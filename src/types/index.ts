@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import { TOKENS } from "../constants";
 
 export interface Creator {
   address: string;
@@ -24,22 +23,21 @@ export interface MintCollectionNFTResponse {
   metadata: PublicKey;
 }
 
-/**
- * Mint addresses of supported tokens for lending on Lulo
- */
-export type LuloDepositAssetMint = (typeof TOKENS)[keyof typeof TOKENS];
+export interface PumpFunTokenOptions {
+  description?: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
+  imageUrl?: string;
+  initialLiquiditySOL?: any;
+  slippageBps?: number;
+  priorityFee?: number;
+  mintAddress?: string; // Optional mint address
+}
 
-/**
- * Lulo Account Details response format
- */
-export interface LuloAccountDetailsResponse {
-  totalValue: number;
-  interestEarned: number;
-  realtimeApy: number;
-  settings: {
-    owner: string;
-    allowedProtocols: string | null;
-    homebase: string | null;
-    minimumRate: string;
-  };
+export interface PumpfunLaunchResponse {
+  signature: string;
+  mint: string;
+  metadataUri?: string;
+  error?: string;
 }
