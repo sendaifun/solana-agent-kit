@@ -1,56 +1,32 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "../index";
-import { LuloAccountDetailsResponse, LuloDepositAssetMint } from "../types";
-import { getPriorityFees } from "../utils/send_tx";
-import { LULO_API } from "../constants";
+import { LuloAccountDetailsResponse } from "../types";
+import { SolanaAgentKit } from "../agent";
 
 /**
  * Lend tokens for yields using Lulo
  * @param agent SolanaAgentKit instance
- * @param asset Mint address of the token to lend (as supported by Lulo)
- * @param amount Amount to lend (in token decimals)
- * @param LULO_API_KEY Valid API key for Lulo
+ * @param amount Amount of USDC to lend
  * @returns Transaction signature
  */
 export async function lendAsset(
   agent: SolanaAgentKit,
-  asset: LuloDepositAssetMint,
   amount: number,
-  LULO_API_KEY = "",
 ): Promise<string> {
   try {
-    if (!LULO_API_KEY) {
-      throw new Error("Missing Lulo API key");
-    }
-
-    const request = {
-      owner: agent.wallet.publicKey.toBase58(),
-      mintAddress: asset.toBase58(),
-      depositAmount: amount.toString(),
-    };
-
-    const priorityFees = await getPriorityFees(agent.connection);
-    const priority = `?priorityFee=${priorityFees.median}`;
-
     const response = await fetch(
-      `${LULO_API}/generate/account/deposit${priority}`,
+      `https://blink.lulo.fi/actions?amount=${amount}&symbol=USDC`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-wallet-pubkey": agent.wallet.publicKey.toBase58(),
-          "x-api-key": LULO_API_KEY,
-        },
-        body: JSON.stringify(request),
+        body: JSON.stringify({
+          account: agent.wallet.publicKey.toBase58(),
+        }),
       },
     );
 
-    const {
-      data: { transactionMeta },
-    } = await response.json();
+    const data = await response.json();
 
     const luloTxn = VersionedTransaction.deserialize(
-      Buffer.from(transactionMeta[0].transaction, "base64"),
+      Buffer.from(data.transaction, "base64"),
     );
 
     // Sign and send transaction

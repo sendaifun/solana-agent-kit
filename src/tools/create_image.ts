@@ -13,7 +13,7 @@ export async function create_image(
   agent: SolanaAgentKit,
   prompt: string,
   size: "256x256" | "512x512" | "1024x1024" = "1024x1024",
-  n: number = 1
+  n: number = 1,
 ) {
   try {
     if (!agent.openai_api_key) {
@@ -21,7 +21,7 @@ export async function create_image(
     }
 
     const openai = new OpenAI({
-      apiKey: agent.openai_api_key
+      apiKey: agent.openai_api_key,
     });
 
     const response = await openai.images.generate({
@@ -31,9 +31,8 @@ export async function create_image(
     });
 
     return {
-      images: response.data.map((img) => img.url),
+      images: response.data.map((img: any) => img.url),
     };
-
   } catch (error: any) {
     throw new Error(`Image generation failed: ${error.message}`);
   }

@@ -28,8 +28,3 @@ export const DEFAULT_OPTIONS = {
  * Jupiter API URL
  */
 export const JUP_API = "https://quote-api.jup.ag/v6";
-
-/**
- * LULO (fka Flexlend) API URL
- */
-export const LULO_API = "https://api.flexlend.fi";

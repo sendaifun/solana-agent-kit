@@ -104,9 +104,7 @@ import { PublicKey } from '@solana/web3.js';
 
 const signature = await lendAsset(
   agent,
-  new PublicKey('asset-mint'),
   100, // amount
-  "lulo-api-key"
 );
 ```
 
