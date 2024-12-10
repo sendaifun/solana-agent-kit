@@ -10,6 +10,7 @@ import {
   trade,
   registerDomain,
   launchPumpFunToken,
+  rps,
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { DEFAULT_OPTIONS } from "../constants";
@@ -32,7 +33,7 @@ export class SolanaAgentKit {
   constructor(
     private_key: string,
     rpc_url = "https://api.mainnet-beta.solana.com",
-    openai_api_key: string
+    openai_api_key: string,
   ) {
     this.connection = new Connection(rpc_url);
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
@@ -46,7 +47,7 @@ export class SolanaAgentKit {
   }
 
   async deployToken(
-    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
     // initialSupply?: number
   ) {
     return deploy_token(this, decimals);
@@ -63,7 +64,7 @@ export class SolanaAgentKit {
   async mintNFT(
     collectionMint: PublicKey,
     metadata: Parameters<typeof mintCollectionNFT>[2],
-    recipient?: PublicKey
+    recipient?: PublicKey,
   ) {
     return mintCollectionNFT(this, collectionMint, metadata, recipient);
   }
@@ -80,7 +81,7 @@ export class SolanaAgentKit {
     outputMint: PublicKey,
     inputAmount: number,
     inputMint?: PublicKey,
-    slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS
+    slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
   ) {
     return trade(this, outputMint, inputAmount, inputMint, slippageBps);
   }
@@ -90,7 +91,7 @@ export class SolanaAgentKit {
     tokenTicker: string,
     description: string,
     imageUrl: string,
-    options?: PumpFunTokenOptions 
+    options?: PumpFunTokenOptions,
   ) {
     return launchPumpFunToken(
       this,
@@ -98,7 +99,11 @@ export class SolanaAgentKit {
       tokenTicker,
       description,
       imageUrl,
-      options
+      options,
     );
+  }
+
+  async rockPaperScissors(amount: number, choice: "R" | "P" | "S") {
+    return rps(this, amount, choice);
   }
 }

@@ -40,7 +40,6 @@ export interface PumpfunLaunchResponse {
   error?: string;
 }
 
-
 /**
  * Mint addresses of supported tokens for lending on Lulo
  */

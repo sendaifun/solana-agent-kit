@@ -42,7 +42,7 @@ export class SolanaTransferTool extends Tool {
   name = "solana_transfer";
   description = `Transfer tokens or SOL to another address ( also called as wallet address ).
 
-  Inputs ( input is a JSON string ): 
+  Inputs ( input is a JSON string ):
   to: string, eg "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk" (required)
   amount: number, eg 1 (required)
   mint?: string, eg "So11111111111111111111111111111111111111112" or "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (optional)`;
@@ -64,7 +64,7 @@ export class SolanaTransferTool extends Tool {
       const tx = await this.solanaKit.transfer(
         recipient,
         parsedInput.amount,
-        mintAddress
+        mintAddress,
       );
 
       return JSON.stringify({
@@ -102,7 +102,7 @@ export class SolanaDeployTokenTool extends Tool {
         input.decimals > 9)
     ) {
       throw new Error(
-        "decimals must be a number between 0 and 9 when provided"
+        "decimals must be a number between 0 and 9 when provided",
       );
     }
     if (
@@ -159,7 +159,7 @@ export class SolanaDeployCollectionTool extends Tool {
         input.royaltyBasisPoints > 10000)
     ) {
       throw new Error(
-        "royaltyBasisPoints must be a number between 0 and 10000 when provided"
+        "royaltyBasisPoints must be a number between 0 and 10000 when provided",
       );
     }
     if (input.creators) {
@@ -169,7 +169,7 @@ export class SolanaDeployCollectionTool extends Tool {
       input.creators.forEach((creator: any, index: number) => {
         if (!creator.address || typeof creator.address !== "string") {
           throw new Error(
-            `creator[${index}].address is required and must be a string`
+            `creator[${index}].address is required and must be a string`,
           );
         }
         if (
@@ -178,7 +178,7 @@ export class SolanaDeployCollectionTool extends Tool {
           creator.percentage > 100
         ) {
           throw new Error(
-            `creator[${index}].percentage must be a number between 0 and 100`
+            `creator[${index}].percentage must be a number between 0 and 100`,
           );
         }
       });
@@ -246,7 +246,9 @@ export class SolanaMintNFTTool extends Tool {
       const result = await this.solanaKit.mintNFT(
         new PublicKey(parsedInput.collectionMint),
         parsedInput.metadata,
-        parsedInput.recipient ? new PublicKey(parsedInput.recipient) : undefined
+        parsedInput.recipient
+          ? new PublicKey(parsedInput.recipient)
+          : undefined,
       );
 
       return JSON.stringify({
@@ -290,7 +292,7 @@ export class SolanaTradeTool extends Tool {
         parsedInput.inputMint
           ? new PublicKey(parsedInput.inputMint)
           : new PublicKey("So11111111111111111111111111111111111111112"),
-        parsedInput.slippageBps
+        parsedInput.slippageBps,
       );
 
       return JSON.stringify({
@@ -371,7 +373,7 @@ export class SolanaRegisterDomainTool extends Tool {
 
       const tx = await this.solanaKit.registerDomain(
         parsedInput.name,
-        parsedInput.spaceKB || 1
+        parsedInput.spaceKB || 1,
       );
 
       return JSON.stringify({
@@ -409,9 +411,9 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
 
   description = `This tool can be used to launch a token on Pump.fun,
    do not use this tool for any other purpose, or for creating SPL tokens.
-   If the user asks you to chose the parameters, you should generate valid values.  
+   If the user asks you to chose the parameters, you should generate valid values.
    For generating the image, you can use the solana_create_image tool.
-   
+
    Inputs:
    tokenName: string, eg "PumpFun Token",
    tokenTicker: string, eg "PUMP",
@@ -463,7 +465,7 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
           telegram: parsedInput.telegram,
           website: parsedInput.website,
           initialLiquiditySOL: parsedInput.initialLiquiditySOL,
-        }
+        },
       );
 
       return JSON.stringify({
@@ -517,6 +519,55 @@ export class SolanaCreateImageTool extends Tool {
   }
 }
 
+export class SolanaRockPaperScissorsTool extends Tool {
+  name = "solana_rock_paper_scissors";
+  description = `Gamble while playing rock paper scissors.
+
+  Inputs:
+  choice: string, either "r", "p", "s" for "rock", "paper", or "scissors" respectively (required)
+  amount: number, amount of SOL to play the game with, either 0.1, 0.01, or 0.005 SOL (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  private validateInput(input: any): void {
+    if (!input.name || typeof input.choice !== "string") {
+      throw new Error("choice is required and must be a string");
+    }
+    if (
+      input.amount !== undefined &&
+      (typeof input.spaceKB !== "number" || input.spaceKB <= 0)
+    ) {
+      throw new Error("amount must be a positive number when provided");
+    }
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = toJSON(input);
+      this.validateInput(parsedInput);
+
+      const tx = await this.solanaKit.rockPaperScissors(
+        parsedInput.choice,
+        parsedInput.amount,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Game completed successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -530,5 +581,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetWalletAddressTool(solanaKit),
     new SolanaPumpfunTokenLaunchTool(solanaKit),
     new SolanaCreateImageTool(solanaKit),
+    new SolanaRockPaperScissorsTool(solanaKit),
   ];
 }
