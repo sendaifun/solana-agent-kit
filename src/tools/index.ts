@@ -7,3 +7,4 @@ export * from './transfer';
 export * from './trade';
 export * from './register_domain';
 export * from './launch_pumpfun_token';
+export * from './stake_with_jup';
