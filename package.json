@@ -1,7 +1,7 @@
 {
   "name": "solana-agent-kit",
   "version": "1.1.0",
-  "description": "A toolkit for interacting with the Solana blockchain using LangChain",
+  "description": "A toolkit for agents to interact with and performs actions on Solana",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,9 +10,6 @@
     "test": "ts-node test/index.ts",
     "generate": "ts-node src/utils/keypair.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@bonfida/spl-name-service": "^3.0.7",
     "@langchain/core": "^0.3.18",
@@ -36,5 +33,21 @@
   "devDependencies": {
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2"
+  },
+  "keywords": [
+    "solana",
+    "ai",
+    "agent",
+    "web3"
+  ],
+  "author": "sendaifun",
+  "license": "GPL-3.0-only",
+  "homepage": "https://solanaagentkit.xyz/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sendaifun/solana-agent-kit/issues"
   }
 }

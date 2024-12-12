@@ -5,14 +5,15 @@
 Solana Agent Kit is an open source public goods for helping folks build on-chain AI agents maintained by [SEND AI](https://www.sendai.fun/)
 </div>
 
-A powerful toolkit for interacting with the Solana blockchain, providing easy-to-use functions for token operations, NFT management, trading, and yield farming.
+A toolkit for agents to interact with and performs actions on Solana, providing easy-to-use functions for token operations, NFT management, trading, and yield farming.
 
-## Features
+## Key features
 
 - 🪙 Token Operations
   - Deploy new SPL tokens
   - Transfer SOL and SPL tokens
   - Check token balances
+  - Stake SOL
 
 - 🖼️ NFT Management
   - Deploy NFT collections
@@ -21,6 +22,7 @@ A powerful toolkit for interacting with the Solana blockchain, providing easy-to
 
 - 💱 Trading
   - Integrated Jupiter Exchange support
+  - Launch tokens on pump.fun
   - Token swaps with customizable slippage
   - Direct routing options
 
@@ -115,47 +117,13 @@ const signature = await lendAsset(
 );
 ```
 
-## API Reference
-
-### Core Functions
-
-#### `deploy_token(agent, decimals?, initialSupply?)`
-Deploy a new SPL token with optional initial supply.
-
-#### `deploy_collection(agent, options)`
-Create a new NFT collection with customizable metadata and royalties.
-
-#### `mintCollectionNFT(agent, collectionMint, metadata, recipient?)`
-Mint a new NFT as part of an existing collection.
-
-#### `transfer(agent, to, amount, mint?)`
-Transfer SOL or SPL tokens to a recipient.
-
-#### `trade(agent, outputMint, inputAmount, inputMint?, slippageBps?)`
-Swap tokens using Jupiter Exchange integration.
-
-#### `get_balance(agent, token_address)`
-Check SOL or token balance for the agent's wallet.
-
-#### `lendAsset(agent, assetMint, amount, apiKey)`
-Lend idle assets to earn interest with Lulo.
-
-## Dependencies
-
-The toolkit relies on several key Solana and Metaplex libraries:
-
-- @solana/web3.js
-- @solana/spl-token
-- @metaplex-foundation/mpl-token-metadata
-- @metaplex-foundation/umi
-
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please refer to the [contribution guidelines](CONTRIBUTING.md) for more information.
 
 ## License
 
-ISC License
+GNU License
 
 ## Security
 
