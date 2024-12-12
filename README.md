@@ -1,4 +1,8 @@
-# Solana Agent Kit
+<div align="center">
+[Docs](https://solanaagentkit.xyz/) | [Examples](https://github.com/sendaifun/solana-agent-kit/tree/main/test/) | [X](https://x.com/sendaifun)
+
+Solana Agent Kit is an open source public goods for helping folks build on-chain AI agents maintained by [SEND AI](https://www.sendai.fun/)
+</div>
 
 A powerful toolkit for interacting with the Solana blockchain, providing easy-to-use functions for token operations, NFT management, and trading. Now integrated with LangChain for enhanced functionality.
 
