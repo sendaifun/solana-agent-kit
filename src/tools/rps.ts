@@ -11,6 +11,9 @@ export async function rps(
       `https://rps.sendarcade.fun/api/actions/backend?amount=${amount}&choice=${choice}&player=B`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application
+        },
         body: JSON.stringify({
           account: agent.wallet.publicKey.toBase58(),
         }),
@@ -22,10 +25,22 @@ export async function rps(
     const txn = VersionedTransaction.deserialize(
       Buffer.from(data.transaction, "base64"),
     );
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    txn.message.recentBlockhash = blockhash;
 
     // Sign and send transaction
     txn.sign([agent.wallet]);
-    const signature = await agent.connection.sendTransaction(txn);
+    const signature = await agent.connection.sendTransaction(txn, {
+      preflightCommitment: "confirmed",
+      maxRetries: 3,
+    });
+
+    const latestBlockhash = await agent.connection.getLatestBlockhash();
+    await agent.connection.confirmTransaction({
+      signature,
+      blockhash: latestBlockhash.blockhash,
+      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+    });
     return signature;
   } catch (error: any) {
     console.error(error);
