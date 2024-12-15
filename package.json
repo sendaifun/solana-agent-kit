@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@raydium-io/raydium-sdk-v2": "0.1.95-alpha",
     "@bonfida/spl-name-service": "^3.0.7",
     "@langchain/core": "^0.3.18",
     "@langchain/groq": "^0.1.2",
@@ -27,6 +28,8 @@
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",
     "bs58": "^6.0.0",
+    "bn.js": "^5.2.1",
+    "decimal.js": "^10.4.3",
     "dotenv": "^16.4.5",
     "form-data": "^4.0.1",
     "langchain": "^0.3.6",
@@ -34,6 +37,7 @@
     "typedoc": "^0.26.11"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.1.5",
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2"
   }

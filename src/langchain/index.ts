@@ -1,8 +1,10 @@
+import { PublicKey } from "@solana/web3.js";
+import { BN } from "bn.js";
+import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../index";
-import { PublicKey } from "@solana/web3.js";
-import { toJSON } from "../utils/toJSON";
 import { create_image } from "../tools/create_image";
+import { toJSON } from "../utils/toJSON";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -568,6 +570,140 @@ export class SolanaTPSCalculatorTool extends Tool {
   }
 }
 
+export class SolanaRaydiumCreateAmmV4 extends Tool {
+  name = "raydium_create_ammV4";
+  description = `create raydium amm v4 pool
+
+  Inputs (input is a json string):
+  marketId: string (required)
+  baseAmount: number(int), eg: 111111 (required)
+  quoteAmount: number(int), eg: 111111 (required)
+  startTime: number(seconds), eg: now number or zero (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input)
+
+      const tx = await this.solanaKit.raydiumCreateAmmV4(
+        new PublicKey(inputFormat.marketId),
+        new BN(inputFormat.baseAmount),
+        new BN(inputFormat.quoteAmount),
+        new BN(inputFormat.startTime),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Create raydium amm v4 pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumCreateClmm extends Tool {
+  name = "raydium_create_clmm";
+  description = `create raydium clmm pool
+
+  Inputs (input is a json string):
+  mint1: string (required)
+  mint2: string (required)
+  configId: string (required)
+  initialPrice: number, eg: 123.12 (required)
+  startTime: number(seconds), eg: now number or zero (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input)
+
+      const tx = await this.solanaKit.raydiumCreateClmm(
+        new PublicKey(inputFormat.mint1),
+        new PublicKey(inputFormat.mint2),
+
+        new PublicKey(inputFormat.configId),
+
+        new Decimal(inputFormat.initialPrice),
+        new BN(inputFormat.startTime),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Create raydium clmm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumCreateCpmm extends Tool {
+  name = "raydium_create_cpmm";
+  description = `create raydium cpmm pool
+
+  Inputs (input is a json string):
+  mint1: string (required)
+  mint2: string (required)
+  configId: string (required)
+  mintAAmount: number(int), eg: 1111 (required)
+  mintBAmount: number(int), eg: 2222 (required)
+  startTime: number(seconds), eg: now number or zero (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input)
+
+      const tx = await this.solanaKit.raydiumCreateCpmm(
+        new PublicKey(inputFormat.mint1),
+        new PublicKey(inputFormat.mint2),
+
+        new PublicKey(inputFormat.configId),
+
+        new BN(inputFormat.mintAAmount),
+        new BN(inputFormat.mintBAmount),
+
+        new BN(inputFormat.startTime),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Create raydium cpmm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -583,5 +719,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCreateImageTool(solanaKit),
     new SolanaLendAssetTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),
+    new SolanaRaydiumCreateAmmV4(solanaKit),
+    new SolanaRaydiumCreateClmm(solanaKit),
+    new SolanaRaydiumCreateCpmm(solanaKit),
   ];
 }
