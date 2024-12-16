@@ -103,7 +103,10 @@ export class SolanaAgentKit {
     );
   }
 
-  async rockPaperScissors(amount: number, choice: "R" | "P" | "S") {
+  async rockPaperScissors(
+    amount: number,
+    choice: "rock" | "paper" | "scissors",
+  ) {
     return rps(this, amount, choice);
   }
 }

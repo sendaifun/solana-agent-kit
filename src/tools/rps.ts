@@ -4,7 +4,7 @@ import { SolanaAgentKit } from "../agent";
 export async function rps(
   agent: SolanaAgentKit,
   amount: number,
-  choice: "R" | "P" | "S",
+  choice: "rock" | "paper" | "scissors",
 ): Promise<string> {
   try {
     const res = await fetch(
@@ -12,7 +12,7 @@ export async function rps(
       {
         method: "POST",
         headers: {
-          "Content-Type": "application
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           account: agent.wallet.publicKey.toBase58(),

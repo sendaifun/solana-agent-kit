@@ -524,7 +524,7 @@ export class SolanaRockPaperScissorsTool extends Tool {
   description = `Gamble while playing rock paper scissors.
 
   Inputs:
-  choice: string, either "r", "p", "s" for "rock", "paper", or "scissors" respectively (required)
+  choice: string, either "rock", "paper", or "scissors" (required)
   amount: number, amount of SOL to play the game with, either 0.1, 0.01, or 0.005 SOL (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
