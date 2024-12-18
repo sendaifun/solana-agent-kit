@@ -4,6 +4,9 @@ import { PublicKey } from "@solana/web3.js";
 import { toJSON } from "../utils/toJSON";
 import { create_image } from "../tools/create_image";
 import { fetchPrice } from "../tools/fetch_price";
+import { BN } from "@coral-xyz/anchor";
+import Decimal from "decimal.js";
+import { FEE_TIERS } from "../tools";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -630,6 +633,61 @@ export class SolanaFetchPriceTool extends Tool {
     }
   }
 }
+
+export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
+  name = "create_orca_single_sided_whirlpool";
+  description = `Create a single-sided Whirlpool with liquidity.
+
+  Inputs (input is a JSON string):
+  - depositTokenAmount: number, eg: 1000000000 (required, in units of deposit token including decimals)
+  - depositTokenMint: string, eg: "DepositTokenMintAddress" (required, mint address of deposit token)
+  - otherTokenMint: string, eg: "OtherTokenMintAddress" (required, mint address of other token)
+  - initialPrice: number, eg: 0.001 (required, initial price of deposit token in terms of other token)
+  - maxPrice: number, eg: 5.0 (required, maximum price at which liquidity is added)
+  - feeTier: number, eg: 0.30 (required, fee tier for the pool)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+      const depositTokenAmount = new BN(inputFormat.depositTokenAmount);
+      const depositTokenMint = new PublicKey(inputFormat.depositTokenMint);
+      const otherTokenMint = new PublicKey(inputFormat.otherTokenMint);
+      const initialPrice = new Decimal(inputFormat.initialPrice);
+      const maxPrice = new Decimal(inputFormat.maxPrice);
+      const feeTier = inputFormat.feeTier;
+
+      if (!feeTier || !(feeTier in FEE_TIERS)) {
+        throw new Error(`Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(", ")}`);
+      }
+
+      const txId = await this.solanaKit.createOrcaSingleSidedWhirlpool(
+        depositTokenAmount,
+        depositTokenMint,
+        otherTokenMint,
+        initialPrice,
+        maxPrice,
+        feeTier,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Single-sided Whirlpool created successfully",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
