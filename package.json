@@ -6,7 +6,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "docs": "typedoc src --out docs",
+    "docs:generate": "typedoc src/index.ts",
+    "docs:prepare": "node scripts/prepare-docs.js",
+    "docs": "npm run docs:generate && npm run docs:prepare",
+    "dev": "mintlify dev",
     "test": "ts-node test/index.ts",
     "generate": "ts-node src/utils/keypair.ts"
   },
@@ -30,11 +33,12 @@
     "dotenv": "^16.4.5",
     "form-data": "^4.0.1",
     "langchain": "^0.3.6",
-    "openai": "^4.75.0",
-    "typedoc": "^0.26.11"
+    "openai": "^4.75.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.27.1",
+    "typedoc-plugin-markdown": "^4.3.3"
   }
 }

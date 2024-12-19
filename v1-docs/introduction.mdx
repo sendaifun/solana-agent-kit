@@ -1,0 +1,52 @@
+---
+title: 'Introduction'
+description: 'Learn how to use Solana Agent Kit in your projects'
+---
+
+# Getting Started
+
+To start using Solana Agent Kit in your project:
+
+```bash
+npm install solana-agent-kit
+```
+
+# Quick Example
+
+```typescript
+import { SolanaAgent } from 'solana-agent-kit';
+
+// Initialize the agent with your configuration
+const agent = new SolanaAgent({
+  network: 'devnet',  // or 'mainnet-beta'
+  rpcEndpoint: 'YOUR_RPC_ENDPOINT',
+  commitment: 'confirmed'
+});
+
+// Example: Get an account's SOL balance
+const balance = await agent.getBalance('YOUR_ADDRESS');
+console.log(`Account balance: ${balance} SOL`);
+
+// Example: Create a new SPL token
+const tokenMint = await agent.createToken({
+  name: "My Token",
+  symbol: "MTKN",
+  decimals: 9,
+  initialSupply: 1000000
+});
+
+// Example: Query NFT metadata
+const metadata = await agent.getNFTMetadata('NFT_MINT_ADDRESS');
+```
+
+# Features
+
+- **Blockchain Operations**: Easy-to-use interfaces for common Solana operations
+- **Token Management**: Comprehensive tools for SPL token operations
+- **NFT Support**: Built-in support for NFT creation and management
+- **Name Service**: Integration with Solana name service
+- **LangChain Integration**: Seamless integration with LangChain's AI capabilities
+
+# Next Steps
+
+Check out our [Quickstart Guide](/quickstart) for detailed examples and usage instructions.
