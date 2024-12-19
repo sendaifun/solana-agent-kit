@@ -124,7 +124,7 @@ try {
     navigation,
     footer: {
       socials: {
-        github: "https://github.com/yourusername/solana-agent-kit"
+        github: "https://github.com/sendaifun/solana-agent-kit"
       }
     }
   };

@@ -37,7 +37,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:39](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L39)
+[agent/index.ts:39](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L39)
 
 ## Methods
 
@@ -51,19 +51,35 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:51](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L51)
+[agent/index.ts:51](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L51)
 
 ***
 
 ### deployToken()
 
-> **deployToken**(`decimals`): `Promise`\<\{ `mint`: `PublicKey`; \}\>
+> **deployToken**(`name`, `uri`, `symbol`, `decimals`, `initialSupply`?): `Promise`\<\{ `mint`: `PublicKey`; \}\>
 
 #### Parameters
+
+##### name
+
+`string`
+
+##### uri
+
+`string`
+
+##### symbol
+
+`string`
 
 ##### decimals
 
 `number` = `DEFAULT_OPTIONS.TOKEN_DECIMALS`
+
+##### initialSupply?
+
+`number`
 
 #### Returns
 
@@ -71,7 +87,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:55](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L55)
+[agent/index.ts:55](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L55)
 
 ***
 
@@ -91,7 +107,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:62](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L62)
+[agent/index.ts:65](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L65)
 
 ***
 
@@ -111,7 +127,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:66](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L66)
+[agent/index.ts:69](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L69)
 
 ***
 
@@ -128,10 +144,6 @@ Provides a unified interface for token operations, NFT management, and trading
 ##### metadata
 
 ###### name
-
-`string`
-
-###### symbol
 
 `string`
 
@@ -157,7 +169,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:70](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L70)
+[agent/index.ts:73](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L73)
 
 ***
 
@@ -185,7 +197,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:78](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L78)
+[agent/index.ts:81](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L81)
 
 ***
 
@@ -209,7 +221,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:82](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L82)
+[agent/index.ts:85](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L85)
 
 ***
 
@@ -229,7 +241,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:86](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L86)
+[agent/index.ts:89](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L89)
 
 ***
 
@@ -249,7 +261,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:90](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L90)
+[agent/index.ts:93](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L93)
 
 ***
 
@@ -281,7 +293,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:94](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L94)
+[agent/index.ts:97](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L97)
 
 ***
 
@@ -301,7 +313,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:103](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L103)
+[agent/index.ts:106](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L106)
 
 ***
 
@@ -315,7 +327,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:107](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L107)
+[agent/index.ts:110](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L110)
 
 ***
 
@@ -335,7 +347,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:111](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L111)
+[agent/index.ts:114](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L114)
 
 ***
 
@@ -355,7 +367,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:115](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L115)
+[agent/index.ts:118](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L118)
 
 ***
 
@@ -391,7 +403,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:119](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L119)
+[agent/index.ts:122](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L122)
 
 ***
 
@@ -411,7 +423,7 @@ Provides a unified interface for token operations, NFT management, and trading
 
 #### Defined in
 
-[agent/index.ts:136](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L136)
+[agent/index.ts:139](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L139)
 
 ## Properties
 
@@ -423,7 +435,7 @@ Solana RPC connection
 
 #### Defined in
 
-[agent/index.ts:34](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L34)
+[agent/index.ts:34](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L34)
 
 ***
 
@@ -435,7 +447,7 @@ Wallet keypair for signing transactions
 
 #### Defined in
 
-[agent/index.ts:35](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L35)
+[agent/index.ts:35](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L35)
 
 ***
 
@@ -447,7 +459,7 @@ Public key of the wallet
 
 #### Defined in
 
-[agent/index.ts:36](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L36)
+[agent/index.ts:36](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L36)
 
 ***
 
@@ -457,4 +469,4 @@ Public key of the wallet
 
 #### Defined in
 
-[agent/index.ts:37](https://github.com/scriptscrypt/solana-agent-kit/blob/a820222cbc6538b7b24a8b29ee43679a229c9635/src/agent/index.ts#L37)
+[agent/index.ts:37](https://github.com/scriptscrypt/solana-agent-kit/blob/4c8fad738fa9f59b8988f2e035ba86e7943593b8/src/agent/index.ts#L37)

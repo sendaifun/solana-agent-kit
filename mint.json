@@ -34,15 +34,6 @@
       ]
     },
     {
-      "group": "Guides",
-      "icon": "book-open",
-      "pages": [
-        "v1-docs/guides/add_your_own_tool",
-        "v1-docs/guides/setup_locally",
-        "v1-docs/guides/test_it_out"
-      ]
-    },
-    {
       "group": "Classes",
       "icon": "cube",
       "pages": [
@@ -69,6 +60,15 @@
         "v1-docs/interfaces/MintCollectionNFTResponse",
         "v1-docs/interfaces/PumpFunTokenOptions",
         "v1-docs/interfaces/PumpfunLaunchResponse"
+      ]
+    },
+    {
+      "group": "Guides",
+      "icon": "book-open",
+      "pages": [
+        "v1-docs/guides/add_your_own_tool",
+        "v1-docs/guides/setup_locally",
+        "v1-docs/guides/test_it_out"
       ]
     }
   ],
