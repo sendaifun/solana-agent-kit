@@ -53,10 +53,13 @@ export class SolanaAgentKit {
   }
 
   async deployToken(
-    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS
-    // initialSupply?: number
+    name: string,
+    uri: string,
+    symbol: string,
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    initialSupply?: number,
   ) {
-    return deploy_token(this, decimals);
+    return deploy_token(this, name, uri, symbol, decimals, initialSupply);
   }
 
   async deployCollection(options: CollectionOptions) {
@@ -83,11 +86,11 @@ export class SolanaAgentKit {
     return registerDomain(this, name, spaceKB);
   }
 
-  async resolveSolDomain(domain:string ){
+  async resolveSolDomain(domain: string) {
     return resolveSolDomain(this, domain)
   }
 
-  async getPrimaryDomain(account: PublicKey){
+  async getPrimaryDomain(account: PublicKey) {
     return getPrimaryDomain(this, account)
   }
 
@@ -132,7 +135,7 @@ export class SolanaAgentKit {
       options
     );
   }
-  
+
   async stake(
     amount: number,
   ) {

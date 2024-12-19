@@ -12,8 +12,8 @@ dotenv.config();
 
 function validateEnvironment(): void {
   const missingVars: string[] = [];
-  const requiredVars = ["OPENAI_API_KEY", "HELIUS_API_KEY", "SOLANA_PRIVATE_KEY"];
-  
+  const requiredVars = ["OPENAI_API_KEY", "RPC_URL", "SOLANA_PRIVATE_KEY"];
+
   requiredVars.forEach(varName => {
     if (!process.env[varName]) {
       missingVars.push(varName);
@@ -52,7 +52,7 @@ async function initializeAgent() {
 
     const solanaKit = new SolanaAgentKit(
       process.env.SOLANA_PRIVATE_KEY!,
-      `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`,
+      process.env.RPC_URL,
       process.env.OPENAI_API_KEY!
     );
 
@@ -176,7 +176,7 @@ async function chooseMode(): Promise<"chat" | "auto"> {
       .trim();
 
     rl.close();
-    
+
     if (choice === "1" || choice === "chat") {
       return "chat";
     } else if (choice === "2" || choice === "auto") {

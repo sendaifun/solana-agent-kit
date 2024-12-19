@@ -1,54 +1,69 @@
 import { SolanaAgentKit } from "../index";
-import {
-  createInitializeMint2Instruction,
-  MINT_SIZE,
-  getMinimumBalanceForRentExemptAccount,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-import { Keypair, SystemProgram, Transaction  } from "@solana/web3.js";
-import { sendTx } from "../utils/send_tx";
+import { PublicKey } from "@solana/web3.js";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
+import { createFungible, mintV1, TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
+import { fromWeb3JsKeypair, fromWeb3JsPublicKey, toWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
 
 /**
  * Deploy a new SPL token
  * @param agent SolanaAgentKit instance
+ * @param name Name of the token
+ * @param uri URI for the token metadata
+ * @param symbol Symbol of the token
  * @param decimals Number of decimals for the token (default: 9)
  * @param initialSupply Initial supply to mint (optional)
  * @returns Object containing token mint address and initial account (if supply was minted)
  */
 export async function deploy_token(
   agent: SolanaAgentKit,
-  decimals: number = 9
-  // initialSupply?: number
-) {
+  name: string,
+  uri: string,
+  symbol: string,
+  decimals: number = 9,
+  initialSupply?: number
+): Promise<{ mint: PublicKey }> {
   try {
-    // Create new token mint
-    const lamports = await getMinimumBalanceForRentExemptAccount(
-      agent.connection
-    );
+    // Create UMI instance from agent
+    const umi = createUmi(agent.connection.rpcEndpoint)
+    umi.use(keypairIdentity(fromWeb3JsKeypair(agent.wallet)));
 
-    const mint = Keypair.generate();
-    let account_create_ix = SystemProgram.createAccount({
-      fromPubkey: agent.wallet_address,
-      newAccountPubkey: mint.publicKey,
-      lamports,
-      space: MINT_SIZE,
-      programId: TOKEN_PROGRAM_ID,
+    // Create new token mint
+    const mint = generateSigner(umi);
+
+    let builder = createFungible(umi, {
+      name,
+      uri,
+      symbol,
+      sellerFeeBasisPoints: {
+        basisPoints: 0n,
+        identifier: "%",
+        decimals: 2,
+      },
+      decimals,
+      mint,
     });
 
-    let create_mint_ix = createInitializeMint2Instruction(
-      mint.publicKey,
-      decimals,
-      agent.wallet_address,
-      agent.wallet_address,
-      TOKEN_PROGRAM_ID
+    if (initialSupply) {
+      builder = builder.add(
+        mintV1(umi, {
+          mint: mint.publicKey,
+          tokenStandard: TokenStandard.Fungible,
+          tokenOwner: fromWeb3JsPublicKey(agent.wallet_address),
+          amount: initialSupply,
+        })
+      );
+    }
+
+    builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
+
+    console.log(
+      "Token deployed successfully. Mint address: ",
+      mint.publicKey.toString()
     );
 
-    let tx = new Transaction().add(account_create_ix, create_mint_ix);
-
-    let hash = await sendTx(agent, tx, [mint]);
-
     return {
-      mint: mint.publicKey,
+      mint: toWeb3JsPublicKey(mint.publicKey),
     };
   } catch (error: any) {
     console.log(error);
