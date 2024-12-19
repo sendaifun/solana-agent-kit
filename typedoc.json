@@ -1,0 +1,26 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": ["./src/index.ts"],
+    "out": "docs",
+    "plugin": ["typedoc-plugin-markdown"],
+    "theme": "markdown",
+    "readme": "none",
+    "exclude": ["**/node_modules/**", "**/test/**"],
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeExternals": true,
+    "includeVersion": true,
+    "hideGenerator": true,
+    "groupOrder": ["Classes", "Interfaces", "Functions", "Types", "Variables"],
+    "sort": ["source-order"],
+    "validation": {
+      "notExported": true,
+      "invalidLink": true,
+      "notDocumented": true
+    },
+    "navigationLinks": {
+      "GitHub": "https://github.com/sendaifun/solana-agent-kit"
+    },
+    "categorizeByGroup": true,
+    "cleanOutputDir": true
+  }
