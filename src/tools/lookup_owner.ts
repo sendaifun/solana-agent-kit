@@ -14,7 +14,7 @@ export async function getOwnedAllDomains(
 ): Promise<string[]> {
   try {
     const domains = await getAllDomains(agent.connection, owner);
-    return domains.map(domain => domain.name);
+    return domains.map(domain => domain.toString());
   } catch (error: any) {
     throw new Error(`Failed to fetch owned domains: ${error.message}`);
   }
