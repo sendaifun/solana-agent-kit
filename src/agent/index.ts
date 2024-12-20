@@ -193,7 +193,6 @@ export class SolanaAgentKit {
     );
   }
 
-  // New domain-related methods
   async resolveAllDomains(domain: string): Promise<PublicKey | null> {
     return resolveAllDomains(this, domain);
   }
