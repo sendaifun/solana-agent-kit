@@ -69,8 +69,8 @@ try {
   function processTypeDocContent(sourceDir, targetSubDir, groupName, icon) {
     if (fs.existsSync(sourceDir)) {
       const files = fs.readdirSync(sourceDir)
-        .filter(file => file.endsWith('.md') || file.endsWith('.html'))
-        .map(file => file.replace('.md', '').replace('.html', ''));
+        .filter(file => file.endsWith('.md'))
+        .map(file => file.replace('.md', ''));
 
       if (files.length > 0) {
         navigation.push({
@@ -82,7 +82,7 @@ try {
         // Process files
         files.forEach(file => {
           const sourceFile = fs.readdirSync(sourceDir)
-            .find(f => f.startsWith(file) && (f.endsWith('.md') || f.endsWith('.html')));
+            .find(f => f.startsWith(file) && (f.endsWith('.md')));
           const sourcePath = path.join(sourceDir, sourceFile);
           const targetPath = path.join(TARGET_DIR, targetSubDir, `${file}.mdx`);
           processFile(sourcePath, targetPath);

@@ -37,7 +37,6 @@
       "group": "Classes",
       "icon": "cube",
       "pages": [
-        "v1-docs/classes/SolanaAgentKit",
         "v1-docs/classes/SolanaAgentKit"
       ]
     },
@@ -45,7 +44,6 @@
       "group": "Functions",
       "icon": "function",
       "pages": [
-        "v1-docs/functions/createSolanaTools",
         "v1-docs/functions/createSolanaTools"
       ]
     },
@@ -54,22 +52,13 @@
       "icon": "brackets-curly",
       "pages": [
         "v1-docs/interfaces/CollectionDeployment",
-        "v1-docs/interfaces/CollectionDeployment",
-        "v1-docs/interfaces/CollectionOptions",
         "v1-docs/interfaces/CollectionOptions",
         "v1-docs/interfaces/Creator",
-        "v1-docs/interfaces/Creator",
-        "v1-docs/interfaces/FetchPriceResponse",
         "v1-docs/interfaces/FetchPriceResponse",
         "v1-docs/interfaces/JupiterTokenData",
-        "v1-docs/interfaces/JupiterTokenData",
-        "v1-docs/interfaces/LuloAccountDetailsResponse",
         "v1-docs/interfaces/LuloAccountDetailsResponse",
         "v1-docs/interfaces/MintCollectionNFTResponse",
-        "v1-docs/interfaces/MintCollectionNFTResponse",
         "v1-docs/interfaces/PumpFunTokenOptions",
-        "v1-docs/interfaces/PumpFunTokenOptions",
-        "v1-docs/interfaces/PumpfunLaunchResponse",
         "v1-docs/interfaces/PumpfunLaunchResponse"
       ]
     },
