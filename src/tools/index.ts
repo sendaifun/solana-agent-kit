@@ -12,5 +12,6 @@ export * from "./launch_pumpfun_token";
 export * from "./lend";
 export * from "./get_tps";
 export * from "./get_token_data";
-export * from './stake_with_jup';
+export * from "./stake_with_jup";
 export * from "./fetch_price";
+export * from "./send_compressed_airdrop";

@@ -44,8 +44,6 @@ export async function getTokenAddressFromTicker(
       .filter((pair: any) => pair.chainId === "solana")
       .sort((a: any, b: any) => (b.fdv || 0) - (a.fdv || 0));
 
-    console.log("solanaPairs", solanaPairs);
-
     solanaPairs = solanaPairs.filter(
       (pair: any) =>
         pair.baseToken.symbol.toLowerCase() === ticker.toLowerCase()

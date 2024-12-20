@@ -44,9 +44,9 @@ import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
 
 // Initialize with private key and optional RPC URL
 const agent = new SolanaAgentKit(
- "your-wallet-private-key-as-base58",
- "https://api.mainnet-beta.solana.com",
- "your-openai-api-key"
+  "your-wallet-private-key-as-base58",
+  "https://api.mainnet-beta.solana.com",
+  "your-openai-api-key"
 );
 
 // Create LangChain tools
@@ -61,9 +61,9 @@ const tools = createSolanaTools(agent);
 import { deploy_token } from "solana-agent-kit";
 
 const result = await deploy_token(
- agent,
- 9, // decimals
- 1000000 // initial supply
+  agent,
+  9, // decimals
+  1000000 // initial supply
 );
 
 console.log("Token Mint Address:", result.mint.toString());
@@ -75,15 +75,15 @@ console.log("Token Mint Address:", result.mint.toString());
 import { deploy_collection } from "solana-agent-kit";
 
 const collection = await deploy_collection(agent, {
- name: "My NFT Collection",
- uri: "https://arweave.net/metadata.json",
- royaltyBasisPoints: 500, // 5%
- creators: [
-  {
-   address: "creator-wallet-address",
-   percentage: 100,
-  },
- ],
+  name: "My NFT Collection",
+  uri: "https://arweave.net/metadata.json",
+  royaltyBasisPoints: 500, // 5%
+  creators: [
+    {
+      address: "creator-wallet-address",
+      percentage: 100,
+    },
+  ],
 });
 ```
 
@@ -94,11 +94,11 @@ import { trade } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
 const signature = await trade(
- agent,
- new PublicKey("target-token-mint"),
- 100, // amount
- new PublicKey("source-token-mint"),
- 300 // 3% slippage
+  agent,
+  new PublicKey("target-token-mint"),
+  100, // amount
+  new PublicKey("source-token-mint"),
+  300 // 3% slippage
 );
 ```
 
@@ -109,8 +109,8 @@ import { lendAsset } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
 const signature = await lendAsset(
- agent,
- 100 // amount
+  agent,
+  100 // amount
 );
 ```
 
@@ -120,8 +120,8 @@ const signature = await lendAsset(
 import { stakeWithJup } from "solana-agent-kit";
 
 const signature = await stakeWithJup(
- agent,
- 1 // amount in SOL
+  agent,
+  1 // amount in SOL
 );
 ```
 
@@ -131,11 +131,42 @@ const signature = await stakeWithJup(
 import { fetchPrice } from "solana-agent-kit";
 
 const price = await fetchPrice(
- agent,
- "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" // Token mint address
+  agent,
+  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" // Token mint address
 );
 
 console.log("Price in USDC:", price);
+```
+
+### Send an SPL Token Airdrop via ZK Compression
+
+```typescript
+import {
+  sendCompressedAirdrop,
+  getAirdropCostEstimate,
+} from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+(async () => {
+  console.log(
+    "~Airdrop cost estimate:",
+    getAirdropCostEstimate(
+      1000, // recipients
+      30_000 // priority fee in lamports
+    )
+  );
+
+  const signature = await sendCompressedAirdrop(
+    agent,
+    new PublicKey("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"), // mint
+    42, // amount per recipient
+    [
+      new PublicKey("1nc1nerator11111111111111111111111111111111"),
+      // ... add more recipients
+    ],
+    30_000 // priority fee in lamports
+  );
+})();
 ```
 
 ## API Reference
@@ -174,6 +205,10 @@ Lend idle assets to earn interest with Lulo.
 
 Stake SOL with Jupiter to earn rewards.
 
+#### `sendCompressedAirdrop(agent, mintAddress, amount, recipients, priorityFeeInLamports?, shouldLog?)`
+
+Send an SPL token airdrop to many recipients at low cost via ZK Compression.
+
 ## Dependencies
 
 The toolkit relies on several key Solana and Metaplex libraries:
@@ -183,6 +218,8 @@ The toolkit relies on several key Solana and Metaplex libraries:
 - @metaplex-foundation/mpl-token-metadata
 - @metaplex-foundation/mpl-core
 - @metaplex-foundation/umi
+- @lightprotocol/compressed-token
+- @lightprotocol/stateless.js
 
 ## Contributing
 

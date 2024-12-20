@@ -57,16 +57,10 @@ export async function deploy_token(
 
     builder.sendAndConfirm(umi, { confirm: { commitment: 'finalized' } });
 
-    console.log(
-      "Token deployed successfully. Mint address: ",
-      mint.publicKey.toString()
-    );
-
     return {
       mint: toWeb3JsPublicKey(mint.publicKey),
     };
   } catch (error: any) {
-    console.log(error);
     throw new Error(`Token deployment failed: ${error.message}`);
   }
 }
