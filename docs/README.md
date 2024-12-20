@@ -1,8 +1,8 @@
-**solana-agent-kit v1.1.1**
+**solana-agent-kit v1.2.0**
 
 ***
 
-# solana-agent-kit v1.1.1
+# solana-agent-kit v1.2.0
 
 ## Classes
 

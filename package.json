@@ -51,11 +51,8 @@
     "@types/bn.js": "^5.1.5",
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2",
-<<<<<<< HEAD
     "typedoc": "^0.27.1",
-    "typedoc-plugin-markdown": "^4.3.3"
-=======
+    "typedoc-plugin-markdown": "^4.3.3",
     "typescript": "^5.7.2"
->>>>>>> origin
   }
 }

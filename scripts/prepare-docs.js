@@ -52,7 +52,7 @@ const baseConfig = {
 };
 
 try {
-  const TARGET_DIR = 'v1-docs';
+  const TARGET_DIR = 'v0';
   if (!fs.existsSync(TARGET_DIR)) {
     fs.mkdirSync(TARGET_DIR, { recursive: true });
   }
@@ -62,7 +62,7 @@ try {
   // Add Getting Started section
   navigation.push({
     group: "Getting Started",
-    pages: ["v1-docs/introduction", "v1-docs/quickstart"]
+    pages: ["v0/introduction", "v0/quickstart"]
   });
 
   // Function to process TypeDoc generated content

@@ -29,46 +29,31 @@
     {
       "group": "Getting Started",
       "pages": [
-        "v1-docs/introduction",
-        "v1-docs/quickstart"
+        "v0/introduction",
+        "v0/quickstart"
       ]
     },
     {
       "group": "Classes",
       "icon": "cube",
       "pages": [
-        "v1-docs/classes/SolanaAgentKit"
-      ]
-    },
-    {
-      "group": "Functions",
-      "icon": "function",
-      "pages": [
-        "v1-docs/functions/createSolanaTools"
-      ]
-    },
-    {
-      "group": "Interfaces",
-      "icon": "brackets-curly",
-      "pages": [
-        "v1-docs/interfaces/CollectionDeployment",
-        "v1-docs/interfaces/CollectionOptions",
-        "v1-docs/interfaces/Creator",
-        "v1-docs/interfaces/FetchPriceResponse",
-        "v1-docs/interfaces/JupiterTokenData",
-        "v1-docs/interfaces/LuloAccountDetailsResponse",
-        "v1-docs/interfaces/MintCollectionNFTResponse",
-        "v1-docs/interfaces/PumpFunTokenOptions",
-        "v1-docs/interfaces/PumpfunLaunchResponse"
+        "v0/classes/SolanaAgentKit"
       ]
     },
     {
       "group": "Guides",
       "icon": "book-open",
       "pages": [
-        "v1-docs/guides/add_your_own_tool",
-        "v1-docs/guides/setup_locally",
-        "v1-docs/guides/test_it_out"
+        "v0/guides/add_your_own_tool",
+        "v0/guides/setup_locally",
+        "v0/guides/test_it_out"
+      ]
+    },
+    {
+      "group": "Functions",
+      "icon": "function",
+      "pages": [
+        "v0/functions/createSolanaTools"
       ]
     }
   ],
