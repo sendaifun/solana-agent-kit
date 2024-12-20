@@ -25,16 +25,17 @@ import {
   stakeWithJup,
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
-  FEE_TIERS
+  FEE_TIERS,
+  getAllDomainsTLDs,
+  getAllRegisteredAllDomains,
+  getOwnedDomainsForTLD,
+  getMainAllDomainsDomain,
+  getOwnedAllDomains,
+  resolveAllDomains,
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { BN } from "@coral-xyz/anchor";
-import { getAllDomainsTLDs } from "../tools/get_all_active_tlds";
-import { getAllRegisteredAllDomains } from "../tools/get_all_registered_all_domains";
-import { getOwnedDomainsForTLD } from "../tools/get_domains_on_tld";
-import { getMainAllDomainsDomain } from "../tools/get_main_domain";
-import { getOwnedAllDomains } from "../tools/lookup_owner";
-import { resolveAllDomains } from "../tools/resolve_domain";
+import Decimal from "decimal.js";
 
 /**
  * Main class for interacting with Solana blockchain
