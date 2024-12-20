@@ -10,51 +10,118 @@ This guide will help you get up and running with Solana Agent Kit quickly.
 ## Installation
 
 ```bash
-npm install solana-agent-kit
+pnpm install solana-agent-kit
 ```
 
-## Basic Setup
+## Setup
 
-First, import and initialize the Solana Agent:
+1. Create a `.env` file in your project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+RPC_URL=your_rpc_url
+SOLANA_PRIVATE_KEY=your_private_key
+```
+
+1. Create a new file (e.g., `agent.ts`) and initialize the agent:
 
 ```typescript
-import { SolanaAgent } from 'solana-agent-kit';
+import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import { HumanMessage } from "@langchain/core/messages";
+import { ChatOpenAI } from "@langchain/openai";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { MemorySaver } from "@langchain/langgraph";
+import * as dotenv from "dotenv";
 
-const agent = new SolanaAgent({
-    network: 'devnet', // or 'mainnet-beta'
-    // Add your configuration options here
-});
+dotenv.config();
+
+async function initializeAgent() {
+  const llm = new ChatOpenAI({
+    modelName: "gpt-4",
+    temperature: 0.7,
+  });
+
+  const solanaKit = new SolanaAgentKit(
+    process.env.SOLANA_PRIVATE_KEY!,
+    process.env.RPC_URL,
+    process.env.OPENAI_API_KEY!
+  );
+
+  const tools = createSolanaTools(solanaKit);
+  const memory = new MemorySaver();
+  const config = { configurable: { thread_id: "Solana Agent Kit!" } };
+
+  return createReactAgent({
+    llm,
+    tools,
+    checkpointSaver: memory,
+  });
+}
 ```
 
-## Common Operations
+## Interactive Mode
 
-### Checking Account Balance
+Create a chat interface to interact with your agent:
 
 ```typescript
-const balance = await agent.getBalance('ADDRESS');
-console.log(`Balance: ${balance} SOL`);
+async function runChat() {
+  const agent = await initializeAgent();
+  const config = { configurable: { thread_id: "Solana Agent Kit!" } };
+
+  // Example: Send a command to the agent
+  const stream = await agent.stream({
+    messages: [new HumanMessage("Create a new token with 1000000 supply")]
+  }, config);
+
+  // Handle the response
+  for await (const chunk of stream) {
+    if ("agent" in chunk) {
+      console.log(chunk.agent.messages[0].content);
+    } else if ("tools" in chunk) {
+      console.log(chunk.tools.messages[0].content);
+    }
+    console.log("-------------------");
+  }
+}
+
+runChat().catch(console.error);
 ```
 
-### Creating a New Token
+## Example Commands
 
-```typescript
-const tokenMint = await agent.createToken({
-    decimals: 9,
-    initialSupply: 1000000000
-});
-console.log(`Created token: ${tokenMint}`);
+Once your agent is running, you can interact with it using natural language:
+
+```
+"Create a new token with 1000000 supply"
+"Check my wallet balance"
+"Mint an NFT named 'My Cool NFT'"
+"Swap 1 SOL for USDC"
 ```
 
-### Working with NFTs
+## Available Features
 
-```typescript
-const nft = await agent.createNFT({
-    name: "My NFT",
-    symbol: "MNFT",
-    uri: "https://your-metadata-uri.json"
-});
-```
+Your agent can perform various operations:
 
-## Next Steps
+* 🪙 Create and manage tokens
 
-Check out the [API Documentation](/api) for detailed information about all available functions and options.
+* 🎨 Mint NFTs and deploy collections
+
+* 💱 Swap tokens using Jupiter
+
+* 💰 Check balances and transfer assets
+
+* 🎮 Execute Solana Programs
+
+* 📦 Send compressed airdrops
+
+## Troubleshooting
+
+If you encounter issues:
+
+1. Ensure all environment variables are set correctly
+
+2. Verify your RPC endpoint is responsive
+
+3. Check that your wallet has sufficient SOL for transactions
+
+4. For API errors, try again with increased priority fees
