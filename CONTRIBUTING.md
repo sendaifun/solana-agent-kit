@@ -76,7 +76,7 @@ Check out the [Good First Issues](https://github.com/sendaifun/solana-agent-kit/
 
 - **Language**: TypeScript
 - **Formatting**: Follow the existing codebase formatting. Consider using [Prettier](https://prettier.io/) for consistent code formatting.
-- **Linting**: Adhere to the linting rules defined in `.eslintrc`. Ensure all linting checks pass before submitting a PR.
+- **Code Quality**: Adhere to the code quality rules defined in `.eslintrc`. Ensure all checks pass before submitting a PR.
 
 ### Commit Messages
 

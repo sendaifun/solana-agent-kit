@@ -1,37 +1,75 @@
+<div align="center">
+
 # Solana Agent Kit
 
-A powerful toolkit for interacting with the Solana blockchain, providing easy-to-use functions for token operations, NFT management, and trading. Now integrated with LangChain for enhanced functionality.
+</div>
 
-## Features
+![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
 
-- 🪙 Token Operations
+An open-source toolkit for connecting AI agents to Solana protocols. Now, any agent, using any model can autonomously perform 15+ Solana actions:
 
-  - Deploy new SPL tokens
-  - Transfer SOL and SPL tokens
-  - Check token balances
+- Trade tokens
+- Launch new tokens 
+- Lend assets
+- Send compressed airdrops
+- Execute blinks
+- Launch tokens on AMMs
+- And more...
+
+Anyone - whether an SF-based AI researcher or a crypto-native builder - can bring their AI agents trained with any model and seamlessly integrate with Solana.
+
+## 🔧 Core Blockchain Features
+
+- **Token Operations**
+  - Deploy SPL tokens by Metaplex
+  - Transfer assets
+  - Balance checks
   - Stake SOL
+  - Zk compressed Airdrop by Light Protocol and Helius
 
-- 🖼️ NFT Management
+- **NFT Management via Metaplex**
+  - Collection deployment
+  - NFT minting
+  - Metadata management
+  - Royalty configuration
 
-  - Deploy NFT collections
-  - Mint NFTs to collections
-  - Manage metadata and royalties
+- **DeFi Integration**
+  - Jupiter Exchange swaps
+  - Launch on Pump via PumpPortal
+  - Raydium pool creation (CPMM, CLMM, AMMv4)
+  - Orca whirlpool integration
+  - Meteora Dynamic AMM, DLMM Pool, and Alpga Vault
+  - Openbook market creation
+  - Register and Resolve SNS
+  - Jito Bundles
 
-- 💱 Trading
+- **Solana Blinks**
+   - Lending by Lulo
+   - Send Arcade Games
+   - JupSOL staking
 
-  - Integrated Jupiter Exchange support
-  - Token swaps with customizable slippage
-  - Direct routing options
 
-- 🏦 Yield Farming
+## 🤖 AI Integration Features
 
-  - Lend idle assets to earn interest with Lulo
+- **LangChain Integration**
+  - Ready-to-use LangChain tools for blockchain operations
+  - Autonomous agent support with React framework
+  - Memory management for persistent interactions
+  - Streaming responses for real-time feedback
 
-- 🔗 LangChain Integration
-  - Utilize LangChain tools for enhanced blockchain interactions
-  - Access a suite of tools for balance checks, transfers, token deployments, and more
+- **Autonomous Modes**
+  - Interactive chat mode for guided operations
+  - Autonomous mode for independent agent actions
+  - Configurable action intervals
+  - Built-in error handling and recovery
 
-## Installation
+- **AI Tools**
+  - DALL-E integration for NFT artwork generation
+  - Natural language processing for blockchain commands
+  - Price feed integration for market analysis
+  - Automated decision-making capabilities
+
+## 📦 Installation
 
 ```bash
 npm install solana-agent-kit
@@ -224,10 +262,11 @@ The toolkit relies on several key Solana and Metaplex libraries:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
 
 ## License
 
-ISC License
+MIT License
 
 ## Security
 
