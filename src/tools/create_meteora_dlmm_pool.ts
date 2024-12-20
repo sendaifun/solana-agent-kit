@@ -1,5 +1,5 @@
 import { SolanaAgentKit } from "../agent";
-import { BN } from "bn.js";
+import BN from "bn.js";
 import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
 import DLMM, { ActivationType } from "@meteora-ag/dlmm";
 import { getMint } from "@solana/spl-token";
@@ -28,7 +28,7 @@ export async function createMeteoraDlmmPool(
   feeBps: number,
   activationType: ActivationType,
   hasAlphaVault: boolean,
-  activationPoint: BN | null
+  activationPoint: BN | undefined
 ): Promise<string> {
   const tokenAMintInfo = await getMint(agent.connection, tokenAMint);
   const tokenBMintInfo = await getMint(agent.connection, tokenBMint);

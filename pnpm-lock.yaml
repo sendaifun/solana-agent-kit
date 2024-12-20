@@ -79,6 +79,9 @@ dependencies:
     version: 0.26.11(typescript@5.7.2)
 
 devDependencies:
+  '@types/bn.js':
+    specifier: ^5.1.6
+    version: 5.1.6
   '@types/node':
     specifier: ^22.9.0
     version: 22.10.2
@@ -1455,6 +1458,12 @@ packages:
   /@types/big.js@6.2.2:
     resolution: {integrity: sha512-e2cOW9YlVzFY2iScnGBBkplKsrn2CsObHQ2Hiw4V1sSyiGbgWL8IyqE3zFi1Pt5o1pdAtYkDAIsF3KKUPjdzaA==}
     dev: false
+
+  /@types/bn.js@5.1.6:
+    resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
+    dependencies:
+      '@types/node': 22.10.2
+    dev: true
 
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}

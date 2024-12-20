@@ -1,7 +1,7 @@
 import AlphaVault, { PoolType, WhitelistMode } from "@meteora-ag/alpha-vault";
 import { SolanaAgentKit } from "../agent";
 import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
-import { BN } from "bn.js";
+import BN from "bn.js";
 
 /**
  * Create Meteora FCFS alpha vault 

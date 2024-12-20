@@ -1,6 +1,6 @@
 import AmmImpl from "@mercurial-finance/dynamic-amm-sdk";
 import { SolanaAgentKit } from "../agent";
-import { BN } from "bn.js";
+import BN from "bn.js";
 import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
 import { CustomizableParams } from "@mercurial-finance/dynamic-amm-sdk/dist/cjs/src/amm/types";
 
