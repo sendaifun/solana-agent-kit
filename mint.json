@@ -5,6 +5,12 @@
     "light": "/public/logo/light.svg",
     "dark": "/public/logo/dark.svg"
   },
+  "metadata": {
+    "og:image": "/public/og.png"
+  },
+  "seo": {
+    "indexHiddenPages": true
+  },
   "layout": "sidenav",
   "favicon": "/public/favicon.ico",
   "sidebar": {
@@ -28,17 +34,12 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": [
-        "v0/introduction",
-        "v0/quickstart"
-      ]
+      "pages": ["v0/introduction", "v0/quickstart"]
     },
     {
       "group": "Classes",
       "icon": "cube",
-      "pages": [
-        "v0/classes/SolanaAgentKit"
-      ]
+      "pages": ["v0/classes/SolanaAgentKit"]
     },
     {
       "group": "Guides",
@@ -52,9 +53,7 @@
     {
       "group": "Functions",
       "icon": "function",
-      "pages": [
-        "v0/functions/createSolanaTools"
-      ]
+      "pages": ["v0/functions/createSolanaTools"]
     }
   ],
   "footer": {
