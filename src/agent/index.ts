@@ -29,6 +29,12 @@ import {
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { getAllDomainsTLDs } from "../tools/get_all_active_tlds";
+import { getAllRegisteredAllDomains } from "../tools/get_all_registered_all_domains";
+import { getOwnedDomainsForTLD } from "../tools/get_domains_on_tld";
+import { getMainAllDomainsDomain } from "../tools/get_main_domain";
+import { getOwnedAllDomains } from "../tools/lookup_owner";
+import { resolveAllDomains } from "../tools/resolve_domain";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -174,7 +180,7 @@ export class SolanaAgentKit {
     otherTokenMint: PublicKey,
     initialPrice: Decimal,
     maxPrice: Decimal,
-    feeTier: keyof typeof FEE_TIERS,
+    feeTier: keyof typeof FEE_TIERS
   ) {
     return createOrcaSingleSidedWhirlpool(
       this,
@@ -184,7 +190,35 @@ export class SolanaAgentKit {
       initialPrice,
       maxPrice,
       feeTier
-    )
+    );
+  }
+
+  // New domain-related methods
+  async resolveAllDomains(domain: string): Promise<PublicKey | null> {
+    return resolveAllDomains(this, domain);
+  }
+
+  async getOwnedAllDomains(owner: PublicKey): Promise<string[]> {
+    return getOwnedAllDomains(this, owner);
+  }
+
+  async getOwnedDomainsForTLD(
+    owner: PublicKey,
+    tld: string
+  ): Promise<string[]> {
+    return getOwnedDomainsForTLD(this, owner, tld);
+  }
+
+  async getAllDomainsTLDs(): Promise<string[]> {
+    return getAllDomainsTLDs(this);
+  }
+
+  async getAllRegisteredAllDomains(): Promise<string[]> {
+    return getAllRegisteredAllDomains(this);
+  }
+
+  async getMainAllDomainsDomain(owner: PublicKey): Promise<string | null> {
+    return getMainAllDomainsDomain(this, owner);
   }
 
   async raydiumCreateAmmV4(
