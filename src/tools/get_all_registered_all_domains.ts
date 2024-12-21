@@ -1,7 +1,7 @@
 import { getAllDomains } from "@bonfida/spl-name-service";
 import { SolanaAgentKit } from "../agent";
 import { PublicKey } from "@solana/web3.js";
-import { getAllDomainsTLDs } from "./get_all_active_tlds";
+import { getAllDomainsTLDs } from "./get_all_domains_tlds";
 
 /**
  * Get all registered domains across all TLDs
@@ -20,7 +20,7 @@ export async function getAllRegisteredAllDomains(
     for (const tld of tlds) {
       const domains = await getAllDomains(
         agent.connection,
-        new PublicKey("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX"),
+        new PublicKey("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX")
       );
 
       // Add domains with TLD suffix

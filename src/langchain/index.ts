@@ -980,6 +980,189 @@ export class SolanaOpenbookCreateMarket extends Tool {
   }
 }
 
+export class SolanaResolveDomain extends Tool {
+  name = "solana_resolve_domain";
+  description = `Resolve a Solana domain name to its owner's public key
+    Inputs (input is a json string):
+    domain: string (required) - The domain name to resolve (e.g., "mydomain.sol")
+    `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+      const owner = await this.solanaKit.resolveAllDomains(inputFormat.domain);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Domain resolved successfully",
+        owner: owner?.toString(),
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "DOMAIN_RESOLUTION_ERROR",
+      });
+    }
+  }
+}
+export class SolanaGetOwnedDomains extends Tool {
+  name = "solana_get_owned_domains";
+  description = `Get all domains owned by a specific wallet address
+    Inputs (input is a json string):
+    owner: string (required) - The public key of the domain owner
+    `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+      const ownerPubkey = new PublicKey(inputFormat.owner);
+      const domains = await this.solanaKit.getOwnedAllDomains(ownerPubkey);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Owned domains fetched successfully",
+        domains: domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_OWNED_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetOwnedTldDomains extends Tool {
+  name = "solana_get_owned_tld_domains";
+  description = `Get all domains owned by the agent's wallet for a specific TLD
+    Inputs (input is a json string):
+    tld: string (required) - The top-level domain to search (e.g., "sol")
+    `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+      const domains = await this.solanaKit.getOwnedDomainsForTLD(
+        inputFormat.tld
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLD domains fetched successfully",
+        domains: domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLD_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+export class SolanaGetAllTlds extends Tool {
+  name = "solana_get_all_tlds";
+  description = `Get all active top-level domains (TLDs) in the Solana name service
+    Inputs (input is a json string): {}
+    No additional parameters required`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const tlds = await this.solanaKit.getAllDomainsTLDs();
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLDs fetched successfully",
+        tlds: tlds,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLDS_ERROR",
+      });
+    }
+  }
+}
+export class SolanaGetAllRegisteredDomains extends Tool {
+  name = "solana_get_all_registered_domains";
+  description = `Get all registered domains across all TLDs in the Solana name service
+    Inputs (input is a json string): {}
+    No additional parameters required`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const domains = await this.solanaKit.getAllRegisteredAllDomains();
+
+      return JSON.stringify({
+        status: "success",
+        message: "All registered domains fetched successfully",
+        domains: domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_ALL_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+export class SolanaGetMainDomain extends Tool {
+  name = "solana_get_main_domain";
+  description = `Get the user's main/favorite domain
+    Inputs (input is a json string):
+    owner: string (required) - The public key of the domain owner
+    `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+      const ownerPubkey = new PublicKey(inputFormat.owner);
+      const mainDomain = await this.solanaKit.getMainAllDomainsDomain(
+        ownerPubkey
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Main domain fetched successfully",
+        domain: mainDomain,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_MAIN_DOMAIN_ERROR",
+      });
+    }
+  }
+}
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1007,5 +1190,11 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaRaydiumCreateCpmm(solanaKit),
     new SolanaOpenbookCreateMarket(solanaKit),
     new SolanaCreateSingleSidedWhirlpoolTool(solanaKit),
+    new SolanaResolveDomain(solanaKit),
+    new SolanaGetOwnedDomains(solanaKit),
+    new SolanaGetOwnedTldDomains(solanaKit),
+    new SolanaGetAllTlds(solanaKit),
+    new SolanaGetAllRegisteredDomains(solanaKit),
+    new SolanaGetMainDomain(solanaKit),
   ];
 }
