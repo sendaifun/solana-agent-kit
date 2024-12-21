@@ -12,7 +12,7 @@
     "indexHiddenPages": true
   },
   "layout": "sidenav",
-  "favicon": "/public/favicon.ico",
+  "favicon": "/public/favicon.svg",
   "sidebar": {
     "items": "border"
   },
