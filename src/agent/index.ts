@@ -25,10 +25,17 @@ import {
   stakeWithJup,
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
-  FEE_TIERS
+  FEE_TIERS,
+  getAllDomainsTLDs,
+  getAllRegisteredAllDomains,
+  getOwnedDomainsForTLD,
+  getMainAllDomainsDomain,
+  getOwnedAllDomains,
+  resolveAllDomains,
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { NameAccountAndDomain } from "@onsol/tldparser";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -174,7 +181,7 @@ export class SolanaAgentKit {
     otherTokenMint: PublicKey,
     initialPrice: Decimal,
     maxPrice: Decimal,
-    feeTier: keyof typeof FEE_TIERS,
+    feeTier: keyof typeof FEE_TIERS
   ) {
     return createOrcaSingleSidedWhirlpool(
       this,
@@ -184,7 +191,38 @@ export class SolanaAgentKit {
       initialPrice,
       maxPrice,
       feeTier
-    )
+    );
+  }
+
+  async resolveAllDomains(domain: string): Promise<PublicKey | undefined> {
+    return resolveAllDomains(this, domain);
+  }
+
+  async getOwnedAllDomains(
+    owner: PublicKey
+  ): Promise<NameAccountAndDomain[]> {
+    return getOwnedAllDomains(this, owner);
+  }
+
+  async getOwnedDomainsForTLD(
+    tld: string
+  ):Promise<NameAccountAndDomain[]> {
+    return getOwnedDomainsForTLD(this, tld);
+  }
+
+  async getAllDomainsTLDs(): Promise<Array<{
+    tld: String;
+    parentAccount: PublicKey;
+}>> {
+    return getAllDomainsTLDs(this);
+  }
+
+  async getAllRegisteredAllDomains(): Promise<string[]> {
+    return getAllRegisteredAllDomains(this);
+  }
+
+  async getMainAllDomainsDomain(owner: PublicKey): Promise<string | null> {
+    return getMainAllDomainsDomain(this, owner);
   }
 
   async raydiumCreateAmmV4(
@@ -193,7 +231,7 @@ export class SolanaAgentKit {
     baseAmount: BN,
     quoteAmount: BN,
 
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateAmmV4(
       this,
@@ -202,8 +240,8 @@ export class SolanaAgentKit {
       baseAmount,
       quoteAmount,
 
-      startTime,
-    )
+      startTime
+    );
   }
 
   async raydiumCreateClmm(
@@ -213,7 +251,7 @@ export class SolanaAgentKit {
     configId: PublicKey,
 
     initialPrice: Decimal,
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateClmm(
       this,
@@ -224,8 +262,8 @@ export class SolanaAgentKit {
       configId,
 
       initialPrice,
-      startTime,
-    )
+      startTime
+    );
   }
 
   async raydiumCreateCpmm(
@@ -237,7 +275,7 @@ export class SolanaAgentKit {
     mintAAmount: BN,
     mintBAmount: BN,
 
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateCpmm(
       this,
@@ -250,8 +288,8 @@ export class SolanaAgentKit {
       mintAAmount,
       mintBAmount,
 
-      startTime,
-    )
+      startTime
+    );
   }
 
   async openbookCreateMarket(
@@ -259,7 +297,7 @@ export class SolanaAgentKit {
     quoteMint: PublicKey,
 
     lotSize: number = 1,
-    tickSize: number = 0.01,
+    tickSize: number = 0.01
   ) {
     return openbookCreateMarket(
       this,
@@ -267,7 +305,7 @@ export class SolanaAgentKit {
       quoteMint,
 
       lotSize,
-      tickSize,
-    )
+      tickSize
+    );
   }
 }
