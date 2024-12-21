@@ -1,7 +1,5 @@
 import * as dotenv from "dotenv";
-import { test_deploy_token } from "./deployToken";
-import { test_deploy_collection } from "./deployCollection";
-import { test_mint_nft } from "./mintNft";
+import { test_create_meteora_dynamic_amm_pool } from "./create_meteora_dynamic_amm_pool";
 
 dotenv.config();
 
@@ -10,9 +8,7 @@ async function main() {
     console.log("Starting Agent...");
 
     // Test Tools
-    await test_deploy_token();
-    await test_deploy_collection();
-    await test_mint_nft();
+    await test_create_meteora_dynamic_amm_pool();
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
