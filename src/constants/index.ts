@@ -28,3 +28,5 @@ export const DEFAULT_OPTIONS = {
  * Jupiter API URL
  */
 export const JUP_API = "https://quote-api.jup.ag/v6";
+
+export const METEORA_DYNAMIC_AMM_PROGRAM_ID = new PublicKey("Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB");
