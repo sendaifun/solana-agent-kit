@@ -87,9 +87,9 @@ export function createSolanaTools(agent: SolanaAgentKit) {
 ### 6. Usage Example
 
 ```typescript
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+agent: SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
 
-const agent = new SolanaAgentKit(
+const agent = new SolanaAgent(
   "your-wallet-private-key-as-base58",
   "https://api.mainnet-beta.solana.com",
   "your-openai-api-key"

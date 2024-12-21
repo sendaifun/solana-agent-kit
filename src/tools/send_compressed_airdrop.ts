@@ -1,12 +1,11 @@
 import {
   AddressLookupTableAccount,
   ComputeBudgetProgram,
-  Connection,
   Keypair,
   PublicKey,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { SolanaAgentKit } from "../agent/index.js";
+import { SolanaAgentKit } from "../index";
 import {
   buildAndSignTx,
   calculateComputeUnitPrice,
@@ -33,7 +32,7 @@ const MAX_CONCURRENT_TXS = 30;
  */
 export const getAirdropCostEstimate = (
   numberOfRecipients: number,
-  priorityFeeInLamports: number
+  priorityFeeInLamports: number,
 ) => {
   const baseFee = 5000;
   const perRecipientCompressedStateFee = 300;
@@ -63,14 +62,13 @@ export async function sendCompressedAirdrop(
   decimals: number,
   recipients: PublicKey[],
   priorityFeeInLamports: number,
-  shouldLog: boolean = false
+  shouldLog: boolean = false,
 ): Promise<string[]> {
   if (recipients.length > MAX_AIRDROP_RECIPIENTS) {
     throw new Error(
-      `Max airdrop can be ${MAX_AIRDROP_RECIPIENTS} recipients at a time. For more scale, use open source ZK Compression airdrop tools such as https://github.com/helius-labs/airship.`
+      `Max airdrop can be ${MAX_AIRDROP_RECIPIENTS} recipients at a time. For more scale, use open source ZK Compression airdrop tools such as https://github.com/helius-labs/airship.`,
     );
   }
-
 
   const url = agent.connection.rpcEndpoint;
   if (url.includes("devnet")) {
@@ -78,7 +76,7 @@ export async function sendCompressedAirdrop(
   }
   if (!url.includes("helius")) {
     console.warn(
-      "Warning: Must use RPC with ZK Compression support. Double check with your RPC provider if in doubt."
+      "Warning: Must use RPC with ZK Compression support. Double check with your RPC provider if in doubt.",
     );
   }
 
@@ -88,11 +86,11 @@ export async function sendCompressedAirdrop(
       agent.connection,
       agent.wallet,
       mintAddress,
-      agent.wallet.publicKey
+      agent.wallet.publicKey,
     );
   } catch (error) {
     throw new Error(
-      "Source token account not found and failed to create it. Please add funds to your wallet and try again."
+      "Source token account not found and failed to create it. Please add funds to your wallet and try again.",
     );
   }
 
@@ -100,7 +98,7 @@ export async function sendCompressedAirdrop(
     await createTokenPool(
       agent.connection as unknown as Rpc,
       agent.wallet,
-      mintAddress
+      mintAddress,
     );
   } catch (error: any) {
     if (error.message.includes("already in use")) {
@@ -116,7 +114,7 @@ export async function sendCompressedAirdrop(
     mintAddress,
     recipients,
     priorityFeeInLamports,
-    shouldLog
+    shouldLog,
   );
 }
 
@@ -126,7 +124,7 @@ async function processAll(
   mint: PublicKey,
   recipients: PublicKey[],
   priorityFeeInLamports: number,
-  shouldLog: boolean
+  shouldLog: boolean,
 ): Promise<string[]> {
   const mintAddress = mint;
   const payer = agent.wallet;
@@ -135,13 +133,13 @@ async function processAll(
     agent.connection,
     agent.wallet,
     mintAddress,
-    agent.wallet.publicKey
+    agent.wallet.publicKey,
   );
 
   const maxRecipientsPerInstruction = 5;
   const maxIxs = 3; // empirically determined (as of 12/15/2024)
   const lookupTableAddress = new PublicKey(
-    "9NYFyEqPkyXUhkerbGHXUXkvb4qpzeEdHuGpgbgpH1NJ"
+    "9NYFyEqPkyXUhkerbGHXUXkvb4qpzeEdHuGpgbgpH1NJ",
   );
 
   const lookupTableAccount = (
@@ -164,7 +162,7 @@ async function processAll(
         ComputeBudgetProgram.setComputeUnitPrice({
           microLamports: calculateComputeUnitPrice(
             priorityFeeInLamports,
-            500_000
+            500_000,
           ),
         }),
       ];
@@ -184,13 +182,13 @@ async function processAll(
             toAddress: batch,
             amount: batch.map(() => amount),
             mint: mintAddress,
-          })
+          }),
         );
       }
 
       const compressIxs = await Promise.all(compressIxPromises);
       return [...instructions, ...compressIxs];
-    })
+    }),
   );
 
   const url = agent.connection.rpcEndpoint;
@@ -225,12 +223,12 @@ async function processAll(
           instructions,
           payer,
           lookupTableAccount,
-          i + idx
+          i + idx,
         ).then((signature) => {
           confirmedCount++;
           log("\r" + renderProgressBar(confirmedCount, totalBatches));
           return signature;
-        })
+        }),
       );
 
     const batchResults = await Promise.allSettled(batchPromises);
@@ -250,7 +248,7 @@ async function processAll(
     throw new Error(
       `Failed to process ${failures.length} batches: ${failures
         .map((f) => f.error)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
@@ -262,7 +260,7 @@ async function sendTransactionWithRetry(
   instructions: TransactionInstruction[],
   payer: Keypair,
   lookupTableAccount: AddressLookupTableAccount,
-  batchIndex: number
+  batchIndex: number,
 ): Promise<string> {
   const MAX_RETRIES = 3;
   const INITIAL_BACKOFF = 500; // ms
@@ -275,7 +273,7 @@ async function sendTransactionWithRetry(
         payer,
         blockhash,
         [],
-        [lookupTableAccount]
+        [lookupTableAccount],
       );
 
       const signature = await sendAndConfirmTx(connection, tx);
@@ -292,7 +290,7 @@ async function sendTransactionWithRetry(
         throw new Error(
           `Batch ${batchIndex} failed after ${attempt + 1} attempts: ${
             error.message
-          }`
+          }`,
         );
       }
 

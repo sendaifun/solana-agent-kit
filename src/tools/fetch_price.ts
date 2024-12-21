@@ -1,20 +1,13 @@
-import { SolanaAgentKit } from "../index";
-import { Tool } from "langchain/tools";
+import { PublicKey } from "@solana/web3.js";
 
 /**
- * Fetch the price of a given token in USDC using Jupiter API
- * @param agent SolanaAgentKit instance
+ * Fetch the price of a given token quoted in USDC using Jupiter API
  * @param tokenId The token mint address
- * @returns The price of the token in USDC
+ * @returns The price of the token quoted in USDC
  */
-export async function fetchPrice(
-  agent: SolanaAgentKit,
-  tokenId: string
-): Promise<string> {
+export async function fetchPrice(tokenId: PublicKey): Promise<string> {
   try {
-    const response = await fetch(
-      `https://api.jup.ag/price/v2?ids=${tokenId}`
-    );
+    const response = await fetch(`https://api.jup.ag/price/v2?ids=${tokenId}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch price: ${response.statusText}`);
@@ -22,7 +15,7 @@ export async function fetchPrice(
 
     const data = await response.json();
 
-    const price = data.data[tokenId]?.price;
+    const price = data.data[tokenId.toBase58()]?.price;
 
     if (!price) {
       throw new Error("Price data not available for the given token.");

@@ -1,5 +1,5 @@
 import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../index";
 import { BN, Wallet } from "@coral-xyz/anchor";
 import { Decimal } from "decimal.js";
 import {
@@ -40,7 +40,7 @@ import { sendTx } from "../utils/send_tx";
  * @remarks
  * Fee tiers determine the percentage of fees collected on swaps, while tick spacing affects
  * the granularity of price ranges for liquidity positions.
- * 
+ *
  * For more details, refer to:
  * - [Whirlpool Fees](https://orca-so.github.io/whirlpools/Architecture%20Overview/Whirlpool%20Fees)
  * - [Whirlpool Parameters](https://orca-so.github.io/whirlpools/Architecture%20Overview/Whirlpool%20Parameters)
@@ -54,17 +54,17 @@ export const FEE_TIERS = {
   0.04: 4,
   0.05: 8,
   0.16: 16,
-  0.30: 64,
+  0.3: 64,
   0.65: 96,
-  1.00: 128,
-  2.00: 256,
+  1.0: 128,
+  2.0: 256,
 } as const;
 
 /**
  * # Creates a single-sided Whirlpool.
  *
  * This function initializes a new Whirlpool (liquidity pool) on Orca and seeds it with liquidity from a single token.
- * 
+ *
  * ## Example Usage:
  * You created a new token called SHARK, and you want to set the initial price to 0.001 USDC.
  * You set `depositTokenMint` to SHARK's mint address and `otherTokenMint` to USDC's mint address.
@@ -72,7 +72,7 @@ export const FEE_TIERS = {
  * 1. Increase the amount of tokens you deposit
  * 2. Set the initial price very low
  * 3. Set the maximum price closer to the initial price
- * 
+ *
  * ### Note for experts:
  * The Wrhirlpool program initializes the Whirlpool with the in a specific order. This might not be
  * the order you expect, so the function checks the order and adjusts the inverts the prices. This means that
@@ -86,13 +86,13 @@ export const FEE_TIERS = {
  * @param initialPrice - The initial price of the deposit token in terms of the other token.
  * @param maxPrice - The maximum price at which liquidity is added.
  * @param feeTier - The fee tier percentage for the pool, determining tick spacing and fee collection rates.
- * 
+ *
  * @returns A promise that resolves to a transaction ID (`string`) of the transaction creating the pool.
- * 
+ *
  * @throws Will throw an error if:
  * - Mint accounts for the tokens cannot be fetched.
  * - Prices are out of bounds.
- * 
+ *
  * @remarks
  * This function is designed for single-sided deposits where users only contribute one type of token,
  * and the function manages mint order and necessary calculations.
@@ -103,7 +103,7 @@ export const FEE_TIERS = {
  * import { PublicKey } from "@solana/web3.js";
  * import { BN } from "@coral-xyz/anchor";
  * import Decimal from "decimal.js";
- * 
+ *
  * const agent = new SolanaAgentKit(wallet, connection);
  * const depositAmount = new BN(1_000_000_000_000); // 1 million SHARK if SHARK has 6 decimals
  * const depositTokenMint = new PublicKey("DEPOSTI_TOKEN_ADDRESS");
@@ -111,7 +111,7 @@ export const FEE_TIERS = {
  * const initialPrice = new Decimal(0.001);
  * const maxPrice = new Decimal(5.0);
  * const feeTier = 0.30;
- * 
+ *
  * const txId = await createOrcaSingleSidedWhirlpool(
  *   agent,
  *   depositAmount,
@@ -134,13 +134,19 @@ export async function createOrcaSingleSidedWhirlpool(
   feeTier: keyof typeof FEE_TIERS,
 ): Promise<string> {
   const wallet = new Wallet(agent.wallet);
-  const ctx = WhirlpoolContext.from(agent.connection, wallet, ORCA_WHIRLPOOL_PROGRAM_ID);
+  const ctx = WhirlpoolContext.from(
+    agent.connection,
+    wallet,
+    ORCA_WHIRLPOOL_PROGRAM_ID,
+  );
   const fetcher = ctx.fetcher;
 
-  const correctTokenOrder = PoolUtil.orderMints(otherTokenMint, depositTokenMint).map(
-    (addr) => addr.toString(),
-  );
-  const isCorrectMintOrder = correctTokenOrder[0] === depositTokenMint.toString();
+  const correctTokenOrder = PoolUtil.orderMints(
+    otherTokenMint,
+    depositTokenMint,
+  ).map((addr) => addr.toString());
+  const isCorrectMintOrder =
+    correctTokenOrder[0] === depositTokenMint.toString();
   let mintA, mintB;
   if (isCorrectMintOrder) {
     [mintA, mintB] = [depositTokenMint, otherTokenMint];
@@ -151,10 +157,18 @@ export async function createOrcaSingleSidedWhirlpool(
   }
   const mintAAccount = await fetcher.getMintInfo(mintA);
   const mintBAccount = await fetcher.getMintInfo(mintB);
-  if (mintAAccount === null || mintBAccount === null) throw Error('Mint account not found');
+  if (mintAAccount === null || mintBAccount === null)
+    throw Error("Mint account not found");
   const tickSpacing = FEE_TIERS[feeTier];
-  const tickIndex = PriceMath.priceToTickIndex(initialPrice, mintAAccount.decimals, mintBAccount.decimals);
-  const initialTick = TickUtil.getInitializableTickIndex(tickIndex, tickSpacing);
+  const tickIndex = PriceMath.priceToTickIndex(
+    initialPrice,
+    mintAAccount.decimals,
+    mintBAccount.decimals,
+  );
+  const initialTick = TickUtil.getInitializableTickIndex(
+    tickIndex,
+    tickSpacing,
+  );
 
   const tokenExtensionCtx: TokenExtensionContextForPool = {
     ...NO_TOKEN_EXTENSION_CONTEXT,
@@ -196,17 +210,17 @@ export async function createOrcaSingleSidedWhirlpool(
     tokenVaultBKeypair,
     feeTierKey,
     tickSpacing: tickSpacing,
-    funder: wallet.publicKey
+    funder: wallet.publicKey,
   };
   const initPoolIx = !TokenExtensionUtil.isV2IxRequiredPool(tokenExtensionCtx)
     ? WhirlpoolIx.initializePoolIx(ctx.program, baseParamsPool)
     : WhirlpoolIx.initializePoolV2Ix(ctx.program, {
-      ...baseParamsPool,
-      tokenProgramA: tokenExtensionCtx.tokenMintWithProgramA.tokenProgram,
-      tokenProgramB: tokenExtensionCtx.tokenMintWithProgramB.tokenProgram,
-      tokenBadgeA,
-      tokenBadgeB,
-    });
+        ...baseParamsPool,
+        tokenProgramA: tokenExtensionCtx.tokenMintWithProgramA.tokenProgram,
+        tokenProgramB: tokenExtensionCtx.tokenMintWithProgramB.tokenProgram,
+        tokenBadgeA,
+        tokenBadgeB,
+      });
   const initialTickArrayStartTick = TickUtil.getStartTickIndex(
     initialTick,
     tickSpacing,
@@ -235,14 +249,32 @@ export async function createOrcaSingleSidedWhirlpool(
   let tickLowerIndex, tickUpperIndex;
   if (isCorrectMintOrder) {
     tickLowerIndex = initialTick;
-    tickUpperIndex = PriceMath.priceToTickIndex(maxPrice, mintAAccount.decimals, mintBAccount.decimals);
+    tickUpperIndex = PriceMath.priceToTickIndex(
+      maxPrice,
+      mintAAccount.decimals,
+      mintBAccount.decimals,
+    );
   } else {
-    tickLowerIndex = PriceMath.priceToTickIndex(maxPrice, mintAAccount.decimals, mintBAccount.decimals);
+    tickLowerIndex = PriceMath.priceToTickIndex(
+      maxPrice,
+      mintAAccount.decimals,
+      mintBAccount.decimals,
+    );
     tickUpperIndex = initialTick;
   }
-  const tickLowerInitializableIndex = TickUtil.getInitializableTickIndex(tickLowerIndex, tickSpacing);
-  const tickUpperInitializableIndex = TickUtil.getInitializableTickIndex(tickUpperIndex, tickSpacing);
-  if (!TickUtil.checkTickInBounds(tickLowerInitializableIndex) || !TickUtil.checkTickInBounds(tickUpperInitializableIndex)) throw Error('Prices out of bounds');
+  const tickLowerInitializableIndex = TickUtil.getInitializableTickIndex(
+    tickLowerIndex,
+    tickSpacing,
+  );
+  const tickUpperInitializableIndex = TickUtil.getInitializableTickIndex(
+    tickUpperIndex,
+    tickSpacing,
+  );
+  if (
+    !TickUtil.checkTickInBounds(tickLowerInitializableIndex) ||
+    !TickUtil.checkTickInBounds(tickUpperInitializableIndex)
+  )
+    throw Error("Prices out of bounds");
   const increasLiquidityQuoteParam: IncreaseLiquidityQuoteParam = {
     inputTokenAmount: new BN(depositTokenAmount),
     inputTokenMint: depositTokenMint,
@@ -253,11 +285,11 @@ export async function createOrcaSingleSidedWhirlpool(
     tickLowerIndex: tickLowerInitializableIndex,
     tickUpperIndex: tickUpperInitializableIndex,
     tokenExtensionCtx: tokenExtensionCtx,
-    slippageTolerance: Percentage.fromFraction(0, 100)
-  }
+    slippageTolerance: Percentage.fromFraction(0, 100),
+  };
   const liquidityInput = increaseLiquidityQuoteByInputTokenWithParams(
-    increasLiquidityQuoteParam
-  )
+    increasLiquidityQuoteParam,
+  );
   const { liquidityAmount: liquidity, tokenMaxA, tokenMaxB } = liquidityInput;
 
   const positionMintKeypair = Keypair.generate();
@@ -285,7 +317,7 @@ export async function createOrcaSingleSidedWhirlpool(
     ...params,
     positionMint: positionMintPubkey,
     withTokenMetadataExtension: true,
-  })
+  });
 
   txBuilder.addInstruction(positionIx);
   txBuilder.addSigner(positionMintKeypair);
@@ -365,35 +397,33 @@ export async function createOrcaSingleSidedWhirlpool(
     tickArrayUpper: tickArrayUpperPda.publicKey,
   };
 
-  const liquidityIx = !TokenExtensionUtil.isV2IxRequiredPool(
-    tokenExtensionCtx,
-  )
+  const liquidityIx = !TokenExtensionUtil.isV2IxRequiredPool(tokenExtensionCtx)
     ? increaseLiquidityIx(ctx.program, baseParamsLiquidity)
     : increaseLiquidityV2Ix(ctx.program, {
-      ...baseParamsLiquidity,
-      tokenMintA: mintA,
-      tokenMintB: mintB,
-      tokenProgramA: tokenExtensionCtx.tokenMintWithProgramA.tokenProgram,
-      tokenProgramB: tokenExtensionCtx.tokenMintWithProgramB.tokenProgram,
-    });
+        ...baseParamsLiquidity,
+        tokenMintA: mintA,
+        tokenMintB: mintB,
+        tokenProgramA: tokenExtensionCtx.tokenMintWithProgramA.tokenProgram,
+        tokenProgramB: tokenExtensionCtx.tokenMintWithProgramB.tokenProgram,
+      });
   txBuilder.addInstruction(liquidityIx);
 
   const txPayload = await txBuilder.build({
-    maxSupportedTransactionVersion: "legacy"
+    maxSupportedTransactionVersion: "legacy",
   });
 
   if (txPayload.transaction instanceof Transaction) {
     try {
-      const txId = await sendTx(
-        agent,
-        txPayload.transaction,
-        [positionMintKeypair, tokenVaultAKeypair, tokenVaultBKeypair],
-      );
+      const txId = await sendTx(agent, txPayload.transaction, [
+        positionMintKeypair,
+        tokenVaultAKeypair,
+        tokenVaultBKeypair,
+      ]);
       return txId;
     } catch (error) {
-        throw new Error(`Failed to create pool: ${JSON.stringify(error)}`);
+      throw new Error(`Failed to create pool: ${JSON.stringify(error)}`);
     }
   } else {
-    throw new Error('Failed to create pool: Transaction not created');
+    throw new Error("Failed to create pool: Transaction not created");
   }
 }

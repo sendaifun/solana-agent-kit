@@ -1,11 +1,15 @@
 import { SolanaAgentKit } from "../index";
-import { generateSigner, keypairIdentity } from '@metaplex-foundation/umi';
-import { create, mplCore } from '@metaplex-foundation/mpl-core';
-import { fetchCollection } from '@metaplex-foundation/mpl-core';
+import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
+import { create, mplCore } from "@metaplex-foundation/mpl-core";
+import { fetchCollection } from "@metaplex-foundation/mpl-core";
 import { PublicKey } from "@solana/web3.js";
-import { fromWeb3JsKeypair, fromWeb3JsPublicKey, toWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-import { MintCollectionNFTResponse } from '../types';
+import {
+  fromWeb3JsKeypair,
+  fromWeb3JsPublicKey,
+  toWeb3JsPublicKey,
+} from "@metaplex-foundation/umi-web3js-adapters";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { MintCollectionNFTResponse } from "../types";
 
 /**
  * Mint a new NFT as part of an existing collection
@@ -27,7 +31,7 @@ export async function mintCollectionNFT(
       share: number;
     }>;
   },
-  recipient?: PublicKey
+  recipient?: PublicKey,
 ): Promise<MintCollectionNFTResponse> {
   try {
     // Create UMI instance from agent
@@ -49,13 +53,13 @@ export async function mintCollectionNFT(
       collection: collection,
       name: metadata.name,
       uri: metadata.uri,
-      owner: fromWeb3JsPublicKey(recipient ?? agent.wallet.publicKey)
+      owner: fromWeb3JsPublicKey(recipient ?? agent.wallet.publicKey),
     }).sendAndConfirm(umi);
 
     return {
       mint: toWeb3JsPublicKey(assetSigner.publicKey),
       // Note: Token account is now handled automatically by the create instruction
-      metadata: toWeb3JsPublicKey(assetSigner.publicKey)
+      metadata: toWeb3JsPublicKey(assetSigner.publicKey),
     };
   } catch (error: any) {
     throw new Error(`Collection NFT minting failed: ${error.message}`);

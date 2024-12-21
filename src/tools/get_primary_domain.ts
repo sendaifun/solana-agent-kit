@@ -16,22 +16,22 @@ import { SolanaAgentKit } from "../index";
  */
 export async function getPrimaryDomain(
   agent: SolanaAgentKit,
-  account: PublicKey
+  account: PublicKey,
 ): Promise<string> {
   try {
     const { reverse, stale } = await _getPrimaryDomain(
       agent.connection,
-      account
+      account,
     );
     if (stale) {
       throw new Error(
-        `Primary domain is stale for account: ${account.toBase58()}`
+        `Primary domain is stale for account: ${account.toBase58()}`,
       );
     }
     return reverse;
   } catch (error) {
     throw new Error(
-      `Failed to get primary domain for account: ${account.toBase58()}`
+      `Failed to get primary domain for account: ${account.toBase58()}`,
     );
   }
 }

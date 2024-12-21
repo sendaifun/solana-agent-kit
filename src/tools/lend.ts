@@ -1,6 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import { LuloAccountDetailsResponse } from "../types";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../index";
 
 /**
  * Lend tokens for yields using Lulo
@@ -10,7 +9,7 @@ import { SolanaAgentKit } from "../agent";
  */
 export async function lendAsset(
   agent: SolanaAgentKit,
-  amount: number
+  amount: number,
 ): Promise<string> {
   try {
     const response = await fetch(
@@ -23,14 +22,14 @@ export async function lendAsset(
         body: JSON.stringify({
           account: agent.wallet.publicKey.toBase58(),
         }),
-      }
+      },
     );
 
     const data = await response.json();
 
     // Deserialize the transaction
     const luloTxn = VersionedTransaction.deserialize(
-      Buffer.from(data.transaction, "base64")
+      Buffer.from(data.transaction, "base64"),
     );
 
     // Get a recent blockhash and set it

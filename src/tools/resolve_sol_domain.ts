@@ -16,7 +16,7 @@ import { SolanaAgentKit } from "../index";
  */
 export async function resolveSolDomain(
   agent: SolanaAgentKit,
-  domain: string
+  domain: string,
 ): Promise<PublicKey> {
   if (!domain || typeof domain !== "string") {
     throw new Error("Invalid domain. Expected a non-empty string.");
