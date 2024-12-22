@@ -29,6 +29,12 @@ import {
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { getAllDomainsTLDs } from "../tools/get_all_domains_tlds";
+import { getOwnedAllDomains } from "../tools/get_all_owned_domains";
+import { getAllRegisteredAllDomains } from "../tools/get_all_registered_all_domains";
+import { getMainAllDomainsDomain } from "../tools/get_main_all_domains_domain";
+import { getOwnedDomainsForTLD } from "../tools/get_owned_domains_for_tld";
+import { resolveAllDomains } from "../tools/resolve_all_domains";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -269,5 +275,29 @@ export class SolanaAgentKit {
       lotSize,
       tickSize,
     )
+  }
+
+  async resolveAllDomains(domain: string) {
+    return resolveAllDomains(this, domain);
+  }
+
+  async getOwnedAllDomains(owner: PublicKey) {
+    return getOwnedAllDomains(this, owner);
+  }
+
+  async getOwnedDomainsForTLD(tld: string) {
+    return getOwnedDomainsForTLD(this, tld);
+  }
+
+  async getAllDomainsTLDs() {
+    return getAllDomainsTLDs(this);
+  }
+
+  async getAllRegisteredAllDomains() {
+    return getAllRegisteredAllDomains(this);
+  }
+
+  async getMainAllDomainsDomain(owner: PublicKey) {
+    return getMainAllDomainsDomain(this, owner);
   }
 }
