@@ -19,7 +19,7 @@ export async function create_TipLink(
   agent: SolanaAgentKit,
   amountSol: number,
 ): Promise<{
-  url: string;
+  url: string,
   signature: string;
 }> {
   try {
@@ -41,6 +41,9 @@ export async function create_TipLink(
       [agent.wallet],
       { commitment: "confirmed" },
     );
+    if(signature===null){
+      throw "Unable to find tiplink's Public key"
+    }
 
     return {
       url: tiplink.url.toString(),
