@@ -10,7 +10,6 @@ import { create_image } from "../tools/create_image";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 import { toJSON } from "../utils/toJSON";
-import { TipLink } from "@tiplink/api"
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
