@@ -77,3 +77,11 @@ export interface FetchPriceResponse {
   message?: string;
   code?: string;
 }
+
+export interface PythFetchPriceResponse {
+  status: "success" | "error";
+  priceFeedID: string;
+  price?: string;
+  message?: string;
+  code?: string;
+}

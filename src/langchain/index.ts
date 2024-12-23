@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../index";
+import { PythFetchPriceResponse, SolanaAgentKit } from "../index";
 import { create_image } from "../tools/create_image";
 import { fetchPrice } from "../tools/fetch_price";
 import { BN } from "@coral-xyz/anchor";
@@ -980,6 +980,38 @@ export class SolanaOpenbookCreateMarket extends Tool {
   }
 }
 
+export class SolanaPythFetchPrice extends Tool {
+  name = "solana_pyth_fetch_price";
+  description = `Fetch the price of a given price feed from Pyth's Hermes service
+
+  Inputs:
+  priceFeedID: string, the price feed ID, e.g., "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43" for BTC/USD`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const price = await this.solanaKit.pythFetchPrice(input);
+      let response: PythFetchPriceResponse = {
+        status: "success",
+        priceFeedID: input,
+        price: price,
+      };
+      return JSON.stringify(response);
+    } catch (error: any) {
+      let response: PythFetchPriceResponse = {
+        status: "error",
+        priceFeedID: input,
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      };
+      return JSON.stringify(response);
+    }
+  }
+}
+
 export class SolanaResolveAllDomainsTool extends Tool {
   name = "solana_resolve_all_domains";
   description = `Resolve a domain from the AllDomains service to a corresponding Solana PublicKey. 
@@ -1191,5 +1223,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetAllDomainsTLDsTool(solanaKit),
     new SolanaGetAllRegisteredAllDomainsTool(solanaKit),
     new SolanaGetMainAllDomainsDomainTool(solanaKit),
+    new SolanaPythFetchPrice(solanaKit),
   ];
 }
+

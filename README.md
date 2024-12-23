@@ -9,7 +9,7 @@
 An open-source toolkit for connecting AI agents to Solana protocols. Now, any agent, using any model can autonomously perform 15+ Solana actions:
 
 - Trade tokens
-- Launch new tokens 
+- Launch new tokens
 - Lend assets
 - Send compressed airdrops
 - Execute blinks
@@ -96,10 +96,10 @@ const tools = createSolanaTools(agent);
 ### Deploy a New Token
 
 ```typescript
-import { deploy_token } from "solana-agent-kit";
-
-const result = await deploy_token(
-  agent,
+const result = await agent.deployToken(
+  "my ai token", // name
+  "uri", // uri
+  "token", // symbol
   9, // decimals
   1000000 // initial supply
 );
@@ -110,9 +110,7 @@ console.log("Token Mint Address:", result.mint.toString());
 ### Create NFT Collection
 
 ```typescript
-import { deploy_collection } from "solana-agent-kit";
-
-const collection = await deploy_collection(agent, {
+const collection = await agent.deployCollection({
   name: "My NFT Collection",
   uri: "https://arweave.net/metadata.json",
   royaltyBasisPoints: 500, // 5%
@@ -128,11 +126,9 @@ const collection = await deploy_collection(agent, {
 ### Swap Tokens
 
 ```typescript
-import { trade } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await trade(
-  agent,
+const signature = await agent.trade(
   new PublicKey("target-token-mint"),
   100, // amount
   new PublicKey("source-token-mint"),
@@ -143,46 +139,24 @@ const signature = await trade(
 ### Lend Tokens
 
 ```typescript
-import { lendAsset } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await lendAsset(
-  agent,
-  100 // amount
+const signature = await agent.lendAssets(
+  100 // amount of USDC to lend
 );
 ```
 
 ### Stake SOL
 
 ```typescript
-import { stakeWithJup } from "solana-agent-kit";
-
-const signature = await stakeWithJup(
-  agent,
-  1 // amount in SOL
+const signature = await agent.stake(
+  1 // amount in SOL to stake
 );
-```
-
-### Fetch Token Price
-
-```typescript
-import { fetchPrice } from "solana-agent-kit";
-
-const price = await fetchPrice(
-  agent,
-  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" // Token mint address
-);
-
-console.log("Price in USDC:", price);
 ```
 
 ### Send an SPL Token Airdrop via ZK Compression
 
 ```typescript
-import {
-  sendCompressedAirdrop,
-  getAirdropCostEstimate,
-} from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
 (async () => {
@@ -194,8 +168,7 @@ import { PublicKey } from "@solana/web3.js";
     )
   );
 
-  const signature = await sendCompressedAirdrop(
-    agent,
+  const signature = await agent.sendCompressedAirdrop(
     new PublicKey("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"), // mint
     42, // amount per recipient
     [
@@ -205,6 +178,19 @@ import { PublicKey } from "@solana/web3.js";
     30_000 // priority fee in lamports
   );
 })();
+```
+
+### Fetch Price Data from Pyth
+
+```typescript
+import { pythFetchPrice } from "solana-agent-kit";
+
+const price = await pythFetchPrice(
+  agent,
+  "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
+);
+
+console.log("Price in BTC/USD:", price);
 ```
 
 ## API Reference
@@ -247,6 +233,10 @@ Stake SOL with Jupiter to earn rewards.
 
 Send an SPL token airdrop to many recipients at low cost via ZK Compression.
 
+#### `pythFetchPrice(agent, priceFeedID)`
+
+Fetch price data from Pyth's Hermes service.
+
 ## Dependencies
 
 The toolkit relies on several key Solana and Metaplex libraries:
@@ -258,6 +248,7 @@ The toolkit relies on several key Solana and Metaplex libraries:
 - @metaplex-foundation/umi
 - @lightprotocol/compressed-token
 - @lightprotocol/stateless.js
+- @pythnetwork/price-service-client
 
 ## Contributing
 
