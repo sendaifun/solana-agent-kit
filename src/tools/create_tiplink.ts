@@ -4,7 +4,13 @@ import {
   SystemProgram,
   LAMPORTS_PER_SOL,
   sendAndConfirmTransaction,
+  PublicKey,
 } from "@solana/web3.js";
+import { 
+  getAssociatedTokenAddress, 
+  createTransferInstruction,
+  getMint
+} from "@solana/spl-token";
 import { SolanaAgentKit } from "../index";
 
 /**
@@ -17,7 +23,8 @@ import { SolanaAgentKit } from "../index";
  */
 export async function create_TipLink(
   agent: SolanaAgentKit,
-  amountSol: number,
+  amount: number,
+  splmintAddress?:PublicKey,
 ): Promise<{
   url: string,
   signature: string;
@@ -25,31 +32,61 @@ export async function create_TipLink(
   try {
     // Create a new TipLink
     const tiplink = await TipLink.create();
+    if(!splmintAddress){
+      const tiplink = await TipLink.create();
 
-    const transaction = new Transaction();
-    transaction.add(
-      SystemProgram.transfer({
-        fromPubkey: agent.wallet_address,
-        toPubkey: tiplink.keypair.publicKey,
-        lamports: amountSol * LAMPORTS_PER_SOL,
-      }),
-    );
+      const transaction = new Transaction();
+      transaction.add(
+        SystemProgram.transfer({
+          fromPubkey: agent.wallet_address,
+          toPubkey: tiplink.keypair.publicKey,
+          lamports: amount * LAMPORTS_PER_SOL,
+        }),
+      );
+  
+      const signature = await sendAndConfirmTransaction(
+        agent.connection,
+        transaction,
+        [agent.wallet],
+        { commitment: "confirmed" },
+      );
+      if(signature===null){
+        throw "Unable to find tiplink's Public key"
+      }
+      return{
+        url: tiplink.url.toString(),
+        signature,
+      };
+    }else{
+      const fromAta = await getAssociatedTokenAddress(splmintAddress, agent.wallet_address);
+      const toAta = await getAssociatedTokenAddress(splmintAddress,tiplink.keypair.publicKey);
+      
+      // Get mint info to determine decimals
+      const mintInfo = await getMint(agent.connection, splmintAddress);
+      const adjustedAmount = amount * Math.pow(10, mintInfo.decimals);
 
-    const signature = await sendAndConfirmTransaction(
-      agent.connection,
-      transaction,
-      [agent.wallet],
-      { commitment: "confirmed" },
-    );
-    if(signature===null){
-      throw "Unable to find tiplink's Public key"
-    }
+      const transaction = new Transaction().add(
+        createTransferInstruction(
+          fromAta,
+          toAta,
+          agent.wallet_address,
+          adjustedAmount
+        )
+      );
 
-    return {
-      url: tiplink.url.toString(),
-      signature,
-    };
+      const signature = await sendAndConfirmTransaction(
+        agent.connection,
+        transaction,
+        [agent.wallet]
+      );
+      return  {
+        url: tiplink.url.toString(),
+        signature,
+      };
+    } 
   } catch (error: any) {
     throw new Error(`Failed to create TipLink: ${error.message}`);
   }
 }
+
+
