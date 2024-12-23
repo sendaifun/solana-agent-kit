@@ -776,7 +776,11 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
       const feeTier = inputFormat.feeTier;
 
       if (!feeTier || !(feeTier in FEE_TIERS)) {
-        throw new Error(`Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(", ")}`);
+        throw new Error(
+          `Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(
+            ", "
+          )}`
+        );
       }
 
       const txId = await this.solanaKit.createOrcaSingleSidedWhirlpool(
@@ -785,7 +789,7 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
         otherTokenMint,
         initialPrice,
         maxPrice,
-        feeTier,
+        feeTier
       );
 
       return JSON.stringify({
@@ -802,7 +806,6 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
     }
   }
 }
-
 
 export class SolanaRaydiumCreateAmmV4 extends Tool {
   name = "raydium_create_ammV4";
@@ -821,13 +824,13 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      let inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateAmmV4(
         new PublicKey(inputFormat.marketId),
         new BN(inputFormat.baseAmount),
         new BN(inputFormat.quoteAmount),
-        new BN(inputFormat.startTime),
+        new BN(inputFormat.startTime)
       );
 
       return JSON.stringify({
@@ -863,7 +866,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      let inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateClmm(
         new PublicKey(inputFormat.mint1),
@@ -872,7 +875,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
         new PublicKey(inputFormat.configId),
 
         new Decimal(inputFormat.initialPrice),
-        new BN(inputFormat.startTime),
+        new BN(inputFormat.startTime)
       );
 
       return JSON.stringify({
@@ -909,7 +912,7 @@ export class SolanaRaydiumCreateCpmm extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      let inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateCpmm(
         new PublicKey(inputFormat.mint1),
@@ -920,12 +923,162 @@ export class SolanaRaydiumCreateCpmm extends Tool {
         new BN(inputFormat.mintAAmount),
         new BN(inputFormat.mintBAmount),
 
-        new BN(inputFormat.startTime),
+        new BN(inputFormat.startTime)
       );
 
       return JSON.stringify({
         status: "success",
         message: "Create raydium cpmm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumAddLiquidityAmm extends Tool {
+  name = "raydium_add_liquidity_amm";
+  description = `Raydium add liquidity to amm pool
+
+  Inputs (input is a json string):
+  poolId: string (required)
+  inputAmount: number, eg: 1 (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+
+      const tx = await this.solanaKit.raydiumAddLiquidityAmm(
+        inputFormat.poolId,
+        new Decimal(inputFormat.inputAmount)
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Add liquidity to amm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumRemoveLiquidityAmm extends Tool {
+  name = "raydium_remove_liquidity_amm";
+  description = `Raydium remove liquidity from amm pool
+
+  Inputs (input is a json string):
+  poolId: string (required)
+  withdrawLpAmount: number(int), eg: 1 (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+
+      const tx = await this.solanaKit.raydiumRemoveLiquidityAmm(
+        inputFormat.poolId,
+        new BN(inputFormat.withdrawLpAmount)
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Remove liquidity from amm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumOpenPositionClmm extends Tool {
+  name = "raydium_open_position_clmm";
+  description = `Raydium open position in clmm pool
+
+  Inputs (input is a json string):
+  poolId: string (required)
+  inputAmount: number, eg: 1 (required)
+  startPrice: number, eg: 123.12 (required)
+  endPrice: number, eg: 123.12 (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+
+      const tx = await this.solanaKit.raydiumOpenPositionClmm(
+        inputFormat.poolId,
+        new Decimal(inputFormat.inputAmount),
+        new Decimal(inputFormat.startPrice),
+        new Decimal(inputFormat.endPrice)
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Open position in clmm pool successfully",
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRaydiumClosePositionClmm extends Tool {
+  name = "raydium_close_position_clmm";
+  description = `Raydium close position in clmm pool
+
+  Inputs (input is a json string):
+  poolId: string (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      let inputFormat = JSON.parse(input);
+
+      const tx = await this.solanaKit.raydiumClosePositionClmm(
+        inputFormat.poolId
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Close position in clmm pool successfully",
         transaction: tx,
       });
     } catch (error: any) {
@@ -955,14 +1108,14 @@ export class SolanaOpenbookCreateMarket extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      let inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.openbookCreateMarket(
         new PublicKey(inputFormat.baseMint),
         new PublicKey(inputFormat.quoteMint),
 
         inputFormat.lotSize,
-        inputFormat.tickSize,
+        inputFormat.tickSize
       );
 
       return JSON.stringify({
@@ -1005,6 +1158,10 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaRaydiumCreateAmmV4(solanaKit),
     new SolanaRaydiumCreateClmm(solanaKit),
     new SolanaRaydiumCreateCpmm(solanaKit),
+    new SolanaRaydiumAddLiquidityAmm(solanaKit),
+    new SolanaRaydiumRemoveLiquidityAmm(solanaKit),
+    new SolanaRaydiumOpenPositionClmm(solanaKit),
+    new SolanaRaydiumClosePositionClmm(solanaKit),
     new SolanaOpenbookCreateMarket(solanaKit),
     new SolanaCreateSingleSidedWhirlpoolTool(solanaKit),
   ];

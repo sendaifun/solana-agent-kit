@@ -1,4 +1,4 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";;
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
@@ -16,6 +16,10 @@ import {
   raydiumCreateAmmV4,
   raydiumCreateClmm,
   raydiumCreateCpmm,
+  raydiumAddLiquidityAmm,
+  raydiumRemoveLiquidityAmm,
+  raydiumOpenPositionClmm,
+  raydiumClosePositionClmm,
   registerDomain,
   request_faucet_funds,
   trade,
@@ -25,7 +29,7 @@ import {
   stakeWithJup,
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
-  FEE_TIERS
+  FEE_TIERS,
 } from "../tools";
 import { CollectionOptions, PumpFunTokenOptions } from "../types";
 import { BN } from "@coral-xyz/anchor";
@@ -174,7 +178,7 @@ export class SolanaAgentKit {
     otherTokenMint: PublicKey,
     initialPrice: Decimal,
     maxPrice: Decimal,
-    feeTier: keyof typeof FEE_TIERS,
+    feeTier: keyof typeof FEE_TIERS
   ) {
     return createOrcaSingleSidedWhirlpool(
       this,
@@ -184,7 +188,7 @@ export class SolanaAgentKit {
       initialPrice,
       maxPrice,
       feeTier
-    )
+    );
   }
 
   async raydiumCreateAmmV4(
@@ -193,7 +197,7 @@ export class SolanaAgentKit {
     baseAmount: BN,
     quoteAmount: BN,
 
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateAmmV4(
       this,
@@ -202,8 +206,8 @@ export class SolanaAgentKit {
       baseAmount,
       quoteAmount,
 
-      startTime,
-    )
+      startTime
+    );
   }
 
   async raydiumCreateClmm(
@@ -213,7 +217,7 @@ export class SolanaAgentKit {
     configId: PublicKey,
 
     initialPrice: Decimal,
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateClmm(
       this,
@@ -224,8 +228,8 @@ export class SolanaAgentKit {
       configId,
 
       initialPrice,
-      startTime,
-    )
+      startTime
+    );
   }
 
   async raydiumCreateCpmm(
@@ -237,7 +241,7 @@ export class SolanaAgentKit {
     mintAAmount: BN,
     mintBAmount: BN,
 
-    startTime: BN,
+    startTime: BN
   ) {
     return raydiumCreateCpmm(
       this,
@@ -250,8 +254,35 @@ export class SolanaAgentKit {
       mintAAmount,
       mintBAmount,
 
-      startTime,
-    )
+      startTime
+    );
+  }
+
+  async raydiumAddLiquidityAmm(poolId: string, inputAmount: Decimal) {
+    return raydiumAddLiquidityAmm(this, poolId, inputAmount);
+  }
+
+  async raydiumRemoveLiquidityAmm(poolId: string, withdrawLpAmount: BN) {
+    return raydiumRemoveLiquidityAmm(this, poolId, withdrawLpAmount);
+  }
+
+  async raydiumOpenPositionClmm(
+    poolId: string,
+    inputAmount: Decimal,
+    startPrice: Decimal,
+    endPrice: Decimal
+  ) {
+    return raydiumOpenPositionClmm(
+      this,
+      poolId,
+      inputAmount,
+      startPrice,
+      endPrice
+    );
+  }
+
+  async raydiumClosePositionClmm(poolId: string) {
+    return raydiumClosePositionClmm(this, poolId);
   }
 
   async openbookCreateMarket(
@@ -259,7 +290,7 @@ export class SolanaAgentKit {
     quoteMint: PublicKey,
 
     lotSize: number = 1,
-    tickSize: number = 0.01,
+    tickSize: number = 0.01
   ) {
     return openbookCreateMarket(
       this,
@@ -267,7 +298,7 @@ export class SolanaAgentKit {
       quoteMint,
 
       lotSize,
-      tickSize,
-    )
+      tickSize
+    );
   }
 }
