@@ -1,23 +1,27 @@
 // src/tools/launch_pumpfun_token.ts
 import { VersionedTransaction, Keypair } from "@solana/web3.js";
-import { PumpFunTokenOptions, SolanaAgentKit } from "../index";
+import {
+  PumpfunLaunchResponse,
+  PumpFunTokenOptions,
+  SolanaAgentKit,
+} from "../index";
 
 async function uploadMetadata(
-  tokenName: string, 
+  tokenName: string,
   tokenTicker: string,
   description: string,
   imageUrl: string,
-  options?: PumpFunTokenOptions
+  options?: PumpFunTokenOptions,
 ): Promise<any> {
   // Create metadata object
   const formData = new URLSearchParams();
-  formData.append('name', tokenName);
+  formData.append("name", tokenName);
   formData.append("symbol", tokenTicker);
   formData.append("description", description);
 
   formData.append("showName", "true");
 
-  if (options?.twitter) formData.append('twitter', options.twitter);
+  if (options?.twitter) formData.append("twitter", options.twitter);
   if (options?.telegram) formData.append("telegram", options.telegram);
   if (options?.website) formData.append("website", options.website);
 
@@ -35,13 +39,12 @@ async function uploadMetadata(
   }
   // Add file if exists
   if (files?.file) {
-    finalFormData.append('file', files.file);
+    finalFormData.append("file", files.file);
   }
-
 
   const metadataResponse = await fetch("https://pump.fun/api/ipfs", {
     method: "POST",
-    body: finalFormData
+    body: finalFormData,
   });
 
   if (!metadataResponse.ok) {
@@ -55,7 +58,7 @@ async function createTokenTransaction(
   agent: SolanaAgentKit,
   mintKeypair: Keypair,
   metadataResponse: any,
-  options?: PumpFunTokenOptions
+  options?: PumpFunTokenOptions,
 ) {
   const payload = {
     publicKey: agent.wallet_address.toBase58(),
@@ -78,12 +81,14 @@ async function createTokenTransaction(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Transaction creation failed: ${response.status} - ${errorText}`);
+    throw new Error(
+      `Transaction creation failed: ${response.status} - ${errorText}`,
+    );
   }
 
   return response;
@@ -92,12 +97,13 @@ async function createTokenTransaction(
 async function signAndSendTransaction(
   kit: SolanaAgentKit,
   tx: VersionedTransaction,
-  mintKeypair: Keypair
+  mintKeypair: Keypair,
 ) {
   try {
     // Get the latest blockhash
-    const { blockhash, lastValidBlockHeight } = await kit.connection.getLatestBlockhash();
-    
+    const { blockhash, lastValidBlockHeight } =
+      await kit.connection.getLatestBlockhash();
+
     // Update transaction with latest blockhash
     tx.message.recentBlockhash = blockhash;
 
@@ -107,15 +113,15 @@ async function signAndSendTransaction(
     // Send and confirm transaction with options
     const signature = await kit.connection.sendTransaction(tx, {
       skipPreflight: false,
-      preflightCommitment: 'confirmed',
-      maxRetries: 5
+      preflightCommitment: "confirmed",
+      maxRetries: 5,
     });
 
     // Wait for confirmation
     const confirmation = await kit.connection.confirmTransaction({
       signature,
       blockhash,
-      lastValidBlockHeight
+      lastValidBlockHeight,
     });
 
     if (confirmation.value.err) {
@@ -124,9 +130,9 @@ async function signAndSendTransaction(
 
     return signature;
   } catch (error) {
-    console.error('Transaction send error:', error);
-    if (error instanceof Error && 'logs' in error) {
-      console.error('Transaction logs:', error.logs);
+    console.error("Transaction send error:", error);
+    if (error instanceof Error && "logs" in error) {
+      console.error("Transaction logs:", error.logs);
     }
     throw error;
   }
@@ -140,6 +146,7 @@ async function signAndSendTransaction(
  * @param description - Description of the token
  * @param imageUrl - URL of the token image
  * @param options - Optional token options (twitter, telegram, website, initialLiquiditySOL, slippageBps, priorityFee)
+ * @returns - Signature of the transaction, mint address and metadata URI, if successful, else error
  */
 export async function launchPumpFunToken(
   agent: SolanaAgentKit,
@@ -147,15 +154,27 @@ export async function launchPumpFunToken(
   tokenTicker: string,
   description: string,
   imageUrl: string,
-  options?: PumpFunTokenOptions
-) {
+  options?: PumpFunTokenOptions,
+): Promise<PumpfunLaunchResponse> {
   try {
-
     const mintKeypair = Keypair.generate();
-    const metadataResponse = await uploadMetadata(tokenName, tokenTicker, description, imageUrl, options);
-    const response = await createTokenTransaction(agent, mintKeypair, metadataResponse, options);
+    const metadataResponse = await uploadMetadata(
+      tokenName,
+      tokenTicker,
+      description,
+      imageUrl,
+      options,
+    );
+    const response = await createTokenTransaction(
+      agent,
+      mintKeypair,
+      metadataResponse,
+      options,
+    );
     const transactionData = await response.arrayBuffer();
-    const tx = VersionedTransaction.deserialize(new Uint8Array(transactionData));
+    const tx = VersionedTransaction.deserialize(
+      new Uint8Array(transactionData),
+    );
     const signature = await signAndSendTransaction(agent, tx, mintKeypair);
 
     return {
@@ -163,11 +182,10 @@ export async function launchPumpFunToken(
       mint: mintKeypair.publicKey.toBase58(),
       metadataUri: metadataResponse.metadataUri,
     };
-
   } catch (error) {
     console.error("Error in launchpumpfuntoken:", error);
-    if (error instanceof Error && 'logs' in error) {
-      console.error('Transaction logs:', (error as any).logs);
+    if (error instanceof Error && "logs" in error) {
+      console.error("Transaction logs:", (error as any).logs);
     }
     throw error;
   }

@@ -19,7 +19,7 @@ Create a new TypeScript file in the `src/tools/` directory for your tool (e.g., 
 
 ### 2. Implement the Tool Class
 
-```typescript:src/tools/custom_tool.ts
+```typescript:src/langchain/index.ts
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../agent";
 
@@ -85,6 +85,8 @@ export function createSolanaTools(agent: SolanaAgentKit) {
 ```
 
 ### 6. Usage Example
+
+Add a code example in the `README.md` file.
 
 ```typescript
 import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";

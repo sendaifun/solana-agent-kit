@@ -34,6 +34,7 @@
     "@metaplex-foundation/umi-web3js-adapters": "^0.9.2",
     "@orca-so/common-sdk": "0.6.4",
     "@orca-so/whirlpools-sdk": "^0.13.12",
+    "@pythnetwork/price-service-client": "^1.9.0",
     "@raydium-io/raydium-sdk-v2": "0.1.95-alpha",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",

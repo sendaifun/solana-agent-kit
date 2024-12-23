@@ -30,8 +30,16 @@ import {
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
   FEE_TIERS,
+  pythFetchPrice,
 } from "../tools";
-import { CollectionOptions, PumpFunTokenOptions } from "../types";
+import {
+  CollectionDeployment,
+  CollectionOptions,
+  JupiterTokenData,
+  MintCollectionNFTResponse,
+  PumpfunLaunchResponse,
+  PumpFunTokenOptions,
+} from "../types";
 import { BN } from "@coral-xyz/anchor";
 
 /**
@@ -71,15 +79,17 @@ export class SolanaAgentKit {
     symbol: string,
     decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
     initialSupply?: number
-  ) {
+  ): Promise<{ mint: PublicKey }> {
     return deploy_token(this, name, uri, symbol, decimals, initialSupply);
   }
 
-  async deployCollection(options: CollectionOptions) {
+  async deployCollection(
+    options: CollectionOptions
+  ): Promise<CollectionDeployment> {
     return deploy_collection(this, options);
   }
 
-  async getBalance(token_address?: PublicKey) {
+  async getBalance(token_address?: PublicKey): Promise<number> {
     return get_balance(this, token_address);
   }
 
@@ -87,23 +97,27 @@ export class SolanaAgentKit {
     collectionMint: PublicKey,
     metadata: Parameters<typeof mintCollectionNFT>[2],
     recipient?: PublicKey
-  ) {
+  ): Promise<MintCollectionNFTResponse> {
     return mintCollectionNFT(this, collectionMint, metadata, recipient);
   }
 
-  async transfer(to: PublicKey, amount: number, mint?: PublicKey) {
+  async transfer(
+    to: PublicKey,
+    amount: number,
+    mint?: PublicKey
+  ): Promise<string> {
     return transfer(this, to, amount, mint);
   }
 
-  async registerDomain(name: string, spaceKB?: number) {
+  async registerDomain(name: string, spaceKB?: number): Promise<string> {
     return registerDomain(this, name, spaceKB);
   }
 
-  async resolveSolDomain(domain: string) {
+  async resolveSolDomain(domain: string): Promise<PublicKey> {
     return resolveSolDomain(this, domain);
   }
 
-  async getPrimaryDomain(account: PublicKey) {
+  async getPrimaryDomain(account: PublicKey): Promise<string> {
     return getPrimaryDomain(this, account);
   }
 
@@ -112,23 +126,27 @@ export class SolanaAgentKit {
     inputAmount: number,
     inputMint?: PublicKey,
     slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS
-  ) {
+  ): Promise<string> {
     return trade(this, outputMint, inputAmount, inputMint, slippageBps);
   }
 
-  async lendAssets(amount: number) {
+  async lendAssets(amount: number): Promise<string> {
     return lendAsset(this, amount);
   }
 
-  async getTPS() {
+  async getTPS(): Promise<number> {
     return getTPS(this);
   }
 
-  async getTokenDataByAddress(mint: string) {
+  async getTokenDataByAddress(
+    mint: string
+  ): Promise<JupiterTokenData | undefined> {
     return getTokenDataByAddress(new PublicKey(mint));
   }
 
-  async getTokenDataByTicker(ticker: string) {
+  async getTokenDataByTicker(
+    ticker: string
+  ): Promise<JupiterTokenData | undefined> {
     return getTokenDataByTicker(ticker);
   }
 
@@ -138,7 +156,7 @@ export class SolanaAgentKit {
     description: string,
     imageUrl: string,
     options?: PumpFunTokenOptions
-  ) {
+  ): Promise<PumpfunLaunchResponse> {
     return launchPumpFunToken(
       this,
       tokenName,
@@ -149,7 +167,7 @@ export class SolanaAgentKit {
     );
   }
 
-  async stake(amount: number) {
+  async stake(amount: number): Promise<string> {
     return stakeWithJup(this, amount);
   }
 
@@ -179,7 +197,7 @@ export class SolanaAgentKit {
     initialPrice: Decimal,
     maxPrice: Decimal,
     feeTier: keyof typeof FEE_TIERS
-  ) {
+  ): Promise<string> {
     return createOrcaSingleSidedWhirlpool(
       this,
       depositTokenAmount,
@@ -193,12 +211,10 @@ export class SolanaAgentKit {
 
   async raydiumCreateAmmV4(
     marketId: PublicKey,
-
     baseAmount: BN,
     quoteAmount: BN,
-
     startTime: BN
-  ) {
+  ): Promise<string> {
     return raydiumCreateAmmV4(
       this,
       marketId,
@@ -213,20 +229,15 @@ export class SolanaAgentKit {
   async raydiumCreateClmm(
     mint1: PublicKey,
     mint2: PublicKey,
-
     configId: PublicKey,
-
     initialPrice: Decimal,
     startTime: BN
-  ) {
+  ): Promise<string> {
     return raydiumCreateClmm(
       this,
-
       mint1,
       mint2,
-
       configId,
-
       initialPrice,
       startTime
     );
@@ -235,34 +246,33 @@ export class SolanaAgentKit {
   async raydiumCreateCpmm(
     mint1: PublicKey,
     mint2: PublicKey,
-
     configId: PublicKey,
-
     mintAAmount: BN,
     mintBAmount: BN,
-
     startTime: BN
-  ) {
+  ): Promise<string> {
     return raydiumCreateCpmm(
       this,
-
       mint1,
       mint2,
-
       configId,
-
       mintAAmount,
       mintBAmount,
-
       startTime
     );
   }
 
-  async raydiumAddLiquidityAmm(poolId: string, inputAmount: Decimal) {
+  async raydiumAddLiquidityAmm(
+    poolId: string,
+    inputAmount: Decimal
+  ): Promise<string> {
     return raydiumAddLiquidityAmm(this, poolId, inputAmount);
   }
 
-  async raydiumRemoveLiquidityAmm(poolId: string, withdrawLpAmount: BN) {
+  async raydiumRemoveLiquidityAmm(
+    poolId: string,
+    withdrawLpAmount: BN
+  ): Promise<string> {
     return raydiumRemoveLiquidityAmm(this, poolId, withdrawLpAmount);
   }
 
@@ -271,7 +281,7 @@ export class SolanaAgentKit {
     inputAmount: Decimal,
     startPrice: Decimal,
     endPrice: Decimal
-  ) {
+  ): Promise<string> {
     return raydiumOpenPositionClmm(
       this,
       poolId,
@@ -281,17 +291,16 @@ export class SolanaAgentKit {
     );
   }
 
-  async raydiumClosePositionClmm(poolId: string) {
+  async raydiumClosePositionClmm(poolId: string): Promise<string> {
     return raydiumClosePositionClmm(this, poolId);
   }
 
   async openbookCreateMarket(
     baseMint: PublicKey,
     quoteMint: PublicKey,
-
     lotSize: number = 1,
     tickSize: number = 0.01
-  ) {
+  ): Promise<string[]> {
     return openbookCreateMarket(
       this,
       baseMint,
@@ -300,5 +309,9 @@ export class SolanaAgentKit {
       lotSize,
       tickSize
     );
+  }
+
+  async pythFetchPrice(priceFeedID: string) {
+    return pythFetchPrice(this, priceFeedID);
   }
 }

@@ -38,6 +38,9 @@ importers:
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.3.0
         version: 3.3.0(@metaplex-foundation/umi@0.9.2)
+      '@metaplex-foundation/mpl-toolbox':
+        specifier: ^0.9.4
+        version: 0.9.4(@metaplex-foundation/umi@0.9.2)
       '@metaplex-foundation/umi':
         specifier: ^0.9.2
         version: 0.9.2
@@ -53,6 +56,9 @@ importers:
       '@orca-so/whirlpools-sdk':
         specifier: ^0.13.12
         version: 0.13.12(@coral-xyz/anchor@0.29.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(@orca-so/common-sdk@0.6.4(@solana/spl-token@0.4.9(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(decimal.js@10.4.3))(@solana/spl-token@0.4.9(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(decimal.js@10.4.3)
+      '@pythnetwork/price-service-client':
+        specifier: ^1.9.0
+        version: 1.9.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@raydium-io/raydium-sdk-v2':
         specifier: 0.1.95-alpha
         version: 0.1.95-alpha(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
@@ -315,6 +321,13 @@ packages:
       '@solana/spl-token': ^0.4.8
       '@solana/web3.js': ^1.90.0
       decimal.js: ^10.4.3
+
+  '@pythnetwork/price-service-client@1.9.0':
+    resolution: {integrity: sha512-SLm3IFcfmy9iMqHeT4Ih6qMNZhJEefY14T9yTlpsH2D/FE5+BaGGnfcexUifVlfH6M7mwRC4hEFdNvZ6ebZjJg==}
+    deprecated: This package is deprecated and is no longer maintained. Please use @pythnetwork/hermes-client instead.
+
+  '@pythnetwork/price-service-sdk@1.8.0':
+    resolution: {integrity: sha512-tFZ1thj3Zja06DzPIX2dEWSi7kIfIyqreoywvw5NQ3Z1pl5OJHQGMEhxt6Li3UCGSp2ooYZS9wl8/8XfrfrNSA==}
 
   '@raydium-io/raydium-sdk-v2@0.1.95-alpha':
     resolution: {integrity: sha512-+u7yxo/R1JDysTCzOuAlh90ioBe2DlM2Hbcz/tFsxP/YzmnYQzShvNjcmc0361a4zJhmlrEJfpFXW0J3kkX5vA==}
@@ -592,6 +605,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  axios-retry@3.9.1:
+    resolution: {integrity: sha512-8PJDLJv7qTTMMwdnbMvrLYuvB47M81wRtxQmEdV5w4rgbTXTt+vtPkXwajOfOdSyv/wZICJOC+/UhXH4aQ/R+w==}
+
   axios@1.7.9:
     resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
@@ -825,6 +841,10 @@ packages:
   ipaddr.js@2.2.0:
     resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
     engines: {node: '>= 10'}
+
+  is-retry-allowed@2.2.0:
+    resolution: {integrity: sha512-XVm7LOeLpTW4jV19QSH38vkswxoLud8sQ57YwJVTPWdiaI9I8keEhGFpBlslyVsgdQy4Opg8QOLb8YRgsyZiQg==}
+    engines: {node: '>=10'}
 
   isomorphic-ws@4.0.1:
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
@@ -1125,6 +1145,9 @@ packages:
 
   trim-lines@3.0.1:
     resolution: {integrity: sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg==}
+
+  ts-log@2.2.7:
+    resolution: {integrity: sha512-320x5Ggei84AxzlXp91QkIGSw5wgaLT6GeAH0KsqDmRZdVWW2OiSeVvElVoatk3f7nicwXlElXsoFkARiGE2yg==}
 
   ts-node@10.9.2:
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
@@ -1576,6 +1599,24 @@ snapshots:
       decimal.js: 10.4.3
       tiny-invariant: 1.3.3
 
+  '@pythnetwork/price-service-client@1.9.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@pythnetwork/price-service-sdk': 1.8.0
+      '@types/ws': 8.5.13
+      axios: 1.7.9
+      axios-retry: 3.9.1
+      isomorphic-ws: 4.0.1(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      ts-log: 2.2.7
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
+
+  '@pythnetwork/price-service-sdk@1.8.0':
+    dependencies:
+      bn.js: 5.2.1
+
   '@raydium-io/raydium-sdk-v2@0.1.95-alpha(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
@@ -2016,6 +2057,11 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  axios-retry@3.9.1:
+    dependencies:
+      '@babel/runtime': 7.26.0
+      is-retry-allowed: 2.2.0
+
   axios@1.7.9:
     dependencies:
       follow-redirects: 1.15.9
@@ -2235,9 +2281,15 @@ snapshots:
 
   ipaddr.js@2.2.0: {}
 
+  is-retry-allowed@2.2.0: {}
+
   isomorphic-ws@4.0.1(ws@7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
     dependencies:
       ws: 7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+
+  isomorphic-ws@4.0.1(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
+    dependencies:
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
   jayson@4.1.3(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
@@ -2521,6 +2573,8 @@ snapshots:
   tr46@0.0.3: {}
 
   trim-lines@3.0.1: {}
+
+  ts-log@2.2.7: {}
 
   ts-node@10.9.2(@types/node@22.10.2)(typescript@5.7.2):
     dependencies:
