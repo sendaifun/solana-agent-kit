@@ -3,7 +3,6 @@ import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
 import { GibworkCreateTaskResponse, PythFetchPriceResponse, SolanaAgentKit } from "../index";
 import { create_image } from "../tools/create_image";
-import { fetchPrice } from "../tools/fetch_price";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 import { toJSON } from "../utils/toJSON";
@@ -67,7 +66,7 @@ export class SolanaTransferTool extends Tool {
       const tx = await this.solanaKit.transfer(
         recipient,
         parsedInput.amount,
-        mintAddress
+        mintAddress,
       );
 
       return JSON.stringify({
@@ -94,7 +93,7 @@ export class SolanaDeployTokenTool extends Tool {
 
   Inputs (input is a JSON string):
   name: string, eg "My Token" (required)
-  uri: string, eg "https://example.com/token.json" (required) 
+  uri: string, eg "https://example.com/token.json" (required)
   symbol: string, eg "MTK" (required)
   decimals?: number, eg 9 (optional, defaults to 9)
   initialSupply?: number, eg 1000000 (optional)`;
@@ -112,7 +111,7 @@ export class SolanaDeployTokenTool extends Tool {
         parsedInput.uri,
         parsedInput.symbol,
         parsedInput.decimals,
-        parsedInput.initialSupply
+        parsedInput.initialSupply,
       );
 
       return JSON.stringify({
@@ -192,7 +191,7 @@ export class SolanaMintNFTTool extends Tool {
         },
         parsedInput.recipient
           ? new PublicKey(parsedInput.recipient)
-          : this.solanaKit.wallet_address
+          : this.solanaKit.wallet_address,
       );
 
       return JSON.stringify({
@@ -240,7 +239,7 @@ export class SolanaTradeTool extends Tool {
         parsedInput.inputMint
           ? new PublicKey(parsedInput.inputMint)
           : new PublicKey("So11111111111111111111111111111111111111112"),
-        parsedInput.slippageBps
+        parsedInput.slippageBps,
       );
 
       return JSON.stringify({
@@ -320,7 +319,7 @@ export class SolanaRegisterDomainTool extends Tool {
 
       const tx = await this.solanaKit.registerDomain(
         parsedInput.name,
-        parsedInput.spaceKB || 1
+        parsedInput.spaceKB || 1,
       );
 
       return JSON.stringify({
@@ -477,7 +476,7 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
           telegram: parsedInput.telegram,
           website: parsedInput.website,
           initialLiquiditySOL: parsedInput.initialLiquiditySOL,
-        }
+        },
       );
 
       return JSON.stringify({
@@ -621,7 +620,7 @@ export class SolanaStakeTool extends Tool {
 export class SolanaFetchPriceTool extends Tool {
   name = "solana_fetch_price";
   description = `Fetch the price of a given token in USDC.
-  
+
   Inputs:
   - tokenId: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"`;
 
@@ -631,7 +630,7 @@ export class SolanaFetchPriceTool extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      const price = await fetchPrice(this.solanaKit, input.trim());
+      const price = await this.solanaKit.fetchTokenPrice(input.trim());
       return JSON.stringify({
         status: "success",
         tokenId: input.trim(),
@@ -710,7 +709,7 @@ export class SolanaTokenDataByTickerTool extends Tool {
 export class SolanaCompressedAirdropTool extends Tool {
   name = "solana_compressed_airdrop";
   description = `Airdrop SPL tokens with ZK Compression (also called as airdropping tokens)
-  
+
   Inputs (input is a JSON string):
   mintAddress: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required)
   amount: number, the amount of tokens to airdrop per recipient, e.g., 42 (required)
@@ -733,7 +732,7 @@ export class SolanaCompressedAirdropTool extends Tool {
         parsedInput.decimals,
         parsedInput.recipients,
         parsedInput.priorityFeeInLamports || 30_000,
-        parsedInput.shouldLog || false
+        parsedInput.shouldLog || false,
       );
 
       return JSON.stringify({
@@ -897,7 +896,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
 export class SolanaRaydiumCreateCpmm extends Tool {
   name = "raydium_create_cpmm";
-  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard 
+  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard
 
   Inputs (input is a json string):
   mint1: string (required)
@@ -945,7 +944,7 @@ export class SolanaRaydiumCreateCpmm extends Tool {
 
 export class SolanaOpenbookCreateMarket extends Tool {
   name = "solana_openbook_create_market";
-  description = `Openbook marketId, required for ammv4 
+  description = `Openbook marketId, required for ammv4
 
   Inputs (input is a json string):
   baseMint: string (required)

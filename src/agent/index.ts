@@ -25,9 +25,10 @@ import {
   stakeWithJup,
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
-  FEE_TIERS,
+  fetchPrice,
   pythFetchPrice,
   submitGibworkTask,
+  FEE_TIERS,
   getAllDomainsTLDs,
   getAllRegisteredAllDomains,
   getOwnedDomainsForTLD,
@@ -48,7 +49,7 @@ import { NameAccountAndDomain } from "@onsol/tldparser";
 
 /**
  * Main class for interacting with Solana blockchain
- * Provides a unified interface for token operations, NFT management, and trading
+ * Provides a unified interface for token operations, NFT management, trading and more
  *
  * @class SolanaAgentKit
  * @property {Connection} connection - Solana RPC connection
@@ -152,6 +153,10 @@ export class SolanaAgentKit {
     ticker: string,
   ): Promise<JupiterTokenData | undefined> {
     return getTokenDataByTicker(ticker);
+  }
+
+  async fetchTokenPrice(mint: string) {
+    return fetchPrice(new PublicKey(mint));
   }
 
   async launchPumpFunToken(
@@ -308,11 +313,11 @@ export class SolanaAgentKit {
 
       lotSize,
       tickSize,
-    )
+    );
   }
 
-  async pythFetchPrice(priceFeedID: string) {
-    return pythFetchPrice(this, priceFeedID);
+  async pythFetchPrice(priceFeedID: string): Promise<string> {
+    return pythFetchPrice(priceFeedID);
   }
 
   async submitGibworkTask(

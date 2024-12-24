@@ -8,7 +8,6 @@
     "build": "tsc",
     "docs": "typedoc src --out docs",
     "test": "ts-node test/index.ts",
-    "test:domain": "ts-node test/domain_methods.test.ts",
     "generate": "ts-node src/utils/keypair.ts"
   },
   "engines": {
@@ -16,7 +15,7 @@
     "pnpm": ">=8.0.0"
   },
   "keywords": [],
-  "author": "",
+  "author": "sendaifun",
   "license": "ISC",
   "dependencies": {
     "@bonfida/spl-name-service": "^3.0.7",
