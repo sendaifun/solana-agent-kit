@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
-import { PythFetchPriceResponse, SolanaAgentKit } from "../index";
+import { GibworkCreateTaskResponse, PythFetchPriceResponse, SolanaAgentKit } from "../index";
 import { create_image } from "../tools/create_image";
 import { fetchPrice } from "../tools/fetch_price";
 import { BN } from "@coral-xyz/anchor";
@@ -1012,6 +1012,56 @@ export class SolanaPythFetchPrice extends Tool {
   }
 }
 
+export class SolanaGibworkTaskTool extends Tool {
+  name = "submit_gibwork_task";
+  description = `Submit a task to the Gibwork platform.
+  Inputs (input is a JSON string):
+  taskTitle: string, title of the task (required)
+  taskDetails: string, detailed description of the task (required)
+  taskCriteria: string, criteria or requirements for the task (required)
+  taskTags: string[], list of tags for the task (required)
+  fundingAccount: string, address of the payer's wallet (optional, defaults to the agent's wallet)
+  payment: {
+    mintAddress: string, token mint address for payment (required)
+    amount: number, payment amount in tokens (required)
+  }`;
+
+  constructor(private solanaSdk: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const taskData = await this.solanaSdk.submitGibworkTask(
+        parsedInput.taskTitle,
+        parsedInput.taskDetails,
+        parsedInput.taskCriteria,
+        parsedInput.taskTags,
+        parsedInput.payment.mintAddress,
+        parsedInput.payment.amount,
+        parsedInput.fundingAccount
+      );
+
+      const response: GibworkCreateTaskResponse = {
+        error: false,
+        taskId: taskData.taskId,
+        serializedTransaction: taskData.serializedTransaction,
+      };
+
+      return JSON.stringify(response);
+    } catch (err: any) {
+      return JSON.stringify({
+        status: "error",
+        message: err.message,
+        code: err.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1040,6 +1090,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaOpenbookCreateMarket(solanaKit),
     new SolanaCreateSingleSidedWhirlpoolTool(solanaKit),
     new SolanaPythFetchPrice(solanaKit),
+    new SolanaGibworkTaskTool(solanaKit)
   ];
 }
 

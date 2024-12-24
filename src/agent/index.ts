@@ -27,6 +27,7 @@ import {
   createOrcaSingleSidedWhirlpool,
   FEE_TIERS,
   pythFetchPrice,
+  submitGibworkTask,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -276,5 +277,26 @@ export class SolanaAgentKit {
 
   async pythFetchPrice(priceFeedID: string) {
     return pythFetchPrice(this, priceFeedID);
+  }
+
+  async submitGibworkTask(
+    title: string,
+    content: string,
+    requirements: string,
+    tags: string[],
+    tokenMintAddress: string,
+    tokenAmount: number,
+    payer?: string
+  ){
+    return submitGibworkTask(
+      this,
+      title,
+      content,
+      requirements,
+      tags,
+      tokenMintAddress,
+      tokenAmount,
+      payer
+  );
   }
 }

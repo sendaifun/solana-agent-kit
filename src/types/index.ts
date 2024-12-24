@@ -85,3 +85,9 @@ export interface PythFetchPriceResponse {
   message?: string;
   code?: string;
 }
+
+export interface GibworkCreateTaskResponse {
+  error: boolean;
+  taskId?: string,
+  serializedTransaction?: string
+}
