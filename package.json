@@ -8,6 +8,7 @@
     "build": "tsc",
     "docs": "typedoc src --out docs",
     "test": "ts-node test/index.ts",
+    "test:domain": "ts-node test/domain_methods.test.ts",
     "generate": "ts-node src/utils/keypair.ts"
   },
   "engines": {
@@ -32,6 +33,7 @@
     "@metaplex-foundation/umi": "^0.9.2",
     "@metaplex-foundation/umi-bundle-defaults": "^0.9.2",
     "@metaplex-foundation/umi-web3js-adapters": "^0.9.2",
+    "@onsol/tldparser": "^0.6.7",
     "@orca-so/common-sdk": "0.6.4",
     "@orca-so/whirlpools-sdk": "^0.13.12",
     "@pythnetwork/price-service-client": "^1.9.0",
@@ -40,6 +42,7 @@
     "@solana/web3.js": "^1.95.4",
     "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
+    "chai": "^5.1.2",
     "decimal.js": "^10.4.3",
     "dotenv": "^16.4.5",
     "form-data": "^4.0.1",
@@ -49,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.5",
+    "@types/chai": "^5.0.1",
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
