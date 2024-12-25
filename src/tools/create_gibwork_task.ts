@@ -1,3 +1,4 @@
+import { VersionedTransaction } from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
 
 /**
@@ -13,7 +14,7 @@ import { SolanaAgentKit } from "../index";
  * @returns Response containing the transaction for job creation and the generated jobId
  */
 export async function submitGibworkTask(
-    sdkInstance: SolanaAgentKit,
+    agent: SolanaAgentKit,
     jobTitle: string,
     jobDetails: string,
     jobCriteria: string,
@@ -33,7 +34,7 @@ export async function submitGibworkTask(
                 content: jobDetails,
                 requirements: jobCriteria,
                 tags: jobTags,
-                payer: fundingAccount || sdkInstance.wallet.publicKey.toBase58(),
+                payer: fundingAccount || agent.wallet.publicKey.toBase58(),
                 token: {
                     mintAddress: paymentMint,
                     amount: paymentAmount
@@ -42,11 +43,29 @@ export async function submitGibworkTask(
         });
 
         const responseData = await apiResponse.json();
+        const txn = VersionedTransaction.deserialize(
+            Buffer.from(responseData.serializedTransaction, "base64"),
+        );
+        const { blockhash } = await agent.connection.getLatestBlockhash();
+        txn.message.recentBlockhash = blockhash;
+    
+        txn.sign([agent.wallet]);
+        const signature = await agent.connection.sendTransaction(txn, {
+          preflightCommitment: "confirmed",
+          maxRetries: 3,
+        });
+
+        const latestBlockhash = await agent.connection.getLatestBlockhash();
+        await agent.connection.confirmTransaction({
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        });
 
         return {
             success: true,
             taskId: responseData.taskId,
-            serializedTransaction: responseData.serializedTransaction
+            signature: signature
         };
     } catch (err: any) {
         throw new Error(`Failed to create a Gibwork job: ${err.message}`);

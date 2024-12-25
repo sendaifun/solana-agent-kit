@@ -1051,7 +1051,7 @@ export class SolanaGibworkTaskTool extends Tool {
       const response: GibworkCreateTaskResponse = {
         error: false,
         taskId: taskData.taskId,
-        serializedTransaction: taskData.serializedTransaction,
+        signature: taskData.signature,
       };
 
       return JSON.stringify(response);
