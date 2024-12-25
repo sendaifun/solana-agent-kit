@@ -45,7 +45,7 @@ export async function create_gibwork_task(
         const data = await response.json();
         const serializedTx = data.serializedTransaction;
         const txn = VersionedTransaction.deserialize(Buffer.from(serializedTx, "base64"));
-        const signature = await signAndSendTransaction(agent, txn, agent.wallet)
+        const signature = await signAndSendTransaction(agent, txn)
 
         return {
             success: true,
@@ -60,7 +60,6 @@ export async function create_gibwork_task(
 async function signAndSendTransaction(
     kit: SolanaAgentKit,
     tx: VersionedTransaction,
-    mintKeypair: Keypair,
   ) {
     try {
       const { blockhash, lastValidBlockHeight } =
@@ -68,7 +67,7 @@ async function signAndSendTransaction(
   
       tx.message.recentBlockhash = blockhash;
   
-      tx.sign([mintKeypair, kit.wallet]);
+      tx.sign([kit.wallet]);
   
       const signature = await kit.connection.sendTransaction(tx, {
         skipPreflight: false,
