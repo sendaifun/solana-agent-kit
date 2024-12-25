@@ -34,6 +34,7 @@ import {
   getMainAllDomainsDomain,
   getOwnedAllDomains,
   resolveAllDomains,
+  create_gibwork_task
 } from "../tools";
 import {
   CollectionDeployment,
@@ -317,5 +318,26 @@ export class SolanaAgentKit {
 
   async pythFetchPrice(priceFeedID: string): Promise<string> {
     return pythFetchPrice(priceFeedID);
+  }
+
+  async createGibworkTask(
+    title: string,
+    content: string,
+    requirements: string,
+    tags: string[],
+    tokenMintAddress: string,
+    tokenAmount: number,
+    payer?: string
+  ){
+    return create_gibwork_task(
+      this,
+      title,
+      content,
+      requirements,
+      tags,
+      tokenMintAddress,
+      tokenAmount,
+      payer
+  );
   }
 }

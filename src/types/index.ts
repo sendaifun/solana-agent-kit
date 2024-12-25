@@ -85,3 +85,9 @@ export interface PythFetchPriceResponse {
   message?: string;
   code?: string;
 }
+
+export interface GibworkCreateTaskReponse {
+  status: "success" | "error";
+  taskId?: string,
+  signature?: string
+}

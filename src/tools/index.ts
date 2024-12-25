@@ -36,3 +36,4 @@ export * from "./raydium_create_clmm";
 export * from "./raydium_create_cpmm";
 export * from "./openbook_create_market";
 export * from "./pyth_fetch_price";
+export * from './create_gibwork_task'

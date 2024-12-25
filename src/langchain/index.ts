@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
-import { PythFetchPriceResponse, SolanaAgentKit } from "../index";
+import { GibworkCreateTaskReponse, PythFetchPriceResponse, SolanaAgentKit } from "../index";
 import { create_image } from "../tools/create_image";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
@@ -1181,6 +1181,55 @@ export class SolanaGetMainDomain extends Tool {
   }
 }
 
+export class SolanaGibworkTaskTool extends Tool {
+  name = "create_gibwork_task";
+  description = `Create a task on Gibwork platform.
+
+  Inputs (input is a JSON string):
+  title: string, task title (required)
+  content: string, task description content (required)
+  requirements: string, task requirements (required)
+  tags: string[], array of tags for the task (required)
+  payer: string, payer address (optional, defaults to agent wallet)
+  token: {
+    mintAddress: string, token mint address for payment (required)
+    amount: number, payment amount (required)
+  }`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+
+      const task = await this.solanaKit.createGibworkTask(
+        inputFormat.title,
+        inputFormat.content,
+        inputFormat.requirements,
+        inputFormat.tags,
+        inputFormat.token.mintAddress,
+        inputFormat.token.amount,
+        inputFormat.payer 
+    );
+
+    const response: GibworkCreateTaskReponse = {
+      status: "success",
+      taskId: task.taskId,
+      signature: task.signature,
+    }
+      return JSON.stringify(response);
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR"
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1214,5 +1263,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetAllTlds(solanaKit),
     new SolanaGetMainDomain(solanaKit),
     new SolanaResolveAllDomainsTool(solanaKit),
+    new SolanaGibworkTaskTool(solanaKit),
   ];
 }
