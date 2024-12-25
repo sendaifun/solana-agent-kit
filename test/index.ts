@@ -14,7 +14,7 @@ function validateEnvironment(): void {
   const missingVars: string[] = [];
   const requiredVars = ["OPENAI_API_KEY", "RPC_URL", "SOLANA_PRIVATE_KEY"];
 
-  requiredVars.forEach(varName => {
+  requiredVars.forEach((varName) => {
     if (!process.env[varName]) {
       missingVars.push(varName);
     }
@@ -22,7 +22,7 @@ function validateEnvironment(): void {
 
   if (missingVars.length > 0) {
     console.error("Error: Required environment variables are not set");
-    missingVars.forEach(varName => {
+    missingVars.forEach((varName) => {
       console.error(`${varName}=your_${varName.toLowerCase()}_here`);
     });
     process.exit(1);
@@ -50,13 +50,13 @@ async function initializeAgent() {
       }
     }
 
-    const solanaKit = new SolanaAgentKit(
+    const solanaAgent = new SolanaAgentKit(
       process.env.SOLANA_PRIVATE_KEY!,
       process.env.RPC_URL,
-      process.env.OPENAI_API_KEY!
+      process.env.OPENAI_API_KEY!,
     );
 
-    const tools = createSolanaTools(solanaKit);
+    const tools = createSolanaTools(solanaAgent);
     const memory = new MemorySaver();
     const config = { configurable: { thread_id: "Solana Agent Kit!" } };
 
@@ -65,14 +65,13 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: `
-        You are a helpful agent that can interact onchain using the Solana Agent Kit. You are 
-        empowered to interact onchain using your tools. If you ever need funds, you can request them from the 
-        faucet. If not, you can provide your wallet details and request funds from the user. If there is a 5XX 
-        (internal) HTTP error code, ask the user to try again later. If someone asks you to do something you 
-        can't do with your currently available tools, you must say so, and encourage them to implement it 
-        themselves using the Solana Agent Kit, recommend they go to https://www.solanaagentkit.xyz for more information. Be 
-        concise and helpful with your responses. Refrain from restating your tools' descriptions unless it is 
-        explicitly requested.
+        You are a helpful agent that can interact onchain using the Solana Agent Kit. You are
+        empowered to interact onchain using your tools. If you ever need funds, you can request them from the
+        faucet. If not, you can provide your wallet details and request funds from the user. If there is a 5XX
+        (internal) HTTP error code, ask the user to try again later. If someone asks you to do something you
+        can't do with your currently available tools, you must say so, and encourage them to implement it
+        themselves using the Solana Agent Kit, recommend they go to https://www.solanaagentkit.xyz for more information. Be
+        concise and helpful with your responses. Refrain from restating your tools' descriptions unless it is explicitly requested.
       `,
     });
 
@@ -96,7 +95,10 @@ async function runAutonomousMode(agent: any, config: any, interval = 10) {
         "Be creative and do something interesting on the blockchain. " +
         "Choose an action or set of actions and execute it that highlights your abilities.";
 
-      const stream = await agent.stream({ messages: [new HumanMessage(thought)] }, config);
+      const stream = await agent.stream(
+        { messages: [new HumanMessage(thought)] },
+        config,
+      );
 
       for await (const chunk of stream) {
         if ("agent" in chunk) {
@@ -107,7 +109,7 @@ async function runAutonomousMode(agent: any, config: any, interval = 10) {
         console.log("-------------------");
       }
 
-      await new Promise(resolve => setTimeout(resolve, interval * 1000));
+      await new Promise((resolve) => setTimeout(resolve, interval * 1000));
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error:", error.message);
@@ -126,7 +128,7 @@ async function runChatMode(agent: any, config: any) {
   });
 
   const question = (prompt: string): Promise<string> =>
-    new Promise(resolve => rl.question(prompt, resolve));
+    new Promise((resolve) => rl.question(prompt, resolve));
 
   try {
     while (true) {
@@ -136,7 +138,10 @@ async function runChatMode(agent: any, config: any) {
         break;
       }
 
-      const stream = await agent.stream({ messages: [new HumanMessage(userInput)] }, config);
+      const stream = await agent.stream(
+        { messages: [new HumanMessage(userInput)] },
+        config,
+      );
 
       for await (const chunk of stream) {
         if ("agent" in chunk) {
@@ -164,7 +169,7 @@ async function chooseMode(): Promise<"chat" | "auto"> {
   });
 
   const question = (prompt: string): Promise<string> =>
-    new Promise(resolve => rl.question(prompt, resolve));
+    new Promise((resolve) => rl.question(prompt, resolve));
 
   while (true) {
     console.log("\nAvailable modes:");
@@ -206,7 +211,7 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error("Fatal error:", error);
     process.exit(1);
   });

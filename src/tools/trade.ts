@@ -1,4 +1,8 @@
-import { VersionedTransaction, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import {
+  VersionedTransaction,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
 import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
 

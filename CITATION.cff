@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: Solana Agent Kit
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: SendAI
+repository-code: 'https://github.com/sendaifun/solana-agent-kit'
+url: 'https://github.com/sendaifun/solana-agent-kit'
+abstract: >-
+  Connect any AI Agents to Solana Protocols
+keywords:
+  - solana
+  - blockchain
+  - web3
+  - agent
+  - toolkit
+license: Apache-2.0
+version: 1.2.0
+preferred-citation:
+  type: software
+  title: Solana Agent Kit
+  abstract: Connect any AI Agents to Solana Protocols
+  version: 1.2.0
+  date-released: '2024-12-21'
+  license: Apache-2.0
+  url: 'https://github.com/sendaifun/solana-agent-kit'
+  repository-code: 'https://github.com/sendaifun/solana-agent-kit'
+  authors:
+  - name: SendAI

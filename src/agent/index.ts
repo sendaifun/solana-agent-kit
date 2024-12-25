@@ -29,8 +29,15 @@ import {
   stakeWithJup,
   sendCompressedAirdrop,
   createOrcaSingleSidedWhirlpool,
-  FEE_TIERS,
+  fetchPrice,
   pythFetchPrice,
+  FEE_TIERS,
+  getAllDomainsTLDs,
+  getAllRegisteredAllDomains,
+  getOwnedDomainsForTLD,
+  getMainAllDomainsDomain,
+  getOwnedAllDomains,
+  resolveAllDomains,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -41,10 +48,11 @@ import {
   PumpFunTokenOptions,
 } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { NameAccountAndDomain } from "@onsol/tldparser";
 
 /**
  * Main class for interacting with Solana blockchain
- * Provides a unified interface for token operations, NFT management, and trading
+ * Provides a unified interface for token operations, NFT management, trading and more
  *
  * @class SolanaAgentKit
  * @property {Connection} connection - Solana RPC connection
@@ -150,6 +158,10 @@ export class SolanaAgentKit {
     return getTokenDataByTicker(ticker);
   }
 
+  async fetchTokenPrice(mint: string) {
+    return fetchPrice(new PublicKey(mint));
+  }
+
   async launchPumpFunToken(
     tokenName: string,
     tokenTicker: string,
@@ -197,7 +209,7 @@ export class SolanaAgentKit {
     initialPrice: Decimal,
     maxPrice: Decimal,
     feeTier: keyof typeof FEE_TIERS
-  ): Promise<string> {
+  ) {
     return createOrcaSingleSidedWhirlpool(
       this,
       depositTokenAmount,
@@ -207,6 +219,30 @@ export class SolanaAgentKit {
       maxPrice,
       feeTier
     );
+  }
+
+  async resolveAllDomains(domain: string): Promise<PublicKey | undefined> {
+    return resolveAllDomains(this, domain);
+  }
+
+  async getOwnedAllDomains(owner: PublicKey): Promise<string[]> {
+    return getOwnedAllDomains(this, owner);
+  }
+
+  async getOwnedDomainsForTLD(tld: string): Promise<string[]> {
+    return getOwnedDomainsForTLD(this, tld);
+  }
+
+  async getAllDomainsTLDs(): Promise<String[]> {
+    return getAllDomainsTLDs(this);
+  }
+
+  async getAllRegisteredAllDomains(): Promise<string[]> {
+    return getAllRegisteredAllDomains(this);
+  }
+
+  async getMainAllDomainsDomain(owner: PublicKey): Promise<string | null> {
+    return getMainAllDomainsDomain(this, owner);
   }
 
   async raydiumCreateAmmV4(
@@ -258,7 +294,24 @@ export class SolanaAgentKit {
       configId,
       mintAAmount,
       mintBAmount,
+
       startTime
+    );
+  }
+
+  async openbookCreateMarket(
+    baseMint: PublicKey,
+    quoteMint: PublicKey,
+    lotSize: number = 1,
+    tickSize: number = 0.01
+  ): Promise<string[]> {
+    return openbookCreateMarket(
+      this,
+      baseMint,
+      quoteMint,
+
+      lotSize,
+      tickSize
     );
   }
 
@@ -295,23 +348,7 @@ export class SolanaAgentKit {
     return raydiumClosePositionClmm(this, poolId);
   }
 
-  async openbookCreateMarket(
-    baseMint: PublicKey,
-    quoteMint: PublicKey,
-    lotSize: number = 1,
-    tickSize: number = 0.01
-  ): Promise<string[]> {
-    return openbookCreateMarket(
-      this,
-      baseMint,
-      quoteMint,
-
-      lotSize,
-      tickSize
-    );
-  }
-
-  async pythFetchPrice(priceFeedID: string) {
-    return pythFetchPrice(this, priceFeedID);
+  async pythFetchPrice(priceFeedID: string): Promise<string> {
+    return pythFetchPrice(priceFeedID);
   }
 }

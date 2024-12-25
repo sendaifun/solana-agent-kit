@@ -183,59 +183,13 @@ import { PublicKey } from "@solana/web3.js";
 ### Fetch Price Data from Pyth
 
 ```typescript
-import { pythFetchPrice } from "solana-agent-kit";
 
-const price = await pythFetchPrice(
-  agent,
+const price = await agent.pythFetchPrice(
   "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
 );
 
 console.log("Price in BTC/USD:", price);
 ```
-
-## API Reference
-
-### Core Functions
-
-#### `deploy_token(agent, decimals?, name, uri, symbol, initialSupply?)`
-
-Deploy a new SPL token with optional initial supply. If not specified, decimals default to 9.
-
-#### `deploy_collection(agent, options)`
-
-Create a new NFT collection with customizable metadata and royalties.
-
-#### `mintCollectionNFT(agent, collectionMint, metadata, recipient?)`
-
-Mint a new NFT as part of an existing collection.
-
-#### `transfer(agent, to, amount, mint?)`
-
-Transfer SOL or SPL tokens to a recipient.
-
-#### `trade(agent, outputMint, inputAmount, inputMint?, slippageBps?)`
-
-Swap tokens using Jupiter Exchange integration.
-
-#### `get_balance(agent, token_address)`
-
-Check SOL or token balance for the agent's wallet.
-
-#### `lendAsset(agent, assetMint, amount, apiKey)`
-
-Lend idle assets to earn interest with Lulo.
-
-#### `stakeWithJup(agent, amount)`
-
-Stake SOL with Jupiter to earn rewards.
-
-#### `sendCompressedAirdrop(agent, mintAddress, amount, recipients, priorityFeeInLamports?, shouldLog?)`
-
-Send an SPL token airdrop to many recipients at low cost via ZK Compression.
-
-#### `pythFetchPrice(agent, priceFeedID)`
-
-Fetch price data from Pyth's Hermes service.
 
 ## Dependencies
 

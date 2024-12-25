@@ -3,7 +3,6 @@ import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
 import { PythFetchPriceResponse, SolanaAgentKit } from "../index";
 import { create_image } from "../tools/create_image";
-import { fetchPrice } from "../tools/fetch_price";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 import { toJSON } from "../utils/toJSON";
@@ -94,7 +93,7 @@ export class SolanaDeployTokenTool extends Tool {
 
   Inputs (input is a JSON string):
   name: string, eg "My Token" (required)
-  uri: string, eg "https://example.com/token.json" (required) 
+  uri: string, eg "https://example.com/token.json" (required)
   symbol: string, eg "MTK" (required)
   decimals?: number, eg 9 (optional, defaults to 9)
   initialSupply?: number, eg 1000000 (optional)`;
@@ -342,10 +341,12 @@ export class SolanaRegisterDomainTool extends Tool {
 
 export class SolanaResolveDomainTool extends Tool {
   name = "solana_resolve_domain";
-  description = `Resolve a .sol domain to a Solana PublicKey.
+  description = `Resolve ONLY .sol domain names to a Solana PublicKey.
+  This tool is exclusively for .sol domains.
+  DO NOT use this for other domain types like .blink, .bonk, etc.
 
   Inputs:
-  domain: string, eg "pumpfun.sol" or "pumpfun"(required)
+  domain: string, eg "pumpfun.sol" (required)
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -619,7 +620,7 @@ export class SolanaStakeTool extends Tool {
 export class SolanaFetchPriceTool extends Tool {
   name = "solana_fetch_price";
   description = `Fetch the price of a given token in USDC.
-  
+
   Inputs:
   - tokenId: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"`;
 
@@ -629,7 +630,7 @@ export class SolanaFetchPriceTool extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      const price = await fetchPrice(this.solanaKit, input.trim());
+      const price = await this.solanaKit.fetchTokenPrice(input.trim());
       return JSON.stringify({
         status: "success",
         tokenId: input.trim(),
@@ -708,7 +709,7 @@ export class SolanaTokenDataByTickerTool extends Tool {
 export class SolanaCompressedAirdropTool extends Tool {
   name = "solana_compressed_airdrop";
   description = `Airdrop SPL tokens with ZK Compression (also called as airdropping tokens)
-  
+
   Inputs (input is a JSON string):
   mintAddress: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required)
   amount: number, the amount of tokens to airdrop per recipient, e.g., 42 (required)
@@ -895,7 +896,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
 export class SolanaRaydiumCreateCpmm extends Tool {
   name = "raydium_create_cpmm";
-  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard 
+  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard
 
   Inputs (input is a json string):
   mint1: string (required)
@@ -947,7 +948,7 @@ export class SolanaRaydiumAddLiquidityAmm extends Tool {
 
   Inputs (input is a json string):
   poolId: string (required)
-  inputAmount: number, eg: 1 (required)
+  inputAmount: string (required)
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -984,7 +985,7 @@ export class SolanaRaydiumRemoveLiquidityAmm extends Tool {
 
   Inputs (input is a json string):
   poolId: string (required)
-  withdrawLpAmount: number(int), eg: 1 (required)
+  withdrawLpAmount: string (required)
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -1021,9 +1022,9 @@ export class SolanaRaydiumOpenPositionClmm extends Tool {
 
   Inputs (input is a json string):
   poolId: string (required)
-  inputAmount: number, eg: 1 (required)
-  startPrice: number, eg: 123.12 (required)
-  endPrice: number, eg: 123.12 (required)
+  inputAmount: string (required)
+  startPrice: string (required)
+  endPrice: string (required)
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -1093,7 +1094,7 @@ export class SolanaRaydiumClosePositionClmm extends Tool {
 
 export class SolanaOpenbookCreateMarket extends Tool {
   name = "solana_openbook_create_market";
-  description = `Openbook marketId, required for ammv4 
+  description = `Openbook marketId, required for ammv4
 
   Inputs (input is a json string):
   baseMint: string (required)
@@ -1165,6 +1166,167 @@ export class SolanaPythFetchPrice extends Tool {
   }
 }
 
+export class SolanaResolveAllDomainsTool extends Tool {
+  name = "solana_resolve_all_domains";
+  description = `Resolve domain names to a public key for ALL domain types EXCEPT .sol domains.
+  Use this for domains like .blink, .bonk, etc.
+  DO NOT use this for .sol domains (use solana_resolve_domain instead).
+
+  Input:
+  domain: string, eg "mydomain.blink" or "mydomain.bonk" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const owner = await this.solanaKit.resolveAllDomains(input);
+
+      if (!owner) {
+        return JSON.stringify({
+          status: "error",
+          message: "Domain not found",
+          code: "DOMAIN_NOT_FOUND",
+        });
+      }
+
+      return JSON.stringify({
+        status: "success",
+        message: "Domain resolved successfully",
+        owner: owner?.toString(),
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "DOMAIN_RESOLUTION_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetOwnedDomains extends Tool {
+  name = "solana_get_owned_domains";
+  description = `Get all domains owned by a specific wallet address.
+
+  Inputs:
+  owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const ownerPubkey = new PublicKey(input.trim());
+      const domains = await this.solanaKit.getOwnedAllDomains(ownerPubkey);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Owned domains fetched successfully",
+        domains: domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_OWNED_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetOwnedTldDomains extends Tool {
+  name = "solana_get_owned_tld_domains";
+  description = `Get all domains owned by the agent's wallet for a specific TLD.
+
+  Inputs:
+  tld: string, eg "bonk" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const domains = await this.solanaKit.getOwnedDomainsForTLD(input);
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLD domains fetched successfully",
+        domains: domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLD_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetAllTlds extends Tool {
+  name = "solana_get_all_tlds";
+  description = `Get all active top-level domains (TLDs) in the AllDomains Name Service`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(): Promise<string> {
+    try {
+      const tlds = await this.solanaKit.getAllDomainsTLDs();
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLDs fetched successfully",
+        tlds: tlds,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLDS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetMainDomain extends Tool {
+  name = "solana_get_main_domain";
+  description = `Get the main/favorite domain for a given wallet address.
+
+  Inputs:
+  owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const ownerPubkey = new PublicKey(input.trim());
+      const mainDomain = await this.solanaKit.getMainAllDomainsDomain(
+        ownerPubkey
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Main domain fetched successfully",
+        domain: mainDomain,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_MAIN_DOMAIN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1182,7 +1344,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaTPSCalculatorTool(solanaKit),
     new SolanaStakeTool(solanaKit),
     new SolanaFetchPriceTool(solanaKit),
-    new SolanaResolveDomainTool(solanaKit),
     new SolanaGetDomainTool(solanaKit),
     new SolanaTokenDataTool(solanaKit),
     new SolanaTokenDataByTickerTool(solanaKit),
@@ -1197,6 +1358,11 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaOpenbookCreateMarket(solanaKit),
     new SolanaCreateSingleSidedWhirlpoolTool(solanaKit),
     new SolanaPythFetchPrice(solanaKit),
+    new SolanaResolveDomainTool(solanaKit),
+    new SolanaGetOwnedDomains(solanaKit),
+    new SolanaGetOwnedTldDomains(solanaKit),
+    new SolanaGetAllTlds(solanaKit),
+    new SolanaGetMainDomain(solanaKit),
+    new SolanaResolveAllDomainsTool(solanaKit),
   ];
 }
-
