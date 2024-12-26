@@ -1,21 +1,18 @@
 "use client"
-import { Attachment } from "ai";
 import { Message, useChat } from "ai/react";
-import useChatStore from "./hooks/useChatStore";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChatLayout } from "../components/chat/chat-layout";
 import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
-import { CompiledStateGraph, MemorySaver, MessagesAnnotation, START } from "@langchain/langgraph";
+import { CompiledStateGraph, MessagesAnnotation, START } from "@langchain/langgraph";
 import { ChatOpenAI } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { HumanMessage } from "@langchain/core/messages";
-import config from "next/config";
 
 type Agent = CompiledStateGraph<(typeof MessagesAnnotation)["State"], (typeof MessagesAnnotation)["Update"], typeof START | "agent" | "tools", typeof MessagesAnnotation.spec, typeof MessagesAnnotation.spec>;
 type Config = {
   configurable: {
-      thread_id: string;
+    thread_id: string;
   };
 }
 
@@ -30,27 +27,25 @@ export default function Home() {
     setMessages,
     setInput,
   } = useChat({
-    onResponse: (response: any) => {
+    onResponse: (response: Response) => {
       if (response) {
         setLoadingSubmit(false);
       }
     },
-    onError: (error: any) => {
+    onError: () => {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
     },
   });
 
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
-  const [agent,setAgent] = useState<Agent>()
-  const [config,setConfig] = useState<Config>()
+  const [agent, setAgent] = useState<Agent>()
+  const [config, setConfig] = useState<Config>()
   const formRef = useRef<HTMLFormElement>(null);
-  const base64Images = useChatStore((state: { base64Images: any; }) => state.base64Images);
-  const setBase64Images = useChatStore((state: { setBase64Images: any; }) => state.setBase64Images);
 
-  useEffect(()=>{
+  useEffect(() => {
     initializeAgent();
-  })
+  },[])
 
   const addMessage = (Message: Message) => {
     messages.push(Message);
@@ -60,20 +55,26 @@ export default function Home() {
 
   const initializeAgent = () => {
     try {
+      if (!process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY
+        || !process.env.NEXT_PUBLIC_RPC_URL
+        || !process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+        return
+      }
       const llm = new ChatOpenAI({
+        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
         modelName: "gpt-4o-mini",
         temperature: 0.7,
       });
-  
+
       const solanaAgent = new SolanaAgentKit(
         process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY!,
         process.env.NEXT_PUBLIC_RPC_URL,
         process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
       );
-  
+
       const tools = createSolanaTools(solanaAgent);
       const config = { configurable: { thread_id: "Solana Agent Kit!" } };
-  
+
       const agent = createReactAgent({
         llm,
         tools,
@@ -103,11 +104,11 @@ export default function Home() {
 
     addMessage({ role: "user", content: input, id: "" });
     setInput("");
-    if(agent){
+    if (agent) {
       const stream = await agent.stream(
         { messages: [new HumanMessage(input)] },
         config,
-      ); 
+      );
       let text = ""
       for await (const chunk of stream) {
         if ("agent" in chunk) {
@@ -118,7 +119,7 @@ export default function Home() {
       }
       addMessage({ role: "assistant", content: text, id: "" });
     }
-       
+
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -128,26 +129,25 @@ export default function Home() {
     setMessages([...messages]);
 
     handleSubmitProduction(e);
-    setBase64Images(null)
   };
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center ">
-        <ChatLayout
-          messages={messages}
-          input={input}
-          handleInputChange={handleInputChange}
-          handleSubmit={onSubmit}
-          isLoading={isLoading}
-          loadingSubmit={loadingSubmit}
-          error={error}
-          stop={stop}
-          navCollapsedSize={10}
-          defaultLayout={[30, 160]}
-          formRef={formRef}
-          setMessages={setMessages}
-          setInput={setInput}
-        />
-      </main>
+      <ChatLayout
+        messages={messages}
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={onSubmit}
+        isLoading={isLoading}
+        loadingSubmit={loadingSubmit}
+        error={error}
+        stop={stop}
+        navCollapsedSize={10}
+        defaultLayout={[30, 160]}
+        formRef={formRef}
+        setMessages={setMessages}
+        setInput={setInput}
+      />
+    </main>
   );
 }

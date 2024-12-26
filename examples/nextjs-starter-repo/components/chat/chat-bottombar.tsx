@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { ChatProps } from "./chat";
 import { AnimatePresence } from "framer-motion";
 import TextareaAutosize from "react-textarea-autosize";
-import { Cross2Icon, StopIcon } from "@radix-ui/react-icons";
-import { Mic, SendHorizonal } from "lucide-react";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { SendHorizonal } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import MultiImagePicker from "../image-embedder";
@@ -15,32 +15,11 @@ export default function ChatBottombar({
   input,
   handleInputChange,
   handleSubmit,
-  isLoading,
-  stop,
-  setInput,
 }: ChatProps) {
-  const [isMobile, setIsMobile] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const base64Images = useChatStore((state) => state.base64Images);
   const setBase64Images = useChatStore((state) => state.setBase64Images);
   const env = process.env.NODE_ENV;
-
-  React.useEffect(() => {
-    const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    // Initial check
-    checkScreenWidth();
-
-    // Event listener for screen width changes
-    window.addEventListener("resize", checkScreenWidth);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", checkScreenWidth);
-    };
-  }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {

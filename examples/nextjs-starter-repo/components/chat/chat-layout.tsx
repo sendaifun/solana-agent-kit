@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Sidebar } from "../sidebar";
-import { Message, useChat } from "ai/react";
+import { Message } from "ai/react";
 import Chat, { ChatProps } from "./chat";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../ui/resizable";
 import { cn } from "../../lib/utils";

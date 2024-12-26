@@ -1,4 +1,4 @@
-import { Message, useChat } from "ai/react";
+import { Message } from "ai/react";
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -13,20 +13,14 @@ import { cn } from "../../lib/utils";
 
 export default function ChatList({
   messages,
-  input,
   handleInputChange,
-  handleSubmit,
   isLoading,
-  error,
-  stop,
   loadingSubmit,
   formRef,
   isMobile,
 }: ChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [name, setName] = React.useState<string>("");
-  const [localStorageIsLoading, setLocalStorageIsLoading] =
-    React.useState(true);
   const [initialQuestions, setInitialQuestions] = React.useState<Message[]>([]);
 
   const scrollToBottom = () => {
@@ -41,7 +35,6 @@ export default function ChatList({
     const username = localStorage.getItem("ollama_user");
     if (username) {
       setName(username);
-      setLocalStorageIsLoading(false);
     }
   }, []);
 
@@ -72,7 +65,7 @@ export default function ChatList({
     } as React.ChangeEvent<HTMLTextAreaElement>);
 
     setTimeout(() => {
-      formRef.current?.dispatchEvent(
+      formRef?.current?.dispatchEvent(
         new Event("submit", {
           cancelable: true,
           bubbles: true,
