@@ -339,7 +339,7 @@ export class SolanaAgentKit {
       payer ? new PublicKey(payer) : undefined,
     );
   }
-  async createTiplink(amountSol: number){
-    return create_TipLink(this,amountSol)
+  async createTiplink(amount: number , splmintAddress?:PublicKey){
+    return create_TipLink(this,amount,splmintAddress)
   }
 }

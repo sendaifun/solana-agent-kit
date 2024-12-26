@@ -988,6 +988,45 @@ export class SolanaOpenbookCreateMarket extends Tool {
   }
 }
 
+export class SolanaTipLinkTool extends Tool {
+  name = "solana_tiplink";
+  description = `Create a TipLink for transferring SOL.
+
+  Provide the amount of SOL you want to transfer. The tool will generate a TipLink URL for the recipient to claim the funds.
+
+  Inputs:
+  amountSol: number, e.g., 1 (Amount of SOL to transfer)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const amountSol : number = parseFloat(input);
+
+      if (isNaN(amountSol) || amountSol <= 0) {
+        throw new Error("Invalid amount. Please provide a valid amount of SOL.");
+      }
+
+      const { url, signature } = await this.solanaKit.createTiplink(amountSol);
+
+      return JSON.stringify({
+        status: "success",
+        url,
+        signature,
+        message: "TipLink created successfully.",
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
