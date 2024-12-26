@@ -694,8 +694,8 @@ export class SolanaRegisterDomainTool extends Tool implements Action {
   validate: Validator = async (context, ...args) => {
     const input = args[0];
     try {
-      const parsedInput = JSON.parse(input);
-      return typeof parsedInput.domain === "string";
+      this.validateInput(input);
+      return true;
     } catch {
       return false;
     }
