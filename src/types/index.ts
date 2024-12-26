@@ -91,3 +91,129 @@ export interface GibworkCreateTaskReponse {
   taskId?: string | undefined;
   signature?: string | undefined;
 }
+
+// Core action types
+export type Handler = (
+  context: ActionContext,
+  ...args: any[]
+) => Promise<ActionResult>;
+export type Validator = (
+  context: ActionContext,
+  ...args: any[]
+) => Promise<boolean>;
+
+// Context and runtime interfaces
+export interface ActionContext {
+  runtime: Runtime;
+  message: Message;
+  state?: Record<string, any>;
+}
+
+export interface Runtime {
+  services: Map<string, any>;
+  memory: MemoryManager;
+  state: StateManager;
+}
+
+export interface MemoryManager {
+  get(id: string): Promise<Memory | null>;
+  create(memory: Omit<Memory, 'id'>): Promise<Memory>;
+  update(id: string, update: Partial<Memory>): Promise<Memory>;
+  delete(id: string): Promise<boolean>;
+}
+
+export interface StateManager {
+  get(): Promise<Record<string, any>>;
+  set(state: Record<string, any>): Promise<void>;
+  update(update: Partial<Record<string, any>>): Promise<Record<string, any>>;
+  clear(): Promise<void>;
+}
+
+// Message and memory interfaces
+export interface Message {
+  id: string;
+  content: MessageContent;
+  userId: string;
+  timestamp: number;
+}
+
+export interface MessageContent {
+  text: string;
+  metadata?: Record<string, any>;
+  attachments?: Attachment[];
+  actions?: string[];
+}
+
+export interface Attachment {
+  id: string;
+  type: string;
+  url: string;
+  metadata?: Record<string, any>;
+}
+
+export interface Memory extends Message {
+  roomId?: string;
+  threadId?: string;
+  replyTo?: string;
+  reactions?: Reaction[];
+}
+
+export interface Reaction {
+  type: string;
+  userId: string;
+  timestamp: number;
+}
+
+// Action interfaces
+export interface Action {
+  name: string;
+  similes: string[];
+  description: string;
+  examples: ActionExample[][];
+  handler: Handler;
+  validate: Validator;
+}
+
+export interface ActionExample {
+  input: ActionInput;
+  output: ActionResult;
+}
+
+export interface ActionInput {
+  message: Message;
+  state?: Record<string, any>;
+}
+
+export interface ActionResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+  metadata?: Record<string, any>;
+}
+
+// Service types
+export enum ServiceType {
+  DOCUMENT = 'document',
+  TRANSCRIPTION = 'transcription',
+  TRANSLATION = 'translation',
+  STORAGE = 'storage',
+  // Add other service types as needed
+}
+
+export interface Service {
+  type: ServiceType;
+  initialize(): Promise<void>;
+  shutdown(): Promise<void>;
+}
+
+// Error types
+export class ActionError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public metadata?: Record<string, any>,
+  ) {
+    super(message);
+    this.name = "ActionError";
+  }
+}

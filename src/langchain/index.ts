@@ -10,9 +10,17 @@ import { create_image } from "../tools/create_image";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 import { toJSON } from "../utils/toJSON";
+import {
+  Action,
+  ActionExample,
+  ActionResult,
+  Handler,
+  Validator,
+} from "../types";
 
-export class SolanaBalanceTool extends Tool {
+export class SolanaBalanceTool extends Tool implements Action {
   name = "solana_balance";
+  similes = ["check_balance", "get_wallet_balance"];
   description = `Get the balance of a Solana wallet or token account.
 
   If you want to get the balance of your wallet, you don't need to provide the tokenAddress.
@@ -20,6 +28,21 @@ export class SolanaBalanceTool extends Tool {
 
   Inputs:
   tokenAddress: string, eg "So11111111111111111111111111111111111111112" (optional)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: { text: "Get my balance" },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: { success: true, data: { balance: "100 SOL" } },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -43,17 +66,52 @@ export class SolanaBalanceTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    return typeof input === "string";
+  };
 }
 
-export class SolanaTransferTool extends Tool {
+export class SolanaTransferTool extends Tool implements Action {
   name = "solana_transfer";
+  similes = ["send_tokens", "transfer_sol"];
   description = `Transfer tokens or SOL to another address ( also called as wallet address ).
 
   Inputs ( input is a JSON string ):
   to: string, eg "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk" (required)
   amount: number, eg 1 (required)
   mint?: string, eg "So11111111111111111111111111111111111111112" or "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (optional)`;
-
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                to: "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk",
+                amount: 1,
+                mint: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: { success: true, data: { transactionId: "5G9f8..." } },
+      },
+    ],
+  ];
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
@@ -89,10 +147,34 @@ export class SolanaTransferTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.to === "string" &&
+        typeof parsedInput.amount === "number" &&
+        (parsedInput.mint === undefined || typeof parsedInput.mint === "string")
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaDeployTokenTool extends Tool {
+export class SolanaDeployTokenTool extends Tool implements Action {
   name = "solana_deploy_token";
+  similes = ["create_token", "deploy_token"];
   description = `Deploy a new token on Solana blockchain.
 
   Inputs (input is a JSON string):
@@ -101,6 +183,31 @@ export class SolanaDeployTokenTool extends Tool {
   symbol: string, eg "MTK" (required)
   decimals?: number, eg 9 (optional, defaults to 9)
   initialSupply?: number, eg 1000000 (optional)`;
+
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                name: "MyToken",
+                symbol: "MTK",
+                decimals: 9,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { tokenAddress: "So11111111111111111111111111111111111111112" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -132,16 +239,66 @@ export class SolanaDeployTokenTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.name === "string" &&
+        typeof parsedInput.symbol === "string" &&
+        typeof parsedInput.decimals === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaDeployCollectionTool extends Tool {
+export class SolanaDeployCollectionTool extends Tool implements Action {
   name = "solana_deploy_collection";
+  similes = ["create_collection", "deploy_collection"];
   description = `Deploy a new NFT collection on Solana blockchain.
 
   Inputs (input is a JSON string):
   name: string, eg "My Collection" (required)
   uri: string, eg "https://example.com/collection.json" (required)
   royaltyBasisPoints?: number, eg 500 for 5% (optional)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                name: "MyCollection",
+                symbol: "MC",
+                uri: "https://example.com/metadata.json",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: {
+            collectionAddress: "So11111111111111111111111111111111111111112",
+          },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -167,10 +324,34 @@ export class SolanaDeployCollectionTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.name === "string" &&
+        typeof parsedInput.symbol === "string" &&
+        typeof parsedInput.uri === "string"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaMintNFTTool extends Tool {
+export class SolanaMintNFTTool extends Tool implements Action {
   name = "solana_mint_nft";
+  similes = ["create_nft", "mint_nft"];
   description = `Mint a new NFT in a collection on Solana blockchain.
 
     Inputs (input is a JSON string):
@@ -178,7 +359,30 @@ export class SolanaMintNFTTool extends Tool {
     name: string, eg "My NFT" (required)
     uri: string, eg "https://example.com/nft.json" (required)
     recipient?: string, eg "9aUn5swQzUTRanaaTwmszxiv89cvFwUCjEBv1vZCoT1u" (optional) - The wallet to receive the NFT, defaults to agent's wallet which is ${this.solanaKit.wallet_address.toString()}`;
-
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                collectionAddress:
+                  "So11111111111111111111111111111111111111112",
+                uri: "https://example.com/metadata.json",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { nftAddress: "So11111111111111111111111111111111111111112" },
+        },
+      },
+    ],
+  ];
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
@@ -217,10 +421,32 @@ export class SolanaMintNFTTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.collectionAddress === "string" &&
+        typeof parsedInput.uri === "string"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaTradeTool extends Tool {
+export class SolanaTradeTool extends Tool implements Action {
   name = "solana_trade";
+  similes = ["swap_tokens", "trade_tokens"];
   description = `This tool can be used to swap tokens to another token ( It uses Jupiter Exchange ).
 
   Inputs ( input is a JSON string ):
@@ -228,6 +454,31 @@ export class SolanaTradeTool extends Tool {
   inputAmount: number, eg 1 or 0.01 (required)
   inputMint?: string, eg "So11111111111111111111111111111111111111112" (optional)
   slippageBps?: number, eg 100 (optional)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                outputMint: "So11111111111111111111111111111111111111112",
+                inputAmount: 1,
+                inputMint: "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa",
+                slippageBps: 100,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { transactionId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -262,11 +513,57 @@ export class SolanaTradeTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.outputMint === "string" &&
+        typeof parsedInput.inputAmount === "number" &&
+        (parsedInput.inputMint === undefined || typeof parsedInput.inputMint === "string") &&
+        (parsedInput.slippageBps === undefined || typeof parsedInput.slippageBps === "number")
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaRequestFundsTool extends Tool {
+export class SolanaRequestFundsTool extends Tool implements Action {
   name = "solana_request_funds";
+  similes = ["request_airdrop", "get_test_tokens"];
   description = "Request SOL from Solana faucet (devnet/testnet only)";
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                amount: 1,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { transactionId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -289,16 +586,59 @@ export class SolanaRequestFundsTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.amount === "number";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaRegisterDomainTool extends Tool {
+export class SolanaRegisterDomainTool extends Tool implements Action {
   name = "solana_register_domain";
+  similes = ["register_domain", "create_domain"];
   description = `Register a .sol domain name for your wallet.
 
   Inputs:
   name: string, eg "pumpfun.sol" (required)
   spaceKB: number, eg 1 (optional, default is 1)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                domain: "example.sol",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: {
+            domainAddress: "So11111111111111111111111111111111111111112",
+          },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -341,10 +681,30 @@ export class SolanaRegisterDomainTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.domain === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaResolveDomainTool extends Tool {
+export class SolanaResolveDomainTool extends Tool implements Action {
   name = "solana_resolve_domain";
+  similes = ["resolve_domain", "get_domain_address"];
   description = `Resolve ONLY .sol domain names to a Solana PublicKey.
   This tool is exclusively for .sol domains.
   DO NOT use this for other domain types like .blink, .bonk, etc.
@@ -352,6 +712,28 @@ export class SolanaResolveDomainTool extends Tool {
   Inputs:
   domain: string, eg "pumpfun.sol" (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                domain: "example.sol",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { address: "So11111111111111111111111111111111111111112" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -375,15 +757,57 @@ export class SolanaResolveDomainTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.domain === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaGetDomainTool extends Tool {
+export class SolanaGetDomainTool extends Tool implements Action {
   name = "solana_get_domain";
+  similes = ["get_domain", "fetch_domain"];
   description = `Retrieve the .sol domain associated for a given account address.
 
   Inputs:
   account: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                address: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { domain: "example.sol" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -407,11 +831,53 @@ export class SolanaGetDomainTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.address === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaGetWalletAddressTool extends Tool {
+export class SolanaGetWalletAddressTool extends Tool implements Action {
   name = "solana_get_wallet_address";
+  similes = ["get_wallet_address", "fetch_wallet_address"];
   description = `Get the wallet address of the agent`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: "",
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: {
+            walletAddress: "So11111111111111111111111111111111111111112",
+          },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -420,11 +886,24 @@ export class SolanaGetWalletAddressTool extends Tool {
   async _call(_input: string): Promise<string> {
     return this.solanaKit.wallet_address.toString();
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async () => {
+    return true;
+  };
 }
 
-export class SolanaPumpfunTokenLaunchTool extends Tool {
+export class SolanaPumpfunTokenLaunchTool extends Tool implements Action {
   name = "solana_launch_pumpfun_token";
-
+  similes = ["launch_token", "create_token"];
   description = `This tool can be used to launch a token on Pump.fun,
    do not use this tool for any other purpose, or for creating SPL tokens.
    If the user asks you to chose the parameters, you should generate valid values.
@@ -435,6 +914,30 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
    tokenTicker: string, eg "PUMP",
    description: string, eg "PumpFun Token is a token on the Solana blockchain",
    imageUrl: string, eg "https://i.imgur.com/UFm07Np_d.png`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                name: "PumpfunToken",
+                symbol: "PFT",
+                decimals: 9,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { tokenAddress: "So11111111111111111111111111111111111111112" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -497,12 +1000,55 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      this.validateInput(input);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaCreateImageTool extends Tool {
+export class SolanaCreateImageTool extends Tool implements Action {
   name = "solana_create_image";
+  similes = ["generate_image", "create_image"];
   description =
     "Create an image using OpenAI's DALL-E. Input should be a string prompt for the image.";
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                prompt: "A futuristic cityscape",
+                width: 1024,
+                height: 768,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { imageUrl: "https://example.com/image.png" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -532,10 +1078,30 @@ export class SolanaCreateImageTool extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      this.validateInput(input);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaLendAssetTool extends Tool {
+export class SolanaLendAssetTool extends Tool implements Action {
   name = "solana_lend_asset";
+  similes = ["lend_asset", "provide_liquidity"];
   description = `Lend idle USDC for yield using Lulo. ( only USDC is supported )
 
   Inputs (input is a json string):
@@ -544,6 +1110,29 @@ export class SolanaLendAssetTool extends Tool {
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                asset: "So11111111111111111111111111111111111111112",
+                amount: 100,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { transactionId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   async _call(input: string): Promise<string> {
     try {
@@ -565,11 +1154,56 @@ export class SolanaLendAssetTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.asset === "string" &&
+        typeof parsedInput.amount === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaTPSCalculatorTool extends Tool {
+export class SolanaTPSCalculatorTool extends Tool implements Action {
   name = "solana_get_tps";
+  similes = ["calculate_tps", "get_tps"];
   description = "Get the current TPS of the Solana network";
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                startTime: 1633046400,
+                endTime: 1633046500,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { tps: 1500 },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -583,14 +1217,59 @@ export class SolanaTPSCalculatorTool extends Tool {
       return `Error fetching TPS: ${error.message}`;
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.startTime === "number" &&
+        typeof parsedInput.endTime === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaStakeTool extends Tool {
+export class SolanaStakeTool extends Tool implements Action {
   name = "solana_stake";
+  similes = ["stake_tokens", "delegate_tokens"];
   description = `This tool can be used to stake your SOL (Solana), also called as SOL staking or liquid staking.
 
   Inputs ( input is a JSON string ):
   amount: number, eg 1 or 0.01 (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                amount: 100,
+                validator: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { transactionId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -616,17 +1295,62 @@ export class SolanaStakeTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.amount === "number" &&
+        typeof parsedInput.validator === "string"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
 /**
  * Tool to fetch the price of a token in USDC
  */
-export class SolanaFetchPriceTool extends Tool {
+export class SolanaFetchPriceTool extends Tool implements Action {
   name = "solana_fetch_price";
+  similes = ["get_price", "fetch_token_price"];
   description = `Fetch the price of a given token in USDC.
 
   Inputs:
   - tokenId: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"`;
+
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenAddress: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { price: 150.25 },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -648,14 +1372,60 @@ export class SolanaFetchPriceTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.tokenAddress === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaTokenDataTool extends Tool {
+export class SolanaTokenDataTool extends Tool implements Action {
   name = "solana_token_data";
+  similes = ["get_token_data", "fetch_token_data"];
   description = `Get the token data for a given token mint address
 
   Inputs: mintAddress is required.
   mintAddress: string, eg "So11111111111111111111111111111111111111112" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenAddress: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: {
+            name: "Example Token",
+            symbol: "EXT",
+            decimals: 9,
+            supply: "1000000000",
+          },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -679,14 +1449,60 @@ export class SolanaTokenDataTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.tokenAddress === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaTokenDataByTickerTool extends Tool {
+export class SolanaTokenDataByTickerTool extends Tool implements Action {
   name = "solana_token_data_by_ticker";
+  similes = ["get_token_data_by_ticker", "fetch_token_data_by_ticker"];
   description = `Get the token data for a given token ticker
 
   Inputs: ticker is required.
   ticker: string, eg "USDC" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                ticker: "SOL",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: {
+            name: "Solana",
+            symbol: "SOL",
+            decimals: 9,
+            supply: "1000000000",
+          },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -708,10 +1524,29 @@ export class SolanaTokenDataByTickerTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.ticker === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaCompressedAirdropTool extends Tool {
+export class SolanaCompressedAirdropTool extends Tool implements Action {
   name = "solana_compressed_airdrop";
+  similes = ["compressed_airdrop", "airdrop_tokens"];
   description = `Airdrop SPL tokens with ZK Compression (also called as airdropping tokens)
 
   Inputs (input is a JSON string):
@@ -721,6 +1556,32 @@ export class SolanaCompressedAirdropTool extends Tool {
   recipients: string[], the recipient addresses, e.g., ["1nc1nerator11111111111111111111111111111111"] (required)
   priorityFeeInLamports: number, the priority fee in lamports. Default is 30_000. (optional)
   shouldLog: boolean, whether to log progress to stdout. Default is false. (optional)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                recipients: [
+                  "So11111111111111111111111111111111111111112",
+                  "So22222222222222222222222222222222222222222",
+                ],
+                amount: 100,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { transactionId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -752,10 +1613,33 @@ export class SolanaCompressedAirdropTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        Array.isArray(parsedInput.recipients) &&
+        parsedInput.recipients.every((recipient: any) => typeof recipient === "string") &&
+        typeof parsedInput.amount === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
+export class SolanaCreateSingleSidedWhirlpoolTool extends Tool implements Action {
   name = "create_orca_single_sided_whirlpool";
+  similes = ["create_whirlpool", "single_sided_whirlpool"];
   description = `Create a single-sided Whirlpool with liquidity.
 
   Inputs (input is a JSON string):
@@ -765,6 +1649,31 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
   - initialPrice: number, eg: 0.001 (required, initial price of deposit token in terms of other token)
   - maxPrice: number, eg: 5.0 (required, maximum price at which liquidity is added)
   - feeTier: number, eg: 0.30 (required, fee tier for the pool)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenA: "So11111111111111111111111111111111111111112",
+                amountA: 100,
+                tokenB: "So22222222222222222222222222222222222222222",
+                amountB: 200,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { poolAddress: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -810,10 +1719,34 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.tokenA === "string" &&
+        typeof parsedInput.amountA === "number" &&
+        typeof parsedInput.tokenB === "string" &&
+        typeof parsedInput.amountB === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaRaydiumCreateAmmV4 extends Tool {
+export class SolanaRaydiumCreateAmmV4 extends Tool implements Action {
   name = "raydium_create_ammV4";
+  similes = ["create_amm_v4", "raydium_create_amm"];
   description = `Raydium's Legacy AMM that requiers an OpenBook marketID
 
   Inputs (input is a json string):
@@ -822,6 +1755,31 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
   quoteAmount: number(int), eg: 111111 (required)
   startTime: number(seconds), eg: now number or zero (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenA: "So11111111111111111111111111111111111111112",
+                amountA: 100,
+                tokenB: "So22222222222222222222222222222222222222222",
+                amountB: 200,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { poolAddress: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -851,10 +1809,34 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.tokenA === "string" &&
+        typeof parsedInput.amountA === "number" &&
+        typeof parsedInput.tokenB === "string" &&
+        typeof parsedInput.amountB === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaRaydiumCreateClmm extends Tool {
+export class SolanaRaydiumCreateClmm extends Tool implements Action {
   name = "raydium_create_clmm";
+  similes = ["create_clmm", "raydium_create_clmm"];
   description = `Concentrated liquidity market maker, custom liquidity ranges, increased capital efficiency
 
   Inputs (input is a json string):
@@ -864,6 +1846,31 @@ export class SolanaRaydiumCreateClmm extends Tool {
   initialPrice: number, eg: 123.12 (required)
   startTime: number(seconds), eg: now number or zero (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenA: "So11111111111111111111111111111111111111112",
+                amountA: 100,
+                tokenB: "So22222222222222222222222222222222222222222",
+                amountB: 200,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { poolAddress: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -896,10 +1903,34 @@ export class SolanaRaydiumCreateClmm extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.tokenA === "string" &&
+        typeof parsedInput.amountA === "number" &&
+        typeof parsedInput.tokenB === "string" &&
+        typeof parsedInput.amountB === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaRaydiumCreateCpmm extends Tool {
+export class SolanaRaydiumCreateCpmm extends Tool implements Action {
   name = "raydium_create_cpmm";
+  similes = ["create_cpmm", "raydium_create_cpmm"];
   description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard
 
   Inputs (input is a json string):
@@ -910,6 +1941,31 @@ export class SolanaRaydiumCreateCpmm extends Tool {
   mintBAmount: number(int), eg: 2222 (required)
   startTime: number(seconds), eg: now number or zero (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenA: "So11111111111111111111111111111111111111112",
+                amountA: 100,
+                tokenB: "So22222222222222222222222222222222222222222",
+                amountB: 200,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { poolAddress: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -944,10 +2000,34 @@ export class SolanaRaydiumCreateCpmm extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.tokenA === "string" &&
+        typeof parsedInput.amountA === "number" &&
+        typeof parsedInput.tokenB === "string" &&
+        typeof parsedInput.amountB === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaOpenbookCreateMarket extends Tool {
+export class SolanaOpenbookCreateMarket extends Tool implements Action {
   name = "solana_openbook_create_market";
+  similes = ["create_market", "openbook_create_market"];
   description = `Openbook marketId, required for ammv4
 
   Inputs (input is a json string):
@@ -956,6 +2036,31 @@ export class SolanaOpenbookCreateMarket extends Tool {
   lotSize: number (required)
   tickSize: number (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                baseToken: "So11111111111111111111111111111111111111112",
+                quoteToken: "So22222222222222222222222222222222222222222",
+                baseLotSize: 100,
+                quoteLotSize: 200,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { marketAddress: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -986,15 +2091,60 @@ export class SolanaOpenbookCreateMarket extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.baseToken === "string" &&
+        typeof parsedInput.quoteToken === "string" &&
+        typeof parsedInput.baseLotSize === "number" &&
+        typeof parsedInput.quoteLotSize === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaPythFetchPrice extends Tool {
+export class SolanaPythFetchPrice extends Tool implements Action {
   name = "solana_pyth_fetch_price";
+  similes = ["fetch_price", "pyth_fetch_price"];
   description = `Fetch the price of a given price feed from Pyth's Hermes service
 
   Inputs:
   priceFeedID: string, the price feed ID, e.g., "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43" for BTC/USD`;
-
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                tokenSymbol: "SOL",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { price: 150.25 },
+        },
+      },
+    ],
+  ];
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
@@ -1018,16 +2168,57 @@ export class SolanaPythFetchPrice extends Tool {
       return JSON.stringify(response);
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.tokenSymbol === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaResolveAllDomainsTool extends Tool {
+export class SolanaResolveAllDomainsTool extends Tool implements Action {
   name = "solana_resolve_all_domains";
+  similes = ["resolve_all_domains", "get_all_domains"];
   description = `Resolve domain names to a public key for ALL domain types EXCEPT .sol domains.
   Use this for domains like .blink, .bonk, etc.
   DO NOT use this for .sol domains (use solana_resolve_domain instead).
 
   Input:
   domain: string, eg "mydomain.blink" or "mydomain.bonk" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                address: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { domains: ["example1.sol", "example2.sol"] },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1058,14 +2249,55 @@ export class SolanaResolveAllDomainsTool extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.address === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaGetOwnedDomains extends Tool {
+export class SolanaGetOwnedDomains extends Tool implements Action {
   name = "solana_get_owned_domains";
+  similes = ["get_owned_domains", "fetch_owned_domains"];
   description = `Get all domains owned by a specific wallet address.
 
   Inputs:
   owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                address: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { domains: ["example1.sol", "example2.sol"] },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1089,14 +2321,55 @@ export class SolanaGetOwnedDomains extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.address === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaGetOwnedTldDomains extends Tool {
+export class SolanaGetOwnedTldDomains extends Tool implements Action {
   name = "solana_get_owned_tld_domains";
+  similes = ["get_owned_tld_domains", "fetch_owned_tld_domains"];
   description = `Get all domains owned by the agent's wallet for a specific TLD.
 
   Inputs:
   tld: string, eg "bonk" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                address: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { tldDomains: ["example1.sol", "example2.sol"] },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1119,11 +2392,50 @@ export class SolanaGetOwnedTldDomains extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.address === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaGetAllTlds extends Tool {
+export class SolanaGetAllTlds extends Tool implements Action {
   name = "solana_get_all_tlds";
+  similes = ["get_all_tlds", "fetch_all_tlds"];
   description = `Get all active top-level domains (TLDs) in the AllDomains Name Service`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: "",
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { tlds: ["example1.sol", "example2.sol"] },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1146,14 +2458,48 @@ export class SolanaGetAllTlds extends Tool {
       });
     }
   }
+  handler: Handler = async () => {
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call();
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async () => {
+    return true;
+  };
 }
 
-export class SolanaGetMainDomain extends Tool {
+export class SolanaGetMainDomain extends Tool implements Action {
   name = "solana_get_main_domain";
+  similes = ["get_main_domain", "fetch_main_domain"];
   description = `Get the main/favorite domain for a given wallet address.
 
   Inputs:
   owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                address: "So11111111111111111111111111111111111111112",
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { mainDomain: "example.sol" },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1178,10 +2524,29 @@ export class SolanaGetMainDomain extends Tool {
       });
     }
   }
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return typeof parsedInput.address === "string";
+    } catch {
+      return false;
+    }
+  };
 }
 
-export class SolanaCreateGibworkTask extends Tool {
+export class SolanaCreateGibworkTask extends Tool implements Action {
   name = "create_gibwork_task";
+  similes = ["create_gibwork_task", "create_task"];
   description = `Create a task on Gibwork.
 
   Inputs (input is a JSON string):
@@ -1193,6 +2558,30 @@ export class SolanaCreateGibworkTask extends Tool {
   tokenMintAddress: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required)
   amount: number, payment amount (required)
   `;
+  examples: ActionExample[][] = [
+    [
+      {
+        input: {
+          message: {
+            id: "1",
+            content: {
+              text: JSON.stringify({
+                title: "Task Title",
+                description: "Task Description",
+                reward: 100,
+              }),
+            },
+            userId: "user1",
+            timestamp: Date.now(),
+          },
+        },
+        output: {
+          success: true,
+          data: { taskId: "5G9f8..." },
+        },
+      },
+    ],
+  ];
 
   constructor(private solanaSdk: SolanaAgentKit) {
     super();
@@ -1227,6 +2616,29 @@ export class SolanaCreateGibworkTask extends Tool {
       });
     }
   }
+
+  handler: Handler = async (context, ...args) => {
+    const input = args[0];
+    const convert = async (): Promise<ActionResult> => {
+      const promise_string = await this._call(input);
+      return JSON.parse(promise_string);
+    };
+    return convert();
+  };
+
+  validate: Validator = async (context, ...args) => {
+    const input = args[0];
+    try {
+      const parsedInput = JSON.parse(input);
+      return (
+        typeof parsedInput.title === "string" &&
+        typeof parsedInput.description === "string" &&
+        typeof parsedInput.reward === "number"
+      );
+    } catch {
+      return false;
+    }
+  };
 }
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
