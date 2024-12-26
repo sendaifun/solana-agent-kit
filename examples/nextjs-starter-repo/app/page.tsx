@@ -1,16 +1,13 @@
 "use client"
-import { Attachment } from "ai";
 import { Message, useChat } from "ai/react";
-import useChatStore from "./hooks/useChatStore";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChatLayout } from "../components/chat/chat-layout";
 import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
-import { CompiledStateGraph, MemorySaver, MessagesAnnotation, START } from "@langchain/langgraph";
+import { CompiledStateGraph, MessagesAnnotation, START } from "@langchain/langgraph";
 import { ChatOpenAI } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { HumanMessage } from "@langchain/core/messages";
-import config from "next/config";
 
 type Agent = CompiledStateGraph<(typeof MessagesAnnotation)["State"], (typeof MessagesAnnotation)["Update"], typeof START | "agent" | "tools", typeof MessagesAnnotation.spec, typeof MessagesAnnotation.spec>;
 type Config = {
@@ -30,12 +27,12 @@ export default function Home() {
     setMessages,
     setInput,
   } = useChat({
-    onResponse: (response: any) => {
+    onResponse: (response: Response) => {
       if (response) {
         setLoadingSubmit(false);
       }
     },
-    onError: (error: any) => {
+    onError: () => {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
     },
@@ -45,12 +42,10 @@ export default function Home() {
   const [agent, setAgent] = useState<Agent>()
   const [config, setConfig] = useState<Config>()
   const formRef = useRef<HTMLFormElement>(null);
-  const base64Images = useChatStore((state: { base64Images: any; }) => state.base64Images);
-  const setBase64Images = useChatStore((state: { setBase64Images: any; }) => state.setBase64Images);
 
   useEffect(() => {
     initializeAgent();
-  })
+  },[])
 
   const addMessage = (Message: Message) => {
     messages.push(Message);
@@ -60,7 +55,7 @@ export default function Home() {
 
   const initializeAgent = () => {
     try {
-      if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY
+      if (!process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY
         || !process.env.NEXT_PUBLIC_RPC_URL
         || !process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
         return
@@ -134,7 +129,6 @@ export default function Home() {
     setMessages([...messages]);
 
     handleSubmitProduction(e);
-    setBase64Images(null)
   };
 
   return (

@@ -3,9 +3,8 @@
 import { SquarePen } from "lucide-react";
 import { Message } from "ai/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -23,38 +22,7 @@ export function Sidebar({
   closeSidebar
 }: SidebarProps) {
   const router = useRouter();
-  const getLocalstorageChats = (): {
-    chatId: string;
-    messages: Message[];
-  }[] => {
-    const chats = Object.keys(localStorage).filter((key) =>
-      key.startsWith("chat_")
-    );
 
-    // Map through the chats and return an object with chatId and messages
-    const chatObjects = chats.map((chat) => {
-      const item = localStorage.getItem(chat);
-      try {
-        // Try to parse the data if it exists
-        return item
-            ? { chatId: chat, messages: JSON.parse(item) }
-            : { chatId: chat, messages: [] };
-      } catch (error) {
-        // Log the error and return fallback for invalid JSON
-        console.error(`Invalid JSON for chatId: ${chat}`, error);
-        return { chatId: chat, messages: [] };
-      }
-    });
-
-    // Sort chats by the createdAt date of the first message of each chat
-    chatObjects.sort((a, b) => {
-      const aDate = new Date(a.messages[0].createdAt);
-      const bDate = new Date(b.messages[0].createdAt);
-      return bDate.getTime() - aDate.getTime();
-    });
-
-    return chatObjects;
-  };
 
   return (
     <div

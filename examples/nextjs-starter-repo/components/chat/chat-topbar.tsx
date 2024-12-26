@@ -6,7 +6,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from "../ui/sheet";
-
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
@@ -18,12 +17,9 @@ interface ChatTopbarProps {
 }
 
 export default function ChatTopbar({
-  isLoading,
   messages,
   setMessages
 }: ChatTopbarProps) {
-  const [models, setModels] = React.useState<string[]>([]);
-  const [open, setOpen] = React.useState(false);
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
   const handleCloseSidebar = () => {

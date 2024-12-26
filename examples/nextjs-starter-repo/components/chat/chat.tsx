@@ -2,7 +2,7 @@ import React from "react";
 import ChatTopbar from "./chat-topbar";
 import ChatList from "./chat-list";
 import ChatBottombar from "./chat-bottombar";
-import { Message, useChat } from "ai/react";
+import { Message } from "ai/react";
 import { ChatRequestOptions } from "ai";
 
 export interface ChatProps {
@@ -17,7 +17,7 @@ export interface ChatProps {
   loadingSubmit?: boolean;
   error: undefined | Error;
   stop: () => void;
-  formRef: React.RefObject<HTMLFormElement>;
+  formRef:  React.RefObject<HTMLFormElement | null>;
   isMobile?: boolean;
   setInput?: React.Dispatch<React.SetStateAction<string>>;
   setMessages: (messages: Message[]) => void;
