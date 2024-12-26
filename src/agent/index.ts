@@ -46,6 +46,7 @@ import {
   PumpFunTokenOptions,
 } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { useBlink } from "../tools/use_blink";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -137,6 +138,17 @@ export class SolanaAgentKit {
 
   async lendAssets(amount: number): Promise<string> {
     return lendAsset(this, amount);
+  }
+
+  async useBlinks(
+    inputs?: (string | number)[],
+    blinkGetURL?: string,
+    blinkPostURL?: string,
+  ): Promise<string> {
+    if (!inputs) {
+      inputs = [];
+    }
+    return useBlink(this, inputs, blinkGetURL, blinkPostURL);
   }
 
   async getTPS(): Promise<number> {

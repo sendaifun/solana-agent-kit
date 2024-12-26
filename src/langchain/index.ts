@@ -567,6 +567,55 @@ export class SolanaLendAssetTool extends Tool {
   }
 }
 
+export class SolanaUseBlinkTool extends Tool {
+  name = "solana_use_blink";
+  description = `Use Any Blink action with the agent's wallet.
+
+  Inputs (input is a json string):
+  inputs: (string | number)[], eg ["input1", 1]
+  blinkGetURL?: string, eg "https://transol.ayushagr.me/api/actions/transfer-sol"
+  OR
+  If you have the post URL, you can provide it directly
+  blinkPostURL?: string, eg "https://transol.ayushagr.me/api/actions/transfer-sol?to={address}&amount={amount}"`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+      const inputs = parsedInput.inputs;
+      const blinkGetURL = parsedInput.blinkGetURL
+        ? parsedInput.blinkGetURL
+        : undefined;
+      const blinkPostURL = parsedInput.blinkPostURL
+        ? parsedInput.blinkPostURL
+        : undefined;
+
+      const tx = await this.solanaKit.useBlinks(
+        inputs,
+        blinkGetURL,
+        blinkPostURL,
+      );
+      return JSON.stringify({
+        status: "success",
+        message: "Asset lent successfully",
+        transaction: tx,
+        inputs: inputs,
+        blinkGetURL: blinkGetURL,
+        blinkPostURL: blinkPostURL,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export class SolanaTPSCalculatorTool extends Tool {
   name = "solana_get_tps";
   description = "Get the current TPS of the Solana network";
