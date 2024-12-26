@@ -1,35 +1,20 @@
 export const INITIAL_QUESTIONS = [
   {
-    content: "What is the capital of France?",
+    content: "What is Solana?",
   },
   {
-    content: 'Who wrote "To Kill a Mockingbird"?',
+    content: 'How can I use solana-agent-kit?',
   },
   {
-    content: "What is the boiling point of water in Celsius?",
+    content: "How much a SOL token cost?",
   },
   {
-    content: "How many planets are there in our solar system?",
+    content: "Please trade my 2 SOL for USDC.",
   },
   {
-    content: "What year did the Titanic sink?",
+    content: "Could you stake my SOL tokens?",
   },
   {
-    content: "Who painted the Mona Lisa?",
-  },
-  {
-    content: "What is the square root of 144?",
-  },
-  {
-    content: "Who is the current President of the United States?",
-  },
-  {
-    content: "What is the tallest mountain in the world?",
-  },
-  {
-    content: "What is the chemical symbol for gold?",
-  },
-  {
-    content: "Who discovered penicillin?",
-  },
+    content: "Please create a NFT for me.",
+  }
 ];
