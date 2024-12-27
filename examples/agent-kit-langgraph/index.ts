@@ -1,5 +1,5 @@
-import { SolanaAgentKit } from "../../agent";
-import { SolanaBalanceTool } from "../../langchain";
+import { SolanaAgentKit } from "../../src/agent";
+import { createSolanaTools } from "../../src/langchain";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import { MemorySaver } from "@langchain/langgraph";
@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import { BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { StateGraph } from "@langchain/langgraph";
 import { Annotation, messagesStateReducer } from "@langchain/langgraph";
+import * as readline from "readline";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const StateAnnotation = Annotation.Root({
 
 export async function createSolanaAgentGraph(solanaKit: SolanaAgentKit) {
   // Create Solana tools
-  const tools = [new SolanaBalanceTool(solanaKit)];
+  const tools = createSolanaTools(solanaKit);
 
   const toolNode = new ToolNode(tools);
 
@@ -61,16 +62,27 @@ async function main() {
   // Create LangChain tools
   const app = await createSolanaAgentGraph(solanaKit);
 
-  const initialState = await app.invoke(
-    {
-      messages: [new HumanMessage("What's the Balance for this token address: F6Rg7bkYAUYnuXMggiD6czF9W9RJh3AJuo7Q2WmmchCK")],
-    },
-    { configurable: { thread_id: "solana-session-1" } },
-  );
+  // Create readline interface
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-  console.log(initialState.messages[initialState.messages.length - 1].content);
+  rl.question("your prompt: ", async (prompt) => {
+    const initialState = await app.invoke(
+      {
+        messages: [new HumanMessage(prompt)],
+      },
+      { configurable: { thread_id: "solana-session-1" } },
+    );
+
+    console.log(initialState.messages[initialState.messages.length - 1].content);
+
+    rl.close();
+  });
 }
-
+console.log("Starting Solana Agent Kit example...");
+console.log("Please enter your prompt: ");
 main().catch((error) => {
   console.error("Error:", error.message);
   process.exit(1);
