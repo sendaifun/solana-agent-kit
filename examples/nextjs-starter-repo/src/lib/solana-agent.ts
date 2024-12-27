@@ -13,7 +13,10 @@ export class SolanaAgentService {
     });
   }
 
-  async processMessage(message: string): Promise<ChatResponse> {
+  async processMessage(message: string, token?: string): Promise<ChatResponse> {
+    if (token) {
+      this.llm.apiKey = token;
+    }
     try {
       const systemPrompt = `
         You are a helpful agent that can assist with Solana blockchain interactions.
@@ -25,7 +28,7 @@ export class SolanaAgentService {
         1. Be concise and clear
         2. If asked about Solana operations, explain them simply
         3. If technical details are needed, provide them in a structured way
-        4. make sure the respone in HTML supported style with minimal tailwind css
+        4. make sure the response in HTML supported style with minimal tailwind css
       `;
 
       const response = await this.llm.invoke([

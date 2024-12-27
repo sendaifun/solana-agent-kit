@@ -6,7 +6,8 @@ const solanaAgent = new SolanaAgentService("id");
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
-    const response = await solanaAgent.processMessage(message);
+    const token = req.headers.get("OpenAI-Key") || undefined;
+    const response = await solanaAgent.processMessage(message, token);
     return NextResponse.json(response);
   } catch (error) {
     console.error("Chat API Error:", error);
