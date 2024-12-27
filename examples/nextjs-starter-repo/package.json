@@ -11,7 +11,9 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.1.3"
+    "next": "15.1.3",
+    "solana": "link:@privy-io/react-auth/solana",
+    "solana-agent-kit": "../../"
   },
   "devDependencies": {
     "typescript": "^5",
