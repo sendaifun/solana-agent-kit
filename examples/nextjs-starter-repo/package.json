@@ -2,6 +2,16 @@
   "name": "nextjs-starter-repo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "overrides": {
+    "solana-agent-kit": {
+      "engines": {
+        "node": ">=22.0.0"
+      }
+    }
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -9,21 +19,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.26",
+    "@solana/web3.js": "^1.98.0",
+    "langchain": "^0.3.8",
+    "next": "15.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.1.3",
-    "solana": "link:@privy-io/react-auth/solana",
-    "solana-agent-kit": "../../"
+    "solana-agent-kit": "1.3.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.3",
-    "@eslint/eslintrc": "^3"
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }
