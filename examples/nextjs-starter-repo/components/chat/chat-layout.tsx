@@ -12,6 +12,7 @@ interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
+  chatId: string;
   setMessages: (messages: Message[]) => void;
 }
 
@@ -27,6 +28,7 @@ export function ChatLayout({
   handleSubmit,
   isLoading,
   error,
+  chatId,
   stop,
   loadingSubmit,
   formRef,
@@ -90,6 +92,7 @@ export function ChatLayout({
         <Sidebar
           isCollapsed={isCollapsed || isMobile}
           messages={messages}
+          chatId={chatId}
           isMobile={isMobile}
           setMessages={setMessages}
         />
