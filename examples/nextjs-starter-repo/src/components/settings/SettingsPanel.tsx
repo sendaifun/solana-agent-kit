@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { X } from 'lucide-react';
-import { Settings } from '../../types/settings';
-import ThemeToggle from '../theme/ThemeToggle';
+import { X } from "lucide-react";
+import { Settings } from "../../types/settings";
+import ThemeToggle from "../theme/ThemeToggle";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -11,15 +11,25 @@ interface SettingsPanelProps {
   onSave: (settings: Settings) => void;
 }
 
-export default function SettingsPanel({ isOpen, onClose, settings, onSave }: SettingsPanelProps) {
+export default function SettingsPanel({
+  isOpen,
+  onClose,
+  settings,
+  onSave,
+}: SettingsPanelProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    onSave({ openAi: formData.get('apiKey') as string });
+    onSave({
+      openAi: formData.get("apiKey") as string,
+      solPrivateKey: formData.get("solPrivateKey") as string,
+    });
   };
 
   return (
-    <div className={`fixed inset-y-0 right-0 w-80 bg-background border-l transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+    <div
+      className={`fixed inset-y-0 right-0 w-80 bg-background border-l transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+    >
       <div className="h-full flex flex-col p-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Settings</h2>
@@ -34,7 +44,7 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
             </button>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="apiKey" className="text-sm font-medium">
@@ -47,6 +57,19 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
               defaultValue={settings.openAi}
               className="w-full p-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="sk-..."
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="solPrivateKey" className="text-sm font-medium">
+              Solana Private Key
+            </label>
+            <input
+              id="solPrivateKey"
+              name="solPrivateKey"
+              type="password"
+              defaultValue={settings.solPrivateKey}
+              className="w-full p-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="Solana Private Key"
             />
           </div>
           <button

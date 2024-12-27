@@ -7,7 +7,12 @@ export async function POST(req: Request) {
   try {
     const { message } = await req.json();
     const token = req.headers.get("OpenAI-Key") || undefined;
-    const response = await solanaAgent.processMessage(message, token);
+    const solPrivateKey = req.headers.get("Solana-Private-Key") || undefined;
+    const response = await solanaAgent.processMessage(
+      message,
+      token,
+      solPrivateKey,
+    );
     return NextResponse.json(response);
   } catch (error) {
     console.error("Chat API Error:", error);
@@ -16,5 +21,4 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
-
 }

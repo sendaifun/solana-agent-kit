@@ -5,24 +5,32 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
 export class SolanaAgentService {
-  private llm: ChatOpenAI;
+  private llm?: ChatOpenAI;
   private threadId: string;
 
   constructor(id: string) {
     this.threadId = id;
-    this.llm = new ChatOpenAI({
-      modelName: "gpt-4",
-      temperature: 0.7,
-    });
+    // this.llm = new ChatOpenAI({
+    //   modelName: "gpt-4",
+    //   temperature: 0.7,
+    // });
   }
 
-  async processMessage(message: string, token?: string): Promise<ChatResponse> {
+  async processMessage(
+    message: string,
+    token?: string,
+    solPrivateKey?: string,
+  ): Promise<ChatResponse> {
     if (token) {
-      this.llm.apiKey = token;
+      this.llm = new ChatOpenAI({
+        modelName: "gpt-4",
+        temperature: 0.7,
+        apiKey: token,
+      });
     }
 
     const solanaAgent = new SolanaAgentKit(
-      process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY!,
+      solPrivateKey || process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY!,
       process.env.NEXT_PUBLIC_RPC_URL,
       process.env.OPENAI_API_KEY!,
     );
@@ -41,7 +49,7 @@ export class SolanaAgentService {
           3. If technical details are needed, provide them in a structured way
           4. make sure the response in HTML supported style with minimal tailwind css
         `;
-      const agent = await createReactAgent({
+      const agent = createReactAgent({
         llm: this.llm,
         tools: tools,
         messageModifier: systemPrompt,

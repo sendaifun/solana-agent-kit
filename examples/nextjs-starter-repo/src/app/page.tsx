@@ -15,13 +15,14 @@ export default function Home() {
   const [typing, setTyping] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string>();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [ settings, setSettings ] = useState<Settings | { openAi: string }>({ openAi: '' });
-
-
+  const [settings, setSettings] = useState<Settings>({
+    openAi: "",
+    solPrivateKey: "",
+  });
 
   const currentChat = chats.find((chat) => chat.id === currentChatId);
 
-  useEffect(() => { 
+  useEffect(() => {
     const storedChats = localStorage.getItem("chat");
     const storedSettings = localStorage.getItem("settings");
     if (storedSettings) {
@@ -30,9 +31,7 @@ export default function Home() {
     if (storedChats) {
       setChats(JSON.parse(storedChats));
     }
-
   }, []);
-
 
   const createNewChat = () => {
     const newChat: Chat = {
@@ -47,7 +46,7 @@ export default function Home() {
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!currentChatId || !settings.openAi) return;
+    if (!currentChatId || !settings.openAi || !settings.solPrivateKey) return;
     setTyping(true);
 
     const userMessage: Message = {
@@ -78,6 +77,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
         "OpenAI-Key": settings.openAi,
+        "Solana-Private-Key": settings.solPrivateKey,
       },
       body: JSON.stringify({
         message: content,
@@ -154,10 +154,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <ChatInput
-              onSend={handleSendMessage}
-              disabled={!settings.openAi}
-            />
+            <ChatInput onSend={handleSendMessage} disabled={!settings.openAi} />
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
