@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@langchain/core": "^0.3.26",
+    "@langchain/langgraph": "^0.2.36",
     "@langchain/openai": "^0.3.16",
     "@solana/web3.js": "^1.98.0",
     "langchain": "^0.3.8",
