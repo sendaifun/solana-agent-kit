@@ -10,12 +10,12 @@ interface SettingsFormProps {
 }
 
 export default function SettingsForm({ initialSettings, onSave }: SettingsFormProps) {
-  const [openAiKey, setOpenAiKey] = useState(initialSettings.openAiKey);
+  const [openAiKey, setOpenAiKey] = useState(initialSettings.openAi);
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ openAiKey });
+    onSave({ openAi: openAiKey });
     router.push('/');
   };
 
