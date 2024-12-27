@@ -1,10 +1,22 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Use useEffect to ensure the component is only rendered on the client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // If the component is not yet mounted, return null (to prevent hydration mismatch)
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button

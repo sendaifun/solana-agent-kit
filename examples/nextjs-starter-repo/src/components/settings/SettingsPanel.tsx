@@ -24,7 +24,7 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Settings</h2>
           <div className="flex items-center gap-2">
-            {/* <ThemeToggle /> */}
+            <ThemeToggle />
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
