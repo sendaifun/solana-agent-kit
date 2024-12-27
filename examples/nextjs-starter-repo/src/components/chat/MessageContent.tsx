@@ -9,8 +9,16 @@ interface MessageContentProps {
 }
 
 export default function MessageContent({ content }: MessageContentProps) {
+
+  const convertMsg = (msg: string) => {
+    let content = msg.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    content = content.replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>");
+    content = `<p>${content}</p>`;
+    return content;
+  };
+
   if (typeof content === 'string') {
-    return <p dangerouslySetInnerHTML={{ __html: content }} />
+    return <p dangerouslySetInnerHTML={{ __html: convertMsg(content) }} />
   }
 
   switch (content.type) {
