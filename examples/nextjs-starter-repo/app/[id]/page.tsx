@@ -1,23 +1,17 @@
-"use client"
-import { Message, useChat } from "ai/react";
-import React, { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import { ChatLayout } from "../components/chat/chat-layout";
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
-import { CompiledStateGraph, MessagesAnnotation, START } from "@langchain/langgraph";
-import { ChatOpenAI } from "@langchain/openai";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
+"use client";
+
 import { HumanMessage } from "@langchain/core/messages";
-import { v4 as uuidv4 } from "uuid";
+import { useChat } from "ai/react";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { ChatLayout } from "../../components/chat/chat-layout";
+import { Agent, Config } from "../page";
+import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import { ChatOpenAI } from "@langchain/openai";
+import { useParams } from "next/navigation";
 
-export type Agent = CompiledStateGraph<(typeof MessagesAnnotation)["State"], (typeof MessagesAnnotation)["Update"], typeof START | "agent" | "tools", typeof MessagesAnnotation.spec, typeof MessagesAnnotation.spec>;
-export type Config = {
-  configurable: {
-    thread_id: string;
-  };
-}
-
-export default function Home() {
+export default function Page() {
   const {
     messages,
     input,
@@ -28,50 +22,38 @@ export default function Home() {
     setMessages,
     setInput,
   } = useChat({
-    onResponse: (response: Response) => {
+    onResponse: (response) => {
       if (response) {
         setLoadingSubmit(false);
       }
     },
-    onError: () => {
+    onError: (error) => {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
     },
   });
-
-  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const [chatId, setChatId] = useState<string>("");
   const [agent, setAgent] = useState<Agent>()
-  const [chatId, setChatId] = React.useState<string>("");
   const [config, setConfig] = useState<Config>()
-  const formRef = useRef<HTMLFormElement>(null);
+  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const {id} = useParams()
+
+  React.useEffect(() => {
+    if (chatId) {
+      const item = localStorage.getItem(`chat_${chatId}`);
+      if (item) {
+        setMessages(JSON.parse(item));
+      }
+    }
+  }, [chatId]);
 
   useEffect(() => {
     initializeAgent();
+    if (typeof id == 'string'){
+      setChatId(id)
+    }
   },[])
-
-  useEffect(() => {
-    if (messages.length < 1) {
-      // Generate a random id for the chat
-      console.log("Generating chat id");
-      const id = uuidv4();
-      setChatId(id);
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    if (!isLoading && !error && chatId && messages.length > 0) {
-      // Save messages to local storage
-      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-      // Trigger the storage event to update the sidebar component
-      window.dispatchEvent(new Event("storage"));
-    }
-  }, [chatId, isLoading, error]);
-
-  const addMessage = (Message: Message) => {
-    messages.push(Message);
-    window.dispatchEvent(new Event("storage"));
-    setMessages([...messages]);
-  };
 
   const initializeAgent = () => {
     try {
@@ -116,7 +98,13 @@ export default function Home() {
     }
   }
 
-  // Function to handle chatting with cr8AI in production (client side)
+  const addMessage = (Message: any) => {
+    messages.push(Message);
+    window.dispatchEvent(new Event("storage"));
+    setMessages([...messages]);
+  };
+
+  // Function to handle chatting with Ollama in production (client side)
   const handleSubmitProduction = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -145,19 +133,27 @@ export default function Home() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoadingSubmit(false);
+    setLoadingSubmit(true);
 
     setMessages([...messages]);
-
     handleSubmitProduction(e);
   };
 
+  // When starting a new chat, append the messages to the local storage
+  React.useEffect(() => {
+    if (!isLoading && !error && messages.length > 0) {
+      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+      // Trigger the storage event to update the sidebar component
+      window.dispatchEvent(new Event("storage"));
+    }
+  }, [messages, chatId, isLoading, error]);
+
   return (
-    <main className="flex h-[calc(100dvh)] flex-col items-center ">
-      <ChatLayout
+    <main className="flex h-[calc(100dvh)] flex-col items-center">
+       <ChatLayout
         messages={messages}
         input={input}
-        chatId=""
+        chatId={chatId}
         handleInputChange={handleInputChange}
         handleSubmit={onSubmit}
         isLoading={isLoading}
