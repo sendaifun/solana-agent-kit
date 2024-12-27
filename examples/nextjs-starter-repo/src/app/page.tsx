@@ -1,101 +1,136 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { Settings as SettingsIcon } from 'lucide-react';
+import ChatSidebar from './components/chat/ChatSidebar';
+import ChatMessage from './components/chat/ChatMessage';
+import ChatInput from './components/chat/ChatInput';
+import SettingsPanel from './components/settings/SettingsPanel';
+import { Chat, Message } from './types/chat';
+import { useSettings } from './hooks/useSettings';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<string>();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const { settings, setSettings } = useSettings();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const currentChat = chats.find((chat) => chat.id === currentChatId);
+
+  const createNewChat = () => {
+    const newChat: Chat = {
+      id: uuidv4(),
+      title: 'New Chat',
+      messages: [],
+      createdAt: new Date(),
+    };
+    setChats([newChat, ...chats]);
+    setCurrentChatId(newChat.id);
+  };
+
+  const handleSendMessage = async (content: string) => {
+    if (!currentChatId || !settings.openAiKey) return;
+
+    const userMessage: Message = {
+      id: uuidv4(),
+      content,
+      role: 'user',
+      createdAt: new Date(),
+    };
+
+    setChats(chats.map((chat) => {
+      if (chat.id === currentChatId) {
+        return {
+          ...chat,
+          messages: [...chat.messages, userMessage],
+          title: chat.messages.length === 0 ? content.slice(0, 30) : chat.title,
+        };
+      }
+      return chat;
+    }));
+
+    // TODO: Implement OpenAI API call
+    const aiMessage: Message = {
+      id: uuidv4(),
+      content: 'This is a simulated AI response. Replace with actual OpenAI integration.',
+      role: 'assistant',
+      createdAt: new Date(),
+    };
+
+    setChats(chats.map((chat) => {
+      if (chat.id === currentChatId) {
+        return {
+          ...chat,
+          messages: [...chat.messages, userMessage, aiMessage],
+        };
+      }
+      return chat;
+    }));
+  };
+
+  return (
+    <div className="flex h-screen bg-background text-foreground">
+      <ChatSidebar
+        chats={chats}
+        currentChatId={currentChatId}
+        onChatSelect={setCurrentChatId}
+        onNewChat={createNewChat}
+      />
+      
+      <div className="flex-1 flex flex-col relative">
+        <div className="absolute top-4 right-4 z-10">
+          {!isSettingsOpen && <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
+            aria-label="Open settings"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <SettingsIcon size={20} />
+          </button> }
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {currentChat ? (
+          <>
+            <div className="flex-1 overflow-auto">
+              {currentChat.messages.map((message) => (
+                <ChatMessage key={message.id} message={message} />
+              ))}
+            </div>
+            <ChatInput 
+              onSend={handleSendMessage} 
+              disabled={!settings.openAiKey}
+            />
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <h1 className="text-2xl font-bold">Welcome to Solana AI</h1>
+              <p className="text-muted-foreground">
+                {settings.openAiKey 
+                  ? 'Start a new chat or select an existing one.'
+                  : 'Please configure your OpenAI API key in settings.'}
+              </p>
+              <button
+                onClick={createNewChat}
+                disabled={!settings.openAiKey}
+                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 transition-opacity"
+              >
+                Start New Chat
+              </button>
+            </div>
+          </div>
+        )}
+
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          settings={settings}
+          onSave={(newSettings) => {
+            setSettings(newSettings);
+            setIsSettingsOpen(false);
+          }}
+        />
+      </div>
     </div>
   );
 }
