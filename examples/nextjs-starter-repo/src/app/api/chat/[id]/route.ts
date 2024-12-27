@@ -8,10 +8,12 @@ export async function POST(req: Request) {
     const { message } = await req.json();
     const token = req.headers.get("OpenAI-Key") || undefined;
     const solPrivateKey = req.headers.get("Solana-Private-Key") || undefined;
+    const solRpcUrl = req.headers.get("Solana-Rpc-Url") || undefined;
     const response = await solanaAgent.processMessage(
       message,
       token,
       solPrivateKey,
+      solRpcUrl,
     );
     return NextResponse.json(response);
   } catch (error) {

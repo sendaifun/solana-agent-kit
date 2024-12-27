@@ -18,6 +18,7 @@ export default function Home() {
   const [settings, setSettings] = useState<Settings>({
     openAi: "",
     solPrivateKey: "",
+    solRpcUrl: "https://api.devnet.solana.com",
   });
 
   const currentChat = chats.find((chat) => chat.id === currentChatId);
@@ -78,6 +79,7 @@ export default function Home() {
         "Content-Type": "application/json",
         "OpenAI-Key": settings.openAi,
         "Solana-Private-Key": settings.solPrivateKey,
+        "Solana-Rpc-Url": settings.solRpcUrl,
       },
       body: JSON.stringify({
         message: content,

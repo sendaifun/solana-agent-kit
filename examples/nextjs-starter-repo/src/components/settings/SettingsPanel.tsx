@@ -1,8 +1,17 @@
 "use client";
 
 import { X } from "lucide-react";
-import { Settings } from "../../types/settings";
-import ThemeToggle from "../theme/ThemeToggle";
+import { Settings } from "@/types/settings";
+import ThemeToggle from "@/components/theme/ThemeToggle";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -23,6 +32,7 @@ export default function SettingsPanel({
     onSave({
       openAi: formData.get("apiKey") as string,
       solPrivateKey: formData.get("solPrivateKey") as string,
+      solRpcUrl: formData.get("solRpcUrl") as string,
     });
   };
 
@@ -71,6 +81,33 @@ export default function SettingsPanel({
               className="w-full p-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Solana Private Key"
             />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="solRpcUrl" className="text-sm font-medium">
+              Solana RPC Endpoint
+            </label>
+            <Select
+              id="solRpcUrl"
+              name="solRpcUrl"
+              defaultValue={
+              settings.solRpcUrl || "https://api.devnet.solana.com"
+            }>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue
+
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="https://api.devnet.solana.com">
+                    Devnet
+                  </SelectItem>
+                  <SelectItem value="https://api.mainnet-beta.solana.com">
+                    Mainnet
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <button
             type="submit"

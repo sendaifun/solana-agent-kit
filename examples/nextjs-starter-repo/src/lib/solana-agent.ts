@@ -10,16 +10,13 @@ export class SolanaAgentService {
 
   constructor(id: string) {
     this.threadId = id;
-    // this.llm = new ChatOpenAI({
-    //   modelName: "gpt-4",
-    //   temperature: 0.7,
-    // });
   }
 
   async processMessage(
     message: string,
     token?: string,
     solPrivateKey?: string,
+    solRpcUrl?: string,
   ): Promise<ChatResponse> {
     if (token) {
       this.llm = new ChatOpenAI({
@@ -31,7 +28,7 @@ export class SolanaAgentService {
 
     const solanaAgent = new SolanaAgentKit(
       solPrivateKey || process.env.NEXT_PUBLIC_SOLANA_PRIVATE_KEY!,
-      process.env.NEXT_PUBLIC_RPC_URL,
+      solRpcUrl || process.env.NEXT_PUBLIC_RPC_URL,
       process.env.OPENAI_API_KEY!,
     );
     try {
@@ -48,6 +45,7 @@ export class SolanaAgentService {
           2. If asked about Solana operations, explain them simply
           3. If technical details are needed, provide them in a structured way
           4. make sure the response in HTML supported style with minimal tailwind css
+          5. make the response visually appealing and easy to read
         `;
 
       const agent = createReactAgent({
