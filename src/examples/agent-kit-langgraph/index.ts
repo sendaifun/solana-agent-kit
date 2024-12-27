@@ -63,7 +63,7 @@ async function main() {
 
   const initialState = await app.invoke(
     {
-      messages: [new HumanMessage("What's my SOL balance?")],
+      messages: [new HumanMessage("What's the Balance for this token address: F6Rg7bkYAUYnuXMggiD6czF9W9RJh3AJuo7Q2WmmchCK")],
     },
     { configurable: { thread_id: "solana-session-1" } },
   );
