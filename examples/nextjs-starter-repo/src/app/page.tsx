@@ -41,19 +41,34 @@ export default function Home() {
 
     setChats(chats.map((chat) => {
       if (chat.id === currentChatId) {
+        const title = chat.messages.length === 0 ? content.slice(0, 30) : chat.title;
         return {
           ...chat,
           messages: [...chat.messages, userMessage],
-          title: chat.messages.length === 0 ? content.slice(0, 30) : chat.title,
+          title: title,
         };
       }
       return chat;
     }));
 
-    // TODO: Implement OpenAI API call
+    const response = await fetch(`/api/chat/${currentChatId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: content,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
     const aiMessage: Message = {
       id: uuidv4(),
-      content: 'This is a simulated AI response. Replace with actual OpenAI integration.',
+      content: result.message,
       role: 'assistant',
       createdAt: new Date(),
     };

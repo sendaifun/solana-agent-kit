@@ -1,0 +1,18 @@
+├── README.md
+├── .env.example
+├── package.json
+├── next.config.js
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── api/
+│   │       └── chat/
+│   │           └── route.ts
+│   ├── components/
+│   │   ├── Chat.tsx
+│   │   ├── ChatInput.tsx
+│   │   └── Message.tsx
+│   └── lib/
+│       ├── solana-agent.ts
+│       └── types.ts 
