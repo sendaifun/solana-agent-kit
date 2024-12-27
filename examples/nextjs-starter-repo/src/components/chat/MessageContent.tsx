@@ -10,7 +10,7 @@ interface MessageContentProps {
 
 export default function MessageContent({ content }: MessageContentProps) {
   if (typeof content === 'string') {
-    return <p className="whitespace-pre-wrap">{content}</p>;
+    return <p dangerouslySetInnerHTML={{ __html: content }} />
   }
 
   switch (content.type) {

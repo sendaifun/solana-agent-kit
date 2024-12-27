@@ -1,6 +1,6 @@
 'use client';
 
-import { useSettings } from '../hooks/useSettings';
+import { useSettings } from '../app/hooks/useSettings';
 import SettingsForm from '../components/settings/SettingsForm';
 
 export default function SettingsPage() {

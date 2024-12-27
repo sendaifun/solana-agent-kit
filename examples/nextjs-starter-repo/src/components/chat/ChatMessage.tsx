@@ -14,10 +14,9 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 
   return (
     <div className={cn(
-      'py-8 px-4 sm:px-6',
-      !isAI && 'bg-muted'
+      'py-4 px-4 sm:px-6',
     )}>
-      <div className="max-w-3xl mx-auto flex gap-4 animate-in slide-in-from-bottom duration-300">
+      <div className={cn("p-2 max-w-3xl mx-auto flex gap-4 animate-in slide-in-from-bottom duration-300", !isAI && "bg-muted")}>
         <div className={cn(
           'w-8 h-8 rounded-full flex items-center justify-center shrink-0',
           isAI ? 'bg-primary/10' : 'bg-secondary'
