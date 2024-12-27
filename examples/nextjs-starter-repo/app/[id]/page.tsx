@@ -1,7 +1,7 @@
 "use client";
 
 import { HumanMessage } from "@langchain/core/messages";
-import { useChat } from "ai/react";
+import { useChat, Message } from "ai/react";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ export default function Page() {
         setLoadingSubmit(false);
       }
     },
-    onError: (error) => {
+    onError: () => {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
     },
@@ -98,7 +98,7 @@ export default function Page() {
     }
   }
 
-  const addMessage = (Message: any) => {
+  const addMessage = (Message: Message) => {
     messages.push(Message);
     window.dispatchEvent(new Event("storage"));
     setMessages([...messages]);

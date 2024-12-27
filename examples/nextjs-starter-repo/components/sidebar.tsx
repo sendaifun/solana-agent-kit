@@ -1,15 +1,13 @@
 "use client";
 
-import { Link, MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
+import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 import { Message } from "ai/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "./ui/button";
 import { useEffect, useState } from "react";
-import { useLocalStorageData } from "../app/hooks/useLocalStorageData";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { cn } from "../lib/utils";
-import SidebarSkeleton from "./sidebar-skeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 interface SidebarProps {
@@ -34,7 +32,6 @@ export function Sidebar({
     { chatId: string; messages: Message[] }[]
   >([]);
   const [selectedChatId, setSselectedChatId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (chatId) {
@@ -59,10 +56,6 @@ export function Sidebar({
       key.startsWith("chat_")
     );
 
-    if (chats.length === 0) {
-      setIsLoading(false);
-    }
-
     // Map through the chats and return an object with chatId and messages
     const chatObjects = chats.map((chat) => {
       const item = localStorage.getItem(chat);
@@ -85,7 +78,6 @@ export function Sidebar({
       return bDate.getTime() - aDate.getTime();
     });
 
-    setIsLoading(false);
     return chatObjects;
   };
 

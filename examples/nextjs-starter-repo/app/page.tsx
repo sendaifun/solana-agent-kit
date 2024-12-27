@@ -157,7 +157,7 @@ export default function Home() {
       <ChatLayout
         messages={messages}
         input={input}
-        chatId=""
+        chatId={chatId}
         handleInputChange={handleInputChange}
         handleSubmit={onSubmit}
         isLoading={isLoading}

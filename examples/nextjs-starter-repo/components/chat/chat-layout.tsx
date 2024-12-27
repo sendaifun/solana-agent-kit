@@ -105,6 +105,7 @@ export function ChatLayout({
         <Chat
           messages={messages}
           input={input}
+          chatId={chatId}
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           isLoading={isLoading}

@@ -13,12 +13,14 @@ import { Message } from "ai/react";
 interface ChatTopbarProps {
   isLoading: boolean;
   messages: Message[];
+  chatId:string;
   setMessages: (messages: Message[]) => void;
 }
 
 export default function ChatTopbar({
   messages,
-  setMessages
+  setMessages,
+  chatId
 }: ChatTopbarProps) {
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
@@ -34,6 +36,7 @@ export default function ChatTopbar({
           </SheetTrigger>
           <SheetContent side="left">
             <Sidebar
+                chatId={chatId}
                 isCollapsed={false}
                 isMobile={false}
                 messages={messages}
