@@ -8,14 +8,16 @@ import ChatMessage from "../components/chat/ChatMessage";
 import ChatInput from "../components/chat/ChatInput";
 import SettingsPanel from "../components/settings/SettingsPanel";
 import { Chat, Message } from "../types/chat";
-import { useSettings } from "../hooks/useSettings";
+import { Settings } from "../types/settings";
 
 export default function Home() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [typing, setTyping] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string>();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const { settings, setSettings } = useSettings();
+  const [ settings, setSettings ] = useState<Settings | { openAi: string }>({ openAi: '' });
+
+
 
   const currentChat = chats.find((chat) => chat.id === currentChatId);
 
@@ -45,7 +47,7 @@ export default function Home() {
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!currentChatId || !settings.openAiKey) return;
+    if (!currentChatId || !settings.openAi) return;
     setTyping(true);
 
     const userMessage: Message = {
@@ -75,7 +77,7 @@ export default function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "OpenAI-Key": settings.openAiKey,
+        "OpenAI-Key": settings.openAi,
       },
       body: JSON.stringify({
         message: content,
@@ -154,21 +156,21 @@ export default function Home() {
             </div>
             <ChatInput
               onSend={handleSendMessage}
-              disabled={!settings.openAiKey}
+              disabled={!settings.openAi}
             />
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center space-y-4">
-              <h1 className="text-2xl font-bold">Welcome to Solana AI</h1>
-              <p className="text-muted-foreground">
-                {settings.openAiKey
+              <div className="text-2xl font-bold">Welcome to Solana AI</div>
+              <div className="text-muted-foreground">
+                {settings.openAi
                   ? "Start a new chat or select an existing one."
                   : "Please configure your OpenAI API key in settings."}
-              </p>
+              </div>
               <button
                 onClick={createNewChat}
-                disabled={!settings.openAiKey}
+                disabled={!settings.openAi}
                 className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 transition-opacity"
               >
                 Start New Chat

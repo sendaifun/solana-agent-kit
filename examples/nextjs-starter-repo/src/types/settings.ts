@@ -1,3 +1,3 @@
 export interface Settings {
-  openAiKey: string;
+  openAi: string;
 }

@@ -15,7 +15,7 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    onSave({ openAiKey: formData.get('apiKey') as string });
+    onSave({ openAi: formData.get('apiKey') as string });
   };
 
   return (
@@ -24,7 +24,7 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold">Settings</h2>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
@@ -44,7 +44,7 @@ export default function SettingsPanel({ isOpen, onClose, settings, onSave }: Set
               id="apiKey"
               name="apiKey"
               type="password"
-              defaultValue={settings.openAiKey}
+              defaultValue={settings.openAi}
               className="w-full p-2 rounded-lg border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="sk-..."
             />
