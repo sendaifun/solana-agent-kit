@@ -49,7 +49,9 @@ export class SolanaAgentService {
           3. If technical details are needed, provide them in a structured way
           4. make sure the response in HTML supported style with minimal tailwind css
         `;
+
       const agent = createReactAgent({
+        // @ts-expect-error
         llm: this.llm,
         tools: tools,
         messageModifier: systemPrompt,
