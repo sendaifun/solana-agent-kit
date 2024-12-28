@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-
+import { SolanaAgentKit } from "../agent";
 export interface Creator {
   address: string;
   percentage: number;
@@ -94,9 +94,10 @@ export interface GibworkCreateTaskReponse {
 
 // Core action types
 export type Handler = (
-  context: ActionContext,
-  ...args: any[]
+  agent: SolanaAgentKit,
+  input: Record<string, any>,
 ) => Promise<ActionResult>;
+
 export type Validator = (
   context: ActionContext,
   ...args: any[]
