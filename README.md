@@ -202,6 +202,23 @@ const price = await agent.pythFetchPrice(
 console.log("Price in BTC/USD:", price);
 ```
 
+## Examples
+
+### LangGraph Multi-Agent System
+
+The repository includes an advanced example of building a multi-agent system using LangGraph and Solana Agent Kit. Located in `examples/agent-kit-langgraph`, this example demonstrates:
+
+- Multi-agent architecture using LangGraph's StateGraph
+- Specialized agents for different tasks:
+  - General purpose agent for basic queries
+  - Transfer/Swap agent for transaction operations
+  - Read agent for blockchain data queries
+  - Manager agent for routing and orchestration
+- Fully typed TypeScript implementation
+- Environment-based configuration
+
+Check out the [LangGraph example](examples/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
+
 ## Dependencies
 
 The toolkit relies on several key Solana and Metaplex libraries:

@@ -37,3 +37,6 @@ export * from "./openbook_create_market";
 export * from "./pyth_fetch_price";
 
 export * from "./create_gibwork_task";
+
+export * from "./rock_paper_scissor";
+export * from "./create_tiplinks";

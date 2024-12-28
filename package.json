@@ -23,9 +23,9 @@
   "dependencies": {
     "@bonfida/spl-name-service": "^3.0.7",
     "@coral-xyz/anchor": "0.29",
-    "@langchain/core": "^0.3.18",
+    "@langchain/core": "^0.3.26",
     "@langchain/groq": "^0.1.2",
-    "@langchain/langgraph": "^0.2.27",
+    "@langchain/langgraph": "^0.2.34",
     "@langchain/openai": "^0.3.13",
     "@lightprotocol/compressed-token": "^0.17.1",
     "@lightprotocol/stateless.js": "^0.17.1",
@@ -42,6 +42,7 @@
     "@raydium-io/raydium-sdk-v2": "0.1.95-alpha",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",
+    "@tiplink/api": "^0.3.1",
     "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "chai": "^5.1.2",
@@ -56,13 +57,13 @@
     "@types/bn.js": "^5.1.5",
     "@types/chai": "^5.0.1",
     "@types/node": "^22.9.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }
