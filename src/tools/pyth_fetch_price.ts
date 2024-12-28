@@ -38,3 +38,27 @@ export async function pythFetchPrice(priceFeedID: string): Promise<string> {
     throw new Error(`Fetching price from Pyth failed: ${error.message}`);
   }
 }
+
+export async function fetchPythPriceFeedID(tokenSymbol: string): Promise<string> {
+  const stableHermesServiceUrl: string = "https://hermes.pyth.network";
+
+  const response = await fetch(`${stableHermesServiceUrl}/v2/price_feeds/?query=${tokenSymbol}&asset_type=crypto`);
+
+  const data = await response.json();
+
+  if (data.length === 0) {
+    throw new Error(`No price feed found for ${tokenSymbol}`);
+  }
+
+  if (data.length > 1) {
+    const filteredData = data.filter((item: any) => item.attributes.base.toLowerCase() === tokenSymbol.toLowerCase());
+
+    if (filteredData.length === 0) {
+      throw new Error(`No price feed found for ${tokenSymbol}`);
+    }
+
+    return filteredData[0].id;
+  }
+
+  return data[0].id;
+}
