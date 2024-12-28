@@ -8,9 +8,10 @@
     "build": "tsc",
     "docs": "typedoc src --out docs",
     "test": "ts-node test/index.ts",
+    "test:vercel-ai": "ts-node test/agent_sdks/vercel_ai.ts",
     "generate": "ts-node src/utils/keypair.ts",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts,.json",
+    "lint:fix": "eslint . --ext .ts,.json --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "engines": {
@@ -21,11 +22,12 @@
   "author": "sendaifun",
   "license": "Apache-2.0",
   "dependencies": {
+    "@ai-sdk/openai": "^1.0.11",
     "@bonfida/spl-name-service": "^3.0.7",
     "@coral-xyz/anchor": "0.29",
-    "@langchain/core": "^0.3.26",
+    "@langchain/core": "^0.3.18",
     "@langchain/groq": "^0.1.2",
-    "@langchain/langgraph": "^0.2.34",
+    "@langchain/langgraph": "^0.2.27",
     "@langchain/openai": "^0.3.13",
     "@lightprotocol/compressed-token": "^0.17.1",
     "@lightprotocol/stateless.js": "^0.17.1",
@@ -43,6 +45,7 @@
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",
     "@tiplink/api": "^0.3.1",
+    "ai": "^4.0.22",
     "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "chai": "^5.1.2",
@@ -51,7 +54,8 @@
     "form-data": "^4.0.1",
     "langchain": "^0.3.6",
     "openai": "^4.75.0",
-    "typedoc": "^0.26.11"
+    "typedoc": "^0.26.11",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.5",
