@@ -38,5 +38,9 @@ export * from "./pyth_fetch_price";
 
 export * from "./create_gibwork_task";
 
-export * from "./rock_paper_scissor";
-export * from "./create_tiplinks";
+export * from "./crossmint_embedded_wallet";
+export * from "./crossmint_fund_wallet";
+export * from "./crossmint_prepare_tx";
+export * from "./crossmint_send_tx";
+export * from "./crossmint_tx_monitor";
+export { getCrossmintWalletBalance } from "./crossmint_wallet_balance";

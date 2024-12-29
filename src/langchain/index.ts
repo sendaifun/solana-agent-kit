@@ -10,6 +10,8 @@ import { create_image } from "../tools/create_image";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 import { toJSON } from "../utils/toJSON";
+import { createCrossmintWallet, getCrossmintWallet } from "../tools/crossmint_embedded_wallet";
+import { fundCrossmintWallet } from "../tools/crossmint_fund_wallet";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -578,7 +580,7 @@ export class SolanaTPSCalculatorTool extends Tool {
   async _call(_input: string): Promise<string> {
     try {
       const tps = await this.solanaKit.getTPS();
-      return `Solana (mainnet-beta) current transactions per second: ${tps}`;
+      return `Solana (devnet) current transactions per second: ${tps}`;
     } catch (error: any) {
       return `Error fetching TPS: ${error.message}`;
     }
@@ -1229,45 +1231,28 @@ export class SolanaCreateGibworkTask extends Tool {
   }
 }
 
-export class SolanaRockPaperScissorsTool extends Tool {
-  name = "rock_paper_scissors";
-  description = `Play rock paper scissors to win SEND coins.
+export class SolanaEmbeddedWalletTool extends Tool {
+  name = "solana_embedded_wallet";
+  description = `Create and manage an embedded wallet using Crossmint's API.
 
   Inputs (input is a JSON string):
-  choice: string, either "rock", "paper", or "scissors" (required)
-  amount: number, amount of SOL to play with - must be 0.1, 0.01, or 0.005 SOL (required)`;
+  linkedUser: string, e.g., "email:user@example.com" (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
 
-  private validateInput(input: any): void {
-    if (input.choice !== undefined) {
-      throw new Error("choice is required.");
-    }
-    if (
-      input.amount !== undefined &&
-      (typeof input.spaceKB !== "number" || input.spaceKB <= 0)
-    ) {
-      throw new Error("amount must be a positive number when provided");
-    }
-  }
-
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = toJSON(input);
-      this.validateInput(parsedInput);
-      const result = await this.solanaKit.rockPaperScissors(
-        Number(parsedInput['"amount"']),
-        parsedInput['"choice"'].replace(/^"|"$/g, "") as
-          | "rock"
-          | "paper"
-          | "scissors",
-      );
+      const parsedInput = JSON.parse(input);
+      const { linkedUser } = parsedInput;
+
+      const walletResponse = await this.solanaKit.createCrossmintWallet(linkedUser);
 
       return JSON.stringify({
         status: "success",
-        message: result,
+        walletId: walletResponse.walletId,
+        address: walletResponse.address,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -1279,12 +1264,14 @@ export class SolanaRockPaperScissorsTool extends Tool {
   }
 }
 
-export class SolanaTipLinkTool extends Tool {
-  name = "solana_tiplink";
-  description = `Create a TipLink for transferring SOL or SPL tokens.
-  Input is a JSON string with:
-  - amount: number (required) - Amount to transfer
-  - splmintAddress: string (optional) - SPL token mint address`;
+export class CrossmintWalletBalanceTool extends Tool {
+  name = "crossmint_wallet_balance";
+  description = `Get the balance of a Crossmint wallet.
+
+  Inputs (input is a JSON string):
+  walletLocator: string - Wallet identifier/address (required)
+  currency: string - Currency to check (default: 'SOL')
+  network: string - Network to use (default: 'devnet')`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1293,28 +1280,78 @@ export class SolanaTipLinkTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      const { 
+        walletLocator, 
+        currency = 'SOL', 
+        network = 'devnet' 
+      } = parsedInput;
 
-      if (!parsedInput.amount) {
-        throw new Error("Amount is required");
+      if (!walletLocator) {
+        throw new Error("walletLocator is required");
       }
 
-      const amount = parseFloat(parsedInput.amount);
-      const splmintAddress = parsedInput.splmintAddress
-        ? new PublicKey(parsedInput.splmintAddress)
-        : undefined;
-
-      const { url, signature } = await this.solanaKit.createTiplink(
-        amount,
-        splmintAddress,
+      const balanceResponse = await this.solanaKit.getCrossmintWalletBalance(
+        walletLocator,
+        currency,
+        network
       );
 
       return JSON.stringify({
-        status: "success",
-        url,
-        signature,
+        status: balanceResponse.status,
+        balance: balanceResponse.balance,
+        currency: currency,
+        network: network,
+        message: balanceResponse.message,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class CrossmintFundWalletTool extends Tool {
+  name = "crossmint_fund_wallet";
+  description = `Fund a Crossmint wallet with USDC or SOL.
+
+  Inputs (input is a JSON string):
+  walletLocator: string - Wallet identifier/address (required)
+  amount: number - Amount to fund (required)
+  currency: string - Currency to fund with (default: 'USDC')`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+      const { walletLocator, amount, currency = 'USDC' } = parsedInput;
+
+      if (!walletLocator) {
+        throw new Error("walletLocator is required");
+      }
+
+      if (!amount || amount <= 0) {
+        throw new Error("amount must be a positive number");
+      }
+
+      const fundingResponse = await fundCrossmintWallet(
+        this.solanaKit,
+        walletLocator,
         amount,
-        tokenType: splmintAddress ? "SPL" : "SOL",
-        message: `TipLink created successfully`,
+        currency
+      );
+
+      return JSON.stringify({
+        status: fundingResponse.status,
+        transactionId: fundingResponse.transactionId,
+        amount: fundingResponse.amount,
+        currency: fundingResponse.currency,
+        message: fundingResponse.message,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -1360,7 +1397,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetMainDomain(solanaKit),
     new SolanaResolveAllDomainsTool(solanaKit),
     new SolanaCreateGibworkTask(solanaKit),
-    new SolanaRockPaperScissorsTool(solanaKit),
-    new SolanaTipLinkTool(solanaKit),
+    new SolanaEmbeddedWalletTool(solanaKit),
+    new CrossmintFundWalletTool(solanaKit),
+    new CrossmintWalletBalanceTool(solanaKit),
   ];
 }
