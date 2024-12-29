@@ -28,3 +28,8 @@ export const DEFAULT_OPTIONS = {
  * Jupiter API URL
  */
 export const JUP_API = "https://quote-api.jup.ag/v6";
+
+/**
+ * Solana RPC URL
+ */
+export const SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com";

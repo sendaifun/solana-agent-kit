@@ -8,8 +8,8 @@ export interface Creator {
 export interface CollectionOptions {
   name: string;
   uri: string;
-  royaltyBasisPoints?: number;
-  creators?: Creator[];
+  royaltyBasisPoints?: number | undefined;
+  creators?: Creator[] | undefined;
 }
 
 // Add return type interface

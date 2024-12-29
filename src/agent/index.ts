@@ -1,7 +1,7 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
-import { DEFAULT_OPTIONS } from "../constants";
+import { DEFAULT_OPTIONS, SOLANA_RPC_URL } from "../constants";
 import {
   deploy_collection,
   deploy_token,
@@ -62,12 +62,18 @@ export class SolanaAgentKit {
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
-  public openai_api_key: string;
+  public openai_api_key: string | undefined;
 
+  /**
+   * Creates an instance of SolanaAgentKit.
+   * @param {string} private_key - Private key of the wallet
+   * @param {string} [rpc_url="https://api.mainnet-beta.solana.com"] - Solana RPC URL
+   * @param {string} openai_api_key - Deprecated: OpenAI API key
+   */
   constructor(
     private_key: string,
-    rpc_url = "https://api.mainnet-beta.solana.com",
-    openai_api_key: string,
+    rpc_url: string = SOLANA_RPC_URL,
+    openai_api_key?: string,
   ) {
     this.connection = new Connection(rpc_url);
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));

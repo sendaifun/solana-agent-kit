@@ -6,7 +6,7 @@ import { agentKit } from "../utils/solanaAgent";
 import {
   SolanaBalanceTool,
   SolanaFetchPriceTool,
-} from "solana-agent-kit/dist/langchain";
+} from "solana-agent-kit/dist/agent/langchain/tools";
 
 const readAgent = createReactAgent({
   llm: gpt4o,
