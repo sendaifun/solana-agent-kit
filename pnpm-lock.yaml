@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@ai-sdk/provider':
+    specifier: ^1.0.3
+    version: 1.0.3
   '@bonfida/spl-name-service':
     specifier: ^3.0.7
     version: 3.0.7(@solana/web3.js@1.98.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)
@@ -174,7 +177,6 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       json-schema: 0.4.0
-    dev: true
 
   /@babel/runtime@7.26.0:
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
@@ -1379,9 +1381,9 @@ packages:
     dependencies:
       '@babel/runtime': 7.26.0
       '@noble/curves': 1.7.0
-      '@noble/hashes': 1.5.0
+      '@noble/hashes': 1.6.1
       '@solana/buffer-layout': 4.0.1
-      agentkeepalive: 4.5.0
+      agentkeepalive: 4.6.0
       bigint-buffer: 1.1.5
       bn.js: 5.2.1
       borsh: 0.7.0
@@ -1405,7 +1407,7 @@ packages:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@solana/buffer-layout': 4.0.1
-      agentkeepalive: 4.5.0
+      agentkeepalive: 4.6.0
       bigint-buffer: 1.1.5
       bn.js: 5.2.1
       borsh: 0.7.0
@@ -1715,8 +1717,8 @@ packages:
     hasBin: true
     dev: true
 
-  /agentkeepalive@4.5.0:
-    resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
+  /agentkeepalive@4.6.0:
+    resolution: {integrity: sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ==}
     engines: {node: '>= 8.0.0'}
     dependencies:
       humanize-ms: 1.2.1
@@ -2593,7 +2595,7 @@ packages:
       '@types/node': 18.19.68
       '@types/node-fetch': 2.6.12
       abort-controller: 3.0.0
-      agentkeepalive: 4.5.0
+      agentkeepalive: 4.6.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
@@ -2841,7 +2843,6 @@ packages:
 
   /json-schema@0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
-    dev: true
 
   /json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -3228,7 +3229,7 @@ packages:
       '@types/node': 18.19.68
       '@types/node-fetch': 2.6.12
       abort-controller: 3.0.0
-      agentkeepalive: 4.5.0
+      agentkeepalive: 4.6.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
