@@ -100,33 +100,6 @@ export type Handler = (
 
 export type Validator = (input: Record<string, any>) => Promise<boolean>;
 
-// Context and runtime interfaces
-export interface ActionContext {
-  runtime: Runtime;
-  message: Message;
-  state?: Record<string, any>;
-}
-
-export interface Runtime {
-  services: Map<string, any>;
-  memory: MemoryManager;
-  state: StateManager;
-}
-
-export interface MemoryManager {
-  get(id: string): Promise<Memory | null>;
-  create(memory: Omit<Memory, 'id'>): Promise<Memory>;
-  update(id: string, update: Partial<Memory>): Promise<Memory>;
-  delete(id: string): Promise<boolean>;
-}
-
-export interface StateManager {
-  get(): Promise<Record<string, any>>;
-  set(state: Record<string, any>): Promise<void>;
-  update(update: Partial<Record<string, any>>): Promise<Record<string, any>>;
-  clear(): Promise<void>;
-}
-
 // Message and memory interfaces
 export interface Message {
   id: string;
@@ -148,20 +121,6 @@ export interface Attachment {
   url: string;
   metadata?: Record<string, any>;
 }
-
-export interface Memory extends Message {
-  roomId?: string;
-  threadId?: string;
-  replyTo?: string;
-  reactions?: Reaction[];
-}
-
-export interface Reaction {
-  type: string;
-  userId: string;
-  timestamp: number;
-}
-
 // Action interfaces
 export interface Action {
   name: string;
