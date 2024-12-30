@@ -71,6 +71,9 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.4
         version: 1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@sqds/multisig':
+        specifier: ^2.1.3
+        version: 2.1.3(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
       '@tiplink/api':
         specifier: ^0.3.1
         version: 0.3.1(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(sodium-native@3.4.1)(utf-8-validate@5.0.10)
@@ -264,11 +267,20 @@ packages:
   '@lightprotocol/stateless.js@0.17.1':
     resolution: {integrity: sha512-EjId1n33A6dBwpce33Wsa/fs/CDKtMtRrkxbApH0alXrnEXmbW6QhIViXOrKYXjZ4uJQM1xsBtsKe0vqJ4nbtQ==}
 
+  '@metaplex-foundation/beet-solana@0.4.0':
+    resolution: {integrity: sha512-B1L94N3ZGMo53b0uOSoznbuM5GBNJ8LwSeznxBxJ+OThvfHQ4B5oMUqb+0zdLRfkKGS7Q6tpHK9P+QK0j3w2cQ==}
+
   '@metaplex-foundation/beet-solana@0.4.1':
     resolution: {integrity: sha512-/6o32FNUtwK8tjhotrvU/vorP7umBuRFvBZrC6XCk51aKidBHe5LPVPA5AjGPbV3oftMfRuXPNd9yAGeEqeCDQ==}
 
+  '@metaplex-foundation/beet@0.7.1':
+    resolution: {integrity: sha512-hNCEnS2WyCiYyko82rwuISsBY3KYpe828ubsd2ckeqZr7tl0WVLivGkoyA/qdiaaHEBGdGl71OpfWa2rqL3DiA==}
+
   '@metaplex-foundation/beet@0.7.2':
     resolution: {integrity: sha512-K+g3WhyFxKPc0xIvcIjNyV1eaTVJTiuaHZpig7Xx0MuYRMoJLLvhLTnUXhFdR5Tu2l2QSyKwfyXDgZlzhULqFg==}
+
+  '@metaplex-foundation/cusper@0.0.2':
+    resolution: {integrity: sha512-S9RulC2fFCFOQraz61bij+5YCHhSO9llJegK8c8Y6731fSi6snUSQJdCUqYS8AIgR0TKbQvdvgSyIIdbDFZbBA==}
 
   '@metaplex-foundation/mpl-core@1.1.1':
     resolution: {integrity: sha512-h1kLw+cGaV8SiykoHDb1/G01+VYqtJXAt0uGuO5+2Towsdtc6ET4M62iqUnh4EacTVMIW1yYHsKsG/LYWBCKaA==}
@@ -614,6 +626,10 @@ packages:
 
   '@solana/web3.js@1.98.0':
     resolution: {integrity: sha512-nz3Q5OeyGFpFCR+erX2f6JPt3sKhzhYcSycBCSPkWjzSVDh/Rr1FqTVMRe58FKO16/ivTUcuJjeS5MyBvpkbzA==}
+
+  '@sqds/multisig@2.1.3':
+    resolution: {integrity: sha512-WOiL7La+RSiJsz7jVO85yhSiiSvNMUthiWuLPeWVOoD6IYa34BEAzanF1RdXRWGglSbRFYCTkyr+Ay1WmXmSRQ==}
+    engines: {node: '>=14'}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -1327,6 +1343,9 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+
   ipaddr.js@2.2.0:
     resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
     engines: {node: '>= 10'}
@@ -1392,6 +1411,9 @@ packages:
 
   js-tiktoken@1.0.16:
     resolution: {integrity: sha512-nUVdO5k/M9llWpiaZlBBDdtmr6qWXwSD6fgaDu2zM8UP+OXxx9V37lFkI6w0/1IuaDx7WffZ37oYd9KvcWKElg==}
+
+  js-tokens@4.0.0:
+    resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
@@ -1510,6 +1532,10 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  loose-envify@1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
 
   loupe@3.1.2:
     resolution: {integrity: sha512-23I4pFZHmAemUnz8WZXbYRSKYj801VDaNv9ETuMh7IrMc7VuVVSo+Z9iLE3ni30+U48iDWfi30d3twAXBYmnCg==}
@@ -2300,6 +2326,18 @@ snapshots:
       - encoding
       - utf-8-validate
 
+  '@metaplex-foundation/beet-solana@0.4.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@metaplex-foundation/beet': 0.7.2
+      '@solana/web3.js': 1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      bs58: 5.0.0
+      debug: 4.4.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - supports-color
+      - utf-8-validate
+
   '@metaplex-foundation/beet-solana@0.4.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@metaplex-foundation/beet': 0.7.2
@@ -2312,6 +2350,14 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@metaplex-foundation/beet@0.7.1':
+    dependencies:
+      ansicolors: 0.3.2
+      bn.js: 5.2.1
+      debug: 4.4.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@metaplex-foundation/beet@0.7.2':
     dependencies:
       ansicolors: 0.3.2
@@ -2320,6 +2366,8 @@ snapshots:
       debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
+
+  '@metaplex-foundation/cusper@0.0.2': {}
 
   '@metaplex-foundation/mpl-core@1.1.1(@metaplex-foundation/umi@0.9.2)(@noble/hashes@1.6.1)':
     dependencies:
@@ -2836,6 +2884,20 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  '@solana/spl-token@0.3.11(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@solana/buffer-layout': 4.0.1
+      '@solana/buffer-layout-utils': 0.2.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@solana/spl-token-metadata': 0.1.6(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)
+      '@solana/web3.js': 1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      buffer: 6.0.3
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - fastestsmallesttextencoderdecoder
+      - typescript
+      - utf-8-validate
+
   '@solana/spl-token@0.4.6(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@solana/buffer-layout': 4.0.1
@@ -2927,6 +2989,26 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - encoding
+      - utf-8-validate
+
+  '@sqds/multisig@2.1.3(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@metaplex-foundation/beet': 0.7.1
+      '@metaplex-foundation/beet-solana': 0.4.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@metaplex-foundation/cusper': 0.0.2
+      '@solana/spl-token': 0.3.11(@solana/web3.js@1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
+      '@solana/web3.js': 1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@types/bn.js': 5.1.6
+      assert: 2.1.0
+      bn.js: 5.2.1
+      buffer: 6.0.3
+      invariant: 2.2.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - fastestsmallesttextencoderdecoder
+      - supports-color
+      - typescript
       - utf-8-validate
 
   '@swc/helpers@0.5.15':
@@ -3705,6 +3787,10 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  invariant@2.2.4:
+    dependencies:
+      loose-envify: 1.4.0
+
   ipaddr.js@2.2.0: {}
 
   is-arguments@1.2.0:
@@ -3774,6 +3860,8 @@ snapshots:
   js-tiktoken@1.0.16:
     dependencies:
       base64-js: 1.5.1
+
+  js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
     dependencies:
@@ -3864,6 +3952,10 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash@4.17.21: {}
+
+  loose-envify@1.4.0:
+    dependencies:
+      js-tokens: 4.0.0
 
   loupe@3.1.2: {}
 
