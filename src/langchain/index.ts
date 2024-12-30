@@ -7,6 +7,7 @@ import {
   SolanaAgentKit,
 } from "../index";
 import { create_image } from "../tools/create_image";
+import { text_to_speech } from "../tools/audio";
 import { BN } from "@coral-xyz/anchor";
 import { FEE_TIERS } from "../tools";
 
@@ -1368,6 +1369,47 @@ export class SolanaTipLinkTool extends Tool {
   }
 }
 
+export class SolanaTextToSpeechTool extends Tool {
+  name = "solana_text_to_speech";
+  description = `Turn text into lifelike spoken audio.
+  Input is a JSON string with:
+  - prompt: string (required) - Text to generate audio for
+  - path: string (required) - A path to a file for saving the audio`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+      const prompt = parsedInput.prompt;
+      const path = parsedInput.path;
+
+      if (typeof prompt !== "string" || prompt.trim().length === 0) {
+        throw new Error("Prompt must be a non-empty string");
+      }
+      if (typeof path !== "string" || path.trim().length === 0) {
+        throw new Error("Path must be a non-empty string");
+      }
+
+      const result = await text_to_speech(this.solanaKit, prompt, path);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Audio created successfully",
+        ...result,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1405,5 +1447,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCreateGibworkTask(solanaKit),
     new SolanaRockPaperScissorsTool(solanaKit),
     new SolanaTipLinkTool(solanaKit),
+    new SolanaTextToSpeechTool(solanaKit),
   ];
 }
