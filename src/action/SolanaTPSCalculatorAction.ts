@@ -36,8 +36,8 @@ export const SolanaTPSCalculatorAction: Action = {
       success: true,
       data: {
         tps,
-        network: "mainnet-beta"
-      }
+        network: "mainnet-beta",
+      },
     };
   },
 

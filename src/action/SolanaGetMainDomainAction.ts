@@ -18,7 +18,7 @@ export const SolanaGetMainDomainAction: Action = {
             id: "1",
             content: {
               text: JSON.stringify({
-                owner: "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t"
+                owner: "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t",
               }),
             },
             userId: "user1",
@@ -27,7 +27,7 @@ export const SolanaGetMainDomainAction: Action = {
         },
         output: {
           success: true,
-          data: { mainDomain: "example.sol" }
+          data: { mainDomain: "example.sol" },
         },
       },
     ],
@@ -40,16 +40,15 @@ export const SolanaGetMainDomainAction: Action = {
       success: true,
       data: {
         domain: mainDomain,
-        owner: input.owner
-      }
+        owner: input.owner,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
-        owner: z.string()
+        owner: z.string(),
       });
       return schema.safeParse(input).success;
     } catch {

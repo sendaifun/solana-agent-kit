@@ -48,8 +48,7 @@ export const SolanaTransferAction: Action = {
     return convert();
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         to: z.string(),

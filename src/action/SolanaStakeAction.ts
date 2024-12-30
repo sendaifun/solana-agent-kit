@@ -1,5 +1,5 @@
 import { SolanaAgentKit } from "../agent";
-import { Action, ActionResult } from "../types";
+import { Action } from "../types";
 import { z } from "zod";
 
 export const SolanaStakeAction: Action = {
@@ -17,7 +17,7 @@ export const SolanaStakeAction: Action = {
             id: "1",
             content: {
               text: JSON.stringify({
-                amount: 1
+                amount: 1,
               }),
             },
             userId: "user1",
@@ -38,13 +38,12 @@ export const SolanaStakeAction: Action = {
       success: true,
       data: {
         transaction: tx,
-        amount: input.amount
-      }
+        amount: input.amount,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         amount: z.number().positive()

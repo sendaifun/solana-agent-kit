@@ -1,22 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
-import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
-import {
-  GibworkCreateTaskReponse,
-  PythFetchPriceResponse,
-  SolanaAgentKit,
-} from "../index";
-import { create_image } from "../tools/create_image";
-import { BN } from "@coral-xyz/anchor";
-import { FEE_TIERS } from "../tools";
-import { toJSON } from "../utils/toJSON";
-import {
-  Action,
-  ActionExample,
-  ActionResult,
-  Handler,
-  Validator,
-} from "../types";
+import { SolanaAgentKit } from "../index";
 import {
   SolanaBalanceAction,
   SolanaCompressedAirdropAction,
@@ -65,6 +49,9 @@ export class SolanaBalanceTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const tokenAddress = input ? new PublicKey(input) : undefined;
+      if (!this.action.validate({ tokenAddress })) {
+        throw new Error("Invalid input");
+      }
       const balance = await this.action.handler(this.solanaKit, {
         tokenAddress,
       });
@@ -97,6 +84,9 @@ export class SolanaTransferTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -128,6 +118,9 @@ export class SolanaDeployTokenTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -158,6 +151,9 @@ export class SolanaDeployCollectionTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -188,6 +184,9 @@ export class SolanaMintNFTTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -218,6 +217,9 @@ export class SolanaTradeTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -248,6 +250,9 @@ export class SolanaRequestFundsTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -278,6 +283,9 @@ export class SolanaRegisterDomainTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -307,7 +315,10 @@ export class SolanaResolveDomainTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { domain: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -337,7 +348,10 @@ export class SolanaGetDomainTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { account: input };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -365,7 +379,7 @@ export class SolanaGetWalletAddressTool extends Tool {
     super();
   }
 
-  protected async _call(input: string): Promise<string> {
+  protected async _call(_input: string): Promise<string> {
     try {
       // No need to parse input for this action as it doesn't take any
       const result = await this.action.handler(this.solanaKit, {});
@@ -397,7 +411,10 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = JSON.parse(input); 
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -428,6 +445,9 @@ export class SolanaCreateImageTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       // Note: This action takes the raw string input as the prompt
+      if (!this.action.validate({ prompt: input.trim() })) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, {
         prompt: input.trim(),
       });
@@ -460,6 +480,9 @@ export class SolanaLendAssetTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -487,7 +510,7 @@ export class SolanaTPSCalculatorTool extends Tool {
     super();
   }
 
-  protected async _call(input: string): Promise<string> {
+  protected async _call(_input: string): Promise<string> {
     try {
       const result = await this.action.handler(this.solanaKit, {});
 
@@ -518,7 +541,10 @@ export class SolanaStakeTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { amount: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input recived");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -552,7 +578,10 @@ export class SolanaFetchPriceTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { tokenId: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -582,7 +611,10 @@ export class SolanaTokenDataTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { mintAddress: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -612,7 +644,10 @@ export class SolanaTokenDataByTickerTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { ticker: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -643,6 +678,9 @@ export class SolanaCompressedAirdropTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -673,6 +711,9 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -703,6 +744,9 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -733,6 +777,9 @@ export class SolanaRaydiumCreateClmm extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -763,6 +810,9 @@ export class SolanaRaydiumCreateCpmm extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -793,6 +843,9 @@ export class SolanaOpenbookCreateMarket extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -822,7 +875,10 @@ export class SolanaPythFetchPrice extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { priceFeedID: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -852,7 +908,10 @@ export class SolanaResolveAllDomainsTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { domain: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -882,7 +941,10 @@ export class SolanaGetOwnedDomains extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { owner: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -912,7 +974,10 @@ export class SolanaGetOwnedTldDomains extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { tld: input.trim() };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -972,7 +1037,10 @@ export class SolanaGetMainDomain extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = JSON.parse(input);
+      const parsedInput = { owner: input };
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({
@@ -1003,6 +1071,9 @@ export class SolanaCreateGibworkTask extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const parsedInput = JSON.parse(input);
+      if (!this.action.validate(parsedInput)) {
+        throw new Error("Invalid input");
+      }
       const result = await this.action.handler(this.solanaKit, parsedInput);
 
       return JSON.stringify({

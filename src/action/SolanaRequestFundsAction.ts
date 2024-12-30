@@ -29,19 +29,18 @@ export const SolanaRequestFundsAction: Action = {
     ],
   ],
 
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentKit, _input: Record<string, any>) => {
     await agent.requestFaucetFunds();
     return {
       success: true,
       data: {
         message: "Successfully requested faucet funds",
-        network: agent.connection.rpcEndpoint.split("/")[2]
+        network: agent.connection.rpcEndpoint.split("/")[2],
       }
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         amount: z.number(),

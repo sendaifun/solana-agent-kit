@@ -27,7 +27,7 @@ export const SolanaGetOwnedDomainsAction: Action = {
         },
         output: {
           success: true,
-          data: { domains: ["example1.sol", "example2.sol"] }
+          data: { domains: ["example1.sol", "example2.sol"] },
         },
       },
     ],
@@ -40,13 +40,12 @@ export const SolanaGetOwnedDomainsAction: Action = {
       success: true,
       data: {
         domains,
-        owner: input.owner
-      }
+        owner: input.owner,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         owner: z.string()

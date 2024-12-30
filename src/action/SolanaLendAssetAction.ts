@@ -38,13 +38,12 @@ export const SolanaLendAssetAction: Action = {
       success: true,
       data: {
         transaction: tx,
-        amount: input.amount
-      }
+        amount: input.amount,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         amount: z.number().positive(),

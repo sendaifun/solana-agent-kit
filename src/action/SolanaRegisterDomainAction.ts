@@ -37,27 +37,26 @@ export const SolanaRegisterDomainAction: Action = {
   ],
 
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
-    const tx = await agent.registerDomain(
-      input.name,
-      input.spaceKB || 1
-    );
+    const tx = await agent.registerDomain(input.name, input.spaceKB || 1);
 
     return {
       success: true,
       data: {
         transaction: tx,
         domain: `${input.name}.sol`,
-        spaceKB: input.spaceKB || 1
-      }
+        spaceKB: input.spaceKB || 1,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
-        name: z.string(),
-        spaceKB: z.number().optional()
+        name: z.string().nonempty("name is required and must be a string"),
+        spaceKB: z
+          .number()
+          .positive("spaceKB must be a positive number when provided")
+          .optional(),
       });
       return schema.safeParse(input).success;
     } catch {

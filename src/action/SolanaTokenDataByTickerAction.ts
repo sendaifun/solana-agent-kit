@@ -17,7 +17,7 @@ export const SolanaTokenDataByTickerAction: Action = {
             id: "1",
             content: {
               text: JSON.stringify({
-                ticker: "SOL"
+                ticker: "SOL",
               }),
             },
             userId: "user1",
@@ -30,7 +30,7 @@ export const SolanaTokenDataByTickerAction: Action = {
             name: "Solana",
             symbol: "SOL",
             decimals: 9,
-            supply: "1000000000"
+            supply: "1000000000",
           },
         },
       },
@@ -42,13 +42,12 @@ export const SolanaTokenDataByTickerAction: Action = {
     return {
       success: true,
       data: {
-        tokenData
-      }
+        tokenData,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         ticker: z.string(),

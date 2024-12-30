@@ -98,10 +98,7 @@ export type Handler = (
   input: Record<string, any>,
 ) => Promise<ActionResult>;
 
-export type Validator = (
-  context: ActionContext,
-  ...args: any[]
-) => Promise<boolean>;
+export type Validator = (input: Record<string, any>) => Promise<boolean>;
 
 // Context and runtime interfaces
 export interface ActionContext {
@@ -190,31 +187,4 @@ export interface ActionResult {
   data?: any;
   error?: string;
   metadata?: Record<string, any>;
-}
-
-// Service types
-export enum ServiceType {
-  DOCUMENT = 'document',
-  TRANSCRIPTION = 'transcription',
-  TRANSLATION = 'translation',
-  STORAGE = 'storage',
-  // Add other service types as needed
-}
-
-export interface Service {
-  type: ServiceType;
-  initialize(): Promise<void>;
-  shutdown(): Promise<void>;
-}
-
-// Error types
-export class ActionError extends Error {
-  constructor(
-    message: string,
-    public code: string,
-    public metadata?: Record<string, any>,
-  ) {
-    super(message);
-    this.name = "ActionError";
-  }
 }

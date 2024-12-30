@@ -42,8 +42,7 @@ export const SolanaBalanceAction: Action = {
     return convert();
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.string().optional();
       return schema.safeParse(input).success;

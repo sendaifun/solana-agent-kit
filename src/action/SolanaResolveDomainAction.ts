@@ -40,13 +40,12 @@ export const SolanaResolveDomainAction: Action = {
     return {
       success: true,
       data: {
-        publicKey: publicKey.toBase58()
+        publicKey: publicKey.toBase58(),
       }
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         domain: z.string()

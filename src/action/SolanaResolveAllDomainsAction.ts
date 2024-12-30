@@ -19,7 +19,7 @@ export const SolanaResolveAllDomainsAction: Action = {
             id: "1",
             content: {
               text: JSON.stringify({
-                domain: "example.blink"
+                domain: "example.blink",
               }),
             },
             userId: "user1",
@@ -28,7 +28,7 @@ export const SolanaResolveAllDomainsAction: Action = {
         },
         output: {
           success: true,
-          data: { owner: "So11111111111111111111111111111111111111112" }
+          data: { owner: "So11111111111111111111111111111111111111112" },
         },
       },
     ],
@@ -40,13 +40,12 @@ export const SolanaResolveAllDomainsAction: Action = {
       success: true,
       data: {
         owner: owner?.toString(),
-        domain: input.domain
-      }
+        domain: input.domain,
+      },
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         domain: z.string()

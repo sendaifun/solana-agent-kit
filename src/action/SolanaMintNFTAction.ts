@@ -61,8 +61,7 @@ export const SolanaMintNFTAction: Action = {
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         collectionMint: z.string(),

@@ -38,13 +38,12 @@ export const SolanaFetchPriceAction: Action = {
       success: true,
       data: {
         tokenId: input.tokenId,
-        priceInUSDC: price
+        priceInUSDC: price,
       }
     };
   },
 
-  validate: async (context, ...args) => {
-    const input = args[0];
+  validate: async (input: Record<string, any>) => {
     try {
       const schema = z.object({
         tokenId: z.string()
