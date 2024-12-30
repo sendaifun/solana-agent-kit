@@ -1,7 +1,6 @@
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { gpt4o } from "../utils/model";
 import { solanaAgentState } from "../utils/state";
-import { HumanMessage } from "@langchain/core/messages";
 import { agentKit } from "../utils/solanaAgent";
 import {
   SolanaBalanceTool,

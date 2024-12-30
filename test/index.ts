@@ -37,7 +37,7 @@ async function initializeAgent() {
   try {
     const llm = new ChatOpenAI({
       modelName: "gpt-4o-mini",
-      temperature: 0.7,
+      temperature: 0.3,
     });
 
     let walletDataStr: string | null = null;
