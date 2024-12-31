@@ -59,7 +59,7 @@ export async function deploy_token(
           mint: mint.publicKey,
           tokenStandard: TokenStandard.Fungible,
           tokenOwner: fromWeb3JsPublicKey(agent.wallet_address),
-          amount: initialSupply,
+          amount: initialSupply * Math.pow(10, decimals),
         }),
       );
     }

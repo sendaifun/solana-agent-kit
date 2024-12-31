@@ -2,10 +2,12 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
+import { Config } from "../types";
 import {
   deploy_collection,
   deploy_token,
   get_balance,
+  get_balance_other,
   getTPS,
   resolveSolDomain,
   getPrimaryDomain,
@@ -24,10 +26,13 @@ import {
   getTokenDataByTicker,
   stakeWithJup,
   sendCompressedAirdrop,
-  createOrcaSingleSidedWhirlpool,
+  orcaCreateSingleSidedLiquidityPool,
+  orcaCreateCLMM,
+  orcaOpenCenteredPositionWithLiquidity,
+  orcaOpenSingleSidedPosition,
+  FEE_TIERS,
   fetchPrice,
   pythFetchPrice,
-  FEE_TIERS,
   getAllDomainsTLDs,
   getAllRegisteredAllDomains,
   getOwnedDomainsForTLD,
@@ -35,7 +40,14 @@ import {
   getOwnedAllDomains,
   resolveAllDomains,
   create_gibwork_task,
+  orcaClosePosition,
+  orcaFetchPositions,
+  rock_paper_scissor,
+  create_TipLink,
+  listNFTForSale,
+  cancelListing,
 } from "../tools";
+
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -60,17 +72,17 @@ export class SolanaAgentKit {
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
-  public openai_api_key: string;
+  public config: Config;
 
   constructor(
     private_key: string,
     rpc_url = "https://api.mainnet-beta.solana.com",
-    openai_api_key: string,
+    config: Config,
   ) {
     this.connection = new Connection(rpc_url);
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
     this.wallet_address = this.wallet.publicKey;
-    this.openai_api_key = openai_api_key;
+    this.config = config;
   }
 
   // Tool methods
@@ -96,6 +108,13 @@ export class SolanaAgentKit {
 
   async getBalance(token_address?: PublicKey): Promise<number> {
     return get_balance(this, token_address);
+  }
+
+  async getBalanceOther(
+    walletAddress: PublicKey,
+    tokenAddress?: PublicKey,
+  ): Promise<number> {
+    return get_balance_other(this, walletAddress, tokenAddress);
   }
 
   async mintNFT(
@@ -199,15 +218,28 @@ export class SolanaAgentKit {
     );
   }
 
-  async createOrcaSingleSidedWhirlpool(
-    depositTokenAmount: BN,
+  async orcaClosePosition(positionMintAddress: PublicKey) {
+    return orcaClosePosition(this, positionMintAddress);
+  }
+
+  async orcaCreateCLMM(
+    mintDeploy: PublicKey,
+    mintPair: PublicKey,
+    initialPrice: Decimal,
+    feeTier: keyof typeof FEE_TIERS,
+  ) {
+    return orcaCreateCLMM(this, mintDeploy, mintPair, initialPrice, feeTier);
+  }
+
+  async orcaCreateSingleSidedLiquidityPool(
+    depositTokenAmount: number,
     depositTokenMint: PublicKey,
     otherTokenMint: PublicKey,
     initialPrice: Decimal,
     maxPrice: Decimal,
     feeTier: keyof typeof FEE_TIERS,
   ) {
-    return createOrcaSingleSidedWhirlpool(
+    return orcaCreateSingleSidedLiquidityPool(
       this,
       depositTokenAmount,
       depositTokenMint,
@@ -215,6 +247,42 @@ export class SolanaAgentKit {
       initialPrice,
       maxPrice,
       feeTier,
+    );
+  }
+
+  async orcaFetchPositions() {
+    return orcaFetchPositions(this);
+  }
+
+  async orcaOpenCenteredPositionWithLiquidity(
+    whirlpoolAddress: PublicKey,
+    priceOffsetBps: number,
+    inputTokenMint: PublicKey,
+    inputAmount: Decimal,
+  ) {
+    return orcaOpenCenteredPositionWithLiquidity(
+      this,
+      whirlpoolAddress,
+      priceOffsetBps,
+      inputTokenMint,
+      inputAmount,
+    );
+  }
+
+  async orcaOpenSingleSidedPosition(
+    whirlpoolAddress: PublicKey,
+    distanceFromCurrentPriceBps: number,
+    widthBps: number,
+    inputTokenMint: PublicKey,
+    inputAmount: Decimal,
+  ): Promise<string> {
+    return orcaOpenSingleSidedPosition(
+      this,
+      whirlpoolAddress,
+      distanceFromCurrentPriceBps,
+      widthBps,
+      inputTokenMint,
+      inputAmount,
     );
   }
 
@@ -230,8 +298,7 @@ export class SolanaAgentKit {
     return getOwnedDomainsForTLD(this, tld);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async getAllDomainsTLDs(): Promise<String[]> {
+  async getAllDomainsTLDs(): Promise<string[]> {
     return getAllDomainsTLDs(this);
   }
 
@@ -336,5 +403,23 @@ export class SolanaAgentKit {
       tokenAmount,
       payer ? new PublicKey(payer) : undefined,
     );
+  }
+
+  async rockPaperScissors(
+    amount: number,
+    choice: "rock" | "paper" | "scissors",
+  ) {
+    return rock_paper_scissor(this, amount, choice);
+  }
+  async createTiplink(amount: number, splmintAddress?: PublicKey) {
+    return create_TipLink(this, amount, splmintAddress);
+  }
+
+  async tensorListNFT(nftMint: PublicKey, price: number): Promise<string> {
+    return listNFTForSale(this, nftMint, price);
+  }
+
+  async tensorCancelListing(nftMint: PublicKey): Promise<string> {
+    return cancelListing(this, nftMint);
   }
 }

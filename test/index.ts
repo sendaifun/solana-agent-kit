@@ -37,7 +37,7 @@ async function initializeAgent() {
   try {
     const llm = new ChatOpenAI({
       modelName: "gpt-4o-mini",
-      temperature: 0.7,
+      temperature: 0.3,
     });
 
     let walletDataStr: string | null = null;
@@ -53,7 +53,9 @@ async function initializeAgent() {
     const solanaAgent = new SolanaAgentKit(
       process.env.SOLANA_PRIVATE_KEY!,
       process.env.RPC_URL,
-      process.env.OPENAI_API_KEY!,
+      {
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+      },
     );
 
     const tools = createSolanaTools(solanaAgent);

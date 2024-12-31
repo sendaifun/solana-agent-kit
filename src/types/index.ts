@@ -1,5 +1,11 @@
 import { PublicKey } from "@solana/web3.js";
 
+export interface Config {
+  OPENAI_API_KEY?: string;
+  JUPITER_REFERRAL_ACCOUNT?: string;
+  JUPITER_FEE_BPS?: number;
+}
+
 export interface Creator {
   address: string;
   percentage: number;

@@ -16,12 +16,12 @@ export async function create_image(
   n: number = 1,
 ) {
   try {
-    if (!agent.openai_api_key) {
+    if (!agent.config.OPENAI_API_KEY) {
       throw new Error("OpenAI API key not found in agent configuration");
     }
 
     const openai = new OpenAI({
-      apiKey: agent.openai_api_key,
+      apiKey: agent.config.OPENAI_API_KEY,
     });
 
     const response = await openai.images.generate({
