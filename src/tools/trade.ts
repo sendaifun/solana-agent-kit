@@ -1,6 +1,11 @@
 import { VersionedTransaction, PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
-import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
+import {
+  TOKENS,
+  DEFAULT_OPTIONS,
+  JUP_API,
+  JUP_REFERRAL_ADDRESS,
+} from "../constants";
 import { getMint } from "@solana/spl-token";
 /**
  * Swap tokens using Jupiter Exchange
@@ -11,6 +16,7 @@ import { getMint } from "@solana/spl-token";
  * @param slippageBps Slippage tolerance in basis points (default: 300 = 3%)
  * @returns Transaction signature
  */
+
 export async function trade(
   agent: SolanaAgentKit,
   outputMint: PublicKey,
@@ -38,11 +44,24 @@ export async function trade(
           `&amount=${scaledAmount}` +
           `&slippageBps=${slippageBps}` +
           `&onlyDirectRoutes=true` +
-          `&maxAccounts=20`,
+          `&maxAccounts=20` +
+          `${agent.config.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config.JUPITER_FEE_BPS}` : ""}`,
       )
     ).json();
 
     // Get serialized transaction
+    let feeAccount;
+    if (agent.config.JUPITER_REFERRAL_ACCOUNT) {
+      [feeAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("referral_ata"),
+          new PublicKey(agent.config.JUPITER_REFERRAL_ACCOUNT).toBuffer(),
+          TOKENS.SOL.toBuffer(),
+        ],
+        new PublicKey(JUP_REFERRAL_ADDRESS),
+      );
+    }
+
     const { swapTransaction } = await (
       await fetch("https://quote-api.jup.ag/v6/swap", {
         method: "POST",
@@ -55,6 +74,7 @@ export async function trade(
           wrapAndUnwrapSol: true,
           dynamicComputeUnitLimit: true,
           prioritizationFeeLamports: "auto",
+          feeAccount: feeAccount ? feeAccount.toString() : null,
         }),
       })
     ).json();

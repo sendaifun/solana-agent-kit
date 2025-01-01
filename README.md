@@ -47,7 +47,8 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Launch on Pump via PumpPortal
   - Raydium pool creation (CPMM, CLMM, AMMv4)
   - Orca Whirlpool integration
-  - Meteora Dynamic AMM, DLMM Pool, and Alpga Vault
+  - Manifest market creation, and limit orders
+  - Meteora Dynamic AMM, DLMM Pool, and Alpha Vault
   - Openbook market creation
   - Register and Resolve SNS
   - Jito Bundles
@@ -55,7 +56,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Register/resolve Alldomains
 
 - **Solana Blinks**
-   - Lending by Lulon (Best APR for USDC)
+   - Lending by Lulo (Best APR for USDC)
    - Send Arcade Games
    - JupSOL staking
 

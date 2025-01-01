@@ -8,11 +8,10 @@ import { getAllTld } from "@onsol/tldparser";
  */
 export async function getAllDomainsTLDs(
   agent: SolanaAgentKit,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Promise<String[]> {
+): Promise<string[]> {
   try {
     const tlds = await getAllTld(agent.connection);
-    return tlds.map((tld) => tld.tld);
+    return tlds.map((tld) => String(tld.tld));
   } catch (error: any) {
     throw new Error(`Failed to fetch TLDs: ${error.message}`);
   }

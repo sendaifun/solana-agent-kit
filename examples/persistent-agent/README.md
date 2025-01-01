@@ -15,7 +15,7 @@ To use this feature, ensure you have the following:
 
 1. **PostgreSQL Database URL**: Create and host ur PostgreSQL databse and enter the URL. It will be of the format "postgresql://user:password@localhost:5432/db"
 
-## Before applying persistance
+## Without persistence
 ```
 Available modes:
 1. chat
@@ -27,7 +27,7 @@ Starting chat mode... Type 'exit' to end.
 Prompt: i am arpit
 Hello Arpit! How can I assist you today?
 Prompt: ^С
-® arpitsingh Mac persistance-agent & ts-node index.ts
+® arpitsingh Mac persistent-agent & ts-node index.ts
 Starting Agent...
 Available modes:
 1. chat
@@ -39,7 +39,7 @@ Starting chat mode... Type 'exit' to end.
 Prompt: do u know my name
 I don't know your name yet. If you'd like, you can share it.
 ```
-## After applying persistence
+## With persistence
 ```
 Available modes:
 1. chat
@@ -51,7 +51,7 @@ Starting chat mode... Type 'exit' to end.
 Prompt: i am arpit
 Hello Arpit! How can I assist you today?
 Prompt: ^С
-® arpitsingh Mac persistance-agent & ts-node index.ts
+® arpitsingh Mac persistent-agent & ts-node index.ts
 Starting Agent...
 Available modes:
 1. chat
