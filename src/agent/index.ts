@@ -25,6 +25,10 @@ import {
   limitOrder,
   cancelAllOrders,
   withdrawAll,
+  closePerpTradeShort,
+  closePerpTradeLong,
+  openPerpTradeShort,
+  openPerpTradeLong,
   transfer,
   getTokenDataByAddress,
   getTokenDataByTicker,
@@ -190,6 +194,42 @@ export class SolanaAgentKit {
 
   async withdrawAll(marketId: PublicKey): Promise<string> {
     return withdrawAll(this, marketId);
+  }
+
+  async openPerpTradeLong(
+    args: Omit<Parameters<typeof openPerpTradeLong>[0], "agent">,
+  ): Promise<string> {
+    return openPerpTradeLong({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async openPerpTradeShort(
+    args: Omit<Parameters<typeof openPerpTradeShort>[0], "agent">,
+  ): Promise<string> {
+    return openPerpTradeShort({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async closePerpTradeShort(
+    args: Omit<Parameters<typeof closePerpTradeShort>[0], "agent">,
+  ): Promise<string> {
+    return closePerpTradeShort({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async closePerpTradeLong(
+    args: Omit<Parameters<typeof closePerpTradeLong>[0], "agent">,
+  ): Promise<string> {
+    return closePerpTradeLong({
+      agent: this,
+      ...args,
+    });
   }
 
   async lendAssets(amount: number): Promise<string> {
