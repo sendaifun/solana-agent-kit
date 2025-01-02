@@ -52,3 +52,4 @@ export * from "./rock_paper_scissor";
 export * from "./create_tiplinks";
 
 export * from "./tensor_trade";
+export * from "./close_empty_token_accounts";
