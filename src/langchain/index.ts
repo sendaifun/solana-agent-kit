@@ -862,6 +862,76 @@ export class SolanaStakeTool extends Tool {
   }
 }
 
+export class SolanaDepositWithLuloTool extends Tool {
+  name = "solana_deposit_with_lulo";
+  description = `This tool can be used to deposit your token with lulo.
+
+  Inputs ( input is a JSON string ):
+  mintAddress: string, eg "So11111111111111111111111111111111111111112" (required)
+  amount: number, eg 1 or 0.01 (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx = await this.solanaKit.deposit(parsedInput.mintAddress, parsedInput.amount);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Deposit successfully",
+        transaction: tx,
+        mintAddress: parsedInput.mintAddress,
+        amount: parsedInput.amount,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaWithdrawWithLuloTool extends Tool {
+  name = "solana_withdraw_with_lulo";
+  description = `This tool can be used to withdraw your token with lulo.
+
+  Inputs ( input is a JSON string ):
+  mintAddress: string, eg "So11111111111111111111111111111111111111112" (required)
+  amount: number, eg 1 or 0.01 (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx = await this.solanaKit.withdraw(parsedInput.mintAddress, parsedInput.amount);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Withdraw successfully",
+        transaction: tx,
+        mintAddress: parsedInput.mintAddress,
+        amount: parsedInput.amount,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 /**
  * Tool to fetch the price of a token in USDC
  */
@@ -1936,6 +2006,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaLendAssetTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),
     new SolanaStakeTool(solanaKit),
+    new SolanaDepositWithLuloTool(solanaKit),
+    new SolanaWithdrawWithLuloTool(solanaKit),
     new SolanaFetchPriceTool(solanaKit),
     new SolanaGetDomainTool(solanaKit),
     new SolanaTokenDataTool(solanaKit),

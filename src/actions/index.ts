@@ -10,6 +10,8 @@ import getTokenDataAction from "./getTokenData";
 import getTPSAction from "./getTPS";
 import fetchPriceAction from "./fetchPrice";
 import stakeWithJupAction from "./stakeWithJup";
+import depositWithLuloAction from "./depositWithLulo";
+import withdrawWithLuloAction from "./withdrawWithLulo";
 import registerDomainAction from "./registerDomain";
 import lendAssetAction from "./lendAsset";
 import createGibworkTaskAction from "./createGibworkTask";
@@ -40,6 +42,8 @@ export const ACTIONS = {
   "GET_TPS_ACTION" : getTPSAction,
   "FETCH_PRICE_ACTION" : fetchPriceAction,
   "STAKE_WITH_JUP_ACTION" : stakeWithJupAction,
+  "DEPOSIT_WITH_LULO_ACTION" : depositWithLuloAction,
+  "WITHDRAW_WITH_LULO_ACTION" : withdrawWithLuloAction,
   "REGISTER_DOMAIN_ACTION" : registerDomainAction,
   "LEND_ASSET_ACTION" : lendAssetAction,
   "CREATE_GIBWORK_TASK_ACTION" : createGibworkTaskAction,

@@ -18,6 +18,7 @@ export * from "./lend";
 export * from "./get_tps";
 export * from "./get_token_data";
 export * from "./stake_with_jup";
+export * from "./stake_with_lulo";
 export * from "./fetch_price";
 export * from "./send_compressed_airdrop";
 export * from "./orca_close_position";
