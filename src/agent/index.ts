@@ -23,6 +23,7 @@ import {
   request_faucet_funds,
   trade,
   limitOrder,
+  batchOrder,
   cancelAllOrders,
   withdrawAll,
   transfer,
@@ -54,6 +55,7 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  OrderParams,
 } from "../tools";
 
 import {
@@ -187,6 +189,13 @@ export class SolanaAgentKit {
     price: number,
   ): Promise<string> {
     return limitOrder(this, marketId, quantity, side, price);
+  }
+
+  async batchOrder(
+    marketId: PublicKey,
+    orders: OrderParams[],
+  ): Promise<string> {
+    return batchOrder(this, marketId, orders);
   }
 
   async cancelAllOrders(marketId: PublicKey): Promise<string> {
