@@ -1,11 +1,12 @@
-import {
-  VersionedTransaction,
-  PublicKey,
-  LAMPORTS_PER_SOL,
-} from "@solana/web3.js";
+import { VersionedTransaction, PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
-import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
-
+import {
+  TOKENS,
+  DEFAULT_OPTIONS,
+  JUP_API,
+  JUP_REFERRAL_ADDRESS,
+} from "../constants";
+import { getMint } from "@solana/spl-token";
 /**
  * Swap tokens using Jupiter Exchange
  * @param agent SolanaAgentKit instance
@@ -15,6 +16,7 @@ import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
  * @param slippageBps Slippage tolerance in basis points (default: 300 = 3%)
  * @returns Transaction signature
  */
+
 export async function trade(
   agent: SolanaAgentKit,
   outputMint: PublicKey,
@@ -23,19 +25,43 @@ export async function trade(
   slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
 ): Promise<string> {
   try {
+    // Check if input token is native SOL
+    const isNativeSol = inputMint.equals(TOKENS.SOL);
+
+    // For native SOL, we use LAMPORTS_PER_SOL, otherwise fetch mint info
+    const inputDecimals = isNativeSol
+      ? 9 // SOL always has 9 decimals
+      : (await getMint(agent.connection, inputMint)).decimals;
+
+    // Calculate the correct amount based on actual decimals
+    const scaledAmount = inputAmount * Math.pow(10, inputDecimals);
+
     const quoteResponse = await (
       await fetch(
         `${JUP_API}/quote?` +
-          `inputMint=${inputMint.toString()}` +
+          `inputMint=${isNativeSol ? TOKENS.SOL.toString() : inputMint.toString()}` +
           `&outputMint=${outputMint.toString()}` +
-          `&amount=${inputAmount * LAMPORTS_PER_SOL}` +
+          `&amount=${scaledAmount}` +
           `&slippageBps=${slippageBps}` +
           `&onlyDirectRoutes=true` +
-          `&maxAccounts=20`,
+          `&maxAccounts=20` +
+          `${agent.config.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config.JUPITER_FEE_BPS}` : ""}`,
       )
     ).json();
 
     // Get serialized transaction
+    let feeAccount;
+    if (agent.config.JUPITER_REFERRAL_ACCOUNT) {
+      [feeAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("referral_ata"),
+          new PublicKey(agent.config.JUPITER_REFERRAL_ACCOUNT).toBuffer(),
+          TOKENS.SOL.toBuffer(),
+        ],
+        new PublicKey(JUP_REFERRAL_ADDRESS),
+      );
+    }
+
     const { swapTransaction } = await (
       await fetch("https://quote-api.jup.ag/v6/swap", {
         method: "POST",
@@ -48,6 +74,7 @@ export async function trade(
           wrapAndUnwrapSol: true,
           dynamicComputeUnitLimit: true,
           prioritizationFeeLamports: "auto",
+          feeAccount: feeAccount ? feeAccount.toString() : null,
         }),
       })
     ).json();

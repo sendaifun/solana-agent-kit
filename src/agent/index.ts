@@ -2,10 +2,12 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
+import { Config } from "../types";
 import {
   deploy_collection,
   deploy_token,
   get_balance,
+  get_balance_other,
   getTPS,
   resolveSolDomain,
   getPrimaryDomain,
@@ -13,21 +15,28 @@ import {
   lendAsset,
   mintCollectionNFT,
   openbookCreateMarket,
+  manifestCreateMarket,
   raydiumCreateAmmV4,
   raydiumCreateClmm,
   raydiumCreateCpmm,
   registerDomain,
   request_faucet_funds,
   trade,
+  limitOrder,
+  cancelAllOrders,
+  withdrawAll,
   transfer,
   getTokenDataByAddress,
   getTokenDataByTicker,
   stakeWithJup,
   sendCompressedAirdrop,
-  createOrcaSingleSidedWhirlpool,
+  orcaCreateSingleSidedLiquidityPool,
+  orcaCreateCLMM,
+  orcaOpenCenteredPositionWithLiquidity,
+  orcaOpenSingleSidedPosition,
+  FEE_TIERS,
   fetchPrice,
   pythFetchPrice,
-  FEE_TIERS,
   getAllDomainsTLDs,
   getAllRegisteredAllDomains,
   getOwnedDomainsForTLD,
@@ -35,9 +44,14 @@ import {
   getOwnedAllDomains,
   resolveAllDomains,
   create_gibwork_task,
+  orcaClosePosition,
+  orcaFetchPositions,
   rock_paper_scissor,
   create_TipLink,
+  listNFTForSale,
+  cancelListing,
 } from "../tools";
+
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -57,22 +71,39 @@ import { BN } from "@coral-xyz/anchor";
  * @property {Connection} connection - Solana RPC connection
  * @property {Keypair} wallet - Wallet keypair for signing transactions
  * @property {PublicKey} wallet_address - Public key of the wallet
+ * @property {Config} config - Configuration object
  */
 export class SolanaAgentKit {
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
-  public openai_api_key: string;
+  public config: Config;
 
+  /**
+   * @deprecated Using openai_api_key directly in constructor is deprecated.
+   * Please use the new constructor with Config object instead:
+   * @example
+   * const agent = new SolanaAgentKit(privateKey, rpcUrl, { 
+   *   OPENAI_API_KEY: 'your-key'
+   * });
+   */
+  constructor(private_key: string, rpc_url: string, openai_api_key: string | null);
+  constructor(private_key: string, rpc_url: string, config: Config);
   constructor(
     private_key: string,
-    rpc_url = "https://api.mainnet-beta.solana.com",
-    openai_api_key: string,
+    rpc_url: string,
+    configOrKey: Config | string | null,
   ) {
-    this.connection = new Connection(rpc_url);
+    this.connection = new Connection(rpc_url || "https://api.mainnet-beta.solana.com");
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
     this.wallet_address = this.wallet.publicKey;
-    this.openai_api_key = openai_api_key;
+
+    // Handle both old and new patterns
+    if (typeof configOrKey === 'string' || configOrKey === null) {
+      this.config = { OPENAI_API_KEY: configOrKey || '' };
+    } else {
+      this.config = configOrKey;
+    }
   }
 
   // Tool methods
@@ -98,6 +129,13 @@ export class SolanaAgentKit {
 
   async getBalance(token_address?: PublicKey): Promise<number> {
     return get_balance(this, token_address);
+  }
+
+  async getBalanceOther(
+    walletAddress: PublicKey,
+    tokenAddress?: PublicKey,
+  ): Promise<number> {
+    return get_balance_other(this, walletAddress, tokenAddress);
   }
 
   async mintNFT(
@@ -135,6 +173,23 @@ export class SolanaAgentKit {
     slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
   ): Promise<string> {
     return trade(this, outputMint, inputAmount, inputMint, slippageBps);
+  }
+
+  async limitOrder(
+    marketId: PublicKey,
+    quantity: number,
+    side: string,
+    price: number,
+  ): Promise<string> {
+    return limitOrder(this, marketId, quantity, side, price);
+  }
+
+  async cancelAllOrders(marketId: PublicKey): Promise<string> {
+    return cancelAllOrders(this, marketId);
+  }
+
+  async withdrawAll(marketId: PublicKey): Promise<string> {
+    return withdrawAll(this, marketId);
   }
 
   async lendAssets(amount: number): Promise<string> {
@@ -201,15 +256,28 @@ export class SolanaAgentKit {
     );
   }
 
-  async createOrcaSingleSidedWhirlpool(
-    depositTokenAmount: BN,
+  async orcaClosePosition(positionMintAddress: PublicKey) {
+    return orcaClosePosition(this, positionMintAddress);
+  }
+
+  async orcaCreateCLMM(
+    mintDeploy: PublicKey,
+    mintPair: PublicKey,
+    initialPrice: Decimal,
+    feeTier: keyof typeof FEE_TIERS,
+  ) {
+    return orcaCreateCLMM(this, mintDeploy, mintPair, initialPrice, feeTier);
+  }
+
+  async orcaCreateSingleSidedLiquidityPool(
+    depositTokenAmount: number,
     depositTokenMint: PublicKey,
     otherTokenMint: PublicKey,
     initialPrice: Decimal,
     maxPrice: Decimal,
     feeTier: keyof typeof FEE_TIERS,
   ) {
-    return createOrcaSingleSidedWhirlpool(
+    return orcaCreateSingleSidedLiquidityPool(
       this,
       depositTokenAmount,
       depositTokenMint,
@@ -217,6 +285,42 @@ export class SolanaAgentKit {
       initialPrice,
       maxPrice,
       feeTier,
+    );
+  }
+
+  async orcaFetchPositions() {
+    return orcaFetchPositions(this);
+  }
+
+  async orcaOpenCenteredPositionWithLiquidity(
+    whirlpoolAddress: PublicKey,
+    priceOffsetBps: number,
+    inputTokenMint: PublicKey,
+    inputAmount: Decimal,
+  ) {
+    return orcaOpenCenteredPositionWithLiquidity(
+      this,
+      whirlpoolAddress,
+      priceOffsetBps,
+      inputTokenMint,
+      inputAmount,
+    );
+  }
+
+  async orcaOpenSingleSidedPosition(
+    whirlpoolAddress: PublicKey,
+    distanceFromCurrentPriceBps: number,
+    widthBps: number,
+    inputTokenMint: PublicKey,
+    inputAmount: Decimal,
+  ): Promise<string> {
+    return orcaOpenSingleSidedPosition(
+      this,
+      whirlpoolAddress,
+      distanceFromCurrentPriceBps,
+      widthBps,
+      inputTokenMint,
+      inputAmount,
     );
   }
 
@@ -232,8 +336,7 @@ export class SolanaAgentKit {
     return getOwnedDomainsForTLD(this, tld);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async getAllDomainsTLDs(): Promise<String[]> {
+  async getAllDomainsTLDs(): Promise<string[]> {
     return getAllDomainsTLDs(this);
   }
 
@@ -315,6 +418,13 @@ export class SolanaAgentKit {
     );
   }
 
+  async manifestCreateMarket(
+    baseMint: PublicKey,
+    quoteMint: PublicKey,
+  ): Promise<string[]> {
+    return manifestCreateMarket(this, baseMint, quoteMint);
+  }
+
   async pythFetchPrice(priceFeedID: string): Promise<string> {
     return pythFetchPrice(priceFeedID);
   }
@@ -348,5 +458,13 @@ export class SolanaAgentKit {
   }
   async createTiplink(amount: number, splmintAddress?: PublicKey) {
     return create_TipLink(this, amount, splmintAddress);
+  }
+
+  async tensorListNFT(nftMint: PublicKey, price: number): Promise<string> {
+    return listNFTForSale(this, nftMint, price);
+  }
+
+  async tensorCancelListing(nftMint: PublicKey): Promise<string> {
+    return cancelListing(this, nftMint);
   }
 }

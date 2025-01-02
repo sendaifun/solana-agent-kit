@@ -2,8 +2,6 @@
 
 # Solana Agent Kit
 
-
-
 ![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
 
 
@@ -25,6 +23,10 @@ An open-source toolkit for connecting AI agents to Solana protocols. Now, any ag
 
 Anyone - whether an SF-based AI researcher or a crypto-native builder - can bring their AI agents trained with any model and seamlessly integrate with Solana.
 
+
+[![Run on Repl.it](https://replit.com/badge/github/sendaifun/solana-agent-kit)](https://replit.com/@sendaifun/Solana-Agent-Kit)
+> Replit template created by [Arpit Singh](https://github.com/The-x-35)
+
 ## 🔧 Core Blockchain Features
 
 - **Token Operations**
@@ -45,7 +47,8 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Launch on Pump via PumpPortal
   - Raydium pool creation (CPMM, CLMM, AMMv4)
   - Orca Whirlpool integration
-  - Meteora Dynamic AMM, DLMM Pool, and Alpga Vault
+  - Manifest market creation, and limit orders
+  - Meteora Dynamic AMM, DLMM Pool, and Alpha Vault
   - Openbook market creation
   - Register and Resolve SNS
   - Jito Bundles
@@ -53,7 +56,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Register/resolve Alldomains
 
 - **Solana Blinks**
-   - Lending by Lulon (Best APR for USDC)
+   - Lending by Lulo (Best APR for USDC)
    - Send Arcade Games
    - JupSOL staking
 
@@ -236,6 +239,17 @@ The toolkit relies on several key Solana and Metaplex libraries:
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
+
+## Contributors
+
+<a href="https://github.com/sendaifun/solana-agent-kit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sendaifun/solana-agent-kit" />
+</a>
+
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=sendaifun/solana-agent-kit&type=Date)](https://star-history.com/#sendaifun/solana-agent-kit&Date)
 
 ## License
 

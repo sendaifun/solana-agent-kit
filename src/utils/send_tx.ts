@@ -1,70 +1,71 @@
 import { SolanaAgentKit } from "../agent";
-import { Transaction, Keypair, TransactionInstruction } from "@solana/web3.js";
-import { Connection, ComputeBudgetProgram } from "@solana/web3.js";
+import {
+  Keypair,
+  Signer,
+  TransactionInstruction,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { ComputeBudgetProgram } from "@solana/web3.js";
+
+const feeTiers = {
+  min: 0.01,
+  mid: 0.5,
+  max: 0.95,
+};
 
 /**
  * Get priority fees for the current block
  * @param connection - Solana RPC connection
  * @returns Priority fees statistics and instructions for different fee levels
  */
-export async function getPriorityFees(connection: Connection): Promise<{
-  min: number;
-  median: number;
-  max: number;
-  instructions?: {
-    low: TransactionInstruction;
-    medium: TransactionInstruction;
-    high: TransactionInstruction;
-  };
+export async function getComputeBudgetInstructions(
+  agent: SolanaAgentKit,
+  instructions: TransactionInstruction[],
+  feeTier: keyof typeof feeTiers,
+): Promise<{
+  blockhash: string;
+  computeBudgetLimitInstruction: TransactionInstruction;
+  computeBudgetPriorityFeeInstructions: TransactionInstruction;
 }> {
-  try {
-    // Get recent prioritization fees
-    const priorityFees = await connection.getRecentPrioritizationFees();
+  const blockhash = (await agent.connection.getLatestBlockhash()).blockhash;
+  const messageV0 = new TransactionMessage({
+    payerKey: agent.wallet_address,
+    recentBlockhash: blockhash,
+    instructions: instructions,
+  }).compileToV0Message();
+  const transaction = new VersionedTransaction(messageV0);
+  const simulatedTx = agent.connection.simulateTransaction(transaction);
+  const estimatedComputeUnits = (await simulatedTx).value.unitsConsumed;
+  const safeComputeUnits = Math.ceil(
+    estimatedComputeUnits
+      ? Math.max(estimatedComputeUnits + 100000, estimatedComputeUnits * 1.2)
+      : 200000,
+  );
+  const computeBudgetLimitInstruction =
+    ComputeBudgetProgram.setComputeUnitLimit({
+      units: safeComputeUnits,
+    });
 
-    if (!priorityFees.length) {
-      return {
-        min: 0,
-        median: 0,
-        max: 0,
-      };
-    }
+  const priorityFee = await agent.connection
+    .getRecentPrioritizationFees()
+    .then(
+      (fees) =>
+        fees.sort((a, b) => a.prioritizationFee - b.prioritizationFee)[
+          Math.floor(fees.length * feeTiers[feeTier])
+        ].prioritizationFee,
+    );
 
-    // Sort fees by value
-    const sortedFees = priorityFees
-      .map((x) => x.prioritizationFee)
-      .sort((a, b) => a - b);
+  const computeBudgetPriorityFeeInstructions =
+    ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: priorityFee,
+    });
 
-    // Calculate statistics
-    const min = sortedFees[0] ?? 0;
-    const max = sortedFees[sortedFees.length - 1] ?? 0;
-    const mid = Math.floor(sortedFees.length / 2);
-    const median =
-      sortedFees.length % 2 === 0
-        ? ((sortedFees[mid - 1] ?? 0) + (sortedFees[mid] ?? 0)) / 2
-        : (sortedFees[mid] ?? 0);
-
-    // Helper to create priority fee IX based on chosen strategy
-    const createPriorityFeeIx = (fee: number) => {
-      return ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: fee,
-      });
-    };
-
-    return {
-      min,
-      median,
-      max,
-      // Return instructions for different fee levels
-      instructions: {
-        low: createPriorityFeeIx(min),
-        medium: createPriorityFeeIx(median),
-        high: createPriorityFeeIx(max),
-      },
-    };
-  } catch (error) {
-    console.error("Error getting priority fees:", error);
-    throw error;
-  }
+  return {
+    blockhash,
+    computeBudgetLimitInstruction,
+    computeBudgetPriorityFeeInstructions,
+  };
 }
 
 /**
@@ -75,23 +76,53 @@ export async function getPriorityFees(connection: Connection): Promise<{
  */
 export async function sendTx(
   agent: SolanaAgentKit,
-  tx: Transaction,
+  instructions: TransactionInstruction[],
   otherKeypairs?: Keypair[],
 ) {
-  tx.recentBlockhash = (await agent.connection.getLatestBlockhash()).blockhash;
-  tx.feePayer = agent.wallet_address;
-  const fees = await getPriorityFees(agent.connection);
-  if (fees.instructions) {
-    tx.add(fees.instructions.medium!);
-  }
+  const ixComputeBudget = await getComputeBudgetInstructions(
+    agent,
+    instructions,
+    "mid",
+  );
+  const allInstructions = [
+    ixComputeBudget.computeBudgetLimitInstruction,
+    ixComputeBudget.computeBudgetPriorityFeeInstructions,
+    ...instructions,
+  ];
+  const messageV0 = new TransactionMessage({
+    payerKey: agent.wallet_address,
+    recentBlockhash: ixComputeBudget.blockhash,
+    instructions: allInstructions,
+  }).compileToV0Message();
+  const transaction = new VersionedTransaction(messageV0);
+  transaction.sign([agent.wallet, ...(otherKeypairs ?? [])] as Signer[]);
 
-  tx.sign(agent.wallet, ...(otherKeypairs ?? []));
-  const txid = await agent.connection.sendRawTransaction(tx.serialize());
-  await agent.connection.confirmTransaction({
-    signature: txid,
-    blockhash: (await agent.connection.getLatestBlockhash()).blockhash,
-    lastValidBlockHeight: (await agent.connection.getLatestBlockhash())
-      .lastValidBlockHeight,
-  });
-  return txid;
+  const timeoutMs = 90000;
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeoutMs) {
+    const transactionStartTime = Date.now();
+
+    const signature = await agent.connection.sendTransaction(transaction, {
+      maxRetries: 0,
+      skipPreflight: false,
+    });
+
+    const statuses = await agent.connection.getSignatureStatuses([signature]);
+    if (statuses.value[0]) {
+      if (!statuses.value[0].err) {
+        return signature;
+      } else {
+        throw new Error(
+          `Transaction failed: ${statuses.value[0].err.toString()}`,
+        );
+      }
+    }
+
+    const elapsedTime = Date.now() - transactionStartTime;
+    const remainingTime = Math.max(0, 1000 - elapsedTime);
+    if (remainingTime > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remainingTime));
+    }
+  }
+  throw new Error("Transaction timeout");
 }
