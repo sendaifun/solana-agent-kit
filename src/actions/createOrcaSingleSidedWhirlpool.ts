@@ -87,7 +87,7 @@ const createOrcaSingleSidedWhirlpoolAction: Action = {
       const otherTokenMint = new PublicKey(input.otherTokenMint);
       const initialPrice = new Decimal(input.initialPrice);
       const maxPrice = new Decimal(input.maxPrice);
-      const feeTier = input.feeTier
+      const feeTier = input.feeTier;
 
       // Create the whirlpool
       const signature = await orcaCreateSingleSidedLiquidityPool(

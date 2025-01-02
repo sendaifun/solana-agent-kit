@@ -54,7 +54,6 @@ const balanceAction: Action = {
     return {
       status: "success",
       balance: balance,
-      token: input.tokenAddress || "SOL",
     };
   },
 };
