@@ -45,6 +45,10 @@ import {
   getOwnedAllDomains,
   resolveAllDomains,
   create_gibwork_task,
+  createCrossmintWallet,
+  getCrossmintWallet,
+  fundCrossmintWallet,
+  getCrossmintWalletBalance,
   orcaClosePosition,
   orcaFetchPositions,
   rock_paper_scissor,
@@ -93,7 +97,8 @@ export class SolanaAgentKit {
   constructor(private_key: string, rpc_url: string, config: Config);
   constructor(
     private_key: string,
-    rpc_url: string,
+    rpc_url = "https://api.devnet.solana.com",
+    openai_api_key: string,
     configOrKey: Config | string | null,
   ) {
     this.connection = new Connection(rpc_url || "https://api.mainnet-beta.solana.com");
@@ -459,14 +464,47 @@ export class SolanaAgentKit {
     );
   }
 
-  async rockPaperScissors(
-    amount: number,
-    choice: "rock" | "paper" | "scissors",
-  ) {
-    return rock_paper_scissor(this, amount, choice);
+  async createCrossmintWallet(linkedUser: string): Promise<any> {
+    return createCrossmintWallet(this, linkedUser);
   }
-  async createTiplink(amount: number, splmintAddress?: PublicKey) {
-    return create_TipLink(this, amount, splmintAddress);
+
+  async getCrossmintWallet(walletId: string): Promise<any> {
+    return getCrossmintWallet(this, walletId);
+  }
+
+  /**
+   * Fund a Crossmint wallet with USDC
+   * @param walletLocator Wallet identifier/address
+   * @param amount Amount to fund
+   * @param currency Currency to fund (default: 'USDC')
+   * @returns Object containing funding transaction details
+   */
+  async fundCrossmintWallet(
+    walletLocator: string,
+    amount: number,
+    currency: string = 'USDC'
+  ): Promise<any> {
+    return fundCrossmintWallet(this, walletLocator, amount, currency);
+  }
+
+  /**
+   * Get the balance of a Crossmint wallet
+   * @param walletLocator Wallet identifier/address
+   * @param currency Currency to check balance for (default: 'SOL')
+   * @param network Network to use (default: 'devnet')
+   * @returns Object containing wallet balance information
+   */
+  async getCrossmintWalletBalance(
+    walletLocator: string,
+    currency: string = 'SOL',
+    network: string = 'devnet'
+  ): Promise<any> {
+    return getCrossmintWalletBalance(
+      this,
+      walletLocator,
+      currency,
+      network
+    );
   }
 
   async tensorListNFT(nftMint: PublicKey, price: number): Promise<string> {
