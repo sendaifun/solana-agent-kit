@@ -38,9 +38,7 @@ const tradePumpfunTokenAction: Action = {
   ],
   schema: z.object({
     action: z
-      .string()
-      .min(1)
-      .max(10)
+      .enum(["buy", "sell"])
       .describe("Action to perform (buy or sell)"),
     tokenTicker: z
       .string()
