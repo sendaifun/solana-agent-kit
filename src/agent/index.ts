@@ -64,6 +64,7 @@ import {
   PumpFunTokenOptions,
 } from "../types";
 import { BN } from "@coral-xyz/anchor";
+import { WalletAdapter, walletManager } from "../wallet/Wallet";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -77,7 +78,7 @@ import { BN } from "@coral-xyz/anchor";
  */
 export class SolanaAgentKit {
   public connection: Connection;
-  public wallet: Keypair;
+  public wallet: WalletAdapter;
   public wallet_address: PublicKey;
   public config: Config;
 
@@ -92,22 +93,34 @@ export class SolanaAgentKit {
   constructor(private_key: string, rpc_url: string, openai_api_key: string | null);
   constructor(private_key: string, rpc_url: string, config: Config);
   constructor(
-    private_key: string,
-    rpc_url: string,
-    configOrKey: Config | string | null,
+    walletOrPrivateKey: WalletAdapter | string | Keypair,
+    rpc_url: string = "https://api.mainnet-beta.solana.com",
+    configOrOpenAIKey: Config | string | null = {}
   ) {
-    this.connection = new Connection(rpc_url || "https://api.mainnet-beta.solana.com");
-    this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
+    this.connection = new Connection(rpc_url);
+    this.wallet = this.initializeWallet(walletOrPrivateKey);
     this.wallet_address = this.wallet.publicKey;
 
-    // Handle both old and new patterns
-    if (typeof configOrKey === 'string' || configOrKey === null) {
-      this.config = { OPENAI_API_KEY: configOrKey || '' };
+    if (typeof configOrOpenAIKey === 'string' || configOrOpenAIKey === null) {
+      console.warn('Deprecated: Using openai_api_key directly in constructor is deprecated. Please use the new constructor with Config object instead.');
+      this.config = { OPENAI_API_KEY: configOrOpenAIKey || undefined };
     } else {
-      this.config = configOrKey;
+      this.config = configOrOpenAIKey;
     }
   }
 
+  private initializeWallet(walletOrPrivateKey: WalletAdapter | string | Keypair): WalletAdapter {
+    if (typeof walletOrPrivateKey === 'string') {
+      const keypair = Keypair.fromSecretKey(bs58.decode(walletOrPrivateKey));
+      walletManager.connectWallet(keypair, keypair);
+    } else if (walletOrPrivateKey instanceof Keypair) {
+      walletManager.connectWallet(walletOrPrivateKey, walletOrPrivateKey);
+    } else {
+      const keypair = Keypair.generate();
+      walletManager.connectWallet(walletOrPrivateKey, keypair);
+    }
+    return walletManager.getWallet();
+  }
   // Tool methods
   async requestFaucetFunds() {
     return request_faucet_funds(this);

@@ -3,10 +3,11 @@ import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
 
 export interface Config {
-  OPENAI_API_KEY?: string;
+  OPENAI_API_KEY?: string | undefined;
   JUPITER_REFERRAL_ACCOUNT?: string;
   JUPITER_FEE_BPS?: number;
 }
+
 
 export interface Creator {
   address: string;
