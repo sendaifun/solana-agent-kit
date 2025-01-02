@@ -13,6 +13,7 @@ export * from "./register_domain";
 export * from "./resolve_sol_domain";
 export * from "./get_primary_domain";
 export * from "./launch_pumpfun_token";
+export * from "./trade_pumpfun_token";
 export * from "./lend";
 export * from "./get_tps";
 export * from "./get_token_data";

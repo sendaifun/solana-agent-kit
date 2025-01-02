@@ -47,6 +47,21 @@ export interface PumpfunLaunchResponse {
   error?: string;
 }
 
+export interface PumpfunTradeAction {
+  buy: "buy",
+  sell: "sell",
+}
+
+export interface PumpFunTokenTradeOptions {
+  slippageBps?: number;
+  priorityFee?: number;
+}
+
+export interface PumpfunTradeResponse {
+  signature: string;
+  error?: string;
+}
+
 /**
  * Lulo Account Details response format
  */

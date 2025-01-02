@@ -12,6 +12,7 @@ import {
   resolveSolDomain,
   getPrimaryDomain,
   launchPumpFunToken,
+  tradePumpFunToken,
   lendAsset,
   mintCollectionNFT,
   openbookCreateMarket,
@@ -60,6 +61,9 @@ import {
   MintCollectionNFTResponse,
   PumpfunLaunchResponse,
   PumpFunTokenOptions,
+  PumpfunTradeAction,
+  PumpFunTokenTradeOptions,
+  PumpfunTradeResponse,
 } from "../types";
 import { BN } from "@coral-xyz/anchor";
 
@@ -229,6 +233,21 @@ export class SolanaAgentKit {
       tokenTicker,
       description,
       imageUrl,
+      options,
+    );
+  }
+
+  async tradePumpFunToken(
+    action: PumpfunTradeAction,
+    tokenTicker: string,
+    solAmount: number,
+    options?: PumpFunTokenTradeOptions,
+  ): Promise<PumpfunTradeResponse> {
+    return tradePumpFunToken(
+      this,
+      action,
+      tokenTicker,
+      solAmount,
       options,
     );
   }

@@ -649,6 +649,63 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
   }
 }
 
+export class SolanaPumpfunTokenTradeTool extends Tool {
+  name = "solana_trade_pumpfun_token";
+
+  description = `This tool can be used to trade a token on Pump.fun,
+   do not use this tool for any other purpose, or for creating SPL tokens.
+   If the user asks you to chose the parameters, you should generate valid values.
+
+   Inputs:
+   action: string, must be "buy" or "sell",
+   tokenTicker: string, eg "PUMP",
+   solAmount: amount: number, eg 0.1`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  private validateInput(input: any): void {
+    if (!input.action || typeof input.action !== "string") {
+      throw new Error("action is required and must be a string");
+    }
+    if (!input.tokenTicker || typeof input.tokenTicker !== "string") {
+      throw new Error("tokenTicker is required and must be a string");
+    }
+    if (!input.solAmount || typeof input.solAmount !== "number") {
+      throw new Error("solAmount is required and must be a number");
+    }
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      input = input.trim();
+      const parsedInput = JSON.parse(input);
+
+      this.validateInput(parsedInput);
+
+      await this.solanaKit.tradePumpFunToken(
+        parsedInput.action,
+        parsedInput.tokenTicker,
+        parsedInput.solAmount,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Token traded successfully on Pump.fun",
+        tokenName: parsedInput.tokenName,
+        tokenTicker: parsedInput.tokenTicker,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export class SolanaCreateImageTool extends Tool {
   name = "solana_create_image";
   description =
@@ -1838,6 +1895,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaRegisterDomainTool(solanaKit),
     new SolanaGetWalletAddressTool(solanaKit),
     new SolanaPumpfunTokenLaunchTool(solanaKit),
+    new SolanaPumpfunTokenTradeTool(solanaKit),
     new SolanaCreateImageTool(solanaKit),
     new SolanaLendAssetTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),

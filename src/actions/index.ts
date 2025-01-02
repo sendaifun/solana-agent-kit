@@ -26,6 +26,7 @@ import raydiumCreateCpmmAction from "./raydiumCreateCpmm";
 import raydiumCreateAmmV4Action from "./raydiumCreateAmmV4";
 import createOrcaSingleSidedWhirlpoolAction from "./createOrcaSingleSidedWhirlpool";
 import launchPumpfunTokenAction from "./launchPumpfunToken";
+import tradePumpfunTokenAction from "./tradePumpfunToken";
 
 export const ACTIONS = {
   "DEPLOY_TOKEN_ACTION" : deployTokenAction,
@@ -56,6 +57,7 @@ export const ACTIONS = {
   "RAYDIUM_CREATE_AMM_V4_ACTION" : raydiumCreateAmmV4Action,
   "CREATE_ORCA_SINGLE_SIDED_WHIRLPOOL_ACTION" : createOrcaSingleSidedWhirlpoolAction,
   "LAUNCH_PUMPFUN_TOKEN_ACTION" : launchPumpfunTokenAction,
+  "TRADE_PUMPFUN_TOKEN_ACTION" : tradePumpfunTokenAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
