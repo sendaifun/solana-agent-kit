@@ -91,3 +91,5 @@ export interface GibworkCreateTaskReponse {
   taskId?: string | undefined;
   signature?: string | undefined;
 }
+
+export interface Pyth

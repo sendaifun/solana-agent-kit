@@ -79,7 +79,5 @@ export async function fetchPythPrice(feedID: string) {
 
   const data = await response.json();
 
-  const parsedData = data.parsed;
-
   return parsedData;
 }
