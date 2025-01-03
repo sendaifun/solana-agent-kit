@@ -28,3 +28,8 @@ export const DEFAULT_OPTIONS = {
  * Jupiter API URL
  */
 export const JUP_API = "https://quote-api.jup.ag/v6";
+
+/**
+ * LI.FI Swap API URL
+ */
+export const LIFISWAP_API = "https://li.quest/v1/";

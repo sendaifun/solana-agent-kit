@@ -1229,6 +1229,56 @@ export class SolanaCreateGibworkTask extends Tool {
   }
 }
 
+export class SolanaLIFISwap extends Tool {
+  name = "solana_lifiswap";
+  description = `Swap tokens using LiFi protocol which routes through Jupiter.
+
+  Inputs (input is a JSON string):
+  outputMint: string, eg "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" (required)
+  inputAmount: number, eg 1 or 0.01 (required)
+  inputMint?: string, eg "So11111111111111111111111111111111111111112" (optional)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx = await this.solanaKit.lifi_swap(
+        new PublicKey(parsedInput.outputMint),
+        parsedInput.inputAmount,
+        parsedInput.inputMint 
+          ? new PublicKey(parsedInput.inputMint)
+          : new PublicKey("So11111111111111111111111111111111111111112"),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "LiFi swap executed successfully",
+        transaction: tx,
+        inputAmount: parsedInput.inputAmount,
+        inputToken: parsedInput.inputMint || "SOL",
+        outputToken: parsedInput.outputMint
+      });
+    } catch (error: any) {
+      console.log("Detailed error:", {
+        message: error.message,
+        logs: error.logs || [],
+        code: error.code,
+        stack: error.stack
+      });
+
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR"
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1263,5 +1313,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetMainDomain(solanaKit),
     new SolanaResolveAllDomainsTool(solanaKit),
     new SolanaCreateGibworkTask(solanaKit),
+    new SolanaLIFISwap(solanaKit),
   ];
 }

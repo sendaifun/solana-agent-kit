@@ -35,6 +35,7 @@ import {
   getOwnedAllDomains,
   resolveAllDomains,
   create_gibwork_task,
+  lifi_swap,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -337,4 +338,14 @@ export class SolanaAgentKit {
       payer ? new PublicKey(payer) : undefined,
     );
   }
+
+  async lifi_swap(
+    outputMint: PublicKey,
+    inputAmount: number,
+    inputMint: PublicKey,
+  ): Promise<string> {
+    return lifi_swap(this, outputMint, inputAmount, inputMint);
+  }
 }
+
+
