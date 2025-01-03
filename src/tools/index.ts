@@ -46,3 +46,6 @@ export * from "./create_gibwork_task";
 
 export * from "./rock_paper_scissor";
 export * from "./create_tiplinks";
+
+export * from "./pumpfun_buy_token";
+export * from "./pumpfun_sell_token";

@@ -43,6 +43,8 @@ import {
   orcaFetchPositions,
   rock_paper_scissor,
   create_TipLink,
+  pumpfun_buy_token,
+  pumpfun_sell_token
 } from "../tools";
 
 import {
@@ -411,5 +413,22 @@ export class SolanaAgentKit {
   }
   async createTiplink(amount: number, splmintAddress?: PublicKey) {
     return create_TipLink(this, amount, splmintAddress);
+  }
+
+  //Pumpfun FN
+  async pumpfunBuy(
+    token: PublicKey,
+    amount: number,
+    maxSolCost: number,
+  ): Promise<string> {
+    return pumpfun_buy_token(this, token, amount, maxSolCost);
+  }
+
+  async pumpfunSell(
+    token: PublicKey,
+    minSolOut: number,
+    amount: number,
+  ): Promise<string> {
+    return pumpfun_sell_token(this, token, minSolOut, amount);
   }
 }

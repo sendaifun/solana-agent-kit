@@ -1590,6 +1590,96 @@ export class SolanaTipLinkTool extends Tool {
   }
 }
 
+export class SolanaPumpfunTokenBuyTool extends Tool {
+  name = "solana_buy_pumpfun_token";
+  description = `This tool can be used to buy token on Pump.fun,
+   do not use this tool for any other purpose, and remember to check the remain balance of pumpfun pair.
+
+   Input is a JSON string with =>
+   token: publickey, eg "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+   amount: number, eg "1e9",
+   maxSolCost: number, eg "1e9",`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const token =  new PublicKey(parsedInput.token);
+      const amount =  parsedInput.amount;
+      const maxSolCost =  parsedInput.maxSolCost;
+      const tx = await this.solanaKit.pumpfunBuy(
+        token,
+        amount,
+        maxSolCost,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Buy token completed successfully",
+        token,
+        amount,
+        maxSolCost,
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaPumpfunTokenSellTool extends Tool {
+  name = "solana_sell_pumpfun_token";
+  description = `This tool can be used to sell token on Pump.fun,
+   do not use this tool for any other purpose, and remember to check the remain balance of pumpfun pair.
+
+   Input is a JSON string with =>
+   token: publickey, eg "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+   minSolOut: number, eg "1e9",
+   amount: number, eg "1e9",`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const token =  new PublicKey(parsedInput.token);
+      const amount =  parsedInput.amount;
+      const minSolOut =  parsedInput.minSolOut;
+      const tx = await this.solanaKit.pumpfunSell(
+        token,
+        minSolOut,
+        amount,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Sell token completed successfully",
+        token,
+        minSolOut,
+        amount,
+        transaction: tx,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -1632,5 +1722,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCreateGibworkTask(solanaKit),
     new SolanaRockPaperScissorsTool(solanaKit),
     new SolanaTipLinkTool(solanaKit),
+    new SolanaPumpfunTokenBuyTool(solanaKit),
+    new SolanaPumpfunTokenSellTool(solanaKit),
   ];
 }
