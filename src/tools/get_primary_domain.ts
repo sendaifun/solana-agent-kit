@@ -29,7 +29,8 @@ export async function getPrimaryDomain(
       );
     }
     return reverse;
-  } catch (error) {
+  } catch (error: any) {
+    console.error(error);
     throw new Error(
       `Failed to get primary domain for account: ${account.toBase58()}`,
     );

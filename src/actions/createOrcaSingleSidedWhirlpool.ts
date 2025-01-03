@@ -2,7 +2,6 @@ import { Action } from "../types/action";
 import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
-import { BN } from "@coral-xyz/anchor";
 import { Decimal } from "decimal.js";
 import { orcaCreateSingleSidedLiquidityPool } from "../tools";
 
@@ -87,7 +86,7 @@ const createOrcaSingleSidedWhirlpoolAction: Action = {
       const otherTokenMint = new PublicKey(input.otherTokenMint);
       const initialPrice = new Decimal(input.initialPrice);
       const maxPrice = new Decimal(input.maxPrice);
-      const feeTier = input.feeTier
+      const feeTier = input.feeTier;
 
       // Create the whirlpool
       const signature = await orcaCreateSingleSidedLiquidityPool(

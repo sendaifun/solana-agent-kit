@@ -1,7 +1,8 @@
 import { SolanaAgentKit } from "./agent";
 import { createSolanaTools } from "./langchain";
+import { createSolanaTools as createVercelAITools } from "./vercel-ai";
 
-export { SolanaAgentKit, createSolanaTools };
+export { SolanaAgentKit, createSolanaTools, createVercelAITools };
 
 // Optional: Export types that users might need
 export * from "./types";

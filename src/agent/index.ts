@@ -2,7 +2,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
-import { Config } from "../types";
+import { Config, TokenCheck } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -23,6 +23,7 @@ import {
   request_faucet_funds,
   trade,
   limitOrder,
+  batchOrder,
   cancelAllOrders,
   withdrawAll,
   transfer,
@@ -51,6 +52,9 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  fetchTokenReportSummary,
+  fetchTokenDetailedReport,
+  OrderParams,
 } from "../tools";
 
 import {
@@ -84,24 +88,30 @@ export class SolanaAgentKit {
    * @deprecated Using openai_api_key directly in constructor is deprecated.
    * Please use the new constructor with Config object instead:
    * @example
-   * const agent = new SolanaAgentKit(privateKey, rpcUrl, { 
+   * const agent = new SolanaAgentKit(privateKey, rpcUrl, {
    *   OPENAI_API_KEY: 'your-key'
    * });
    */
-  constructor(private_key: string, rpc_url: string, openai_api_key: string | null);
+  constructor(
+    private_key: string,
+    rpc_url: string,
+    openai_api_key: string | null,
+  );
   constructor(private_key: string, rpc_url: string, config: Config);
   constructor(
     private_key: string,
     rpc_url: string,
     configOrKey: Config | string | null,
   ) {
-    this.connection = new Connection(rpc_url || "https://api.mainnet-beta.solana.com");
+    this.connection = new Connection(
+      rpc_url || "https://api.mainnet-beta.solana.com",
+    );
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
     this.wallet_address = this.wallet.publicKey;
 
     // Handle both old and new patterns
-    if (typeof configOrKey === 'string' || configOrKey === null) {
-      this.config = { OPENAI_API_KEY: configOrKey || '' };
+    if (typeof configOrKey === "string" || configOrKey === null) {
+      this.config = { OPENAI_API_KEY: configOrKey || "" };
     } else {
       this.config = configOrKey;
     }
@@ -183,6 +193,13 @@ export class SolanaAgentKit {
     price: number,
   ): Promise<string> {
     return limitOrder(this, marketId, quantity, side, price);
+  }
+
+  async batchOrder(
+    marketId: PublicKey,
+    orders: OrderParams[],
+  ): Promise<string> {
+    return batchOrder(this, marketId, orders);
   }
 
   async cancelAllOrders(marketId: PublicKey): Promise<string> {
@@ -471,5 +488,13 @@ export class SolanaAgentKit {
 
   async tensorCancelListing(nftMint: PublicKey): Promise<string> {
     return cancelListing(this, nftMint);
+  }
+
+  async fetchTokenReportSummary(mint: string): Promise<TokenCheck> {
+    return fetchTokenReportSummary(mint);
+  }
+
+  async fetchTokenDetailedReport(mint: string): Promise<TokenCheck> {
+    return fetchTokenDetailedReport(mint);
   }
 }

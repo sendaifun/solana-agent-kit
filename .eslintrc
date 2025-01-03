@@ -7,6 +7,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
+  "ignorePatterns": ["examples/**/*", "src/utils/keypair.ts", "test/**/*"],
   "rules": {
     "prettier/prettier": "error",
     "no-constant-condition": "off",
@@ -28,13 +29,5 @@
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
-  },
-  "overrides": [
-    {
-      "files": ["test/**/*", "src/utils/keypair.ts", "examples/**/*"],
-      "rules": {
-        "no-console": "off"
-      }
-    }
-  ]
+  }
 } 

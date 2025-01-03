@@ -13,7 +13,7 @@ This example showcases a persistent agent that retains memory across sessions us
 
 To use this feature, ensure you have the following:
 
-1. **PostgreSQL Database URL**: Create and host ur PostgreSQL databse and enter the URL. It will be of the format "postgresql://user:password@localhost:5432/db"
+1. **PostgreSQL Database URL**: Create and host ur PostgreSQL database and enter the URL. It will be of the format "postgresql://user:password@localhost:5432/db"
 
 ## Without persistence
 ```

@@ -16,6 +16,7 @@ export async function getMainAllDomainsDomain(
     mainDomain = await _getFavoriteDomain(agent.connection, owner);
     return mainDomain.stale ? null : mainDomain.reverse;
   } catch (error: any) {
+    console.error(error);
     return null;
   }
 }
