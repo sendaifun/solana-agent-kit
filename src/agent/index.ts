@@ -87,24 +87,30 @@ export class SolanaAgentKit {
    * @deprecated Using openai_api_key directly in constructor is deprecated.
    * Please use the new constructor with Config object instead:
    * @example
-   * const agent = new SolanaAgentKit(privateKey, rpcUrl, { 
+   * const agent = new SolanaAgentKit(privateKey, rpcUrl, {
    *   OPENAI_API_KEY: 'your-key'
    * });
    */
-  constructor(private_key: string, rpc_url: string, openai_api_key: string | null);
+  constructor(
+    private_key: string,
+    rpc_url: string,
+    openai_api_key: string | null,
+  );
   constructor(private_key: string, rpc_url: string, config: Config);
   constructor(
     private_key: string,
     rpc_url: string,
     configOrKey: Config | string | null,
   ) {
-    this.connection = new Connection(rpc_url || "https://api.mainnet-beta.solana.com");
+    this.connection = new Connection(
+      rpc_url || "https://api.mainnet-beta.solana.com",
+    );
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
     this.wallet_address = this.wallet.publicKey;
 
     // Handle both old and new patterns
-    if (typeof configOrKey === 'string' || configOrKey === null) {
-      this.config = { OPENAI_API_KEY: configOrKey || '' };
+    if (typeof configOrKey === "string" || configOrKey === null) {
+      this.config = { OPENAI_API_KEY: configOrKey || "" };
     } else {
       this.config = configOrKey;
     }
