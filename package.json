@@ -7,9 +7,9 @@
 	"scripts": {
 		"build": "tsc",
 		"docs": "typedoc src --out docs",
-		"test": "ts-node test/index.ts",
-		"test:vercel-ai": "ts-node test/agent_sdks/vercel_ai.ts",
-		"generate": "ts-node src/utils/keypair.ts",
+		"test": "tsx test/index.ts",
+		"test:vercel-ai": "tsx test/agent_sdks/vercel_ai.ts",
+		"generate": "tsx src/utils/keypair.ts",
 		"lint": "eslint . --ext .ts",
 		"lint:fix": "eslint . --ext .ts --fix",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
@@ -44,20 +44,20 @@
 		"@pythnetwork/price-service-client": "^1.9.0",
 		"@raydium-io/raydium-sdk-v2": "0.1.95-alpha",
 		"@solana/spl-token": "^0.4.9",
-		"ai": "^4.0.22",
-		"@tensor-oss/tensorswap-sdk": "^4.5.0",
 		"@solana/web3.js": "^1.98.0",
+		"@tensor-oss/tensorswap-sdk": "^4.5.0",
 		"@tiplink/api": "^0.3.1",
+		"ai": "^4.0.22",
 		"bn.js": "^5.2.1",
 		"bs58": "^6.0.0",
 		"chai": "^5.1.2",
 		"decimal.js": "^10.4.3",
 		"dotenv": "^16.4.7",
 		"form-data": "^4.0.1",
-		"zod": "^3.24.1",
 		"langchain": "^0.3.8",
 		"openai": "^4.77.0",
-		"typedoc": "^0.27.6"
+		"typedoc": "^0.27.6",
+		"zod": "^3.24.1"
 	},
 	"devDependencies": {
 		"@types/bn.js": "^5.1.6",
@@ -70,6 +70,7 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"prettier": "^3.4.2",
 		"ts-node": "^10.9.2",
+		"tsx": "^4.19.2",
 		"typescript": "^5.7.2"
 	}
 }
