@@ -8,8 +8,8 @@ import { SolanaAgentKit } from "../index";
 import {
   ManifestClient,
   WrapperPlaceOrderParamsExternal,
+  OrderType,
 } from "@cks-systems/manifest-sdk";
-import { OrderType } from "@cks-systems/manifest-sdk/client/ts/src/wrapper/types/OrderType";
 
 /**
  * Place limit orders using Manifest
