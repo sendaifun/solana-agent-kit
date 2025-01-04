@@ -1,4 +1,5 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
@@ -22,8 +23,8 @@ import {
   registerDomain,
   request_faucet_funds,
   trade,
-  limitOrder,
-  batchOrder,
+  // limitOrder,
+  // batchOrder,
   cancelAllOrders,
   withdrawAll,
   closePerpTradeShort,
@@ -42,7 +43,6 @@ import {
   orcaOpenSingleSidedPosition,
   FEE_TIERS,
   fetchPrice,
-  pythFetchPrice,
   getAllDomainsTLDs,
   getAllRegisteredAllDomains,
   getOwnedDomainsForTLD,
@@ -58,9 +58,9 @@ import {
   cancelListing,
   fetchTokenReportSummary,
   fetchTokenDetailedReport,
-  OrderParams,
+  fetchPythPrice,
+  fetchPythPriceFeedID,
 } from "../tools";
-
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -69,8 +69,8 @@ import {
   MintCollectionNFTResponse,
   PumpfunLaunchResponse,
   PumpFunTokenOptions,
+  // OrderParams,
 } from "../types";
-import { BN } from "@coral-xyz/anchor";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -190,21 +190,21 @@ export class SolanaAgentKit {
     return trade(this, outputMint, inputAmount, inputMint, slippageBps);
   }
 
-  async limitOrder(
-    marketId: PublicKey,
-    quantity: number,
-    side: string,
-    price: number,
-  ): Promise<string> {
-    return limitOrder(this, marketId, quantity, side, price);
-  }
+  // async limitOrder(
+  //   marketId: PublicKey,
+  //   quantity: number,
+  //   side: string,
+  //   price: number,
+  // ): Promise<string> {
+  //   return limitOrder(this, marketId, quantity, side, price);
+  // }
 
-  async batchOrder(
-    marketId: PublicKey,
-    orders: OrderParams[],
-  ): Promise<string> {
-    return batchOrder(this, marketId, orders);
-  }
+  // async batchOrder(
+  //   marketId: PublicKey,
+  //   orders: OrderParams[],
+  // ): Promise<string> {
+  //   return batchOrder(this, marketId, orders);
+  // }
 
   async cancelAllOrders(marketId: PublicKey): Promise<string> {
     return cancelAllOrders(this, marketId);
@@ -487,8 +487,12 @@ export class SolanaAgentKit {
     return manifestCreateMarket(this, baseMint, quoteMint);
   }
 
-  async pythFetchPrice(priceFeedID: string): Promise<string> {
-    return pythFetchPrice(priceFeedID);
+  async getPythPriceFeedID(tokenSymbol: string): Promise<string> {
+    return fetchPythPriceFeedID(tokenSymbol);
+  }
+
+  async getPythPrice(priceFeedID: string): Promise<string> {
+    return fetchPythPrice(priceFeedID);
   }
 
   async createGibworkTask(

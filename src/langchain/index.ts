@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
 import {
@@ -6,9 +7,7 @@ import {
   PythFetchPriceResponse,
   SolanaAgentKit,
 } from "../index";
-import { create_image } from "../tools/create_image";
-import { BN } from "@coral-xyz/anchor";
-import { FEE_TIERS, generateOrdersfromPattern, OrderParams } from "../tools";
+import { create_image, FEE_TIERS } from "../tools";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -414,143 +413,143 @@ export class SolanaTradeTool extends Tool {
   }
 }
 
-export class SolanaLimitOrderTool extends Tool {
-  name = "solana_limit_order";
-  description = `This tool can be used to place limit orders using Manifest.
+// export class SolanaLimitOrderTool extends Tool {
+//   name = "solana_limit_order";
+//   description = `This tool can be used to place limit orders using Manifest.
 
-  Do not allow users to place multiple orders with this instruction, use solana_batch_order instead.
+//   Do not allow users to place multiple orders with this instruction, use solana_batch_order instead.
 
-  Inputs ( input is a JSON string ):
-  marketId: PublicKey, eg "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ" for SOL/USDC (required)
-  quantity: number, eg 1 or 0.01 (required)
-  side: string, eg "Buy" or "Sell" (required)
-  price: number, in tokens eg 200 for SOL/USDC (required)`;
+//   Inputs ( input is a JSON string ):
+//   marketId: PublicKey, eg "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ" for SOL/USDC (required)
+//   quantity: number, eg 1 or 0.01 (required)
+//   side: string, eg "Buy" or "Sell" (required)
+//   price: number, in tokens eg 200 for SOL/USDC (required)`;
 
-  constructor(private solanaKit: SolanaAgentKit) {
-    super();
-  }
+//   constructor(private solanaKit: SolanaAgentKit) {
+//     super();
+//   }
 
-  protected async _call(input: string): Promise<string> {
-    try {
-      const parsedInput = JSON.parse(input);
+//   protected async _call(input: string): Promise<string> {
+//     try {
+//       const parsedInput = JSON.parse(input);
 
-      const tx = await this.solanaKit.limitOrder(
-        new PublicKey(parsedInput.marketId),
-        parsedInput.quantity,
-        parsedInput.side,
-        parsedInput.price,
-      );
+//       const tx = await this.solanaKit.limitOrder(
+//         new PublicKey(parsedInput.marketId),
+//         parsedInput.quantity,
+//         parsedInput.side,
+//         parsedInput.price,
+//       );
 
-      return JSON.stringify({
-        status: "success",
-        message: "Trade executed successfully",
-        transaction: tx,
-        marketId: parsedInput.marketId,
-        quantity: parsedInput.quantity,
-        side: parsedInput.side,
-        price: parsedInput.price,
-      });
-    } catch (error: any) {
-      return JSON.stringify({
-        status: "error",
-        message: error.message,
-        code: error.code || "UNKNOWN_ERROR",
-      });
-    }
-  }
-}
+//       return JSON.stringify({
+//         status: "success",
+//         message: "Trade executed successfully",
+//         transaction: tx,
+//         marketId: parsedInput.marketId,
+//         quantity: parsedInput.quantity,
+//         side: parsedInput.side,
+//         price: parsedInput.price,
+//       });
+//     } catch (error: any) {
+//       return JSON.stringify({
+//         status: "error",
+//         message: error.message,
+//         code: error.code || "UNKNOWN_ERROR",
+//       });
+//     }
+//   }
+// }
 
-export class SolanaBatchOrderTool extends Tool {
-  name = "solana_batch_order";
-  description = `Places multiple limit orders in one transaction using Manifest. Submit orders either as a list or pattern:
+// export class SolanaBatchOrderTool extends Tool {
+//   name = "solana_batch_order";
+//   description = `Places multiple limit orders in one transaction using Manifest. Submit orders either as a list or pattern:
 
-  1. List format:
-  {
-    "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
-    "orders": [
-      { "quantity": 1, "side": "Buy", "price": 200 },
-      { "quantity": 0.5, "side": "Sell", "price": 205 }
-    ]
-  }
+//   1. List format:
+//   {
+//     "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+//     "orders": [
+//       { "quantity": 1, "side": "Buy", "price": 200 },
+//       { "quantity": 0.5, "side": "Sell", "price": 205 }
+//     ]
+//   }
 
-  2. Pattern format:
-  {
-    "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
-    "pattern": {
-      "side": "Buy",
-      "totalQuantity": 100,
-      "priceRange": { "max": 1.0 },
-      "spacing": { "type": "percentage", "value": 1 },
-      "numberOfOrders": 5
-    }
-  }
+//   2. Pattern format:
+//   {
+//     "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+//     "pattern": {
+//       "side": "Buy",
+//       "totalQuantity": 100,
+//       "priceRange": { "max": 1.0 },
+//       "spacing": { "type": "percentage", "value": 1 },
+//       "numberOfOrders": 5
+//     }
+//   }
 
-  Examples:
-  - "Place 5 buy orders totaling 100 tokens, 1% apart below $1"
-  - "Create 3 sell orders of 10 tokens each between $50-$55"
-  - "Place buy orders worth 50 tokens, $0.10 spacing from $0.80"
+//   Examples:
+//   - "Place 5 buy orders totaling 100 tokens, 1% apart below $1"
+//   - "Create 3 sell orders of 10 tokens each between $50-$55"
+//   - "Place buy orders worth 50 tokens, $0.10 spacing from $0.80"
 
-  Important: All orders must be in one transaction. Combine buy and sell orders into a single pattern or list. Never break the orders down to individual buy or sell orders.`;
+//   Important: All orders must be in one transaction. Combine buy and sell orders into a single pattern or list. Never break the orders down to individual buy or sell orders.`;
 
-  constructor(private solanaKit: SolanaAgentKit) {
-    super();
-  }
+//   constructor(private solanaKit: SolanaAgentKit) {
+//     super();
+//   }
 
-  protected async _call(input: string): Promise<string> {
-    try {
-      const parsedInput = JSON.parse(input);
-      let ordersToPlace: OrderParams[] = [];
+//   protected async _call(input: string): Promise<string> {
+//     try {
+//       const parsedInput = JSON.parse(input);
+//       let ordersToPlace: OrderParams[] = [];
 
-      if (!parsedInput.marketId) {
-        throw new Error("Market ID is required");
-      }
+//       if (!parsedInput.marketId) {
+//         throw new Error("Market ID is required");
+//       }
 
-      if (parsedInput.pattern) {
-        ordersToPlace = generateOrdersfromPattern(parsedInput.pattern);
-      } else if (Array.isArray(parsedInput.orders)) {
-        ordersToPlace = parsedInput.orders;
-      } else {
-        throw new Error("Either pattern or orders array is required");
-      }
+//       if (parsedInput.pattern) {
+//         ordersToPlace = generateOrdersfromPattern(parsedInput.pattern);
+//       } else if (Array.isArray(parsedInput.orders)) {
+//         ordersToPlace = parsedInput.orders;
+//       } else {
+//         throw new Error("Either pattern or orders array is required");
+//       }
 
-      if (ordersToPlace.length === 0) {
-        throw new Error("No orders generated or provided");
-      }
+//       if (ordersToPlace.length === 0) {
+//         throw new Error("No orders generated or provided");
+//       }
 
-      ordersToPlace.forEach((order: OrderParams, index: number) => {
-        if (!order.quantity || !order.side || !order.price) {
-          throw new Error(
-            `Invalid order at index ${index}: quantity, side, and price are required`,
-          );
-        }
-        if (order.side !== "Buy" && order.side !== "Sell") {
-          throw new Error(
-            `Invalid side at index ${index}: must be "Buy" or "Sell"`,
-          );
-        }
-      });
+//       ordersToPlace.forEach((order: OrderParams, index: number) => {
+//         if (!order.quantity || !order.side || !order.price) {
+//           throw new Error(
+//             `Invalid order at index ${index}: quantity, side, and price are required`,
+//           );
+//         }
+//         if (order.side !== "Buy" && order.side !== "Sell") {
+//           throw new Error(
+//             `Invalid side at index ${index}: must be "Buy" or "Sell"`,
+//           );
+//         }
+//       });
 
-      const tx = await this.solanaKit.batchOrder(
-        new PublicKey(parsedInput.marketId),
-        parsedInput.orders,
-      );
+//       const tx = await this.solanaKit.batchOrder(
+//         new PublicKey(parsedInput.marketId),
+//         parsedInput.orders,
+//       );
 
-      return JSON.stringify({
-        status: "success",
-        message: "Batch order executed successfully",
-        transaction: tx,
-        marketId: parsedInput.marketId,
-        orders: parsedInput.orders,
-      });
-    } catch (error: any) {
-      return JSON.stringify({
-        status: "error",
-        message: error.message,
-        code: error.code || "UNKNOWN_ERROR",
-      });
-    }
-  }
-}
+//       return JSON.stringify({
+//         status: "success",
+//         message: "Batch order executed successfully",
+//         transaction: tx,
+//         marketId: parsedInput.marketId,
+//         orders: parsedInput.orders,
+//       });
+//     } catch (error: any) {
+//       return JSON.stringify({
+//         status: "error",
+//         message: error.message,
+//         code: error.code || "UNKNOWN_ERROR",
+//       });
+//     }
+//   }
+// }
 
 export class SolanaCancelAllOrdersTool extends Tool {
   name = "solana_cancel_all_orders";
@@ -1638,7 +1637,7 @@ export class SolanaPythFetchPrice extends Tool {
   description = `Fetch the price of a given price feed from Pyth's Hermes service
 
   Inputs:
-  priceFeedID: string, the price feed ID, e.g., "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43" for BTC/USD`;
+  tokenSymbol: string, e.g., BTC for bitcoin`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -1646,17 +1645,21 @@ export class SolanaPythFetchPrice extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      const price = await this.solanaKit.pythFetchPrice(input);
+      const priceFeedID = await this.solanaKit.getPythPriceFeedID(input);
+      const price = await this.solanaKit.getPythPrice(priceFeedID);
+
       const response: PythFetchPriceResponse = {
         status: "success",
-        priceFeedID: input,
+        tokenSymbol: input,
+        priceFeedID,
         price,
       };
+
       return JSON.stringify(response);
     } catch (error: any) {
       const response: PythFetchPriceResponse = {
         status: "error",
-        priceFeedID: input,
+        tokenSymbol: input,
         message: error.message,
         code: error.code || "UNKNOWN_ERROR",
       };
@@ -2149,8 +2152,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaRaydiumCreateCpmm(solanaKit),
     new SolanaOpenbookCreateMarket(solanaKit),
     new SolanaManifestCreateMarket(solanaKit),
-    new SolanaLimitOrderTool(solanaKit),
-    new SolanaBatchOrderTool(solanaKit),
+    // new SolanaLimitOrderTool(solanaKit),
+    // new SolanaBatchOrderTool(solanaKit),
     new SolanaCancelAllOrdersTool(solanaKit),
     new SolanaWithdrawAllTool(solanaKit),
     new SolanaClosePosition(solanaKit),

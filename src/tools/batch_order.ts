@@ -4,12 +4,13 @@ import {
   sendAndConfirmTransaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { SolanaAgentKit } from "../index";
 import {
   ManifestClient,
   WrapperPlaceOrderParamsExternal,
   OrderType,
 } from "@cks-systems/manifest-sdk";
+import { SolanaAgentKit } from "../index";
+import { BatchOrderPattern, OrderParams } from "../types";
 
 export interface OrderParams {
   quantity: number;
