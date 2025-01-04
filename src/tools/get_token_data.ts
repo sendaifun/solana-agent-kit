@@ -9,17 +9,14 @@ export async function getTokenDataByAddress(
       throw new Error("Mint address is required");
     }
 
-    const response = await fetch("https://tokens.jup.ag/tokens?tags=verified", {
+    const response = await fetch(`https://tokens.jup.ag/token/${mint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    const data = (await response.json()) as JupiterTokenData[];
-    const token = data.find((token: JupiterTokenData) => {
-      return token.address === mint.toBase58();
-    });
+    const token = (await response.json()) as JupiterTokenData;
     return token;
   } catch (error: any) {
     throw new Error(`Error fetching token data: ${error.message}`);
