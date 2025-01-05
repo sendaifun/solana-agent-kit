@@ -61,12 +61,12 @@ Check out the [Good First Issues](https://github.com/sendaifun/solana-agent-kit/
 1. **Fork** the repository.
 2. **Create** a new branch for your feature or bugfix.
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/{your-feature-name}
    ```
 3. **Commit** your changes with clear and descriptive messages.
 4. **Push** to your fork.
    ```bash
-   git push origin feature/your-feature-name
+   git push origin feature/{your-feature-name}
    ```
 5. **Open a Pull Request** against the `main` branch of this repository.
 
@@ -102,9 +102,9 @@ Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for y
 
 ### Installation
 
-1. **Clone** the repository:
+1. **Clone** your forked repository:
    ```bash
-   git clone https://github.com/yourusername/solana-agent-kit.git
+   git clone https://github.com/{yourusername}/solana-agent-kit.git
    ```
 2. **Navigate** to the project directory:
    ```bash

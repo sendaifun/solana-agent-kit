@@ -1,11 +1,11 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "markdown"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
   ],
   "ignorePatterns": ["examples/**/*", "src/utils/keypair.ts", "test/**/*"],
   "rules": {
@@ -13,21 +13,31 @@
     "no-constant-condition": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_" },
+    ],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "curly": ["error", "all"],
     "eqeqeq": ["error", "always"],
     "no-floating-decimal": "error",
     "no-var": "error",
-    "prefer-const": "error"
+    "prefer-const": "error",
   },
   "env": {
     "browser": true,
     "node": true,
-    "es6": true
+    "es6": true,
   },
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module"
-  }
-} 
+    "sourceType": "module",
+  },
+  "overrides": [
+    {
+      // 2. Enable the Markdown processor for all .md files.
+      "files": ["**/*.md"],
+      "processor": "markdown/markdown",
+    },
+  ],
+}
