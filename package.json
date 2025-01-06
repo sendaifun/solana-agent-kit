@@ -28,6 +28,7 @@
 		"@bonfida/spl-name-service": "^3.0.7",
 		"@cks-systems/manifest-sdk": "0.1.59",
 		"@coral-xyz/anchor": "0.29",
+		"@dflow-protocol/swap-api-utils": "0.1.2",
 		"@langchain/core": "^0.3.26",
 		"@langchain/groq": "^0.1.2",
 		"@langchain/langgraph": "^0.2.36",

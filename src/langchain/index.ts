@@ -10,6 +10,7 @@ import {
 } from "../index";
 import { create_image, FEE_TIERS, generateOrdersfromPattern } from "../tools";
 import { marketTokenMap } from "../utils/flashUtils";
+import { normalizeScaled } from "../utils/format";
 import {
   CreateCollectionOptions,
   CreateSingleOptions,
@@ -377,7 +378,7 @@ export class SolanaPerpOpenTradeTool extends Tool {
 
 export class SolanaTradeTool extends Tool {
   name = "solana_trade";
-  description = `This tool can be used to swap tokens to another token ( It uses Jupiter Exchange ).
+  description = `This tool can be used to swap tokens to another token ( It uses DFlow ).
 
   Inputs ( input is a JSON string ):
   outputMint: string, eg "So11111111111111111111111111111111111111112" or "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (required)
@@ -393,7 +394,7 @@ export class SolanaTradeTool extends Tool {
     try {
       const parsedInput = JSON.parse(input);
 
-      const tx = await this.solanaKit.trade(
+      const result = await this.solanaKit.trade(
         new PublicKey(parsedInput.outputMint),
         parsedInput.inputAmount,
         parsedInput.inputMint
@@ -405,10 +406,11 @@ export class SolanaTradeTool extends Tool {
       return JSON.stringify({
         status: "success",
         message: "Trade executed successfully",
-        transaction: tx,
-        inputAmount: parsedInput.inputAmount,
+        inputAmount: normalizeScaled(result.qtyIn, result.inputDecimals),
         inputToken: parsedInput.inputMint || "SOL",
+        outputAmount: normalizeScaled(result.qtyOut, result.outputDecimals),
         outputToken: parsedInput.outputMint,
+        orderAddress: result.orderAddress,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -786,10 +788,10 @@ export class SolanaFlashOpenTrade extends Tool {
 
   Inputs ( input is a JSON string ):
   token: string, eg "SOL", "BTC", "ETH" (required)
-  type: string, eg "long", "short" (required) 
-  collateral: number, eg 10, 100, 1000 (required) 
+  type: string, eg "long", "short" (required)
+  collateral: number, eg 10, 100, 1000 (required)
   leverage: number, eg 5, 10, 20 (required)
-  
+
   Example prompt is Open a 20x leveraged trade for SOL on long side using flash trade with 500 USD as collateral`;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -865,7 +867,7 @@ export class SolanaFlashCloseTrade extends Tool {
   Inputs ( input is a JSON string ):
   token: string, eg "SOL", "BTC", "ETH" (required)
   side: string, eg "long", "short" (required)
-  
+
   Example prompt is Close a 20x leveraged trade for SOL on long side`;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -2348,7 +2350,7 @@ export class Solana3LandCreateSingle extends Tool {
 export class Solana3LandCreateCollection extends Tool {
   name = "3land_minting_tool";
   description = `Creates an NFT Collection that you can visit on 3.land's website (3.land/collection/{collectionAccount})
-  
+
   Inputs:
   privateKey (required): represents the privateKey of the wallet - can be an array of numbers, Uint8Array or base58 string
   isMainnet (required): defines is the tx takes places in mainnet

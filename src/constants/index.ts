@@ -28,8 +28,8 @@ export const DEFAULT_OPTIONS = {
 } as const;
 
 /**
- * Jupiter API URL
+ * DFlow Swap API URL
  */
-export const JUP_API = "https://quote-api.jup.ag/v6";
-export const JUP_REFERRAL_ADDRESS =
+export const DFLOW_SWAP_API = "https://quote-api.dflow.net";
+export const REFERRAL_PROGRAM_ADDRESS =
   "REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3";

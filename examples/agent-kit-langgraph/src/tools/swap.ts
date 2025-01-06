@@ -26,7 +26,7 @@ export const swapTool = tool(
   {
     name: "swap",
     description:
-      "call to swap/trade tokens from one token to the other using Jupiter exchange",
+      "call to swap/trade tokens from one token to the other using DFlow",
     schema: z.object({
       outputMint: z
         .string()
