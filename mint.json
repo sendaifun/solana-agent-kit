@@ -34,12 +34,6 @@
       ]
     },
     {
-      "group": "Integrations",
-      "pages": [
-        "v0/integrations/adrena"
-      ]
-    },
-    {
       "group": "Classes",
       "icon": "cube",
       "pages": [

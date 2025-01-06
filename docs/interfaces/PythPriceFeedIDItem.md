@@ -6,7 +6,7 @@
 
 # Interface: PythPriceFeedIDItem
 
-Defined in: [types/index.ts:170](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L170)
+Defined in: [types/index.ts:170](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L170)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:170](https://github.com/scriptscrypt/solana-agent-ki
 
 > **id**: `string`
 
-Defined in: [types/index.ts:171](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L171)
+Defined in: [types/index.ts:171](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L171)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:171](https://github.com/scriptscrypt/solana-agent-ki
 
 > **attributes**: `object`
 
-Defined in: [types/index.ts:172](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L172)
+Defined in: [types/index.ts:172](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L172)
 
 #### asset\_type
 

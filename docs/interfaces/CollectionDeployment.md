@@ -6,7 +6,7 @@
 
 # Interface: CollectionDeployment
 
-Defined in: [types/index.ts:24](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L24)
+Defined in: [types/index.ts:24](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L24)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:24](https://github.com/scriptscrypt/solana-agent-kit
 
 > **collectionAddress**: `PublicKey`
 
-Defined in: [types/index.ts:25](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L25)
+Defined in: [types/index.ts:25](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L25)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [types/index.ts:25](https://github.com/scriptscrypt/solana-agent-kit
 
 > **signature**: `Uint8Array`
 
-Defined in: [types/index.ts:26](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L26)
+Defined in: [types/index.ts:26](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L26)

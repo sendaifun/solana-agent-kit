@@ -6,7 +6,7 @@
 
 # Interface: Config
 
-Defined in: [types/index.ts:5](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L5)
+Defined in: [types/index.ts:5](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L5)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:5](https://github.com/scriptscrypt/solana-agent-kit/
 
 > `optional` **OPENAI\_API\_KEY**: `string`
 
-Defined in: [types/index.ts:6](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L6)
+Defined in: [types/index.ts:6](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L6)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:6](https://github.com/scriptscrypt/solana-agent-kit/
 
 > `optional` **JUPITER\_REFERRAL\_ACCOUNT**: `string`
 
-Defined in: [types/index.ts:7](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L7)
+Defined in: [types/index.ts:7](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L7)
 
 ***
 
@@ -30,4 +30,4 @@ Defined in: [types/index.ts:7](https://github.com/scriptscrypt/solana-agent-kit/
 
 > `optional` **JUPITER\_FEE\_BPS**: `number`
 
-Defined in: [types/index.ts:8](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L8)
+Defined in: [types/index.ts:8](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L8)

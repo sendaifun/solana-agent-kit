@@ -6,7 +6,7 @@
 
 # Interface: BatchOrderPattern
 
-Defined in: [types/index.ts:213](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L213)
+Defined in: [types/index.ts:213](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L213)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:213](https://github.com/scriptscrypt/solana-agent-ki
 
 > **side**: `string`
 
-Defined in: [types/index.ts:214](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L214)
+Defined in: [types/index.ts:214](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L214)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:214](https://github.com/scriptscrypt/solana-agent-ki
 
 > `optional` **totalQuantity**: `number`
 
-Defined in: [types/index.ts:215](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L215)
+Defined in: [types/index.ts:215](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L215)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:215](https://github.com/scriptscrypt/solana-agent-ki
 
 > `optional` **priceRange**: `object`
 
-Defined in: [types/index.ts:216](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L216)
+Defined in: [types/index.ts:216](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L216)
 
 #### min?
 
@@ -46,7 +46,7 @@ Defined in: [types/index.ts:216](https://github.com/scriptscrypt/solana-agent-ki
 
 > `optional` **spacing**: `object`
 
-Defined in: [types/index.ts:220](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L220)
+Defined in: [types/index.ts:220](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L220)
 
 #### type
 
@@ -62,7 +62,7 @@ Defined in: [types/index.ts:220](https://github.com/scriptscrypt/solana-agent-ki
 
 > `optional` **numberOfOrders**: `number`
 
-Defined in: [types/index.ts:224](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L224)
+Defined in: [types/index.ts:224](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L224)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: [types/index.ts:224](https://github.com/scriptscrypt/solana-agent-ki
 
 > `optional` **individualQuantity**: `number`
 
-Defined in: [types/index.ts:225](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L225)
+Defined in: [types/index.ts:225](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L225)

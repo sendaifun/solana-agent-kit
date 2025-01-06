@@ -6,7 +6,7 @@
 
 # Interface: Creator
 
-Defined in: [types/index.ts:11](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L11)
+Defined in: [types/index.ts:11](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L11)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:11](https://github.com/scriptscrypt/solana-agent-kit
 
 > **address**: `string`
 
-Defined in: [types/index.ts:12](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L12)
+Defined in: [types/index.ts:12](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L12)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [types/index.ts:12](https://github.com/scriptscrypt/solana-agent-kit
 
 > **percentage**: `number`
 
-Defined in: [types/index.ts:13](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L13)
+Defined in: [types/index.ts:13](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L13)

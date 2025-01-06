@@ -6,7 +6,7 @@
 
 # Interface: TokenCheck
 
-Defined in: [types/index.ts:158](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L158)
+Defined in: [types/index.ts:158](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L158)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:158](https://github.com/scriptscrypt/solana-agent-ki
 
 > **tokenProgram**: `string`
 
-Defined in: [types/index.ts:159](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L159)
+Defined in: [types/index.ts:159](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L159)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:159](https://github.com/scriptscrypt/solana-agent-ki
 
 > **tokenType**: `string`
 
-Defined in: [types/index.ts:160](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L160)
+Defined in: [types/index.ts:160](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L160)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:160](https://github.com/scriptscrypt/solana-agent-ki
 
 > **risks**: `object`[]
 
-Defined in: [types/index.ts:161](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L161)
+Defined in: [types/index.ts:161](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L161)
 
 #### name
 
@@ -54,4 +54,4 @@ Defined in: [types/index.ts:161](https://github.com/scriptscrypt/solana-agent-ki
 
 > **score**: `number`
 
-Defined in: [types/index.ts:167](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L167)
+Defined in: [types/index.ts:167](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L167)

@@ -6,7 +6,7 @@
 
 # Interface: JupiterTokenData
 
-Defined in: [types/index.ts:65](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L65)
+Defined in: [types/index.ts:65](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L65)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:65](https://github.com/scriptscrypt/solana-agent-kit
 
 > **address**: `string`
 
-Defined in: [types/index.ts:66](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L66)
+Defined in: [types/index.ts:66](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L66)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:66](https://github.com/scriptscrypt/solana-agent-kit
 
 > **name**: `string`
 
-Defined in: [types/index.ts:67](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L67)
+Defined in: [types/index.ts:67](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L67)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:67](https://github.com/scriptscrypt/solana-agent-kit
 
 > **symbol**: `string`
 
-Defined in: [types/index.ts:68](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L68)
+Defined in: [types/index.ts:68](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L68)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [types/index.ts:68](https://github.com/scriptscrypt/solana-agent-kit
 
 > **decimals**: `number`
 
-Defined in: [types/index.ts:69](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L69)
+Defined in: [types/index.ts:69](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L69)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [types/index.ts:69](https://github.com/scriptscrypt/solana-agent-kit
 
 > **tags**: `string`[]
 
-Defined in: [types/index.ts:70](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L70)
+Defined in: [types/index.ts:70](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L70)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [types/index.ts:70](https://github.com/scriptscrypt/solana-agent-kit
 
 > **logoURI**: `string`
 
-Defined in: [types/index.ts:71](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L71)
+Defined in: [types/index.ts:71](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L71)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [types/index.ts:71](https://github.com/scriptscrypt/solana-agent-kit
 
 > **daily\_volume**: `number`
 
-Defined in: [types/index.ts:72](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L72)
+Defined in: [types/index.ts:72](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L72)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [types/index.ts:72](https://github.com/scriptscrypt/solana-agent-kit
 
 > **freeze\_authority**: `null` \| `string`
 
-Defined in: [types/index.ts:73](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L73)
+Defined in: [types/index.ts:73](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L73)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [types/index.ts:73](https://github.com/scriptscrypt/solana-agent-kit
 
 > **mint\_authority**: `null` \| `string`
 
-Defined in: [types/index.ts:74](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L74)
+Defined in: [types/index.ts:74](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L74)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [types/index.ts:74](https://github.com/scriptscrypt/solana-agent-kit
 
 > **permanent\_delegate**: `null` \| `string`
 
-Defined in: [types/index.ts:75](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L75)
+Defined in: [types/index.ts:75](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L75)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [types/index.ts:75](https://github.com/scriptscrypt/solana-agent-kit
 
 > **extensions**: `object`
 
-Defined in: [types/index.ts:76](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L76)
+Defined in: [types/index.ts:76](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L76)
 
 #### coingeckoId?
 

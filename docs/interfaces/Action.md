@@ -6,7 +6,7 @@
 
 # Interface: Action
 
-Defined in: [types/index.ts:125](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L125)
+Defined in: [types/index.ts:125](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L125)
 
 Main Action interface inspired by ELIZA
 This interface makes it easier to implement actions across different frameworks
@@ -17,7 +17,7 @@ This interface makes it easier to implement actions across different frameworks
 
 > **name**: `string`
 
-Defined in: [types/index.ts:129](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L129)
+Defined in: [types/index.ts:129](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L129)
 
 Unique name of the action
 
@@ -27,7 +27,7 @@ Unique name of the action
 
 > **similes**: `string`[]
 
-Defined in: [types/index.ts:134](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L134)
+Defined in: [types/index.ts:134](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L134)
 
 Alternative names/phrases that can trigger this action
 
@@ -37,7 +37,7 @@ Alternative names/phrases that can trigger this action
 
 > **description**: `string`
 
-Defined in: [types/index.ts:139](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L139)
+Defined in: [types/index.ts:139](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L139)
 
 Detailed description of what the action does
 
@@ -47,7 +47,7 @@ Detailed description of what the action does
 
 > **examples**: [`ActionExample`](ActionExample.md)[][]
 
-Defined in: [types/index.ts:145](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L145)
+Defined in: [types/index.ts:145](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L145)
 
 Array of example inputs and outputs for the action
 Each inner array represents a group of related examples
@@ -58,7 +58,7 @@ Each inner array represents a group of related examples
 
 > **schema**: `ZodType`
 
-Defined in: [types/index.ts:150](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L150)
+Defined in: [types/index.ts:150](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L150)
 
 Zod schema for input validation
 
@@ -68,6 +68,6 @@ Zod schema for input validation
 
 > **handler**: [`Handler`](../type-aliases/Handler.md)
 
-Defined in: [types/index.ts:155](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L155)
+Defined in: [types/index.ts:155](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L155)
 
 Function that executes the action
