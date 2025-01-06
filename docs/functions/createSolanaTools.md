@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Function: createSolanaTools()
 
-> **createSolanaTools**(`solanaKit`): (`SolanaBalanceTool` \| `SolanaTransferTool` \| `SolanaDeployTokenTool` \| `SolanaDeployCollectionTool` \| `SolanaMintNFTTool` \| `SolanaTradeTool` \| `SolanaRequestFundsTool` \| `SolanaRegisterDomainTool` \| `SolanaResolveDomainTool` \| `SolanaGetDomainTool` \| `SolanaGetWalletAddressTool` \| `SolanaPumpfunTokenLaunchTool` \| `SolanaCreateImageTool` \| `SolanaLendAssetTool` \| `SolanaTPSCalculatorTool` \| `SolanaStakeTool` \| `SolanaFetchPriceTool` \| `SolanaTokenDataTool` \| `SolanaTokenDataByTickerTool` \| `SolanaCompressedAirdropTool` \| `SolanaCreateSingleSidedWhirlpoolTool` \| `SolanaRaydiumCreateAmmV4` \| `SolanaRaydiumCreateClmm` \| `SolanaRaydiumCreateCpmm` \| `SolanaOpenbookCreateMarket`)[]
+> **createSolanaTools**(`solanaKit`): (`SolanaBalanceTool` \| `SolanaBalanceOtherTool` \| `SolanaTransferTool` \| `SolanaDeployTokenTool` \| `SolanaDeployCollectionTool` \| `SolanaMintNFTTool` \| `SolanaPerpCloseTradeTool` \| `SolanaPerpOpenTradeTool` \| `SolanaTradeTool` \| `SolanaLimitOrderTool` \| `SolanaBatchOrderTool` \| `SolanaCancelAllOrdersTool` \| `SolanaWithdrawAllTool` \| `SolanaRequestFundsTool` \| `SolanaRegisterDomainTool` \| `SolanaResolveDomainTool` \| `SolanaGetDomainTool` \| `SolanaGetWalletAddressTool` \| `SolanaFlashOpenTrade` \| `SolanaFlashCloseTrade` \| `SolanaPumpfunTokenLaunchTool` \| `SolanaCreateImageTool` \| `SolanaLendAssetTool` \| `SolanaTPSCalculatorTool` \| `SolanaStakeTool` \| `SolanaRestakeTool` \| `SolanaFetchPriceTool` \| `SolanaTokenDataTool` \| `SolanaTokenDataByTickerTool` \| `SolanaCompressedAirdropTool` \| `SolanaClosePosition` \| `SolanaOrcaCreateCLMM` \| `SolanaOrcaCreateSingleSideLiquidityPool` \| `SolanaOrcaFetchPositions` \| `SolanaOrcaOpenCenteredPosition` \| `SolanaOrcaOpenSingleSidedPosition` \| `SolanaRaydiumCreateAmmV4` \| `SolanaRaydiumCreateClmm` \| `SolanaRaydiumCreateCpmm` \| `SolanaOpenbookCreateMarket` \| `SolanaManifestCreateMarket` \| `SolanaPythFetchPrice` \| `SolanaResolveAllDomainsTool` \| `SolanaGetOwnedDomains` \| `SolanaGetOwnedTldDomains` \| `SolanaGetAllTlds` \| `SolanaGetMainDomain` \| `SolanaCreateGibworkTask` \| `SolanaRockPaperScissorsTool` \| `SolanaTipLinkTool` \| `SolanaListNFTForSaleTool` \| `SolanaCancelNFTListingTool` \| `SolanaFetchTokenReportSummaryTool` \| `SolanaFetchTokenDetailedReportTool`)[]
+
+Defined in: [langchain/index.ts:2253](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/langchain/index.ts#L2253)
 
 ## Parameters
 
@@ -16,8 +18,4 @@
 
 ## Returns
 
-(`SolanaBalanceTool` \| `SolanaTransferTool` \| `SolanaDeployTokenTool` \| `SolanaDeployCollectionTool` \| `SolanaMintNFTTool` \| `SolanaTradeTool` \| `SolanaRequestFundsTool` \| `SolanaRegisterDomainTool` \| `SolanaResolveDomainTool` \| `SolanaGetDomainTool` \| `SolanaGetWalletAddressTool` \| `SolanaPumpfunTokenLaunchTool` \| `SolanaCreateImageTool` \| `SolanaLendAssetTool` \| `SolanaTPSCalculatorTool` \| `SolanaStakeTool` \| `SolanaFetchPriceTool` \| `SolanaTokenDataTool` \| `SolanaTokenDataByTickerTool` \| `SolanaCompressedAirdropTool` \| `SolanaCreateSingleSidedWhirlpoolTool` \| `SolanaRaydiumCreateAmmV4` \| `SolanaRaydiumCreateClmm` \| `SolanaRaydiumCreateCpmm` \| `SolanaOpenbookCreateMarket`)[]
-
-## Defined in
-
-[langchain/index.ts:983](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/langchain/index.ts#L983)
+(`SolanaBalanceTool` \| `SolanaBalanceOtherTool` \| `SolanaTransferTool` \| `SolanaDeployTokenTool` \| `SolanaDeployCollectionTool` \| `SolanaMintNFTTool` \| `SolanaPerpCloseTradeTool` \| `SolanaPerpOpenTradeTool` \| `SolanaTradeTool` \| `SolanaLimitOrderTool` \| `SolanaBatchOrderTool` \| `SolanaCancelAllOrdersTool` \| `SolanaWithdrawAllTool` \| `SolanaRequestFundsTool` \| `SolanaRegisterDomainTool` \| `SolanaResolveDomainTool` \| `SolanaGetDomainTool` \| `SolanaGetWalletAddressTool` \| `SolanaFlashOpenTrade` \| `SolanaFlashCloseTrade` \| `SolanaPumpfunTokenLaunchTool` \| `SolanaCreateImageTool` \| `SolanaLendAssetTool` \| `SolanaTPSCalculatorTool` \| `SolanaStakeTool` \| `SolanaRestakeTool` \| `SolanaFetchPriceTool` \| `SolanaTokenDataTool` \| `SolanaTokenDataByTickerTool` \| `SolanaCompressedAirdropTool` \| `SolanaClosePosition` \| `SolanaOrcaCreateCLMM` \| `SolanaOrcaCreateSingleSideLiquidityPool` \| `SolanaOrcaFetchPositions` \| `SolanaOrcaOpenCenteredPosition` \| `SolanaOrcaOpenSingleSidedPosition` \| `SolanaRaydiumCreateAmmV4` \| `SolanaRaydiumCreateClmm` \| `SolanaRaydiumCreateCpmm` \| `SolanaOpenbookCreateMarket` \| `SolanaManifestCreateMarket` \| `SolanaPythFetchPrice` \| `SolanaResolveAllDomainsTool` \| `SolanaGetOwnedDomains` \| `SolanaGetOwnedTldDomains` \| `SolanaGetAllTlds` \| `SolanaGetMainDomain` \| `SolanaCreateGibworkTask` \| `SolanaRockPaperScissorsTool` \| `SolanaTipLinkTool` \| `SolanaListNFTForSaleTool` \| `SolanaCancelNFTListingTool` \| `SolanaFetchTokenReportSummaryTool` \| `SolanaFetchTokenDetailedReportTool`)[]

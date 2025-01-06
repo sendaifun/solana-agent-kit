@@ -1,10 +1,12 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
 [solana-agent-kit](../README.md) / LuloAccountDetailsResponse
 
 # Interface: LuloAccountDetailsResponse
+
+Defined in: [types/index.ts:53](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L53)
 
 Lulo Account Details response format
 
@@ -14,9 +16,7 @@ Lulo Account Details response format
 
 > **totalValue**: `number`
 
-#### Defined in
-
-[types/index.ts:46](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L46)
+Defined in: [types/index.ts:54](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L54)
 
 ***
 
@@ -24,9 +24,7 @@ Lulo Account Details response format
 
 > **interestEarned**: `number`
 
-#### Defined in
-
-[types/index.ts:47](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L47)
+Defined in: [types/index.ts:55](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L55)
 
 ***
 
@@ -34,15 +32,15 @@ Lulo Account Details response format
 
 > **realtimeApy**: `number`
 
-#### Defined in
-
-[types/index.ts:48](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L48)
+Defined in: [types/index.ts:56](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L56)
 
 ***
 
 ### settings
 
 > **settings**: `object`
+
+Defined in: [types/index.ts:57](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L57)
 
 #### owner
 
@@ -59,7 +57,3 @@ Lulo Account Details response format
 #### minimumRate
 
 > **minimumRate**: `string`
-
-#### Defined in
-
-[types/index.ts:49](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L49)

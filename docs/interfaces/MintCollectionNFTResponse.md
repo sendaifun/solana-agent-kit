@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: MintCollectionNFTResponse
 
+Defined in: [types/index.ts:29](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L29)
+
 ## Properties
 
 ### mint
 
 > **mint**: `PublicKey`
 
-#### Defined in
-
-[types/index.ts:22](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L22)
+Defined in: [types/index.ts:30](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L30)
 
 ***
 
@@ -22,6 +22,4 @@
 
 > **metadata**: `PublicKey`
 
-#### Defined in
-
-[types/index.ts:23](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L23)
+Defined in: [types/index.ts:31](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L31)

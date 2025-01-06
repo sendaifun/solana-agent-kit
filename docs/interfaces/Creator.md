@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: Creator
 
+Defined in: [types/index.ts:11](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L11)
+
 ## Properties
 
 ### address
 
 > **address**: `string`
 
-#### Defined in
-
-[types/index.ts:4](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L4)
+Defined in: [types/index.ts:12](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L12)
 
 ***
 
@@ -22,6 +22,4 @@
 
 > **percentage**: `number`
 
-#### Defined in
-
-[types/index.ts:5](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L5)
+Defined in: [types/index.ts:13](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L13)

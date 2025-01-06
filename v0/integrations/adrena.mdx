@@ -1,0 +1,159 @@
+---
+title: 'Adrena Protocol Integration'
+description: 'Learn how to use perpetual trading functionality with Adrena Protocol'
+---
+
+# Adrena Protocol Integration
+
+Solana Agent Kit provides comprehensive integration with Adrena Protocol for perpetual trading. The integration supports both long and short positions with configurable leverage and slippage parameters.
+
+## Key Features
+
+- Long/Short position trading
+- Configurable leverage up to 100x
+- Slippage protection
+- Automated token account setup
+- Price feed integration
+- Support for multiple collateral types
+
+## Opening Positions
+
+### Long Position
+
+```typescript
+const signature = await agent.openPerpTradeLong({
+  price: 300, // USD price
+  collateralAmount: 10, // Amount of collateral
+  collateralMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+  leverage: 50000, // 5x leverage (10000 = 1x)
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // Trading asset
+  slippage: 0.3, // 0.3% slippage tolerance
+});
+```
+
+### Short Position
+
+```typescript
+const signature = await agent.openPerpTradeShort({
+  price: 300,
+  collateralAmount: 10,
+  collateralMint: TOKENS.USDC, // Default collateral for shorts
+  leverage: 50000,
+  tradeMint: TOKENS.jitoSOL,
+  slippage: 0.3,
+});
+```
+
+## Closing Positions
+
+### Close Long Position
+
+```typescript
+const signature = await agent.closePerpTradeLong({
+  price: 200, // Minimum exit price
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"),
+});
+```
+
+### Close Short Position
+
+```typescript
+const signature = await agent.closePerpTradeShort({
+  price: 200,
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"),
+});
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides LangChain tools for automated trading:
+
+### Open Trade Tool
+
+```typescript
+import { SolanaPerpOpenTradeTool } from 'solana-agent-kit';
+
+const openTradeTool = new SolanaPerpOpenTradeTool(agent);
+
+// Tool input format:
+const input = {
+  collateralAmount: 1,
+  collateralMint: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+  tradeMint: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+  leverage: 50000,
+  price: 100,
+  slippage: 0.3,
+  side: "long" // or "short"
+};
+```
+
+### Close Trade Tool
+
+```typescript
+import { SolanaPerpCloseTradeTool } from 'solana-agent-kit';
+
+const closeTradeTool = new SolanaPerpCloseTradeTool(agent);
+
+// Tool input format:
+const input = {
+  tradeMint: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+  price: 100,
+  side: "long" // or "short"
+};
+```
+
+## Important Notes
+
+1. **Leverage Configuration**
+   - Leverage is specified in basis points (10000 = 1x)
+   - Maximum leverage varies by market
+   - Example: 50000 = 5x leverage
+
+2. **Collateral Types**
+   - Long positions: Use same token as tradeMint to avoid swaps
+   - Short positions: USDC recommended as collateral
+
+3. **Price and Slippage**
+   - Price in USD
+   - Slippage as percentage (0.3 = 0.3%)
+   - Always monitor price impact before trading
+
+## Error Handling
+
+```typescript
+try {
+  await agent.openPerpTradeLong({...});
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient collateral
+  } else if (error.message.includes("slippage tolerance exceeded")) {
+    // Handle price movement
+  }
+}
+```
+
+## Technical Details
+
+### Program ID
+```typescript
+const ADRENA_PROGRAM_ID = new PublicKey(
+  "13gDzEXCdocbj8iAiqrScGo47NiSuYENGsRqi3SEAwet"
+);
+```
+
+### Price Decimals
+```typescript
+const PRICE_DECIMALS = 10;
+```
+
+### Default Values
+```typescript
+const DEFAULT_OPTIONS = {
+  LEVERAGE_BPS: 50000, // 5x leverage
+};
+```
+
+### Token Support
+- jitoSOL
+- USDC
+- Additional assets based on protocol liquidity

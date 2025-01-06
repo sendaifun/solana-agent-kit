@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: PumpFunTokenOptions
 
+Defined in: [types/index.ts:34](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L34)
+
 ## Properties
 
 ### twitter?
 
 > `optional` **twitter**: `string`
 
-#### Defined in
-
-[types/index.ts:27](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L27)
+Defined in: [types/index.ts:35](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L35)
 
 ***
 
@@ -22,9 +22,7 @@
 
 > `optional` **telegram**: `string`
 
-#### Defined in
-
-[types/index.ts:28](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L28)
+Defined in: [types/index.ts:36](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L36)
 
 ***
 
@@ -32,9 +30,7 @@
 
 > `optional` **website**: `string`
 
-#### Defined in
-
-[types/index.ts:29](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L29)
+Defined in: [types/index.ts:37](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L37)
 
 ***
 
@@ -42,9 +38,7 @@
 
 > `optional` **initialLiquiditySOL**: `number`
 
-#### Defined in
-
-[types/index.ts:30](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L30)
+Defined in: [types/index.ts:38](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L38)
 
 ***
 
@@ -52,9 +46,7 @@
 
 > `optional` **slippageBps**: `number`
 
-#### Defined in
-
-[types/index.ts:31](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L31)
+Defined in: [types/index.ts:39](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L39)
 
 ***
 
@@ -62,6 +54,4 @@
 
 > `optional` **priorityFee**: `number`
 
-#### Defined in
-
-[types/index.ts:32](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L32)
+Defined in: [types/index.ts:40](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L40)
