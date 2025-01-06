@@ -6,7 +6,7 @@
 
 # Class: SolanaAgentKit
 
-Defined in: [agent/index.ts:89](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L89)
+Defined in: [agent/index.ts:89](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L89)
 
 Main class for interacting with Solana blockchain
 Provides a unified interface for token operations, NFT management, trading and more
@@ -19,7 +19,7 @@ Provides a unified interface for token operations, NFT management, trading and m
 
 > **new SolanaAgentKit**(`private_key`, `rpc_url`, `openai_api_key`): [`SolanaAgentKit`](SolanaAgentKit.md)
 
-Defined in: [agent/index.ts:103](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L103)
+Defined in: [agent/index.ts:103](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L103)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ const agent = new SolanaAgentKit(privateKey, rpcUrl, {
 
 > **new SolanaAgentKit**(`private_key`, `rpc_url`, `config`): [`SolanaAgentKit`](SolanaAgentKit.md)
 
-Defined in: [agent/index.ts:108](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L108)
+Defined in: [agent/index.ts:108](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L108)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [agent/index.ts:108](https://github.com/scriptscrypt/solana-agent-ki
 
 > **requestFaucetFunds**(): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:129](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L129)
+Defined in: [agent/index.ts:129](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L129)
 
 #### Returns
 
@@ -94,7 +94,7 @@ Defined in: [agent/index.ts:129](https://github.com/scriptscrypt/solana-agent-ki
 
 > **deployToken**(`name`, `uri`, `symbol`, `decimals`, `initialSupply`?): `Promise`\<\{ `mint`: `PublicKey`; \}\>
 
-Defined in: [agent/index.ts:133](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L133)
+Defined in: [agent/index.ts:133](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L133)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [agent/index.ts:133](https://github.com/scriptscrypt/solana-agent-ki
 
 > **deployCollection**(`options`): `Promise`\<[`CollectionDeployment`](../interfaces/CollectionDeployment.md)\>
 
-Defined in: [agent/index.ts:143](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L143)
+Defined in: [agent/index.ts:143](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L143)
 
 #### Parameters
 
@@ -146,7 +146,7 @@ Defined in: [agent/index.ts:143](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getBalance**(`token_address`?): `Promise`\<`number`\>
 
-Defined in: [agent/index.ts:149](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L149)
+Defined in: [agent/index.ts:149](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L149)
 
 #### Parameters
 
@@ -164,7 +164,7 @@ Defined in: [agent/index.ts:149](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getBalanceOther**(`walletAddress`, `tokenAddress`?): `Promise`\<`number`\>
 
-Defined in: [agent/index.ts:153](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L153)
+Defined in: [agent/index.ts:153](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L153)
 
 #### Parameters
 
@@ -186,7 +186,7 @@ Defined in: [agent/index.ts:153](https://github.com/scriptscrypt/solana-agent-ki
 
 > **mintNFT**(`collectionMint`, `metadata`, `recipient`?): `Promise`\<[`MintCollectionNFTResponse`](../interfaces/MintCollectionNFTResponse.md)\>
 
-Defined in: [agent/index.ts:160](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L160)
+Defined in: [agent/index.ts:160](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L160)
 
 #### Parameters
 
@@ -226,7 +226,7 @@ Defined in: [agent/index.ts:160](https://github.com/scriptscrypt/solana-agent-ki
 
 > **transfer**(`to`, `amount`, `mint`?): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:168](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L168)
+Defined in: [agent/index.ts:168](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L168)
 
 #### Parameters
 
@@ -252,7 +252,7 @@ Defined in: [agent/index.ts:168](https://github.com/scriptscrypt/solana-agent-ki
 
 > **registerDomain**(`name`, `spaceKB`?): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:176](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L176)
+Defined in: [agent/index.ts:176](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L176)
 
 #### Parameters
 
@@ -274,7 +274,7 @@ Defined in: [agent/index.ts:176](https://github.com/scriptscrypt/solana-agent-ki
 
 > **resolveSolDomain**(`domain`): `Promise`\<`PublicKey`\>
 
-Defined in: [agent/index.ts:180](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L180)
+Defined in: [agent/index.ts:180](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L180)
 
 #### Parameters
 
@@ -292,7 +292,7 @@ Defined in: [agent/index.ts:180](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getPrimaryDomain**(`account`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:184](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L184)
+Defined in: [agent/index.ts:184](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L184)
 
 #### Parameters
 
@@ -310,7 +310,7 @@ Defined in: [agent/index.ts:184](https://github.com/scriptscrypt/solana-agent-ki
 
 > **trade**(`outputMint`, `inputAmount`, `inputMint`?, `slippageBps`?): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:188](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L188)
+Defined in: [agent/index.ts:188](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L188)
 
 #### Parameters
 
@@ -340,7 +340,7 @@ Defined in: [agent/index.ts:188](https://github.com/scriptscrypt/solana-agent-ki
 
 > **limitOrder**(`marketId`, `quantity`, `side`, `price`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:197](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L197)
+Defined in: [agent/index.ts:197](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L197)
 
 #### Parameters
 
@@ -370,7 +370,7 @@ Defined in: [agent/index.ts:197](https://github.com/scriptscrypt/solana-agent-ki
 
 > **batchOrder**(`marketId`, `orders`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:206](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L206)
+Defined in: [agent/index.ts:206](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L206)
 
 #### Parameters
 
@@ -392,7 +392,7 @@ Defined in: [agent/index.ts:206](https://github.com/scriptscrypt/solana-agent-ki
 
 > **cancelAllOrders**(`marketId`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:213](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L213)
+Defined in: [agent/index.ts:213](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L213)
 
 #### Parameters
 
@@ -410,7 +410,7 @@ Defined in: [agent/index.ts:213](https://github.com/scriptscrypt/solana-agent-ki
 
 > **withdrawAll**(`marketId`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:217](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L217)
+Defined in: [agent/index.ts:217](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L217)
 
 #### Parameters
 
@@ -428,7 +428,7 @@ Defined in: [agent/index.ts:217](https://github.com/scriptscrypt/solana-agent-ki
 
 > **openPerpTradeLong**(`args`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:221](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L221)
+Defined in: [agent/index.ts:221](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L221)
 
 #### Parameters
 
@@ -446,7 +446,7 @@ Defined in: [agent/index.ts:221](https://github.com/scriptscrypt/solana-agent-ki
 
 > **openPerpTradeShort**(`args`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:230](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L230)
+Defined in: [agent/index.ts:230](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L230)
 
 #### Parameters
 
@@ -464,7 +464,7 @@ Defined in: [agent/index.ts:230](https://github.com/scriptscrypt/solana-agent-ki
 
 > **closePerpTradeShort**(`args`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:239](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L239)
+Defined in: [agent/index.ts:239](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L239)
 
 #### Parameters
 
@@ -482,7 +482,7 @@ Defined in: [agent/index.ts:239](https://github.com/scriptscrypt/solana-agent-ki
 
 > **closePerpTradeLong**(`args`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:248](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L248)
+Defined in: [agent/index.ts:248](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L248)
 
 #### Parameters
 
@@ -500,7 +500,7 @@ Defined in: [agent/index.ts:248](https://github.com/scriptscrypt/solana-agent-ki
 
 > **lendAssets**(`amount`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:257](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L257)
+Defined in: [agent/index.ts:257](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L257)
 
 #### Parameters
 
@@ -518,7 +518,7 @@ Defined in: [agent/index.ts:257](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getTPS**(): `Promise`\<`number`\>
 
-Defined in: [agent/index.ts:261](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L261)
+Defined in: [agent/index.ts:261](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L261)
 
 #### Returns
 
@@ -530,7 +530,7 @@ Defined in: [agent/index.ts:261](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getTokenDataByAddress**(`mint`): `Promise`\<`undefined` \| [`JupiterTokenData`](../interfaces/JupiterTokenData.md)\>
 
-Defined in: [agent/index.ts:265](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L265)
+Defined in: [agent/index.ts:265](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L265)
 
 #### Parameters
 
@@ -548,7 +548,7 @@ Defined in: [agent/index.ts:265](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getTokenDataByTicker**(`ticker`): `Promise`\<`undefined` \| [`JupiterTokenData`](../interfaces/JupiterTokenData.md)\>
 
-Defined in: [agent/index.ts:271](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L271)
+Defined in: [agent/index.ts:271](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L271)
 
 #### Parameters
 
@@ -566,7 +566,7 @@ Defined in: [agent/index.ts:271](https://github.com/scriptscrypt/solana-agent-ki
 
 > **fetchTokenPrice**(`mint`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:277](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L277)
+Defined in: [agent/index.ts:277](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L277)
 
 #### Parameters
 
@@ -584,7 +584,7 @@ Defined in: [agent/index.ts:277](https://github.com/scriptscrypt/solana-agent-ki
 
 > **launchPumpFunToken**(`tokenName`, `tokenTicker`, `description`, `imageUrl`, `options`?): `Promise`\<[`PumpfunLaunchResponse`](../interfaces/PumpfunLaunchResponse.md)\>
 
-Defined in: [agent/index.ts:281](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L281)
+Defined in: [agent/index.ts:281](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L281)
 
 #### Parameters
 
@@ -618,7 +618,7 @@ Defined in: [agent/index.ts:281](https://github.com/scriptscrypt/solana-agent-ki
 
 > **stake**(`amount`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:298](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L298)
+Defined in: [agent/index.ts:298](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L298)
 
 #### Parameters
 
@@ -636,7 +636,7 @@ Defined in: [agent/index.ts:298](https://github.com/scriptscrypt/solana-agent-ki
 
 > **restake**(`amount`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:302](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L302)
+Defined in: [agent/index.ts:302](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L302)
 
 #### Parameters
 
@@ -654,7 +654,7 @@ Defined in: [agent/index.ts:302](https://github.com/scriptscrypt/solana-agent-ki
 
 > **sendCompressedAirdrop**(`mintAddress`, `amount`, `decimals`, `recipients`, `priorityFeeInLamports`, `shouldLog`): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:306](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L306)
+Defined in: [agent/index.ts:306](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L306)
 
 #### Parameters
 
@@ -692,7 +692,7 @@ Defined in: [agent/index.ts:306](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaClosePosition**(`positionMintAddress`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:325](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L325)
+Defined in: [agent/index.ts:325](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L325)
 
 #### Parameters
 
@@ -710,7 +710,7 @@ Defined in: [agent/index.ts:325](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaCreateCLMM**(`mintDeploy`, `mintPair`, `initialPrice`, `feeTier`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:329](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L329)
+Defined in: [agent/index.ts:329](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L329)
 
 #### Parameters
 
@@ -740,7 +740,7 @@ Defined in: [agent/index.ts:329](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaCreateSingleSidedLiquidityPool**(`depositTokenAmount`, `depositTokenMint`, `otherTokenMint`, `initialPrice`, `maxPrice`, `feeTier`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:338](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L338)
+Defined in: [agent/index.ts:338](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L338)
 
 #### Parameters
 
@@ -778,7 +778,7 @@ Defined in: [agent/index.ts:338](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaFetchPositions**(): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:357](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L357)
+Defined in: [agent/index.ts:357](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L357)
 
 #### Returns
 
@@ -790,7 +790,7 @@ Defined in: [agent/index.ts:357](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaOpenCenteredPositionWithLiquidity**(`whirlpoolAddress`, `priceOffsetBps`, `inputTokenMint`, `inputAmount`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:361](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L361)
+Defined in: [agent/index.ts:361](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L361)
 
 #### Parameters
 
@@ -820,7 +820,7 @@ Defined in: [agent/index.ts:361](https://github.com/scriptscrypt/solana-agent-ki
 
 > **orcaOpenSingleSidedPosition**(`whirlpoolAddress`, `distanceFromCurrentPriceBps`, `widthBps`, `inputTokenMint`, `inputAmount`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:376](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L376)
+Defined in: [agent/index.ts:376](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L376)
 
 #### Parameters
 
@@ -854,7 +854,7 @@ Defined in: [agent/index.ts:376](https://github.com/scriptscrypt/solana-agent-ki
 
 > **resolveAllDomains**(`domain`): `Promise`\<`undefined` \| `PublicKey`\>
 
-Defined in: [agent/index.ts:393](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L393)
+Defined in: [agent/index.ts:393](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L393)
 
 #### Parameters
 
@@ -872,7 +872,7 @@ Defined in: [agent/index.ts:393](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getOwnedAllDomains**(`owner`): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:397](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L397)
+Defined in: [agent/index.ts:397](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L397)
 
 #### Parameters
 
@@ -890,7 +890,7 @@ Defined in: [agent/index.ts:397](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getOwnedDomainsForTLD**(`tld`): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:401](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L401)
+Defined in: [agent/index.ts:401](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L401)
 
 #### Parameters
 
@@ -908,7 +908,7 @@ Defined in: [agent/index.ts:401](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getAllDomainsTLDs**(): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:405](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L405)
+Defined in: [agent/index.ts:405](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L405)
 
 #### Returns
 
@@ -920,7 +920,7 @@ Defined in: [agent/index.ts:405](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getAllRegisteredAllDomains**(): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:409](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L409)
+Defined in: [agent/index.ts:409](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L409)
 
 #### Returns
 
@@ -932,7 +932,7 @@ Defined in: [agent/index.ts:409](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getMainAllDomainsDomain**(`owner`): `Promise`\<`null` \| `string`\>
 
-Defined in: [agent/index.ts:413](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L413)
+Defined in: [agent/index.ts:413](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L413)
 
 #### Parameters
 
@@ -950,7 +950,7 @@ Defined in: [agent/index.ts:413](https://github.com/scriptscrypt/solana-agent-ki
 
 > **raydiumCreateAmmV4**(`marketId`, `baseAmount`, `quoteAmount`, `startTime`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:417](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L417)
+Defined in: [agent/index.ts:417](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L417)
 
 #### Parameters
 
@@ -980,7 +980,7 @@ Defined in: [agent/index.ts:417](https://github.com/scriptscrypt/solana-agent-ki
 
 > **raydiumCreateClmm**(`mint1`, `mint2`, `configId`, `initialPrice`, `startTime`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:434](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L434)
+Defined in: [agent/index.ts:434](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L434)
 
 #### Parameters
 
@@ -1014,7 +1014,7 @@ Defined in: [agent/index.ts:434](https://github.com/scriptscrypt/solana-agent-ki
 
 > **raydiumCreateCpmm**(`mint1`, `mint2`, `configId`, `mintAAmount`, `mintBAmount`, `startTime`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:451](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L451)
+Defined in: [agent/index.ts:451](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L451)
 
 #### Parameters
 
@@ -1052,7 +1052,7 @@ Defined in: [agent/index.ts:451](https://github.com/scriptscrypt/solana-agent-ki
 
 > **openbookCreateMarket**(`baseMint`, `quoteMint`, `lotSize`, `tickSize`): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:471](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L471)
+Defined in: [agent/index.ts:471](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L471)
 
 #### Parameters
 
@@ -1082,7 +1082,7 @@ Defined in: [agent/index.ts:471](https://github.com/scriptscrypt/solana-agent-ki
 
 > **manifestCreateMarket**(`baseMint`, `quoteMint`): `Promise`\<`string`[]\>
 
-Defined in: [agent/index.ts:487](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L487)
+Defined in: [agent/index.ts:487](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L487)
 
 #### Parameters
 
@@ -1104,7 +1104,7 @@ Defined in: [agent/index.ts:487](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getPythPriceFeedID**(`tokenSymbol`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:494](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L494)
+Defined in: [agent/index.ts:494](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L494)
 
 #### Parameters
 
@@ -1122,7 +1122,7 @@ Defined in: [agent/index.ts:494](https://github.com/scriptscrypt/solana-agent-ki
 
 > **getPythPrice**(`priceFeedID`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:498](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L498)
+Defined in: [agent/index.ts:498](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L498)
 
 #### Parameters
 
@@ -1140,7 +1140,7 @@ Defined in: [agent/index.ts:498](https://github.com/scriptscrypt/solana-agent-ki
 
 > **createGibworkTask**(`title`, `content`, `requirements`, `tags`, `tokenMintAddress`, `tokenAmount`, `payer`?): `Promise`\<[`GibworkCreateTaskReponse`](../interfaces/GibworkCreateTaskReponse.md)\>
 
-Defined in: [agent/index.ts:502](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L502)
+Defined in: [agent/index.ts:502](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L502)
 
 #### Parameters
 
@@ -1182,7 +1182,7 @@ Defined in: [agent/index.ts:502](https://github.com/scriptscrypt/solana-agent-ki
 
 > **rockPaperScissors**(`amount`, `choice`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:523](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L523)
+Defined in: [agent/index.ts:523](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L523)
 
 #### Parameters
 
@@ -1204,7 +1204,7 @@ Defined in: [agent/index.ts:523](https://github.com/scriptscrypt/solana-agent-ki
 
 > **createTiplink**(`amount`, `splmintAddress`?): `Promise`\<\{ `url`: `string`; `signature`: `string`; \}\>
 
-Defined in: [agent/index.ts:529](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L529)
+Defined in: [agent/index.ts:529](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L529)
 
 #### Parameters
 
@@ -1226,7 +1226,7 @@ Defined in: [agent/index.ts:529](https://github.com/scriptscrypt/solana-agent-ki
 
 > **tensorListNFT**(`nftMint`, `price`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:533](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L533)
+Defined in: [agent/index.ts:533](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L533)
 
 #### Parameters
 
@@ -1248,7 +1248,7 @@ Defined in: [agent/index.ts:533](https://github.com/scriptscrypt/solana-agent-ki
 
 > **tensorCancelListing**(`nftMint`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:537](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L537)
+Defined in: [agent/index.ts:537](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L537)
 
 #### Parameters
 
@@ -1266,7 +1266,7 @@ Defined in: [agent/index.ts:537](https://github.com/scriptscrypt/solana-agent-ki
 
 > **fetchTokenReportSummary**(`mint`): `Promise`\<[`TokenCheck`](../interfaces/TokenCheck.md)\>
 
-Defined in: [agent/index.ts:541](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L541)
+Defined in: [agent/index.ts:541](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L541)
 
 #### Parameters
 
@@ -1284,7 +1284,7 @@ Defined in: [agent/index.ts:541](https://github.com/scriptscrypt/solana-agent-ki
 
 > **fetchTokenDetailedReport**(`mint`): `Promise`\<[`TokenCheck`](../interfaces/TokenCheck.md)\>
 
-Defined in: [agent/index.ts:545](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L545)
+Defined in: [agent/index.ts:545](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L545)
 
 #### Parameters
 
@@ -1302,7 +1302,7 @@ Defined in: [agent/index.ts:545](https://github.com/scriptscrypt/solana-agent-ki
 
 > **flashOpenTrade**(`params`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:554](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L554)
+Defined in: [agent/index.ts:554](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L554)
 
 Opens a new trading position on Flash.Trade
 
@@ -1326,7 +1326,7 @@ Transaction signature
 
 > **flashCloseTrade**(`params`): `Promise`\<`string`\>
 
-Defined in: [agent/index.ts:563](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L563)
+Defined in: [agent/index.ts:563](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L563)
 
 Closes an existing trading position on Flash.Trade
 
@@ -1350,7 +1350,7 @@ Transaction signature
 
 > **connection**: `Connection`
 
-Defined in: [agent/index.ts:90](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L90)
+Defined in: [agent/index.ts:90](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L90)
 
 Solana RPC connection
 
@@ -1360,7 +1360,7 @@ Solana RPC connection
 
 > **wallet**: `Keypair`
 
-Defined in: [agent/index.ts:91](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L91)
+Defined in: [agent/index.ts:91](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L91)
 
 Wallet keypair for signing transactions
 
@@ -1370,7 +1370,7 @@ Wallet keypair for signing transactions
 
 > **wallet\_address**: `PublicKey`
 
-Defined in: [agent/index.ts:92](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L92)
+Defined in: [agent/index.ts:92](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L92)
 
 Public key of the wallet
 
@@ -1380,6 +1380,6 @@ Public key of the wallet
 
 > **config**: [`Config`](../interfaces/Config.md)
 
-Defined in: [agent/index.ts:93](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/agent/index.ts#L93)
+Defined in: [agent/index.ts:93](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/agent/index.ts#L93)
 
 Configuration object

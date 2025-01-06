@@ -6,7 +6,7 @@
 
 # Interface: LuloAccountDetailsResponse
 
-Defined in: [types/index.ts:53](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L53)
+Defined in: [types/index.ts:53](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L53)
 
 Lulo Account Details response format
 
@@ -16,7 +16,7 @@ Lulo Account Details response format
 
 > **totalValue**: `number`
 
-Defined in: [types/index.ts:54](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L54)
+Defined in: [types/index.ts:54](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L54)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/index.ts:54](https://github.com/scriptscrypt/solana-agent-kit
 
 > **interestEarned**: `number`
 
-Defined in: [types/index.ts:55](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L55)
+Defined in: [types/index.ts:55](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L55)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [types/index.ts:55](https://github.com/scriptscrypt/solana-agent-kit
 
 > **realtimeApy**: `number`
 
-Defined in: [types/index.ts:56](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L56)
+Defined in: [types/index.ts:56](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L56)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types/index.ts:56](https://github.com/scriptscrypt/solana-agent-kit
 
 > **settings**: `object`
 
-Defined in: [types/index.ts:57](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L57)
+Defined in: [types/index.ts:57](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L57)
 
 #### owner
 

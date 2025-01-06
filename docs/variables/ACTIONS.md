@@ -8,7 +8,7 @@
 
 > `const` **ACTIONS**: `object`
 
-Defined in: [actions/index.ts:34](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/actions/index.ts#L34)
+Defined in: [actions/index.ts:34](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/actions/index.ts#L34)
 
 ## Type declaration
 

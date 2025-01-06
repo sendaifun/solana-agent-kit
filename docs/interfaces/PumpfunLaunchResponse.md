@@ -6,7 +6,7 @@
 
 # Interface: PumpfunLaunchResponse
 
-Defined in: [types/index.ts:43](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L43)
+Defined in: [types/index.ts:43](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L43)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:43](https://github.com/scriptscrypt/solana-agent-kit
 
 > **signature**: `string`
 
-Defined in: [types/index.ts:44](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L44)
+Defined in: [types/index.ts:44](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L44)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:44](https://github.com/scriptscrypt/solana-agent-kit
 
 > **mint**: `string`
 
-Defined in: [types/index.ts:45](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L45)
+Defined in: [types/index.ts:45](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L45)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:45](https://github.com/scriptscrypt/solana-agent-kit
 
 > `optional` **metadataUri**: `string`
 
-Defined in: [types/index.ts:46](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L46)
+Defined in: [types/index.ts:46](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L46)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [types/index.ts:46](https://github.com/scriptscrypt/solana-agent-kit
 
 > `optional` **error**: `string`
 
-Defined in: [types/index.ts:47](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L47)
+Defined in: [types/index.ts:47](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L47)

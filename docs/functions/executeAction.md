@@ -8,7 +8,7 @@
 
 > **executeAction**(`action`, `agent`, `input`): `Promise`\<`Record`\<`string`, `any`\>\>
 
-Defined in: [utils/actionExecutor.ts:20](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/utils/actionExecutor.ts#L20)
+Defined in: [utils/actionExecutor.ts:20](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/utils/actionExecutor.ts#L20)
 
 Execute an action with the given input
 

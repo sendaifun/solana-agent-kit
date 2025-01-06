@@ -6,7 +6,7 @@
 
 # Interface: MintCollectionNFTResponse
 
-Defined in: [types/index.ts:29](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L29)
+Defined in: [types/index.ts:29](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L29)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:29](https://github.com/scriptscrypt/solana-agent-kit
 
 > **mint**: `PublicKey`
 
-Defined in: [types/index.ts:30](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L30)
+Defined in: [types/index.ts:30](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L30)
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: [types/index.ts:30](https://github.com/scriptscrypt/solana-agent-kit
 
 > **metadata**: `PublicKey`
 
-Defined in: [types/index.ts:31](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L31)
+Defined in: [types/index.ts:31](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L31)

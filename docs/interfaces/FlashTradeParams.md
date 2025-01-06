@@ -6,7 +6,7 @@
 
 # Interface: FlashTradeParams
 
-Defined in: [types/index.ts:228](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L228)
+Defined in: [types/index.ts:228](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L228)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:228](https://github.com/scriptscrypt/solana-agent-ki
 
 > **token**: `string`
 
-Defined in: [types/index.ts:229](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L229)
+Defined in: [types/index.ts:229](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L229)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:229](https://github.com/scriptscrypt/solana-agent-ki
 
 > **side**: `"long"` \| `"short"`
 
-Defined in: [types/index.ts:230](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L230)
+Defined in: [types/index.ts:230](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L230)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:230](https://github.com/scriptscrypt/solana-agent-ki
 
 > **collateralUsd**: `number`
 
-Defined in: [types/index.ts:231](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L231)
+Defined in: [types/index.ts:231](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L231)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [types/index.ts:231](https://github.com/scriptscrypt/solana-agent-ki
 
 > **leverage**: `number`
 
-Defined in: [types/index.ts:232](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L232)
+Defined in: [types/index.ts:232](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L232)

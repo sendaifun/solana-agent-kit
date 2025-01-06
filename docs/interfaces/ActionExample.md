@@ -6,7 +6,7 @@
 
 # Interface: ActionExample
 
-Defined in: [types/index.ts:107](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L107)
+Defined in: [types/index.ts:107](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L107)
 
 Example of an action with input and output
 
@@ -16,7 +16,7 @@ Example of an action with input and output
 
 > **input**: `Record`\<`string`, `any`\>
 
-Defined in: [types/index.ts:108](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L108)
+Defined in: [types/index.ts:108](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L108)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [types/index.ts:108](https://github.com/scriptscrypt/solana-agent-ki
 
 > **output**: `Record`\<`string`, `any`\>
 
-Defined in: [types/index.ts:109](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L109)
+Defined in: [types/index.ts:109](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L109)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [types/index.ts:109](https://github.com/scriptscrypt/solana-agent-ki
 
 > **explanation**: `string`
 
-Defined in: [types/index.ts:110](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L110)
+Defined in: [types/index.ts:110](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L110)

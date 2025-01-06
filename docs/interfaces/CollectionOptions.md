@@ -6,7 +6,7 @@
 
 # Interface: CollectionOptions
 
-Defined in: [types/index.ts:16](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L16)
+Defined in: [types/index.ts:16](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L16)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [types/index.ts:16](https://github.com/scriptscrypt/solana-agent-kit
 
 > **name**: `string`
 
-Defined in: [types/index.ts:17](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L17)
+Defined in: [types/index.ts:17](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L17)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [types/index.ts:17](https://github.com/scriptscrypt/solana-agent-kit
 
 > **uri**: `string`
 
-Defined in: [types/index.ts:18](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L18)
+Defined in: [types/index.ts:18](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L18)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [types/index.ts:18](https://github.com/scriptscrypt/solana-agent-kit
 
 > `optional` **royaltyBasisPoints**: `number`
 
-Defined in: [types/index.ts:19](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L19)
+Defined in: [types/index.ts:19](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L19)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [types/index.ts:19](https://github.com/scriptscrypt/solana-agent-kit
 
 > `optional` **creators**: [`Creator`](Creator.md)[]
 
-Defined in: [types/index.ts:20](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L20)
+Defined in: [types/index.ts:20](https://github.com/sendaifun/solana-agent-kit/blob/6acfa958180602da3c2d2ac883bf660ca90dba2f/src/types/index.ts#L20)
