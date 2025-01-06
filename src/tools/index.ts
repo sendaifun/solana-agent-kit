@@ -1,6 +1,4 @@
 export * from "./adrena_perp_trading";
-export * from "./batch_order";
-export * from "./cancel_all_orders";
 export * from "./create_gibwork_task";
 export * from "./create_image";
 export * from "./create_tiplinks";
@@ -20,8 +18,7 @@ export * from "./get_tps";
 export * from "./get_wallet_address";
 export * from "./launch_pumpfun_token";
 export * from "./lend";
-export * from "./limit_order";
-export * from "./manifest_create_market";
+export * from "./manifest_trade";
 export * from "./mint_nft";
 export * from "./openbook_create_market";
 export * from "./orca_close_position";
@@ -46,7 +43,5 @@ export * from "./stake_with_solayer";
 export * from "./tensor_trade";
 export * from "./trade";
 export * from "./transfer";
-export * from "./withdraw_all";
-
 export * from "./flash_open_trade";
 export * from "./flash_close_trade";
