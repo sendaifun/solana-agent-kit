@@ -3,7 +3,7 @@
   "name": "Solana Agent Kit",
   "logo": {
     "light": "/public/logo/light.svg",
-    "dark": "public/logo/dark.svg"
+    "dark": "/public/logo/dark.svg"
   },
   "layout": "sidenav",
   "favicon": "/favicon.svg",
@@ -31,6 +31,21 @@
       "pages": [
         "v0/introduction",
         "v0/quickstart"
+      ]
+    },
+    {
+      "group": "Guides",
+      "icon": "book-open",
+      "pages": [
+        "v0/guides/add_your_own_tool",
+        "v0/guides/setup_locally",
+        "v0/guides/test_it_out"
+      ]
+    },
+    {
+      "group": "Features",
+      "pages": [
+        "v0/features/adrena"
       ]
     },
     {
@@ -76,15 +91,6 @@
         "v0/interfaces/PythPriceFeedIDItem",
         "v0/interfaces/PythPriceItem",
         "v0/interfaces/TokenCheck"
-      ]
-    },
-    {
-      "group": "Guides",
-      "icon": "book-open",
-      "pages": [
-        "v0/guides/add_your_own_tool",
-        "v0/guides/setup_locally",
-        "v0/guides/test_it_out"
       ]
     }
   ],
