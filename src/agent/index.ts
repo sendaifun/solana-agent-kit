@@ -60,6 +60,8 @@ import {
   fetchTokenDetailedReport,
   fetchPythPrice,
   fetchPythPriceFeedID,
+  swapFluxBeam,
+  createPoolFluxBeam,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -540,5 +542,29 @@ export class SolanaAgentKit {
 
   async fetchTokenDetailedReport(mint: string): Promise<TokenCheck> {
     return fetchTokenDetailedReport(mint);
+  }
+
+  async swapFluxBeam(
+    outputMint: PublicKey,
+    inputAmount: number,
+    inputMint?: PublicKey,
+    slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
+  ): Promise<string> {
+    return swapFluxBeam(this, outputMint, inputAmount, inputMint, slippageBps);
+  }
+
+  async createPoolFluxBeam(
+    token_a: PublicKey,
+    token_a_amount: number,
+    token_b: PublicKey,
+    token_b_amount: number,
+  ): Promise<string> {
+    return createPoolFluxBeam(
+      this,
+      token_a,
+      token_a_amount,
+      token_b,
+      token_b_amount,
+    );
   }
 }

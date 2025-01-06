@@ -2125,6 +2125,115 @@ export class SolanaFetchTokenDetailedReportTool extends Tool {
   }
 }
 
+export class SolanaSwapFluxBeamTool extends Tool {
+  name = "solana_swap_fluxbeam";
+  description = `This tool can be used to swap tokens using FluxBeam DEX.
+  Inputs (input is a JSON string):
+  - outputMint (string): eg "So11111111111111111111111111111111111111112" (required)
+  - inputAmount (number): eg 1 or 0.01 (required)
+  - inputMint (string): eg "USDC" or "So11111111111111111111111111111111111111112" (optional)
+  - slippageBps (number): eg 300 for 3% (optional)`;
+
+  constructor(private solanaAgent: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      // Parse the JSON input
+      const parsedInput = JSON.parse(input);
+      const { outputMint, inputAmount, inputMint, slippageBps } = parsedInput;
+
+      if (!outputMint || !inputAmount) {
+        throw new Error(
+          "Required parameters 'outputMint' and 'inputAmount' are missing.",
+        );
+      }
+
+      // Perform the token swap using the SolanaAgentKit instance
+      const transactionSignature = await this.solanaAgent.swapFluxBeam(
+        new PublicKey(outputMint),
+        inputAmount,
+        inputMint
+          ? new PublicKey(inputMint)
+          : new PublicKey("So11111111111111111111111111111111111111112"), // Default to SOL
+        slippageBps,
+      );
+
+      // Return success response
+      return JSON.stringify({
+        status: "success",
+        message: "Swap executed successfully",
+        transaction: transactionSignature,
+        inputAmount,
+        inputToken: inputMint || "USDC",
+        outputToken: outputMint,
+      });
+    } catch (error: any) {
+      // Return error response
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaCreatePoolFluxBeamTool extends Tool {
+  name = "solana_create_pool_fluxbeam";
+  description = `This tool can be used to create a new liquidity pool using FluxBeam.
+  Inputs (input is a JSON string):
+  - tokenA (string): eg "So11111111111111111111111111111111111111112" (required)
+  - tokenAAmount (number): eg 100 (required)
+  - tokenB (string): eg "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (required)
+  - tokenBAmount (number): eg 200 (required)`;
+
+  constructor(private solanaAgent: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      // Parse the JSON input
+      const parsedInput = JSON.parse(input);
+      const { tokenA, tokenAAmount, tokenB, tokenBAmount } = parsedInput;
+
+      if (!tokenA || !tokenAAmount || !tokenB || !tokenBAmount) {
+        throw new Error(
+          "Required parameters 'tokenA', 'tokenAAmount', 'tokenB', and 'tokenBAmount' are missing.",
+        );
+      }
+
+      // Create a liquidity pool using the SolanaAgentKit instance
+      const transactionSignature = await this.solanaAgent.createPoolFluxBeam(
+        new PublicKey(tokenA),
+        tokenAAmount,
+        new PublicKey(tokenB),
+        tokenBAmount,
+      );
+
+      // Return success response
+      return JSON.stringify({
+        status: "success",
+        message: "Pool created successfully",
+        transaction: transactionSignature,
+        tokenA,
+        tokenAAmount,
+        tokenB,
+        tokenBAmount,
+      });
+    } catch (error: any) {
+      // Return error response
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -2179,5 +2288,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaFetchTokenDetailedReportTool(solanaKit),
     new SolanaPerpOpenTradeTool(solanaKit),
     new SolanaPerpCloseTradeTool(solanaKit),
+    new SolanaCreatePoolFluxBeamTool(solanaKit),
+    new SolanaSwapFluxBeamTool(solanaKit),
   ];
 }
