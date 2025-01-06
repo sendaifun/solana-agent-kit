@@ -238,7 +238,7 @@ export async function getNftTradingAccountInfo(
             nftOwnerRebateTokenAccountPk,
           );
         if (!accountExists) {
-          console.log(
+          console.error(
             "NFT owner rebate token account does not exist and may need to be created",
           );
         }

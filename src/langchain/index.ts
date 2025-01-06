@@ -794,8 +794,6 @@ export class SolanaFlashOpenTrade extends Tool {
     try {
       const parsedInput = JSON.parse(input);
 
-      console.log(parsedInput);
-
       // Validate input parameters
       if (!parsedInput.token) {
         throw new Error("Token is required, received: " + parsedInput.token);

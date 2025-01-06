@@ -1,4 +1,4 @@
-import { PublicKey, ComputeBudgetProgram } from "@solana/web3.js";
+import { ComputeBudgetProgram } from "@solana/web3.js";
 import {
   PerpetualsClient,
   OraclePrice,

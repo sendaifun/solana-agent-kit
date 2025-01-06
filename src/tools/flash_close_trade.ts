@@ -1,11 +1,5 @@
-import { PublicKey, ComputeBudgetProgram } from "@solana/web3.js";
-import {
-  PerpetualsClient,
-  OraclePrice,
-  PoolConfig,
-  Privilege,
-  Side,
-} from "flash-sdk";
+import { ComputeBudgetProgram } from "@solana/web3.js";
+import { PoolConfig, Privilege, Side } from "flash-sdk";
 import { BN } from "@coral-xyz/anchor";
 import { SolanaAgentKit } from "../index";
 import {
@@ -54,7 +48,7 @@ export async function flashCloseTrade(
     const [targetSymbol, collateralSymbol] = marketData.tokenPair.split("/");
 
     // Fetch oracle prices
-    const [targetPrice, collateralPrice] = await Promise.all([
+    const [targetPrice] = await Promise.all([
       fetchOraclePrice(targetSymbol),
       fetchOraclePrice(collateralSymbol),
     ]);
