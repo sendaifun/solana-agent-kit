@@ -1,8 +1,19 @@
 import { SolanaAgentKit } from "../index";
-import { generateSigner, keypairIdentity, publicKey } from "@metaplex-foundation/umi";
-import { createCollection, mplCore, ruleSet } from "@metaplex-foundation/mpl-core";
+import {
+  generateSigner,
+  keypairIdentity,
+  publicKey,
+} from "@metaplex-foundation/umi";
+import {
+  createCollection,
+  mplCore,
+  ruleSet,
+} from "@metaplex-foundation/mpl-core";
 import { CollectionOptions, CollectionDeployment } from "../types";
-import { fromWeb3JsKeypair, toWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
+import {
+  fromWeb3JsKeypair,
+  toWeb3JsPublicKey,
+} from "@metaplex-foundation/umi-web3js-adapters";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 
 /**
@@ -28,11 +39,11 @@ export async function deploy_collection(
       address: publicKey(creator.address),
       percentage: creator.percentage,
     })) || [
-        {
-          address: publicKey(agent.wallet_address.toString()),
-          percentage: 100,
-        },
-      ];
+      {
+        address: publicKey(agent.wallet_address.toString()),
+        percentage: 100,
+      },
+    ];
 
     // Create collection
     const tx = await createCollection(umi, {

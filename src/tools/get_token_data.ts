@@ -27,11 +27,11 @@ export async function getTokenDataByAddress(
 }
 
 export async function getTokenAddressFromTicker(
-  ticker: string
+  ticker: string,
 ): Promise<string | null> {
   try {
     const response = await fetch(
-      `https://api.dexscreener.com/latest/dex/search?q=${ticker}`
+      `https://api.dexscreener.com/latest/dex/search?q=${ticker}`,
     );
     const data = await response.json();
 
@@ -46,7 +46,7 @@ export async function getTokenAddressFromTicker(
 
     solanaPairs = solanaPairs.filter(
       (pair: any) =>
-        pair.baseToken.symbol.toLowerCase() === ticker.toLowerCase()
+        pair.baseToken.symbol.toLowerCase() === ticker.toLowerCase(),
     );
 
     // Return the address of the highest FDV Solana pair
@@ -58,7 +58,7 @@ export async function getTokenAddressFromTicker(
 }
 
 export async function getTokenDataByTicker(
-  ticker: string
+  ticker: string,
 ): Promise<JupiterTokenData | undefined> {
   const address = await getTokenAddressFromTicker(ticker);
   if (!address) {

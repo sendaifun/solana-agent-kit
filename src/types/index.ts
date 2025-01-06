@@ -1,4 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
+import { SolanaAgentKit } from "../agent";
+import { z } from "zod";
+
+export interface Config {
+  OPENAI_API_KEY?: string;
+  JUPITER_REFERRAL_ACCOUNT?: string;
+  JUPITER_FEE_BPS?: number;
+}
 
 export interface Creator {
   address: string;
@@ -76,4 +84,155 @@ export interface FetchPriceResponse {
   priceInUSDC?: string;
   message?: string;
   code?: string;
+}
+
+export interface PythFetchPriceResponse {
+  status: "success" | "error";
+  tokenSymbol: string;
+  priceFeedID?: string;
+  price?: string;
+  message?: string;
+  code?: string;
+}
+
+export interface GibworkCreateTaskReponse {
+  status: "success" | "error";
+  taskId?: string | undefined;
+  signature?: string | undefined;
+}
+
+/**
+ * Example of an action with input and output
+ */
+export interface ActionExample {
+  input: Record<string, any>;
+  output: Record<string, any>;
+  explanation: string;
+}
+
+/**
+ * Handler function type for executing the action
+ */
+export type Handler = (
+  agent: SolanaAgentKit,
+  input: Record<string, any>,
+) => Promise<Record<string, any>>;
+
+/**
+ * Main Action interface inspired by ELIZA
+ * This interface makes it easier to implement actions across different frameworks
+ */
+export interface Action {
+  /**
+   * Unique name of the action
+   */
+  name: string;
+
+  /**
+   * Alternative names/phrases that can trigger this action
+   */
+  similes: string[];
+
+  /**
+   * Detailed description of what the action does
+   */
+  description: string;
+
+  /**
+   * Array of example inputs and outputs for the action
+   * Each inner array represents a group of related examples
+   */
+  examples: ActionExample[][];
+
+  /**
+   * Zod schema for input validation
+   */
+  schema: z.ZodType<any>;
+
+  /**
+   * Function that executes the action
+   */
+  handler: Handler;
+}
+
+export interface TokenCheck {
+  tokenProgram: string;
+  tokenType: string;
+  risks: Array<{
+    name: string;
+    level: string;
+    description: string;
+    score: number;
+  }>;
+  score: number;
+}
+
+export interface PythPriceFeedIDItem {
+  id: string;
+  attributes: {
+    asset_type: string;
+    base: string;
+  };
+}
+
+export interface PythPriceItem {
+  binary: {
+    data: string[];
+    encoding: string;
+  };
+  parsed: [
+    Array<{
+      id: string;
+      price: {
+        price: string;
+        conf: string;
+        expo: number;
+        publish_time: number;
+      };
+      ema_price: {
+        price: string;
+        conf: string;
+        expo: number;
+        publish_time: number;
+      };
+      metadata: {
+        slot: number;
+        proof_available_time: number;
+        prev_publish_time: number;
+      };
+    }>,
+  ];
+}
+
+export interface OrderParams {
+  quantity: number;
+  side: string;
+  price: number;
+}
+
+export interface BatchOrderPattern {
+  side: string;
+  totalQuantity?: number;
+  priceRange?: {
+    min?: number;
+    max?: number;
+  };
+  spacing?: {
+    type: "percentage" | "fixed";
+    value: number;
+  };
+  numberOfOrders?: number;
+  individualQuantity?: number;
+}
+
+export interface FlashTradeParams {
+  token: string;
+  side: "long" | "short";
+  collateralUsd: number;
+  leverage: number;
+}
+
+export interface FlashCloseTradeParams {
+  token: string;
+  side: "long" | "short";
 }
