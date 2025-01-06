@@ -47,17 +47,20 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Launch on Pump via PumpPortal
   - Raydium pool creation (CPMM, CLMM, AMMv4)
   - Orca Whirlpool integration
+  - Manifest market creation, and limit orders
   - Meteora Dynamic AMM, DLMM Pool, and Alpha Vault
   - Openbook market creation
   - Register and Resolve SNS
   - Jito Bundles
   - Pyth Price feeds for fetching Asset Prices
   - Register/resolve Alldomains
+  - Perpetuals Trading with Adrena Protocol
 
 - **Solana Blinks**
    - Lending by Lulo (Best APR for USDC)
    - Send Arcade Games
    - JupSOL staking
+   - Solayer SOL (sSOL)staking
 
 - **Non-Financial Actions**
   - Gib Work for registering bounties
@@ -69,6 +72,11 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Autonomous agent support with React framework
   - Memory management for persistent interactions
   - Streaming responses for real-time feedback
+
+- **Vercel AI SDK Integration**
+  - Vercel AI SDK for AI agent integration
+  - Framework agnostic support
+  - Quick and easy toolkit setup
 
 - **Autonomous Modes**
   - Interactive chat mode for guided operations
@@ -167,6 +175,15 @@ const signature = await agent.stake(
 );
 ```
 
+### Stake SOL on Solayer
+
+```typescript
+const signature = await agent.restake(
+  1 // amount in SOL to stake
+);
+
+```
+
 ### Send an SPL Token Airdrop via ZK Compression
 
 ```typescript
@@ -197,11 +214,37 @@ import { PublicKey } from "@solana/web3.js";
 
 ```typescript
 
-const price = await agent.pythFetchPrice(
-  "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
-);
+const priceFeedID = await agent.getPythPriceFeedID("SOL");
 
-console.log("Price in BTC/USD:", price);
+const price = await agent.getPythPrice(priceFeedID);
+
+console.log("Price of SOL/USD:", price);
+```
+
+### Open PERP Trade
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+const signature = await agent.openPerpTradeLong({
+  price: 300, // $300 SOL Max price
+  collateralAmount: 10, // 10 jitoSOL in
+  collateralMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+  leverage: 50000, // x5
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+  slippage: 0.3, // 0.3%
+});
+```
+
+### Close PERP Trade
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+const signature = await agent.closePerpTradeLong({
+  price: 200, // $200 SOL price
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+});
 ```
 
 ## Examples
@@ -232,7 +275,6 @@ The toolkit relies on several key Solana and Metaplex libraries:
 - @metaplex-foundation/umi
 - @lightprotocol/compressed-token
 - @lightprotocol/stateless.js
-- @pythnetwork/price-service-client
 
 ## Contributing
 
@@ -254,7 +296,12 @@ Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to co
 
 Apache-2 License
 
+## Funding 
+
+If you wanna give back any tokens or donations to the OSS community -- The Public Solana Agent Kit Treasury Address:
+
+Solana Network : EKHTbXpsm6YDgJzMkFxNU1LNXeWcUW7Ezf8mjUNQQ4Pa
+
 ## Security
 
 This toolkit handles private keys and transactions. Always ensure you're using it in a secure environment and never share your private keys.
-

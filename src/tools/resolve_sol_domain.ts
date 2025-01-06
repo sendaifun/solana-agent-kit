@@ -24,7 +24,8 @@ export async function resolveSolDomain(
 
   try {
     return await resolve(agent.connection, domain);
-  } catch (error) {
+  } catch (error: any) {
+    console.error(error);
     throw new Error(`Failed to resolve domain: ${domain}`);
   }
 }

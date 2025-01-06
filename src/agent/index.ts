@@ -1,8 +1,9 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
-import { Config } from "../types";
+import { Config, TokenCheck } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -15,16 +16,26 @@ import {
   lendAsset,
   mintCollectionNFT,
   openbookCreateMarket,
+  manifestCreateMarket,
   raydiumCreateAmmV4,
   raydiumCreateClmm,
   raydiumCreateCpmm,
   registerDomain,
   request_faucet_funds,
   trade,
+  limitOrder,
+  batchOrder,
+  cancelAllOrders,
+  withdrawAll,
+  closePerpTradeShort,
+  closePerpTradeLong,
+  openPerpTradeShort,
+  openPerpTradeLong,
   transfer,
   getTokenDataByAddress,
   getTokenDataByTicker,
   stakeWithJup,
+  stakeWithSolayer,
   sendCompressedAirdrop,
   orcaCreateSingleSidedLiquidityPool,
   orcaCreateCLMM,
@@ -32,7 +43,6 @@ import {
   orcaOpenSingleSidedPosition,
   FEE_TIERS,
   fetchPrice,
-  pythFetchPrice,
   getAllDomainsTLDs,
   getAllRegisteredAllDomains,
   getOwnedDomainsForTLD,
@@ -46,8 +56,11 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  fetchTokenReportSummary,
+  fetchTokenDetailedReport,
+  fetchPythPrice,
+  fetchPythPriceFeedID,
 } from "../tools";
-
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -56,8 +69,8 @@ import {
   MintCollectionNFTResponse,
   PumpfunLaunchResponse,
   PumpFunTokenOptions,
+  OrderParams,
 } from "../types";
-import { BN } from "@coral-xyz/anchor";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -67,6 +80,7 @@ import { BN } from "@coral-xyz/anchor";
  * @property {Connection} connection - Solana RPC connection
  * @property {Keypair} wallet - Wallet keypair for signing transactions
  * @property {PublicKey} wallet_address - Public key of the wallet
+ * @property {Config} config - Configuration object
  */
 export class SolanaAgentKit {
   public connection: Connection;
@@ -74,15 +88,37 @@ export class SolanaAgentKit {
   public wallet_address: PublicKey;
   public config: Config;
 
+  /**
+   * @deprecated Using openai_api_key directly in constructor is deprecated.
+   * Please use the new constructor with Config object instead:
+   * @example
+   * const agent = new SolanaAgentKit(privateKey, rpcUrl, {
+   *   OPENAI_API_KEY: 'your-key'
+   * });
+   */
   constructor(
     private_key: string,
-    rpc_url = "https://api.mainnet-beta.solana.com",
-    config: Config,
+    rpc_url: string,
+    openai_api_key: string | null,
+  );
+  constructor(private_key: string, rpc_url: string, config: Config);
+  constructor(
+    private_key: string,
+    rpc_url: string,
+    configOrKey: Config | string | null,
   ) {
-    this.connection = new Connection(rpc_url);
+    this.connection = new Connection(
+      rpc_url || "https://api.mainnet-beta.solana.com",
+    );
     this.wallet = Keypair.fromSecretKey(bs58.decode(private_key));
     this.wallet_address = this.wallet.publicKey;
-    this.config = config;
+
+    // Handle both old and new patterns
+    if (typeof configOrKey === "string" || configOrKey === null) {
+      this.config = { OPENAI_API_KEY: configOrKey || "" };
+    } else {
+      this.config = configOrKey;
+    }
   }
 
   // Tool methods
@@ -154,6 +190,66 @@ export class SolanaAgentKit {
     return trade(this, outputMint, inputAmount, inputMint, slippageBps);
   }
 
+  async limitOrder(
+    marketId: PublicKey,
+    quantity: number,
+    side: string,
+    price: number,
+  ): Promise<string> {
+    return limitOrder(this, marketId, quantity, side, price);
+  }
+
+  async batchOrder(
+    marketId: PublicKey,
+    orders: OrderParams[],
+  ): Promise<string> {
+    return batchOrder(this, marketId, orders);
+  }
+
+  async cancelAllOrders(marketId: PublicKey): Promise<string> {
+    return cancelAllOrders(this, marketId);
+  }
+
+  async withdrawAll(marketId: PublicKey): Promise<string> {
+    return withdrawAll(this, marketId);
+  }
+
+  async openPerpTradeLong(
+    args: Omit<Parameters<typeof openPerpTradeLong>[0], "agent">,
+  ): Promise<string> {
+    return openPerpTradeLong({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async openPerpTradeShort(
+    args: Omit<Parameters<typeof openPerpTradeShort>[0], "agent">,
+  ): Promise<string> {
+    return openPerpTradeShort({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async closePerpTradeShort(
+    args: Omit<Parameters<typeof closePerpTradeShort>[0], "agent">,
+  ): Promise<string> {
+    return closePerpTradeShort({
+      agent: this,
+      ...args,
+    });
+  }
+
+  async closePerpTradeLong(
+    args: Omit<Parameters<typeof closePerpTradeLong>[0], "agent">,
+  ): Promise<string> {
+    return closePerpTradeLong({
+      agent: this,
+      ...args,
+    });
+  }
+
   async lendAssets(amount: number): Promise<string> {
     return lendAsset(this, amount);
   }
@@ -197,6 +293,10 @@ export class SolanaAgentKit {
 
   async stake(amount: number): Promise<string> {
     return stakeWithJup(this, amount);
+  }
+
+  async restake(amount: number): Promise<string> {
+    return stakeWithSolayer(this, amount);
   }
 
   async sendCompressedAirdrop(
@@ -380,8 +480,19 @@ export class SolanaAgentKit {
     );
   }
 
-  async pythFetchPrice(priceFeedID: string): Promise<string> {
-    return pythFetchPrice(priceFeedID);
+  async manifestCreateMarket(
+    baseMint: PublicKey,
+    quoteMint: PublicKey,
+  ): Promise<string[]> {
+    return manifestCreateMarket(this, baseMint, quoteMint);
+  }
+
+  async getPythPriceFeedID(tokenSymbol: string): Promise<string> {
+    return fetchPythPriceFeedID(tokenSymbol);
+  }
+
+  async getPythPrice(priceFeedID: string): Promise<string> {
+    return fetchPythPrice(priceFeedID);
   }
 
   async createGibworkTask(
@@ -421,5 +532,13 @@ export class SolanaAgentKit {
 
   async tensorCancelListing(nftMint: PublicKey): Promise<string> {
     return cancelListing(this, nftMint);
+  }
+
+  async fetchTokenReportSummary(mint: string): Promise<TokenCheck> {
+    return fetchTokenReportSummary(mint);
+  }
+
+  async fetchTokenDetailedReport(mint: string): Promise<TokenCheck> {
+    return fetchTokenDetailedReport(mint);
   }
 }

@@ -1,0 +1,1 @@
+pnpm run docs && git add docs/ && tsc && lint-staged

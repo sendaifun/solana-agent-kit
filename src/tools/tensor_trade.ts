@@ -33,6 +33,7 @@ export async function listNFTForSale(
         throw new Error(`You don't own this NFT (${nftMint.toString()})`);
       }
     } catch (error: any) {
+      console.error(error);
       throw new Error(
         `No token account found for mint ${nftMint.toString()}. Make sure you own this NFT.`,
       );

@@ -26,7 +26,7 @@ import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
  * # Opens a Centered Liquidity Position in an Orca Whirlpool
  *
  * This function opens a centered liquidity position in a specified Orca Whirlpool. The user defines
- * a basis point (bps) offset from the cuurent price of the pool to set the lower and upper bounds of the position.
+ * a basis point (bps) offset from the current price of the pool to set the lower and upper bounds of the position.
  * The user also specifies the token mint and the amount to deposit. The required amount of the other token
  * is calculated automatically.
  *

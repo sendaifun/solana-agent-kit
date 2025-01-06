@@ -88,6 +88,7 @@ export async function sendCompressedAirdrop(
       agent.wallet.publicKey,
     );
   } catch (error) {
+    console.error(error);
     throw new Error(
       "Source token account not found and failed to create it. Please add funds to your wallet and try again.",
     );
