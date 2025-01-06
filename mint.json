@@ -2,27 +2,21 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Solana Agent Kit",
   "logo": {
-    "light": "/public/logo/light.svg",
-    "dark": "/public/logo/dark.svg"
-  },
-  "metadata": {
-    "og:image": "/public/og.png"
-  },
-  "seo": {
-    "indexHiddenPages": true
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "layout": "sidenav",
-  "favicon": "/public/favicon.svg",
+  "favicon": "/favicon.svg",
   "sidebar": {
     "items": "border"
   },
   "colors": {
-    "primary": "#1BE1FF",
+    "primary": "#9945FF",
     "light": "#14F195",
-    "dark": "#1BE1FF"
+    "dark": "#9945FF"
   },
   "background": {
-    "style": "gradient"
+    "style": "windows"
   },
   "codeBlock": {
     "mode": "auto"
@@ -34,12 +28,61 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["v0/introduction", "v0/quickstart"]
+      "pages": [
+        "v0/introduction",
+        "v0/quickstart"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "v0/integrations/adrena"
+      ]
     },
     {
       "group": "Classes",
       "icon": "cube",
-      "pages": ["v0/classes/SolanaAgentKit"]
+      "pages": [
+        "v0/classes/SolanaAgentKit"
+      ]
+    },
+    {
+      "group": "Functions",
+      "icon": "function",
+      "pages": [
+        "v0/functions/createSolanaTools",
+        "v0/functions/createVercelAITools",
+        "v0/functions/executeAction",
+        "v0/functions/findAction",
+        "v0/functions/getActionExamples"
+      ]
+    },
+    {
+      "group": "Interfaces",
+      "icon": "brackets-curly",
+      "pages": [
+        "v0/interfaces/Action",
+        "v0/interfaces/ActionExample",
+        "v0/interfaces/BatchOrderPattern",
+        "v0/interfaces/CollectionDeployment",
+        "v0/interfaces/CollectionOptions",
+        "v0/interfaces/Config",
+        "v0/interfaces/Creator",
+        "v0/interfaces/FetchPriceResponse",
+        "v0/interfaces/FlashCloseTradeParams",
+        "v0/interfaces/FlashTradeParams",
+        "v0/interfaces/GibworkCreateTaskReponse",
+        "v0/interfaces/JupiterTokenData",
+        "v0/interfaces/LuloAccountDetailsResponse",
+        "v0/interfaces/MintCollectionNFTResponse",
+        "v0/interfaces/OrderParams",
+        "v0/interfaces/PumpFunTokenOptions",
+        "v0/interfaces/PumpfunLaunchResponse",
+        "v0/interfaces/PythFetchPriceResponse",
+        "v0/interfaces/PythPriceFeedIDItem",
+        "v0/interfaces/PythPriceItem",
+        "v0/interfaces/TokenCheck"
+      ]
     },
     {
       "group": "Guides",
@@ -49,11 +92,6 @@
         "v0/guides/setup_locally",
         "v0/guides/test_it_out"
       ]
-    },
-    {
-      "group": "Functions",
-      "icon": "function",
-      "pages": ["v0/functions/createSolanaTools"]
     }
   ],
   "footer": {

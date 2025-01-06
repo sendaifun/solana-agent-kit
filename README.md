@@ -2,14 +2,19 @@
 
 # Solana Agent Kit
 
-</div>
-
 ![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
+
+
+![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/sendaifun/solana-agent-kit?style=for-the-badge)
+
+</div>
 
 An open-source toolkit for connecting AI agents to Solana protocols. Now, any agent, using any model can autonomously perform 15+ Solana actions:
 
 - Trade tokens
-- Launch new tokens 
+- Launch new tokens
 - Lend assets
 - Send compressed airdrops
 - Execute blinks
@@ -17,6 +22,10 @@ An open-source toolkit for connecting AI agents to Solana protocols. Now, any ag
 - And more...
 
 Anyone - whether an SF-based AI researcher or a crypto-native builder - can bring their AI agents trained with any model and seamlessly integrate with Solana.
+
+
+[![Run on Repl.it](https://replit.com/badge/github/sendaifun/solana-agent-kit)](https://replit.com/@sendaifun/Solana-Agent-Kit)
+> Replit template created by [Arpit Singh](https://github.com/The-x-35)
 
 ## 🔧 Core Blockchain Features
 
@@ -37,17 +46,24 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Jupiter Exchange swaps
   - Launch on Pump via PumpPortal
   - Raydium pool creation (CPMM, CLMM, AMMv4)
-  - Orca whirlpool integration
-  - Meteora Dynamic AMM, DLMM Pool, and Alpga Vault
+  - Orca Whirlpool integration
+  - Manifest market creation, and limit orders
+  - Meteora Dynamic AMM, DLMM Pool, and Alpha Vault
   - Openbook market creation
   - Register and Resolve SNS
   - Jito Bundles
+  - Pyth Price feeds for fetching Asset Prices
+  - Register/resolve Alldomains
+  - Perpetuals Trading with Adrena Protocol
 
 - **Solana Blinks**
-   - Lending by Lulo
+   - Lending by Lulo (Best APR for USDC)
    - Send Arcade Games
    - JupSOL staking
+   - Solayer SOL (sSOL)staking
 
+- **Non-Financial Actions**
+  - Gib Work for registering bounties
 
 ## 🤖 AI Integration Features
 
@@ -56,6 +72,11 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Autonomous agent support with React framework
   - Memory management for persistent interactions
   - Streaming responses for real-time feedback
+
+- **Vercel AI SDK Integration**
+  - Vercel AI SDK for AI agent integration
+  - Framework agnostic support
+  - Quick and easy toolkit setup
 
 - **Autonomous Modes**
   - Interactive chat mode for guided operations
@@ -96,10 +117,10 @@ const tools = createSolanaTools(agent);
 ### Deploy a New Token
 
 ```typescript
-import { deploy_token } from "solana-agent-kit";
-
-const result = await deploy_token(
-  agent,
+const result = await agent.deployToken(
+  "my ai token", // name
+  "uri", // uri
+  "token", // symbol
   9, // decimals
   1000000 // initial supply
 );
@@ -110,9 +131,7 @@ console.log("Token Mint Address:", result.mint.toString());
 ### Create NFT Collection
 
 ```typescript
-import { deploy_collection } from "solana-agent-kit";
-
-const collection = await deploy_collection(agent, {
+const collection = await agent.deployCollection({
   name: "My NFT Collection",
   uri: "https://arweave.net/metadata.json",
   royaltyBasisPoints: 500, // 5%
@@ -128,11 +147,9 @@ const collection = await deploy_collection(agent, {
 ### Swap Tokens
 
 ```typescript
-import { trade } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await trade(
-  agent,
+const signature = await agent.trade(
   new PublicKey("target-token-mint"),
   100, // amount
   new PublicKey("source-token-mint"),
@@ -143,46 +160,33 @@ const signature = await trade(
 ### Lend Tokens
 
 ```typescript
-import { lendAsset } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await lendAsset(
-  agent,
-  100 // amount
+const signature = await agent.lendAssets(
+  100 // amount of USDC to lend
 );
 ```
 
 ### Stake SOL
 
 ```typescript
-import { stakeWithJup } from "solana-agent-kit";
-
-const signature = await stakeWithJup(
-  agent,
-  1 // amount in SOL
+const signature = await agent.stake(
+  1 // amount in SOL to stake
 );
 ```
 
-### Fetch Token Price
+### Stake SOL on Solayer
 
 ```typescript
-import { fetchPrice } from "solana-agent-kit";
-
-const price = await fetchPrice(
-  agent,
-  "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" // Token mint address
+const signature = await agent.restake(
+  1 // amount in SOL to stake
 );
 
-console.log("Price in USDC:", price);
 ```
 
 ### Send an SPL Token Airdrop via ZK Compression
 
 ```typescript
-import {
-  sendCompressedAirdrop,
-  getAirdropCostEstimate,
-} from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
 (async () => {
@@ -194,8 +198,7 @@ import { PublicKey } from "@solana/web3.js";
     )
   );
 
-  const signature = await sendCompressedAirdrop(
-    agent,
+  const signature = await agent.sendCompressedAirdrop(
     new PublicKey("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"), // mint
     42, // amount per recipient
     [
@@ -207,45 +210,59 @@ import { PublicKey } from "@solana/web3.js";
 })();
 ```
 
-## API Reference
+### Fetch Price Data from Pyth
 
-### Core Functions
+```typescript
 
-#### `deploy_token(agent, decimals?, name, uri, symbol, initialSupply?)`
+const priceFeedID = await agent.getPythPriceFeedID("SOL");
 
-Deploy a new SPL token with optional initial supply. If not specified, decimals default to 9.
+const price = await agent.getPythPrice(priceFeedID);
 
-#### `deploy_collection(agent, options)`
+console.log("Price of SOL/USD:", price);
+```
 
-Create a new NFT collection with customizable metadata and royalties.
+### Open PERP Trade
 
-#### `mintCollectionNFT(agent, collectionMint, metadata, recipient?)`
+```typescript
+import { PublicKey } from "@solana/web3.js";
 
-Mint a new NFT as part of an existing collection.
+const signature = await agent.openPerpTradeLong({
+  price: 300, // $300 SOL Max price
+  collateralAmount: 10, // 10 jitoSOL in
+  collateralMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+  leverage: 50000, // x5
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+  slippage: 0.3, // 0.3%
+});
+```
 
-#### `transfer(agent, to, amount, mint?)`
+### Close PERP Trade
 
-Transfer SOL or SPL tokens to a recipient.
+```typescript
+import { PublicKey } from "@solana/web3.js";
 
-#### `trade(agent, outputMint, inputAmount, inputMint?, slippageBps?)`
+const signature = await agent.closePerpTradeLong({
+  price: 200, // $200 SOL price
+  tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
+});
+```
 
-Swap tokens using Jupiter Exchange integration.
+## Examples
 
-#### `get_balance(agent, token_address)`
+### LangGraph Multi-Agent System
 
-Check SOL or token balance for the agent's wallet.
+The repository includes an advanced example of building a multi-agent system using LangGraph and Solana Agent Kit. Located in `examples/agent-kit-langgraph`, this example demonstrates:
 
-#### `lendAsset(agent, assetMint, amount, apiKey)`
+- Multi-agent architecture using LangGraph's StateGraph
+- Specialized agents for different tasks:
+  - General purpose agent for basic queries
+  - Transfer/Swap agent for transaction operations
+  - Read agent for blockchain data queries
+  - Manager agent for routing and orchestration
+- Fully typed TypeScript implementation
+- Environment-based configuration
 
-Lend idle assets to earn interest with Lulo.
-
-#### `stakeWithJup(agent, amount)`
-
-Stake SOL with Jupiter to earn rewards.
-
-#### `sendCompressedAirdrop(agent, mintAddress, amount, recipients, priorityFeeInLamports?, shouldLog?)`
-
-Send an SPL token airdrop to many recipients at low cost via ZK Compression.
+Check out the [LangGraph example](examples/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
 
 ## Dependencies
 
@@ -264,9 +281,26 @@ The toolkit relies on several key Solana and Metaplex libraries:
 Contributions are welcome! Please feel free to submit a Pull Request.
 Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
 
+## Contributors
+
+<a href="https://github.com/sendaifun/solana-agent-kit/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sendaifun/solana-agent-kit" />
+</a>
+
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=sendaifun/solana-agent-kit&type=Date)](https://star-history.com/#sendaifun/solana-agent-kit&Date)
+
 ## License
 
-MIT License
+Apache-2 License
+
+## Funding 
+
+If you wanna give back any tokens or donations to the OSS community -- The Public Solana Agent Kit Treasury Address:
+
+Solana Network : EKHTbXpsm6YDgJzMkFxNU1LNXeWcUW7Ezf8mjUNQQ4Pa
 
 ## Security
 

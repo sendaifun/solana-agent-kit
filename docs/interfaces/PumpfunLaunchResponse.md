@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: PumpfunLaunchResponse
 
+Defined in: [types/index.ts:43](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L43)
+
 ## Properties
 
 ### signature
 
 > **signature**: `string`
 
-#### Defined in
-
-[types/index.ts:36](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L36)
+Defined in: [types/index.ts:44](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L44)
 
 ***
 
@@ -22,9 +22,7 @@
 
 > **mint**: `string`
 
-#### Defined in
-
-[types/index.ts:37](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L37)
+Defined in: [types/index.ts:45](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L45)
 
 ***
 
@@ -32,9 +30,7 @@
 
 > `optional` **metadataUri**: `string`
 
-#### Defined in
-
-[types/index.ts:38](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L38)
+Defined in: [types/index.ts:46](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L46)
 
 ***
 
@@ -42,6 +38,4 @@
 
 > `optional` **error**: `string`
 
-#### Defined in
-
-[types/index.ts:39](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L39)
+Defined in: [types/index.ts:47](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L47)

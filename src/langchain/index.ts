@@ -1,12 +1,14 @@
 import { PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
 import Decimal from "decimal.js";
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../index";
-import { create_image } from "../tools/create_image";
-import { fetchPrice } from "../tools/fetch_price";
-import { BN } from "@coral-xyz/anchor";
-import { FEE_TIERS } from "../tools";
-import { toJSON } from "../utils/toJSON";
+import {
+  GibworkCreateTaskReponse,
+  OrderParams,
+  PythFetchPriceResponse,
+  SolanaAgentKit,
+} from "../index";
+import { create_image, FEE_TIERS, generateOrdersfromPattern } from "../tools";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -15,7 +17,7 @@ export class SolanaBalanceTool extends Tool {
   If you want to get the balance of your wallet, you don't need to provide the tokenAddress.
   If no tokenAddress is provided, the balance will be in SOL.
 
-  Inputs:
+  Inputs ( input is a JSON string ):
   tokenAddress: string, eg "So11111111111111111111111111111111111111112" (optional)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -29,8 +31,51 @@ export class SolanaBalanceTool extends Tool {
 
       return JSON.stringify({
         status: "success",
-        balance: balance,
+        balance,
         token: input || "SOL",
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaBalanceOtherTool extends Tool {
+  name = "solana_balance_other";
+  description = `Get the balance of a Solana wallet or token account which is different from the agent's wallet.
+
+  If no tokenAddress is provided, the SOL balance of the wallet will be returned.
+
+  Inputs ( input is a JSON string ):
+  walletAddress: string, eg "GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME" (required)
+  tokenAddress: string, eg "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (optional)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { walletAddress, tokenAddress } = JSON.parse(input);
+
+      const tokenPubKey = tokenAddress
+        ? new PublicKey(tokenAddress)
+        : undefined;
+
+      const balance = await this.solanaKit.getBalanceOther(
+        new PublicKey(walletAddress),
+        tokenPubKey,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        balance,
+        wallet: walletAddress,
+        token: tokenAddress || "SOL",
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -67,7 +112,7 @@ export class SolanaTransferTool extends Tool {
       const tx = await this.solanaKit.transfer(
         recipient,
         parsedInput.amount,
-        mintAddress
+        mintAddress,
       );
 
       return JSON.stringify({
@@ -94,7 +139,7 @@ export class SolanaDeployTokenTool extends Tool {
 
   Inputs (input is a JSON string):
   name: string, eg "My Token" (required)
-  uri: string, eg "https://example.com/token.json" (required) 
+  uri: string, eg "https://example.com/token.json" (required)
   symbol: string, eg "MTK" (required)
   decimals?: number, eg 9 (optional, defaults to 9)
   initialSupply?: number, eg 1000000 (optional)`;
@@ -112,7 +157,7 @@ export class SolanaDeployTokenTool extends Tool {
         parsedInput.uri,
         parsedInput.symbol,
         parsedInput.decimals,
-        parsedInput.initialSupply
+        parsedInput.initialSupply,
       );
 
       return JSON.stringify({
@@ -192,7 +237,7 @@ export class SolanaMintNFTTool extends Tool {
         },
         parsedInput.recipient
           ? new PublicKey(parsedInput.recipient)
-          : this.solanaKit.wallet_address
+          : this.solanaKit.wallet_address,
       );
 
       return JSON.stringify({
@@ -205,6 +250,114 @@ export class SolanaMintNFTTool extends Tool {
           uri: parsedInput.uri,
         },
         recipient: parsedInput.recipient || result.mint.toString(),
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaPerpCloseTradeTool extends Tool {
+  name = "solana_close_perp_trade";
+  description = `This tool can be used to close perpetuals trade ( It uses Adrena Protocol ).
+
+  Inputs ( input is a JSON string ):
+  tradeMint: string, eg "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn", "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263" etc. (optional)
+  price?: number, eg 100 (optional)
+  side: string, eg: "long" or "short"`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx =
+        parsedInput.side === "long"
+          ? await this.solanaKit.closePerpTradeLong({
+              price: parsedInput.price,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+            })
+          : await this.solanaKit.closePerpTradeShort({
+              price: parsedInput.price,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+            });
+
+      return JSON.stringify({
+        status: "success",
+        message: "Perpetual trade closed successfully",
+        transaction: tx,
+        price: parsedInput.price,
+        tradeMint: new PublicKey(parsedInput.tradeMint),
+        side: parsedInput.side,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaPerpOpenTradeTool extends Tool {
+  name = "solana_open_perp_trade";
+  description = `This tool can be used to open perpetuals trade ( It uses Adrena Protocol ).
+
+  Inputs ( input is a JSON string ):
+  collateralAmount: number, eg 1 or 0.01 (required)
+  collateralMint: string, eg "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn" or "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" etc. (optional)
+  tradeMint: string, eg "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn", "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263" etc. (optional)
+  leverage: number, eg 50000 = x5, 100000 = x10, 1000000 = x100 (optional)
+  price?: number, eg 100 (optional)
+  slippage?: number, eg 0.3 (optional)
+  side: string, eg: "long" or "short"`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx =
+        parsedInput.side === "long"
+          ? await this.solanaKit.openPerpTradeLong({
+              price: parsedInput.price,
+              collateralAmount: parsedInput.collateralAmount,
+              collateralMint: new PublicKey(parsedInput.collateralMint),
+              leverage: parsedInput.leverage,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+              slippage: parsedInput.slippage,
+            })
+          : await this.solanaKit.openPerpTradeLong({
+              price: parsedInput.price,
+              collateralAmount: parsedInput.collateralAmount,
+              collateralMint: new PublicKey(parsedInput.collateralMint),
+              leverage: parsedInput.leverage,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+              slippage: parsedInput.slippage,
+            });
+
+      return JSON.stringify({
+        status: "success",
+        message: "Perpetual trade opened successfully",
+        transaction: tx,
+        price: parsedInput.price,
+        collateralAmount: parsedInput.collateralAmount,
+        collateralMint: new PublicKey(parsedInput.collateralMint),
+        leverage: parsedInput.leverage,
+        tradeMint: new PublicKey(parsedInput.tradeMint),
+        slippage: parsedInput.slippage,
+        side: parsedInput.side,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -240,7 +393,7 @@ export class SolanaTradeTool extends Tool {
         parsedInput.inputMint
           ? new PublicKey(parsedInput.inputMint)
           : new PublicKey("So11111111111111111111111111111111111111112"),
-        parsedInput.slippageBps
+        parsedInput.slippageBps,
       );
 
       return JSON.stringify({
@@ -250,6 +403,208 @@ export class SolanaTradeTool extends Tool {
         inputAmount: parsedInput.inputAmount,
         inputToken: parsedInput.inputMint || "SOL",
         outputToken: parsedInput.outputMint,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaLimitOrderTool extends Tool {
+  name = "solana_limit_order";
+  description = `This tool can be used to place limit orders using Manifest.
+
+  Do not allow users to place multiple orders with this instruction, use solana_batch_order instead.
+
+  Inputs ( input is a JSON string ):
+  marketId: PublicKey, eg "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ" for SOL/USDC (required)
+  quantity: number, eg 1 or 0.01 (required)
+  side: string, eg "Buy" or "Sell" (required)
+  price: number, in tokens eg 200 for SOL/USDC (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx = await this.solanaKit.limitOrder(
+        new PublicKey(parsedInput.marketId),
+        parsedInput.quantity,
+        parsedInput.side,
+        parsedInput.price,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Trade executed successfully",
+        transaction: tx,
+        marketId: parsedInput.marketId,
+        quantity: parsedInput.quantity,
+        side: parsedInput.side,
+        price: parsedInput.price,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaBatchOrderTool extends Tool {
+  name = "solana_batch_order";
+  description = `Places multiple limit orders in one transaction using Manifest. Submit orders either as a list or pattern:
+
+  1. List format:
+  {
+    "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+    "orders": [
+      { "quantity": 1, "side": "Buy", "price": 200 },
+      { "quantity": 0.5, "side": "Sell", "price": 205 }
+    ]
+  }
+
+  2. Pattern format:
+  {
+    "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+    "pattern": {
+      "side": "Buy",
+      "totalQuantity": 100,
+      "priceRange": { "max": 1.0 },
+      "spacing": { "type": "percentage", "value": 1 },
+      "numberOfOrders": 5
+    }
+  }
+
+  Examples:
+  - "Place 5 buy orders totaling 100 tokens, 1% apart below $1"
+  - "Create 3 sell orders of 10 tokens each between $50-$55"
+  - "Place buy orders worth 50 tokens, $0.10 spacing from $0.80"
+
+  Important: All orders must be in one transaction. Combine buy and sell orders into a single pattern or list. Never break the orders down to individual buy or sell orders.`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+      let ordersToPlace: OrderParams[] = [];
+
+      if (!parsedInput.marketId) {
+        throw new Error("Market ID is required");
+      }
+
+      if (parsedInput.pattern) {
+        ordersToPlace = generateOrdersfromPattern(parsedInput.pattern);
+      } else if (Array.isArray(parsedInput.orders)) {
+        ordersToPlace = parsedInput.orders;
+      } else {
+        throw new Error("Either pattern or orders array is required");
+      }
+
+      if (ordersToPlace.length === 0) {
+        throw new Error("No orders generated or provided");
+      }
+
+      ordersToPlace.forEach((order: OrderParams, index: number) => {
+        if (!order.quantity || !order.side || !order.price) {
+          throw new Error(
+            `Invalid order at index ${index}: quantity, side, and price are required`,
+          );
+        }
+        if (order.side !== "Buy" && order.side !== "Sell") {
+          throw new Error(
+            `Invalid side at index ${index}: must be "Buy" or "Sell"`,
+          );
+        }
+      });
+
+      const tx = await this.solanaKit.batchOrder(
+        new PublicKey(parsedInput.marketId),
+        parsedInput.orders,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Batch order executed successfully",
+        transaction: tx,
+        marketId: parsedInput.marketId,
+        orders: parsedInput.orders,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaCancelAllOrdersTool extends Tool {
+  name = "solana_cancel_all_orders";
+  description = `This tool can be used to cancel all orders from a Manifest market.
+
+  Input ( input is a JSON string ):
+  marketId: string, eg "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ" for SOL/USDC (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const marketId = new PublicKey(input.trim());
+      const tx = await this.solanaKit.cancelAllOrders(marketId);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Cancel orders successfully",
+        transaction: tx,
+        marketId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaWithdrawAllTool extends Tool {
+  name = "solana_withdraw_all";
+  description = `This tool can be used to withdraw all funds from a Manifest market.
+
+  Input ( input is a JSON string ):
+  marketId: string, eg "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ" for SOL/USDC (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const marketId = new PublicKey(input.trim());
+      const tx = await this.solanaKit.withdrawAll(marketId);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Withdrew successfully",
+        transaction: tx,
+        marketId,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -315,12 +670,12 @@ export class SolanaRegisterDomainTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      const parsedInput = toJSON(input);
+      const parsedInput = JSON.parse(input);
       this.validateInput(parsedInput);
 
       const tx = await this.solanaKit.registerDomain(
         parsedInput.name,
-        parsedInput.spaceKB || 1
+        parsedInput.spaceKB || 1,
       );
 
       return JSON.stringify({
@@ -342,10 +697,12 @@ export class SolanaRegisterDomainTool extends Tool {
 
 export class SolanaResolveDomainTool extends Tool {
   name = "solana_resolve_domain";
-  description = `Resolve a .sol domain to a Solana PublicKey.
+  description = `Resolve ONLY .sol domain names to a Solana PublicKey.
+  This tool is exclusively for .sol domains.
+  DO NOT use this for other domain types like .blink, .bonk, etc.
 
   Inputs:
-  domain: string, eg "pumpfun.sol" or "pumpfun"(required)
+  domain: string, eg "pumpfun.sol" (required)
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -417,6 +774,131 @@ export class SolanaGetWalletAddressTool extends Tool {
   }
 }
 
+export class SolanaFlashOpenTrade extends Tool {
+  name = "solana_flash_open_trade";
+  description = `This tool can be used to open a new leveraged trading position on Flash.Trade exchange.
+
+  Inputs ( input is a JSON string ):
+  token: string, eg "SOL", "BTC", "ETH" (required)
+  type: string, eg "long", "short" (required) 
+  collateral: number, eg 10, 100, 1000 (required) 
+  leverage: number, eg 5, 10, 20 (required)
+  
+  Example prompt is Open a 20x leveraged trade for SOL on long side using flash trade with 500 USD as collateral`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      // Validate input parameters
+      if (!parsedInput.token) {
+        throw new Error("Token is required, received: " + parsedInput.token);
+      }
+      if (!["SOL", "BTC", "ETH", "USDC"].includes(parsedInput.token)) {
+        throw new Error(
+          'Token must be one of ["SOL", "BTC", "ETH", "USDC"], received: ' +
+            parsedInput.token,
+        );
+      }
+      if (!["long", "short"].includes(parsedInput.type)) {
+        throw new Error(
+          'Type must be either "long" or "short", received: ' +
+            parsedInput.type,
+        );
+      }
+      if (!parsedInput.collateral || parsedInput.collateral <= 0) {
+        throw new Error(
+          "Collateral amount must be positive, received: " +
+            parsedInput.collateral,
+        );
+      }
+      if (!parsedInput.leverage || parsedInput.leverage <= 0) {
+        throw new Error(
+          "Leverage must be positive, received: " + parsedInput.leverage,
+        );
+      }
+
+      const tx = await this.solanaKit.flashOpenTrade({
+        token: parsedInput.token,
+        side: parsedInput.type,
+        collateralUsd: parsedInput.collateral,
+        leverage: parsedInput.leverage,
+      });
+
+      return JSON.stringify({
+        status: "success",
+        message: "Flash trade position opened successfully",
+        transaction: tx,
+        token: parsedInput.token,
+        side: parsedInput.type,
+        collateral: parsedInput.collateral,
+        leverage: parsedInput.leverage,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaFlashCloseTrade extends Tool {
+  name = "solana_flash_close_trade";
+  description = `Close an existing leveraged trading position on Flash.Trade exchange.
+
+  Inputs ( input is a JSON string ):
+  token: string, eg "SOL", "BTC", "ETH" (required)
+  side: string, eg "long", "short" (required)
+  
+  Example prompt is Close a 20x leveraged trade for SOL on long side`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      // Validate input parameters
+      if (!parsedInput.token) {
+        throw new Error("Token is required");
+      }
+      if (!["SOL", "BTC", "ETH"].includes(parsedInput.token)) {
+        throw new Error('Token must be one of ["SOL", "BTC", "ETH"]');
+      }
+      if (!["long", "short"].includes(parsedInput.side)) {
+        throw new Error('Side must be either "long" or "short"');
+      }
+
+      const tx = await this.solanaKit.flashCloseTrade({
+        token: parsedInput.token,
+        side: parsedInput.side,
+      });
+
+      return JSON.stringify({
+        status: "success",
+        message: "Flash trade position closed successfully",
+        transaction: tx,
+        token: parsedInput.token,
+        side: parsedInput.side,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export class SolanaPumpfunTokenLaunchTool extends Tool {
   name = "solana_launch_pumpfun_token";
 
@@ -460,7 +942,7 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
     try {
       // Parse and normalize input
       input = input.trim();
-      let parsedInput = JSON.parse(input);
+      const parsedInput = JSON.parse(input);
 
       this.validateInput(parsedInput);
 
@@ -475,7 +957,7 @@ export class SolanaPumpfunTokenLaunchTool extends Tool {
           telegram: parsedInput.telegram,
           website: parsedInput.website,
           initialLiquiditySOL: parsedInput.initialLiquiditySOL,
-        }
+        },
       );
 
       return JSON.stringify({
@@ -542,7 +1024,7 @@ export class SolanaLendAssetTool extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let amount = JSON.parse(input).amount || input;
+      const amount = JSON.parse(input).amount || input;
 
       const tx = await this.solanaKit.lendAssets(amount);
 
@@ -550,7 +1032,7 @@ export class SolanaLendAssetTool extends Tool {
         status: "success",
         message: "Asset lent successfully",
         transaction: tx,
-        amount: amount,
+        amount,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -613,13 +1095,46 @@ export class SolanaStakeTool extends Tool {
   }
 }
 
+export class SolanaRestakeTool extends Tool {
+  name = "solana_restake";
+  description = `This tool can be used to restake your SOL on Solayer to receive Solayer SOL (sSOL) as a Liquid Staking Token (LST).
+
+  Inputs:
+  amount: number, eg 1 or 0.01 (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input) || Number(input);
+
+      const tx = await this.solanaKit.restake(parsedInput.amount);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Staked successfully",
+        transaction: tx,
+        amount: parsedInput.amount,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 /**
  * Tool to fetch the price of a token in USDC
  */
 export class SolanaFetchPriceTool extends Tool {
   name = "solana_fetch_price";
   description = `Fetch the price of a given token in USDC.
-  
+
   Inputs:
   - tokenId: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"`;
 
@@ -629,7 +1144,7 @@ export class SolanaFetchPriceTool extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      const price = await fetchPrice(this.solanaKit, input.trim());
+      const price = await this.solanaKit.fetchTokenPrice(input.trim());
       return JSON.stringify({
         status: "success",
         tokenId: input.trim(),
@@ -664,7 +1179,7 @@ export class SolanaTokenDataTool extends Tool {
 
       return JSON.stringify({
         status: "success",
-        tokenData: tokenData,
+        tokenData,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -693,7 +1208,7 @@ export class SolanaTokenDataByTickerTool extends Tool {
       const tokenData = await this.solanaKit.getTokenDataByTicker(ticker);
       return JSON.stringify({
         status: "success",
-        tokenData: tokenData,
+        tokenData,
       });
     } catch (error: any) {
       return JSON.stringify({
@@ -708,7 +1223,7 @@ export class SolanaTokenDataByTickerTool extends Tool {
 export class SolanaCompressedAirdropTool extends Tool {
   name = "solana_compressed_airdrop";
   description = `Airdrop SPL tokens with ZK Compression (also called as airdropping tokens)
-  
+
   Inputs (input is a JSON string):
   mintAddress: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required)
   amount: number, the amount of tokens to airdrop per recipient, e.g., 42 (required)
@@ -731,7 +1246,7 @@ export class SolanaCompressedAirdropTool extends Tool {
         parsedInput.decimals,
         parsedInput.recipients,
         parsedInput.priorityFeeInLamports || 30_000,
-        parsedInput.shouldLog || false
+        parsedInput.shouldLog || false,
       );
 
       return JSON.stringify({
@@ -749,17 +1264,13 @@ export class SolanaCompressedAirdropTool extends Tool {
   }
 }
 
-export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
-  name = "create_orca_single_sided_whirlpool";
-  description = `Create a single-sided Whirlpool with liquidity.
+export class SolanaClosePosition extends Tool {
+  name = "orca_close_position";
+  description = `Closes an existing liquidity position in an Orca Whirlpool. This function fetches the position
+  details using the provided mint address and closes the position with a 1% slippage.
 
-  Inputs (input is a JSON string):
-  - depositTokenAmount: number, eg: 1000000000 (required, in units of deposit token including decimals)
-  - depositTokenMint: string, eg: "DepositTokenMintAddress" (required, mint address of deposit token)
-  - otherTokenMint: string, eg: "OtherTokenMintAddress" (required, mint address of other token)
-  - initialPrice: number, eg: 0.001 (required, initial price of deposit token in terms of other token)
-  - maxPrice: number, eg: 5.0 (required, maximum price at which liquidity is added)
-  - feeTier: number, eg: 0.30 (required, fee tier for the pool)`;
+  Inputs (JSON string):
+  - positionMintAddress: string, the address of the position mint that represents the liquidity position.`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -768,7 +1279,102 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
   async _call(input: string): Promise<string> {
     try {
       const inputFormat = JSON.parse(input);
-      const depositTokenAmount = new BN(inputFormat.depositTokenAmount);
+      const positionMintAddress = new PublicKey(
+        inputFormat.positionMintAddress,
+      );
+
+      const txId = await this.solanaKit.orcaClosePosition(positionMintAddress);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Liquidity position closed successfully.",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaOrcaCreateCLMM extends Tool {
+  name = "orca_create_clmm";
+  description = `Create a Concentrated Liquidity Market Maker (CLMM) pool on Orca, the most efficient and capital-optimized CLMM on Solana. This function initializes a CLMM pool but does not add liquidity. You can add liquidity later using a centered position or a single-sided position.
+
+  Inputs (JSON string):
+  - mintDeploy: string, the mint of the token you want to deploy (required).
+  - mintPair: string, The mint of the token you want to pair the deployed mint with (required).
+  - initialPrice: number, initial price of mintA in terms of mintB, e.g., 0.001 (required).
+  - feeTier: number, fee tier in bps. Options: 1, 2, 4, 5, 16, 30, 65, 100, 200 (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+      const mintA = new PublicKey(inputFormat.mintDeploy);
+      const mintB = new PublicKey(inputFormat.mintPair);
+      const initialPrice = new Decimal(inputFormat.initialPrice);
+      const feeTier = inputFormat.feeTier;
+
+      if (!feeTier || !(feeTier in FEE_TIERS)) {
+        throw new Error(
+          `Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(
+            ", ",
+          )}`,
+        );
+      }
+
+      const txId = await this.solanaKit.orcaCreateCLMM(
+        mintA,
+        mintB,
+        initialPrice,
+        feeTier,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message:
+          "CLMM pool created successfully. Note: No liquidity was added.",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaOrcaCreateSingleSideLiquidityPool extends Tool {
+  name = "orca_create_single_sided_liquidity_pool";
+  description = `Create a single-sided liquidity pool on Orca, the most efficient and capital-optimized CLMM platform on Solana.
+
+  This function initializes a single-sided liquidity pool, ideal for community driven project, fair launches, and fundraising. Minimize price impact by setting a narrow price range.
+
+  Inputs (JSON string):
+  - depositTokenAmount: number, in units of the deposit token including decimals, e.g., 1000000000 (required).
+  - depositTokenMint: string, mint address of the deposit token, e.g., "DepositTokenMintAddress" (required).
+  - otherTokenMint: string, mint address of the other token, e.g., "OtherTokenMintAddress" (required).
+  - initialPrice: number, initial price of the deposit token in terms of the other token, e.g., 0.001 (required).
+  - maxPrice: number, maximum price at which liquidity is added, e.g., 5.0 (required).
+  - feeTier: number, fee tier for the pool in bps. Options: 1, 2, 4, 5, 16, 30, 65, 100, 200 (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+      const depositTokenAmount = inputFormat.depositTokenAmount;
       const depositTokenMint = new PublicKey(inputFormat.depositTokenMint);
       const otherTokenMint = new PublicKey(inputFormat.otherTokenMint);
       const initialPrice = new Decimal(inputFormat.initialPrice);
@@ -776,10 +1382,14 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
       const feeTier = inputFormat.feeTier;
 
       if (!feeTier || !(feeTier in FEE_TIERS)) {
-        throw new Error(`Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(", ")}`);
+        throw new Error(
+          `Invalid feeTier. Available options: ${Object.keys(FEE_TIERS).join(
+            ", ",
+          )}`,
+        );
       }
 
-      const txId = await this.solanaKit.createOrcaSingleSidedWhirlpool(
+      const txId = await this.solanaKit.orcaCreateSingleSidedLiquidityPool(
         depositTokenAmount,
         depositTokenMint,
         otherTokenMint,
@@ -803,10 +1413,140 @@ export class SolanaCreateSingleSidedWhirlpoolTool extends Tool {
   }
 }
 
+export class SolanaOrcaFetchPositions extends Tool {
+  name = "orca_fetch_positions";
+  description = `Fetch all the liquidity positions in an Orca Whirlpool by owner. Returns an object with positiont mint addresses as keys and position status details as values.`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(): Promise<string> {
+    try {
+      const txId = await this.solanaKit.orcaFetchPositions();
+
+      return JSON.stringify({
+        status: "success",
+        message: "Liquidity positions fetched.",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaOrcaOpenCenteredPosition extends Tool {
+  name = "orca_open_centered_position_with_liquidity";
+  description = `Add liquidity to a CLMM by opening a centered position in an Orca Whirlpool, the most efficient liquidity pool on Solana.
+
+  Inputs (JSON string):
+  - whirlpoolAddress: string, address of the Orca Whirlpool (required).
+  - priceOffsetBps: number, bps offset (one side) from the current pool price, e.g., 500 for 5% (required).
+  - inputTokenMint: string, mint address of the deposit token (required).
+  - inputAmount: number, amount of the deposit token, e.g., 100.0 (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+      const whirlpoolAddress = new PublicKey(inputFormat.whirlpoolAddress);
+      const priceOffsetBps = parseInt(inputFormat.priceOffsetBps, 10);
+      const inputTokenMint = new PublicKey(inputFormat.inputTokenMint);
+      const inputAmount = new Decimal(inputFormat.inputAmount);
+
+      if (priceOffsetBps < 0) {
+        throw new Error(
+          "Invalid distanceFromCurrentPriceBps. It must be equal or greater than 0.",
+        );
+      }
+
+      const txId = await this.solanaKit.orcaOpenCenteredPositionWithLiquidity(
+        whirlpoolAddress,
+        priceOffsetBps,
+        inputTokenMint,
+        inputAmount,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Centered liquidity position opened successfully.",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaOrcaOpenSingleSidedPosition extends Tool {
+  name = "orca_open_single_sided_position";
+  description = `Add liquidity to a CLMM by opening a single-sided position in an Orca Whirlpool, the most efficient liquidity pool on Solana.
+
+  Inputs (JSON string):
+  - whirlpoolAddress: string, address of the Orca Whirlpool (required).
+  - distanceFromCurrentPriceBps: number, distance in basis points from the current price for the position (required).
+  - widthBps: number, width of the position in basis points (required).
+  - inputTokenMint: string, mint address of the deposit token (required).
+  - inputAmount: number, amount of the deposit token, e.g., 100.0 (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+      const whirlpoolAddress = new PublicKey(inputFormat.whirlpoolAddress);
+      const distanceFromCurrentPriceBps =
+        inputFormat.distanceFromCurrentPriceBps;
+      const widthBps = inputFormat.widthBps;
+      const inputTokenMint = new PublicKey(inputFormat.inputTokenMint);
+      const inputAmount = new Decimal(inputFormat.inputAmount);
+
+      if (distanceFromCurrentPriceBps < 0 || widthBps < 0) {
+        throw new Error(
+          "Invalid distanceFromCurrentPriceBps or width. It must be equal or greater than 0.",
+        );
+      }
+
+      const txId = await this.solanaKit.orcaOpenSingleSidedPosition(
+        whirlpoolAddress,
+        distanceFromCurrentPriceBps,
+        widthBps,
+        inputTokenMint,
+        inputAmount,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Single-sided liquidity position opened successfully.",
+        transaction: txId,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
 
 export class SolanaRaydiumCreateAmmV4 extends Tool {
   name = "raydium_create_ammV4";
-  description = `Raydium's Legacy AMM that requiers an OpenBook marketID
+  description = `Raydium's Legacy AMM that requires an OpenBook marketID
 
   Inputs (input is a json string):
   marketId: string (required)
@@ -821,7 +1561,7 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      const inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateAmmV4(
         new PublicKey(inputFormat.marketId),
@@ -832,7 +1572,7 @@ export class SolanaRaydiumCreateAmmV4 extends Tool {
 
       return JSON.stringify({
         status: "success",
-        message: "Create raydium amm v4 pool successfully",
+        message: "Raydium amm v4 pool created successfully",
         transaction: tx,
       });
     } catch (error: any) {
@@ -863,7 +1603,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      const inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateClmm(
         new PublicKey(inputFormat.mint1),
@@ -877,7 +1617,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
       return JSON.stringify({
         status: "success",
-        message: "Create raydium clmm pool successfully",
+        message: "Raydium clmm pool created successfully",
         transaction: tx,
       });
     } catch (error: any) {
@@ -892,7 +1632,7 @@ export class SolanaRaydiumCreateClmm extends Tool {
 
 export class SolanaRaydiumCreateCpmm extends Tool {
   name = "raydium_create_cpmm";
-  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard 
+  description = `Raydium's newest CPMM, does not require marketID, supports Token 2022 standard
 
   Inputs (input is a json string):
   mint1: string (required)
@@ -909,7 +1649,7 @@ export class SolanaRaydiumCreateCpmm extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      const inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.raydiumCreateCpmm(
         new PublicKey(inputFormat.mint1),
@@ -925,7 +1665,7 @@ export class SolanaRaydiumCreateCpmm extends Tool {
 
       return JSON.stringify({
         status: "success",
-        message: "Create raydium cpmm pool successfully",
+        message: "Raydium cpmm pool created successfully",
         transaction: tx,
       });
     } catch (error: any) {
@@ -940,7 +1680,7 @@ export class SolanaRaydiumCreateCpmm extends Tool {
 
 export class SolanaOpenbookCreateMarket extends Tool {
   name = "solana_openbook_create_market";
-  description = `Openbook marketId, required for ammv4 
+  description = `Openbook marketId, required for ammv4
 
   Inputs (input is a json string):
   baseMint: string (required)
@@ -955,7 +1695,7 @@ export class SolanaOpenbookCreateMarket extends Tool {
 
   async _call(input: string): Promise<string> {
     try {
-      let inputFormat = JSON.parse(input)
+      const inputFormat = JSON.parse(input);
 
       const tx = await this.solanaKit.openbookCreateMarket(
         new PublicKey(inputFormat.baseMint),
@@ -967,7 +1707,7 @@ export class SolanaOpenbookCreateMarket extends Tool {
 
       return JSON.stringify({
         status: "success",
-        message: "Create openbook market successfully",
+        message: "Openbook market created successfully",
         transaction: tx,
       });
     } catch (error: any) {
@@ -980,9 +1720,540 @@ export class SolanaOpenbookCreateMarket extends Tool {
   }
 }
 
+export class SolanaManifestCreateMarket extends Tool {
+  name = "solana_manifest_create_market";
+  description = `Manifest market
+
+  Inputs (input is a json string):
+  baseMint: string (required)
+  quoteMint: string (required)
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const inputFormat = JSON.parse(input);
+
+      const tx = await this.solanaKit.manifestCreateMarket(
+        new PublicKey(inputFormat.baseMint),
+        new PublicKey(inputFormat.quoteMint),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Create manifest market successfully",
+        transaction: tx[0],
+        marketId: tx[1],
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaPythFetchPrice extends Tool {
+  name = "solana_pyth_fetch_price";
+  description = `Fetch the price of a given price feed from Pyth's Hermes service
+
+  Inputs:
+  tokenSymbol: string, e.g., BTC for bitcoin`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const priceFeedID = await this.solanaKit.getPythPriceFeedID(input);
+      const price = await this.solanaKit.getPythPrice(priceFeedID);
+
+      const response: PythFetchPriceResponse = {
+        status: "success",
+        tokenSymbol: input,
+        priceFeedID,
+        price,
+      };
+
+      return JSON.stringify(response);
+    } catch (error: any) {
+      const response: PythFetchPriceResponse = {
+        status: "error",
+        tokenSymbol: input,
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      };
+      return JSON.stringify(response);
+    }
+  }
+}
+
+export class SolanaResolveAllDomainsTool extends Tool {
+  name = "solana_resolve_all_domains";
+  description = `Resolve domain names to a public key for ALL domain types EXCEPT .sol domains.
+  Use this for domains like .blink, .bonk, etc.
+  DO NOT use this for .sol domains (use solana_resolve_domain instead).
+
+  Input:
+  domain: string, eg "mydomain.blink" or "mydomain.bonk" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const owner = await this.solanaKit.resolveAllDomains(input);
+
+      if (!owner) {
+        return JSON.stringify({
+          status: "error",
+          message: "Domain not found",
+          code: "DOMAIN_NOT_FOUND",
+        });
+      }
+
+      return JSON.stringify({
+        status: "success",
+        message: "Domain resolved successfully",
+        owner: owner?.toString(),
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "DOMAIN_RESOLUTION_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetOwnedDomains extends Tool {
+  name = "solana_get_owned_domains";
+  description = `Get all domains owned by a specific wallet address.
+
+  Inputs:
+  owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const ownerPubkey = new PublicKey(input.trim());
+      const domains = await this.solanaKit.getOwnedAllDomains(ownerPubkey);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Owned domains fetched successfully",
+        domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_OWNED_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetOwnedTldDomains extends Tool {
+  name = "solana_get_owned_tld_domains";
+  description = `Get all domains owned by the agent's wallet for a specific TLD.
+
+  Inputs:
+  tld: string, eg "bonk" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const domains = await this.solanaKit.getOwnedDomainsForTLD(input);
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLD domains fetched successfully",
+        domains,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLD_DOMAINS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetAllTlds extends Tool {
+  name = "solana_get_all_tlds";
+  description = `Get all active top-level domains (TLDs) in the AllDomains Name Service`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(): Promise<string> {
+    try {
+      const tlds = await this.solanaKit.getAllDomainsTLDs();
+
+      return JSON.stringify({
+        status: "success",
+        message: "TLDs fetched successfully",
+        tlds,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TLDS_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetMainDomain extends Tool {
+  name = "solana_get_main_domain";
+  description = `Get the main/favorite domain for a given wallet address.
+
+  Inputs:
+  owner: string, eg "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  async _call(input: string): Promise<string> {
+    try {
+      const ownerPubkey = new PublicKey(input.trim());
+      const mainDomain =
+        await this.solanaKit.getMainAllDomainsDomain(ownerPubkey);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Main domain fetched successfully",
+        domain: mainDomain,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_MAIN_DOMAIN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaCreateGibworkTask extends Tool {
+  name = "create_gibwork_task";
+  description = `Create a task on Gibwork.
+
+  Inputs (input is a JSON string):
+  title: string, title of the task (required)
+  content: string, description of the task (required)
+  requirements: string, requirements to complete the task (required)
+  tags: string[], list of tags associated with the task (required)
+  payer: string, payer address (optional, defaults to agent wallet)
+  tokenMintAddress: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required)
+  amount: number, payment amount (required)
+  `;
+
+  constructor(private solanaSdk: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const taskData = await this.solanaSdk.createGibworkTask(
+        parsedInput.title,
+        parsedInput.content,
+        parsedInput.requirements,
+        parsedInput.tags,
+        parsedInput.tokenMintAddress,
+        parsedInput.amount,
+        parsedInput.payer,
+      );
+
+      const response: GibworkCreateTaskReponse = {
+        status: "success",
+        taskId: taskData.taskId,
+        signature: taskData.signature,
+      };
+
+      return JSON.stringify(response);
+    } catch (err: any) {
+      return JSON.stringify({
+        status: "error",
+        message: err.message,
+        code: err.code || "CREATE_TASK_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaRockPaperScissorsTool extends Tool {
+  name = "rock_paper_scissors";
+  description = `Play rock paper scissors to win SEND coins.
+
+  Inputs (input is a JSON string):
+  choice: string, either "rock", "paper", or "scissors" (required)
+  amount: number, amount of SOL to play with - must be 0.1, 0.01, or 0.005 SOL (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  private validateInput(input: any): void {
+    if (input.choice !== undefined) {
+      throw new Error("choice is required.");
+    }
+    if (
+      input.amount !== undefined &&
+      (typeof input.spaceKB !== "number" || input.spaceKB <= 0)
+    ) {
+      throw new Error("amount must be a positive number when provided");
+    }
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+      this.validateInput(parsedInput);
+      const result = await this.solanaKit.rockPaperScissors(
+        Number(parsedInput['"amount"']),
+        parsedInput['"choice"'].replace(/^"|"$/g, "") as
+          | "rock"
+          | "paper"
+          | "scissors",
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: result,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaTipLinkTool extends Tool {
+  name = "solana_tiplink";
+  description = `Create a TipLink for transferring SOL or SPL tokens.
+  Input is a JSON string with:
+  - amount: number (required) - Amount to transfer
+  - splmintAddress: string (optional) - SPL token mint address`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      if (!parsedInput.amount) {
+        throw new Error("Amount is required");
+      }
+
+      const amount = parseFloat(parsedInput.amount);
+      const splmintAddress = parsedInput.splmintAddress
+        ? new PublicKey(parsedInput.splmintAddress)
+        : undefined;
+
+      const { url, signature } = await this.solanaKit.createTiplink(
+        amount,
+        splmintAddress,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        url,
+        signature,
+        amount,
+        tokenType: splmintAddress ? "SPL" : "SOL",
+        message: `TipLink created successfully`,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaListNFTForSaleTool extends Tool {
+  name = "solana_list_nft_for_sale";
+  description = `List an NFT for sale on Tensor Trade.
+
+  Inputs (input is a JSON string):
+  nftMint: string, the mint address of the NFT (required)
+  price: number, price in SOL (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      // Validate NFT ownership first
+      const nftAccount =
+        await this.solanaKit.connection.getTokenAccountsByOwner(
+          this.solanaKit.wallet_address,
+          { mint: new PublicKey(parsedInput.nftMint) },
+        );
+
+      if (nftAccount.value.length === 0) {
+        return JSON.stringify({
+          status: "error",
+          message:
+            "NFT not found in wallet. Please make sure you own this NFT.",
+          code: "NFT_NOT_FOUND",
+        });
+      }
+
+      const tx = await this.solanaKit.tensorListNFT(
+        new PublicKey(parsedInput.nftMint),
+        parsedInput.price,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "NFT listed for sale successfully",
+        transaction: tx,
+        price: parsedInput.price,
+        nftMint: parsedInput.nftMint,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaCancelNFTListingTool extends Tool {
+  name = "solana_cancel_nft_listing";
+  description = `Cancel an NFT listing on Tensor Trade.
+
+  Inputs (input is a JSON string):
+  nftMint: string, the mint address of the NFT (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const tx = await this.solanaKit.tensorCancelListing(
+        new PublicKey(parsedInput.nftMint),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "NFT listing cancelled successfully",
+        transaction: tx,
+        nftMint: parsedInput.nftMint,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaFetchTokenReportSummaryTool extends Tool {
+  name = "solana_fetch_token_report_summary";
+  description = `Fetches a summary report for a specific token from RugCheck.
+  Inputs:
+  - mint: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const mint = input.trim();
+      const report = await this.solanaKit.fetchTokenReportSummary(mint);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Token report summary fetched successfully",
+        report,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TOKEN_REPORT_SUMMARY_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaFetchTokenDetailedReportTool extends Tool {
+  name = "solana_fetch_token_detailed_report";
+  description = `Fetches a detailed report for a specific token from RugCheck.
+  Inputs:
+  - mint: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" (required).`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const mint = input.trim();
+      const detailedReport =
+        await this.solanaKit.fetchTokenDetailedReport(mint);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Detailed token report fetched successfully",
+        report: detailedReport,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "FETCH_TOKEN_DETAILED_REPORT_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
+    new SolanaBalanceOtherTool(solanaKit),
     new SolanaTransferTool(solanaKit),
     new SolanaDeployTokenTool(solanaKit),
     new SolanaDeployCollectionTool(solanaKit),
@@ -996,8 +2267,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaLendAssetTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),
     new SolanaStakeTool(solanaKit),
+    new SolanaRestakeTool(solanaKit),
     new SolanaFetchPriceTool(solanaKit),
-    new SolanaResolveDomainTool(solanaKit),
     new SolanaGetDomainTool(solanaKit),
     new SolanaTokenDataTool(solanaKit),
     new SolanaTokenDataByTickerTool(solanaKit),
@@ -1006,6 +2277,34 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaRaydiumCreateClmm(solanaKit),
     new SolanaRaydiumCreateCpmm(solanaKit),
     new SolanaOpenbookCreateMarket(solanaKit),
-    new SolanaCreateSingleSidedWhirlpoolTool(solanaKit),
+    new SolanaManifestCreateMarket(solanaKit),
+    new SolanaLimitOrderTool(solanaKit),
+    new SolanaBatchOrderTool(solanaKit),
+    new SolanaCancelAllOrdersTool(solanaKit),
+    new SolanaWithdrawAllTool(solanaKit),
+    new SolanaClosePosition(solanaKit),
+    new SolanaOrcaCreateCLMM(solanaKit),
+    new SolanaOrcaCreateSingleSideLiquidityPool(solanaKit),
+    new SolanaOrcaFetchPositions(solanaKit),
+    new SolanaOrcaOpenCenteredPosition(solanaKit),
+    new SolanaOrcaOpenSingleSidedPosition(solanaKit),
+    new SolanaPythFetchPrice(solanaKit),
+    new SolanaResolveDomainTool(solanaKit),
+    new SolanaGetOwnedDomains(solanaKit),
+    new SolanaGetOwnedTldDomains(solanaKit),
+    new SolanaGetAllTlds(solanaKit),
+    new SolanaGetMainDomain(solanaKit),
+    new SolanaResolveAllDomainsTool(solanaKit),
+    new SolanaCreateGibworkTask(solanaKit),
+    new SolanaRockPaperScissorsTool(solanaKit),
+    new SolanaTipLinkTool(solanaKit),
+    new SolanaListNFTForSaleTool(solanaKit),
+    new SolanaCancelNFTListingTool(solanaKit),
+    new SolanaFetchTokenReportSummaryTool(solanaKit),
+    new SolanaFetchTokenDetailedReportTool(solanaKit),
+    new SolanaPerpOpenTradeTool(solanaKit),
+    new SolanaPerpCloseTradeTool(solanaKit),
+    new SolanaFlashOpenTrade(solanaKit),
+    new SolanaFlashCloseTrade(solanaKit),
   ];
 }

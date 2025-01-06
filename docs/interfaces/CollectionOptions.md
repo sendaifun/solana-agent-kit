@@ -1,4 +1,4 @@
-[**solana-agent-kit v1.2.0**](../README.md)
+[**solana-agent-kit v1.3.7**](../README.md)
 
 ***
 
@@ -6,15 +6,15 @@
 
 # Interface: CollectionOptions
 
+Defined in: [types/index.ts:16](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L16)
+
 ## Properties
 
 ### name
 
 > **name**: `string`
 
-#### Defined in
-
-[types/index.ts:9](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L9)
+Defined in: [types/index.ts:17](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L17)
 
 ***
 
@@ -22,9 +22,7 @@
 
 > **uri**: `string`
 
-#### Defined in
-
-[types/index.ts:10](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L10)
+Defined in: [types/index.ts:18](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L18)
 
 ***
 
@@ -32,9 +30,7 @@
 
 > `optional` **royaltyBasisPoints**: `number`
 
-#### Defined in
-
-[types/index.ts:11](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L11)
+Defined in: [types/index.ts:19](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L19)
 
 ***
 
@@ -42,6 +38,4 @@
 
 > `optional` **creators**: [`Creator`](Creator.md)[]
 
-#### Defined in
-
-[types/index.ts:12](https://github.com/thearyanag/solana-agent-kit/blob/c88d8d8c341dc6e1d1c45e94402cf4241851da80/src/types/index.ts#L12)
+Defined in: [types/index.ts:20](https://github.com/scriptscrypt/solana-agent-kit/blob/28121611ae2e5ee3f891044cd4631bfb441231fc/src/types/index.ts#L20)
