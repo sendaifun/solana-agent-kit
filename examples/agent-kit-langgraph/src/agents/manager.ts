@@ -1,23 +1,12 @@
-import { prompt, parser } from "../prompts/manager";
-import { RunnableSequence } from "@langchain/core/runnables";
-import { solanaAgentState } from "../utils/state";
-import { gpt4o } from "../utils/model";
-
-const chain = RunnableSequence.from([prompt, gpt4o, parser]);
-
-export const managerNode = async (state: typeof solanaAgentState.State) => {
-  const { messages } = state;
-
-  const result = await chain.invoke({
-    formatInstructions: parser.getFormatInstructions(),
-    messages: messages,
-  });
-
-  const { isSolanaReadQuery, isSolanaWriteQuery, isGeneralQuery } = result;
-
-  return {
-    isSolanaReadQuery,
-    isSolanaWriteQuery,
-    isGeneralQuery,
-  };
+import { analyzePortfolio } from "./analyzerAgent";
+import { optimizePortfolio } from "./optimizerAgent";
+import { executeTrades } from "./executorAgent";
+export const managePortfolio = async (
+    portfolio: { name: string; balance: number }[],
+    solanaClient: { executeTrade: (trade: { action: string; token: string; amount: number }) => Promise<any> }
+) => {
+    const analysis = await analyzePortfolio(portfolio);
+    const trades = await optimizePortfolio(analysis);
+    const result = await executeTrades(trades, solanaClient);
+    return result;
 };

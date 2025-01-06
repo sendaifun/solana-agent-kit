@@ -9,3 +9,4 @@ package-lock.json
 # Build output
 dist/
 build/
+.codegpt
