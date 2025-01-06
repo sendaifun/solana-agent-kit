@@ -62,6 +62,8 @@ import {
   fetchPythPriceFeedID,
   swapFluxBeam,
   createPoolFluxBeam,
+  flashOpenTrade,
+  flashCloseTrade,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -72,6 +74,8 @@ import {
   PumpfunLaunchResponse,
   PumpFunTokenOptions,
   OrderParams,
+  FlashTradeParams,
+  FlashCloseTradeParams,
 } from "../types";
 
 /**
@@ -566,5 +570,22 @@ export class SolanaAgentKit {
       token_b,
       token_b_amount,
     );
+  }
+  /**
+   * Opens a new trading position on Flash.Trade
+   * @param params Flash trade parameters including market, side, collateral, leverage, and pool name
+   * @returns Transaction signature
+   */
+  async flashOpenTrade(params: FlashTradeParams): Promise<string> {
+    return flashOpenTrade(this, params);
+  }
+
+  /**
+   * Closes an existing trading position on Flash.Trade
+   * @param params Flash trade close parameters
+   * @returns Transaction signature
+   */
+  async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
+    return flashCloseTrade(this, params);
   }
 }

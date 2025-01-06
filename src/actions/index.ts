@@ -30,6 +30,8 @@ import launchPumpfunTokenAction from "./launchPumpfunToken";
 import getWalletAddressAction from "./getWalletAddress";
 import fluxbeamCreatePoolAction from "./fluxbeamCreatePool";
 import fluxbeamSwapAction from "./fluxbeamSwapAction";
+import flashOpenTradeAction from "./flashOpenTrade";
+import flashCloseTradeAction from "./flashCloseTrade";
 
 export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -65,6 +67,8 @@ export const ACTIONS = {
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLUXBEAM_CREATE_POOL_ACTION: fluxbeamCreatePoolAction,
   FLUXBEAM_SWAP_ACTION: fluxbeamSwapAction,
+  FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
+  FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
