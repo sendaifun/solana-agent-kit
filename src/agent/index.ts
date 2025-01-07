@@ -56,6 +56,7 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  closeEmptyTokenAccounts,
   fetchTokenReportSummary,
   fetchTokenDetailedReport,
   fetchPythPrice,
@@ -545,6 +546,13 @@ export class SolanaAgentKit {
 
   async tensorCancelListing(nftMint: PublicKey): Promise<string> {
     return cancelListing(this, nftMint);
+  }
+
+  async closeEmptyTokenAccounts(): Promise<{
+    signature: string;
+    size: number;
+  }> {
+    return closeEmptyTokenAccounts(this);
   }
 
   async fetchTokenReportSummary(mint: string): Promise<TokenCheck> {

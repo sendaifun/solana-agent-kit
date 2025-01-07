@@ -4,7 +4,6 @@
 
 ![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
 
-
 ![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/sendaifun/solana-agent-kit?style=for-the-badge)
@@ -22,7 +21,6 @@ An open-source toolkit for connecting AI agents to Solana protocols. Now, any ag
 - And more...
 
 Anyone - whether an SF-based AI researcher or a crypto-native builder - can bring their AI agents trained with any model and seamlessly integrate with Solana.
-
 
 [![Run on Repl.it](https://replit.com/badge/github/sendaifun/solana-agent-kit)](https://replit.com/@sendaifun/Solana-Agent-Kit)
 > Replit template created by [Arpit Singh](https://github.com/The-x-35)
@@ -301,6 +299,13 @@ const signature = await agent.closePerpTradeLong({
 });
 ```
 
+### Close Empty Token Accounts
+
+``` typescript
+
+const { signature } = await agent.closeEmptyTokenAccounts();
+```
+
 ## Examples
 
 ### LangGraph Multi-Agent System
@@ -340,7 +345,6 @@ Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to co
 <a href="https://github.com/sendaifun/solana-agent-kit/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=sendaifun/solana-agent-kit" />
 </a>
-
 
 ## Star History
 
