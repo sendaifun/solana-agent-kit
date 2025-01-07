@@ -1,0 +1,209 @@
+---
+title: 'Launch Token on Pump.fun'
+description: 'Learn how to launch tokens on Pump.fun with custom metadata and liquidity'
+---
+
+# Launch Token on Pump.fun
+
+Create and launch tokens on Pump.fun with customizable metadata, social links, and initial liquidity pool settings.
+
+## Usage
+
+```typescript
+const result = await agent.launchPumpFunToken(
+  "Sample Token",             // Token name
+  "SMPL",                    // Token ticker
+  "A sample token",          // Description
+  "https://example.com/img", // Image URL
+  {
+    twitter: "@sampletoken",
+    telegram: "t.me/sampletoken",
+    website: "https://sampletoken.com",
+    initialLiquiditySOL: 0.1,
+    slippageBps: 10,
+    priorityFee: 0.0001
+  }
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| tokenName | string | Yes | Name of the token (max 32 chars) |
+| tokenTicker | string | Yes | Token symbol (2-10 chars) |
+| description | string | Yes | Token description |
+| imageUrl | string | Yes | URL of token image |
+| options.twitter | string | No | Twitter handle |
+| options.telegram | string | No | Telegram group link |
+| options.website | string | No | Website URL |
+| options.initialLiquiditySOL | number | No | Initial liquidity (min 0.0001) |
+| options.slippageBps | number | No | Slippage tolerance (default: 5) |
+| options.priorityFee | number | No | Priority fee (default: 0.00005) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Launch a new meme token called 'Rocket Dog' with the RDOG ticker"
+
+"Create a token on Pump.fun with 0.1 SOL initial liquidity"
+
+"Deploy a new token with Twitter and Telegram links"
+
+"Launch token with custom image and description on Pump.fun"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic token launch
+{
+  "tokenName": "Rocket Dog",
+  "tokenTicker": "RDOG",
+  "description": "To the moon with man's best friend!",
+  "imageUrl": "https://example.com/rdog.png"
+}
+
+// Advanced launch with socials and liquidity
+{
+  "tokenName": "Sample Token",
+  "tokenTicker": "SMPL",
+  "description": "A sample token for demonstration",
+  "imageUrl": "https://example.com/token.png",
+  "twitter": "@sampletoken",
+  "telegram": "t.me/sampletoken",
+  "website": "https://sampletoken.com",
+  "initialLiquiditySOL": 0.1
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+async function launchToken(agent: SolanaAgentKit) {
+  try {
+    const result = await agent.launchPumpFunToken(
+      "Rocket Dog",
+      "RDOG",
+      "The fastest dog-themed token on Solana!",
+      "https://example.com/rdog.png",
+      {
+        twitter: "@rocketdogtoken",
+        telegram: "t.me/rocketdog",
+        website: "https://rocketdog.io",
+        initialLiquiditySOL: 0.1,
+        slippageBps: 10
+      }
+    );
+
+    console.log("Token launched:", {
+      mint: result.mint,
+      metadata: result.metadataUri,
+      tx: result.signature
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Token launch failed:", error);
+    throw error;
+  }
+}
+```
+
+## Response Format
+
+```typescript
+// Successful response
+{
+  status: "success",
+  signature: "2ZE7Rz...",
+  mint: "7nxQB...",
+  metadataUri: "https://arweave.net/...",
+  message: "Successfully launched token on Pump.fun"
+}
+
+// Error response
+{
+  status: "error",
+  message: "Error message here",
+  code: "ERROR_CODE"
+}
+```
+
+## Implementation Details
+
+- Uploads metadata to IPFS
+- Creates token mint account
+- Initializes liquidity pool
+- Configures trading parameters
+- Handles token metadata
+- Manages social links
+
+## Error Handling
+
+```typescript
+try {
+  const result = await agent.launchPumpFunToken(...);
+} catch (error) {
+  if (error.message.includes("metadata upload")) {
+    // Handle metadata issues
+  } else if (error.message.includes("liquidity")) {
+    // Handle liquidity issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Token Setup**
+   - Use clear, unique names
+   - Prepare high-quality images
+   - Write compelling descriptions
+   - Verify social links
+
+2. **Liquidity Management**
+   - Set appropriate initial liquidity
+   - Consider trading volume
+   - Monitor pool health
+   - Plan liquidity strategy
+
+3. **Transaction Handling**
+   - Use appropriate priority fees
+   - Set realistic slippage
+   - Monitor transaction status
+   - Handle timeouts properly
+
+4. **Metadata Management**
+   - Use permanent image storage
+   - Format descriptions properly
+   - Include all social links
+   - Verify metadata accuracy
+
+## Common Issues
+
+1. **Image Upload**
+   - Invalid image format
+   - File too large
+   - Temporary URLs
+   - Missing content type
+
+2. **Transaction Failures**
+   - Insufficient SOL
+   - Network congestion
+   - Invalid parameters
+   - RPC timeouts
+
+3. **Metadata Issues**
+   - Invalid social links
+   - Description too long
+   - Missing required fields
+   - Format errors
+
+## Related Functions
+
+- `getBalance`: Check SOL balance
+- `fetchMetadata`: Get token metadata
+- `trade`: Swap tokens
+- `getTokenData`: Get token information

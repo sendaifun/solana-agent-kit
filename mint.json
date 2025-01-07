@@ -28,10 +28,7 @@
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": [
-        "v0/introduction",
-        "v0/quickstart"
-      ]
+      "pages": ["v0/introduction", "v0/quickstart"]
     },
     {
       "group": "Guides",
@@ -44,32 +41,45 @@
     },
     {
       "group": "Features",
-      "pages": [{
-        "group": "Token Operations",
-        "pages": [
-          "v0/features/token-operations/transfer_assets",
-          "v0/features/token-operations/stake_sol",
-          "v0/features/token-operations/deploy_spl_metaplex",
-          "v0/features/token-operations/balance_check",
-          "v0/features/token-operations/compressed_airdrop"
-        ]
-      },
-      {
-        "group": "NFT Management",
-        "pages": [
-          "v0/features/nft-management/deploy_collection",
-          "v0/features/nft-management/mint_nft"
-        ]
-      },
-        "v0/features/adrena"
+      "pages": [
+        {
+          "group": "Token Operations",
+          "pages": [
+            "v0/features/token-operations/transfer_assets",
+            "v0/features/token-operations/stake_sol",
+            "v0/features/token-operations/deploy_spl_metaplex",
+            "v0/features/token-operations/balance_check",
+            "v0/features/token-operations/compressed_airdrop"
+          ]
+        },
+        {
+          "group": "NFT Management",
+          "pages": [
+            "v0/features/nft-management/deploy_collection",
+            "v0/features/nft-management/mint_nft"
+          ]
+        },
+        {
+          "group": "Defi Integrations",
+          "pages": [
+            "v0/features/defi-integration/jupiter_exchange_swaps",
+            "v0/features/defi-integration/launch_pumpfun",
+            "v0/features/defi-integration/raydium_pools",
+            "v0/features/defi-integration/orca_whirlpool",
+            "v0/features/defi-integration/manifest_market",
+            "v0/features/defi-integration/openbook_market",
+            "v0/features/defi-integration/sns",
+            "v0/features/defi-integration/pyth",
+            "v0/features/defi-integration/alldomains",
+            "v0/features/defi-integration/adrena"
+          ]
+        }
       ]
     },
     {
       "group": "Classes",
       "icon": "cube",
-      "pages": [
-        "v0/classes/SolanaAgentKit"
-      ]
+      "pages": ["v0/classes/SolanaAgentKit"]
     },
     {
       "group": "Functions",

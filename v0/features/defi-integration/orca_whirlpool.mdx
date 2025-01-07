@@ -1,0 +1,235 @@
+---
+title: 'Orca Whirlpool Integration'
+description: 'Learn how to interact with Orca Whirlpools for concentrated liquidity'
+---
+
+# Orca Whirlpool Integration
+
+Interact with Orca's Whirlpool protocol for concentrated liquidity positions. Manage positions, provide liquidity, and create pools with customizable price ranges.
+
+## Core Features
+
+1. Position Management
+   - Create centered positions
+   - Create single-sided positions
+   - Close positions
+   - Fetch position data
+
+2. Liquidity Provision
+   - Symmetric ranges
+   - Custom price ranges
+   - Single-token deposits
+   - Multiple fee tiers
+
+## Usage
+
+### Create Centered Position
+
+```typescript
+const result = await agent.orcaOpenCenteredPositionWithLiquidity(
+  new PublicKey("whirlpool-address"),
+  500,                 // 5% range (±2.5%)
+  new PublicKey("token-mint"),
+  new Decimal(100)     // Amount to deposit
+);
+```
+
+### Create Single-Sided Position
+
+```typescript
+const result = await agent.orcaOpenSingleSidedPosition(
+  new PublicKey("whirlpool-address"),
+  250,                 // 2.5% from current price
+  500,                 // 5% width
+  new PublicKey("token-mint"),
+  new Decimal(100)     // Amount to deposit
+);
+```
+
+### Close Position
+
+```typescript
+const signature = await agent.orcaClosePosition(
+  new PublicKey("position-mint-address")
+);
+```
+
+### Fetch Positions
+
+```typescript
+const positions = await agent.orcaFetchPositions();
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a centered liquidity position with 5% range in SOL/USDC pool"
+
+"Open a single-sided USDC position 2.5% above current price"
+
+"Close my whirlpool position"
+
+"Check all my active liquidity positions"
+```
+
+### LangChain Tool Prompts
+
+#### Centered Position
+```text
+{
+  "whirlpoolAddress": "whirlpool_address",
+  "priceOffsetBps": 500,
+  "inputTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "inputAmount": 1000
+}
+```
+
+#### Single-Sided Position
+```text
+{
+  "whirlpoolAddress": "whirlpool_address",
+  "distanceFromCurrentPriceBps": 250,
+  "widthBps": 500,
+  "inputTokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "inputAmount": 1000
+}
+```
+
+## Fee Tiers
+
+```typescript
+const FEE_TIERS = {
+  1: 1,    // 0.01% fee
+  2: 2,    // 0.02% fee
+  4: 4,    // 0.04% fee
+  5: 8,    // 0.05% fee
+  16: 16,  // 0.16% fee
+  30: 64,  // 0.30% fee
+  65: 96,  // 0.65% fee
+  100: 128 // 1.00% fee
+};
+```
+
+## Implementation Details
+
+### Centered Position
+```typescript
+interface CenteredPositionParams {
+  whirlpoolAddress: PublicKey;     // Pool address
+  priceOffsetBps: number;          // Range width (one side)
+  inputTokenMint: PublicKey;       // Deposit token
+  inputAmount: Decimal;            // Amount to deposit
+}
+
+// Features
+- Symmetric ranges around current price
+- Automatic price calculation
+- Slippage protection (1%)
+- Token extension support
+```
+
+### Single-Sided Position
+```typescript
+interface SingleSidedParams {
+  whirlpoolAddress: PublicKey;     // Pool address
+  distanceFromCurrentPriceBps: number; // Starting point
+  widthBps: number;                // Range width
+  inputTokenMint: PublicKey;       // Deposit token
+  inputAmount: Decimal;            // Amount to deposit
+}
+
+// Features
+- Custom price ranges
+- Direction detection
+- Tick initialization
+- Automatic calculations
+```
+
+### Position Data
+```typescript
+interface PositionInfo {
+  whirlpoolAddress: string;
+  positionInRange: boolean;
+  distanceFromCenterBps: number;
+}
+
+// Available data
+- Pool identification
+- Range status
+- Price metrics
+```
+
+## Error Handling
+
+```typescript
+try {
+  const position = await agent.orcaOpenCenteredPositionWithLiquidity(...);
+} catch (error) {
+  if (error.message.includes("slippage")) {
+    // Handle price movement
+  } else if (error.message.includes("liquidity")) {
+    // Handle liquidity issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Position Creation**
+   - Monitor price ranges
+   - Consider fee tiers
+   - Verify token amounts
+   - Check slippage
+
+2. **Range Selection**
+   - Analyze volatility
+   - Consider trading volume
+   - Monitor price trends
+   - Balance risk/reward
+
+3. **Position Management**
+   - Monitor in-range status
+   - Track fee earnings
+   - Rebalance when needed
+   - Plan exit strategy
+
+4. **Performance**
+   - Use price oracles
+   - Batch transactions
+   - Monitor gas costs
+   - Handle timeouts
+
+## Common Issues
+
+1. **Price Range**
+   - Out of bounds
+   - Too narrow
+   - Asymmetric ranges
+   - Price movement
+
+2. **Liquidity**
+   - Insufficient funds
+   - Unbalanced tokens
+   - High slippage
+   - Pool constraints
+
+3. **Technical**
+   - Invalid addresses
+   - Tick spacing
+   - Transaction failure
+   - RPC errors
+
+## Common Token Addresses
+
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- SOL: `So11111111111111111111111111111111111111112`
+- ORCA: `orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+
+## Related Functions
+
+- `orcaFetchPositions`: Get position data
+- `orcaClosePosition`: Close positions
+- `getBalance`: Check token balances
+- `getTokenData`: Get token information

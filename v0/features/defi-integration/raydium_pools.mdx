@@ -1,0 +1,243 @@
+---
+title: 'Raydium Pool Creation'
+description: 'Create liquidity pools on Raydium using AMM V4, CLMM, and CPMM'
+---
+
+# Raydium Pool Creation
+
+Create and manage different types of liquidity pools on Raydium, including AMM V4 (Legacy), Concentrated Liquidity (CLMM), and Constant Product (CPMM) pools.
+
+## Pool Types
+
+### 1. AMM V4 (Legacy)
+- Requires OpenBook marketID
+- Traditional AMM model
+- Supports standard SPL tokens
+
+### 2. CLMM (Concentrated Liquidity)
+- Custom liquidity ranges
+- Increased capital efficiency
+- Supports price range specification
+
+### 3. CPMM (Constant Product)
+- Newest pool type
+- Supports Token-2022 standard
+- No OpenBook market requirement
+
+## Usage
+
+### AMM V4
+```typescript
+const signature = await agent.raydiumCreateAmmV4(
+  new PublicKey("market-id"),
+  new BN(baseAmount),
+  new BN(quoteAmount),
+  new BN(startTime)
+);
+```
+
+### CLMM
+```typescript
+const signature = await agent.raydiumCreateClmm(
+  new PublicKey("mint1"),
+  new PublicKey("mint2"),
+  new PublicKey("config-id"),
+  new Decimal(initialPrice),
+  new BN(startTime)
+);
+```
+
+### CPMM
+```typescript
+const signature = await agent.raydiumCreateCpmm(
+  new PublicKey("mint1"),
+  new PublicKey("mint2"),
+  new PublicKey("config-id"),
+  new BN(mintAAmount),
+  new BN(mintBAmount),
+  new BN(startTime)
+);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a Raydium CPMM pool for USDC/SOL pair"
+
+"Setup concentrated liquidity pool with custom ranges"
+
+"Launch AMM V4 pool with OpenBook market integration"
+
+"Initialize CLMM pool with specific initial price"
+```
+
+### LangChain Tool Prompts
+
+#### AMM V4
+```text
+{
+  "marketId": "9xQFzA...",
+  "baseAmount": "1000000000",
+  "quoteAmount": "1000000000",
+  "startTime": "0"
+}
+```
+
+#### CLMM
+```text
+{
+  "mint1": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "mint2": "So11111111111111111111111111111111111111112",
+  "configId": "6VxuT...",
+  "initialPrice": "24.5",
+  "startTime": "0"
+}
+```
+
+#### CPMM
+```text
+{
+  "mint1": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "mint2": "So11111111111111111111111111111111111111112",
+  "configId": "5VxuT...",
+  "mintAAmount": "1000000000",
+  "mintBAmount": "1000000000",
+  "startTime": "0"
+}
+```
+
+## Pool-Specific Details
+
+### AMM V4
+```typescript
+// Parameters
+interface AmmV4Params {
+  marketId: PublicKey;      // OpenBook market ID
+  baseAmount: BN;          // Initial base token amount
+  quoteAmount: BN;         // Initial quote token amount
+  startTime: BN;          // Pool start time
+}
+
+// Constraints
+- Requires OpenBook market
+- Only supports TOKEN_PROGRAM_ID mints
+- Minimum liquidity requirements
+```
+
+### CLMM
+```typescript
+// Parameters
+interface ClmmParams {
+  mint1: PublicKey;        // First token mint
+  mint2: PublicKey;        // Second token mint
+  configId: PublicKey;     // Configuration ID
+  initialPrice: Decimal;   // Initial pool price
+  startTime: BN;          // Pool start time
+}
+
+// Configuration includes
+- Pool info
+- Index
+- Protocol fee rate
+- Trade fee rate
+- Tick spacing
+- Fund fee rate
+```
+
+### CPMM
+```typescript
+// Parameters
+interface CpmmParams {
+  mint1: PublicKey;        // First token mint
+  mint2: PublicKey;        // Second token mint
+  configId: PublicKey;     // Configuration ID
+  mintAAmount: BN;         // Initial amount of token A
+  mintBAmount: BN;         // Initial amount of token B
+  startTime: BN;          // Pool start time
+}
+
+// Features
+- Supports Token-2022
+- No market ID required
+- Configurable fees
+```
+
+## Implementation Details
+
+### Common Features
+- Automatic mint verification
+- Decimal handling
+- Fee configuration
+- Transaction versioning
+
+### Pool-Specific Features
+- AMM V4: OpenBook integration
+- CLMM: Tick range management
+- CPMM: Token-2022 support
+
+## Error Handling
+
+```typescript
+try {
+  const pool = await agent.raydiumCreate[PoolType](...);
+} catch (error) {
+  if (error.message.includes("insufficient liquidity")) {
+    // Handle liquidity issues
+  } else if (error.message.includes("invalid market")) {
+    // Handle market validation issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Pool Type Selection**
+   - Use CPMM for Token-2022
+   - Use CLMM for efficient ranges
+   - Use AMM V4 for OpenBook integration
+
+2. **Initial Liquidity**
+   - Calculate appropriate amounts
+   - Consider token decimals
+   - Monitor price impact
+   - Verify token balances
+
+3. **Configuration**
+   - Set appropriate fees
+   - Choose tick spacing
+   - Plan start time
+   - Consider trading volume
+
+4. **Security**
+   - Validate all addresses
+   - Check token programs
+   - Verify configurations
+   - Monitor transactions
+
+## Common Issues
+
+1. **Setup Issues**
+   - Invalid market ID
+   - Insufficient liquidity
+   - Wrong token program
+   - Incorrect decimals
+
+2. **Transaction Failures**
+   - Network congestion
+   - Invalid parameters
+   - Configuration errors
+   - Insufficient funds
+
+3. **Permission Issues**
+   - Missing approvals
+   - Wrong signers
+   - Invalid authority
+   - Program restrictions
+
+## Common Token Addresses
+
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- SOL: `So11111111111111111111111111111111111111112`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- RAY: `4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R`

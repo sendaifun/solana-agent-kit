@@ -1,0 +1,245 @@
+---
+title: '.SOL Domain Services'
+description: 'Register and manage .SOL domains using Bonfida Name Service'
+---
+
+# .SOL Domain Services
+
+Register, resolve, and manage .SOL domains using the Solana Name Service (SNS) through Bonfida. Includes domain registration, resolution, and management functionality.
+
+## Core Features
+
+1. Domain Management
+   - Register new domains
+   - Resolve domains to addresses
+   - Get primary domains
+   - List registered domains
+
+2. Domain Operations
+   - Custom space allocation
+   - Domain resolution
+   - Multi-TLD support
+   - Primary domain lookup
+
+## Usage
+
+### Register Domain
+
+```typescript
+const signature = await agent.registerDomain(
+  "mydomain",     // Domain name (without .sol)
+  1               // Space in KB (optional)
+);
+```
+
+### Resolve Domain
+
+```typescript
+const address = await agent.resolveSolDomain("mydomain.sol");
+console.log("Owner:", address.toString());
+```
+
+### Get Primary Domain
+
+```typescript
+const domain = await agent.getPrimaryDomain(
+  new PublicKey("owner-address")
+);
+```
+
+### List All Domains
+
+```typescript
+const domains = await agent.getAllRegisteredAllDomains();
+console.log("Registered domains:", domains);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Register mydomain.sol with 2KB storage"
+
+"Look up the owner of vitalik.sol"
+
+"Get the primary domain for this wallet"
+
+"Find all registered .sol domains"
+```
+
+### LangChain Tool Prompts
+
+#### Register Domain
+```text
+{
+  "name": "mydomain",
+  "spaceKB": 2
+}
+```
+
+#### Resolve Domain
+```text
+{
+  "domain": "vitalik.sol"
+}
+```
+
+## Implementation Details
+
+### Domain Registration
+```typescript
+interface RegistrationParams {
+  name: string;      // Domain name
+  spaceKB?: number;  // Storage space (max 10KB)
+}
+
+// Features
+- Automatic USDC payment
+- Space validation
+- Transaction bundling
+- Associated token handling
+```
+
+### Domain Resolution
+```typescript
+interface ResolutionParams {
+  domain: string;    // Domain to resolve
+}
+
+// Features
+- .sol suffix handling
+- Error recovery
+- Stale check
+- Multi-TLD support
+```
+
+### Primary Domain
+```typescript
+interface PrimaryDomainResponse {
+  reverse: string;    // Domain name
+  stale: boolean;     // Staleness status
+}
+
+// Features
+- Staleness check
+- Error handling
+- Reverse lookup
+```
+
+## Error Handling
+
+```typescript
+try {
+  const result = await agent.registerDomain("mydomain");
+} catch (error) {
+  if (error.message.includes("Maximum domain size")) {
+    // Handle size limit exceeded
+  } else if (error.message.includes("insufficient funds")) {
+    // Handle payment issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Domain Registration**
+   - Choose appropriate space
+   - Verify domain availability
+   - Check USDC balance
+   - Plan for renewals
+
+2. **Domain Resolution**
+   - Handle missing domains
+   - Check staleness
+   - Implement caching
+   - Validate inputs
+
+3. **Domain Management**
+   - Monitor expiration
+   - Update records
+   - Backup settings
+   - Regular validation
+
+4. **Performance**
+   - Cache resolutions
+   - Batch operations
+   - Handle timeouts
+   - Monitor errors
+
+## Common Issues
+
+1. **Registration**
+   - Insufficient USDC
+   - Name taken
+   - Invalid characters
+   - Space limits
+
+2. **Resolution**
+   - Stale records
+   - Invalid domains
+   - Missing records
+   - Network issues
+
+3. **Management**
+   - Expired domains
+   - Update failures
+   - Permission issues
+   - Sync problems
+
+## Response Formats
+
+### Registration Response
+```typescript
+{
+  status: "success",
+  message: "Domain registered successfully",
+  transaction: "5UfgJ5vVZxUx...",
+  domain: "mydomain.sol",
+  spaceKB: 1
+}
+```
+
+### Resolution Response
+```typescript
+{
+  status: "success",
+  message: "Domain resolved successfully",
+  publicKey: "7nxQB..."
+}
+```
+
+## Space Allocation Guide
+
+| Use Case | Recommended Space |
+|----------|------------------|
+| Basic Domain | 1KB |
+| With Records | 2KB |
+| Full Profile | 5KB |
+| Maximum | 10KB |
+
+## Related Functions
+
+- `getBalance`: Check USDC balance
+- `transfer`: Transfer domains
+- `createAssociatedTokenAccount`: Setup USDC
+- `getAllDomainsTLDs`: List available TLDs
+
+## Notes
+
+1. **Registration Cost**
+   - Based on name length
+   - Space allocation fee
+   - USDC payment required
+   - Renewal considerations
+
+2. **Resolution Process**
+   - Caching recommended
+   - Handle timeouts
+   - Validate responses
+   - Multiple attempts
+
+3. **Management Tips**
+   - Regular validation
+   - Backup records
+   - Monitor expiration
+   - Update settings
