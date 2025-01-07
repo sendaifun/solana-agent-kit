@@ -56,6 +56,7 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  closeEmptyTokenAccounts,
   fetchTokenReportSummary,
   fetchTokenDetailedReport,
   fetchPythPrice,
@@ -75,6 +76,15 @@ import {
   FlashTradeParams,
   FlashCloseTradeParams,
 } from "../types";
+import {
+  createCollection,
+  createSingle,
+} from "../tools/create_3land_collectible";
+import {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+  StoreInitOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -538,6 +548,13 @@ export class SolanaAgentKit {
     return cancelListing(this, nftMint);
   }
 
+  async closeEmptyTokenAccounts(): Promise<{
+    signature: string;
+    size: number;
+  }> {
+    return closeEmptyTokenAccounts(this);
+  }
+
   async fetchTokenReportSummary(mint: string): Promise<TokenCheck> {
     return fetchTokenReportSummary(mint);
   }
@@ -562,5 +579,28 @@ export class SolanaAgentKit {
    */
   async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
     return flashCloseTrade(this, params);
+  }
+
+  async create3LandCollection(
+    optionsWithBase58: StoreInitOptions,
+    collectionOpts: CreateCollectionOptions,
+  ): Promise<string> {
+    const tx = await createCollection(optionsWithBase58, collectionOpts);
+    return `Transaction: ${tx}`;
+  }
+
+  async create3LandNft(
+    optionsWithBase58: StoreInitOptions,
+    collectionAccount: string,
+    createItemOptions: CreateSingleOptions,
+    isMainnet: boolean,
+  ): Promise<string> {
+    const tx = await createSingle(
+      optionsWithBase58,
+      collectionAccount,
+      createItemOptions,
+      isMainnet,
+    );
+    return `Transaction: ${tx}`;
   }
 }

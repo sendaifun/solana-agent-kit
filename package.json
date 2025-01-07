@@ -23,6 +23,7 @@
 	"author": "sendaifun",
 	"license": "Apache-2.0",
 	"dependencies": {
+		"@3land/listings-sdk": "^0.0.4",
 		"@ai-sdk/openai": "^1.0.11",
 		"@bonfida/spl-name-service": "^3.0.7",
 		"@cks-systems/manifest-sdk": "0.1.59",

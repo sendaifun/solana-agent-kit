@@ -1,0 +1,266 @@
+---
+title: '3Land NFT Integration'
+description: 'Create and manage NFT collections on 3.land'
+---
+
+# 3Land NFT Integration
+
+Create and manage NFT collections on 3.land platform using Solana Agent Kit. This integration enables collection creation, NFT minting, and listing management.
+
+## Core Features
+
+1. **Collection Management**
+   - Create collections
+   - Set collection metadata
+   - Configure royalties
+   - Manage listings
+
+2. **NFT Creation**
+   - Single edition minting
+   - Trait management
+   - Price configuration
+   - Multiple payment options
+
+## Collection Creation
+
+```typescript
+const collectionOpts: CreateCollectionOptions = {
+  collectionName: "My Collection",
+  collectionSymbol: "MYCOL",
+  collectionDescription: "A unique collection",
+  mainImageUrl: "https://example.com/image.png",
+  coverImageUrl: "https://example.com/cover.png" // Optional
+};
+
+const tx = await agent.create3LandCollection(
+  optionsWithBase58,
+  collectionOpts
+);
+```
+
+### Collection Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| collectionName | string | Yes | Collection name |
+| collectionSymbol | string | Yes | Collection symbol |
+| collectionDescription | string | Yes | Collection description |
+| mainImageUrl | string | Yes | Main collection image |
+| coverImageUrl | string | No | Cover image for collection |
+
+## NFT Creation
+
+```typescript
+const createItemOptions: CreateSingleOptions = {
+  itemName: "My NFT",
+  sellerFee: 500, // 5%
+  itemAmount: 100,
+  itemDescription: "Unique NFT",
+  traits: [
+    { trait_type: "Background", value: "Blue" }
+  ],
+  price: 100000000, // 0.1 SOL
+  mainImageUrl: "https://example.com/nft.png"
+};
+
+const tx = await agent.create3LandNft(
+  optionsWithBase58,
+  collectionAccount,
+  createItemOptions,
+  isMainnet
+);
+```
+
+### NFT Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| itemName | string | Yes | NFT name |
+| sellerFee | number | Yes | Royalty percentage (basis points) |
+| itemAmount | number | Yes | Edition size |
+| traits | Trait[] | Yes | NFT attributes |
+| price | number | Yes | Listing price |
+| mainImageUrl | string | Yes | NFT image URL |
+| splHash | string | No | SPL token for payment |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a new NFT collection called 'Awesome Art'"
+
+"Mint an NFT in my collection with 5% royalties"
+
+"List NFT for 0.1 SOL with traits"
+
+"Create collection with cover image"
+```
+
+### LangChain Tool Prompts
+
+#### Create Collection
+```text
+{
+  "privateKey": "your-private-key",
+  "isMainnet": false,
+  "collectionSymbol": "AWESOME",
+  "collectionName": "Awesome Art",
+  "collectionDescription": "A unique collection",
+  "mainImageUrl": "https://example.com/image.png"
+}
+```
+
+#### Create NFT
+```text
+{
+  "privateKey": "your-private-key",
+  "collectionAccount": "collection-address",
+  "itemName": "Awesome NFT #1",
+  "sellerFee": 500,
+  "itemAmount": 1,
+  "itemDescription": "Unique piece",
+  "traits": [
+    {"trait_type": "Background", "value": "Blue"}
+  ],
+  "price": 100000000,
+  "mainImageUrl": "https://example.com/nft.png",
+  "isMainnet": false
+}
+```
+
+## Implementation Details
+
+### Store Initialization
+```typescript
+interface StoreInitOptions {
+  privateKey: string;
+  isMainnet: boolean;
+}
+
+const store = {
+  mainnet: "AmQNs2kgw4LvS9sm6yE9JJ4Hs3JpVu65eyx9pxMG2xA",
+  devnet: "GyPCu89S63P9NcCQAtuSJesiefhhgpGWrNVJs4bF2cSK"
+};
+```
+
+### Trait Structure
+```typescript
+interface Trait {
+  trait_type: string;
+  value: string;
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const tx = await agent.create3LandNft(...);
+} catch (error) {
+  if (error.message.includes("Collection account")) {
+    // Handle missing collection
+  } else if (error.message.includes("Invalid price")) {
+    // Handle price issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Collection Setup**
+   - Plan collection structure
+   - Prepare metadata
+   - Configure royalties
+   - Test on devnet
+
+2. **NFT Creation**
+   - Use high-quality images
+   - Set appropriate prices
+   - Define clear traits
+   - Monitor transactions
+
+3. **Asset Management**
+   - Store images permanently
+   - Back up metadata
+   - Track transactions
+   - Monitor listings
+
+4. **Security**
+   - Secure private keys
+   - Validate inputs
+   - Check transactions
+   - Monitor permissions
+
+## Common Issues
+
+1. **Creation Failures**
+   - Invalid metadata
+   - Image issues
+   - Network errors
+   - Price formatting
+
+2. **Collection Management**
+   - Missing accounts
+   - Invalid permissions
+   - Configuration errors
+   - Metadata issues
+
+3. **Transaction Issues**
+   - Network congestion
+   - Invalid signatures
+   - Fee calculation
+   - Timeout errors
+
+## Response Format
+
+### Success Response
+```typescript
+{
+  status: "success",
+  message: "Created Collection successfully",
+  transaction: "transaction-signature"
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "Error message",
+  code: "ERROR_CODE"
+}
+```
+
+## Development Tips
+
+1. **Local Testing**
+   - Use devnet first
+   - Test all parameters
+   - Verify metadata
+   - Check transactions
+
+2. **Asset Preparation**
+   - Optimize images
+   - Format metadata
+   - Validate URLs
+   - Check sizes
+
+3. **Deployment**
+   - Verify network
+   - Check balances
+   - Monitor status
+   - Track listings
+
+## Related Functions
+
+- `getCollectionDetails`: Get collection info
+- `updateCollection`: Update collection
+- `getNftDetails`: Get NFT info
+- `updateNft`: Update NFT metadata
+
+## Resources
+
+- [3Land Documentation](https://docs.3.land)
+- [Solana NFT Standards](https://docs.metaplex.com)
+- [Asset Requirements](https://docs.3.land/assets)
+- [API Reference](https://docs.3.land/api)
