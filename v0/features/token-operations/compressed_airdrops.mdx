@@ -1,0 +1,188 @@
+---
+title: 'Compressed Token Airdrop'
+description: 'Learn how to perform efficient token airdrops using ZK Compression'
+---
+
+# Compressed Token Airdrop
+
+Send SPL tokens to multiple recipients efficiently using ZK Compression. This method significantly reduces costs and improves throughput compared to traditional airdrops.
+
+## Usage
+
+```typescript
+const signatures = await agent.sendCompressedAirdrop(
+  new PublicKey("token-mint-address"),  // Token mint
+  42,                                   // Amount per recipient
+  6,                                    // Token decimals
+  recipients,                           // Array of recipient addresses
+  30000,                               // Priority fee (optional)
+  true                                 // Show progress (optional)
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| mintAddress | PublicKey | Yes | Token mint address |
+| amount | number | Yes | Amount per recipient |
+| decimals | number | Yes | Token decimals |
+| recipients | PublicKey[] | Yes | Array of recipient addresses |
+| priorityFeeInLamports | number | No | Priority fee (default: 30000) |
+| shouldLog | boolean | No | Show progress (default: false) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Send 100 BONK tokens to these 50 wallets using compression"
+
+"Airdrop 42 Jupiter tokens to my community members with ZK compression"
+
+"Distribute 1000 tokens to every wallet in my allowlist using compressed airdrop"
+
+"Send compressed airdrop of 50 USDC to competition winners"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic compressed airdrop
+{
+  "mintAddress": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+  "amount": 42,
+  "decimals": 6,
+  "recipients": [
+    "1nc1nerator11111111111111111111111111111111",
+    "BrFndAe111111111111111111111111111111111"
+  ]
+}
+
+// Airdrop with custom priority fee and logging
+{
+  "mintAddress": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "amount": 1000,
+  "decimals": 5,
+  "recipients": ["wallet1", "wallet2", "wallet3"],
+  "priorityFeeInLamports": 50000,
+  "shouldLog": true
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function airdropTokens(agent: SolanaAgentKit) {
+  // Prepare recipient list
+  const recipients = [
+    new PublicKey("recipient1"),
+    new PublicKey("recipient2"),
+    // ... up to 1000 recipients
+  ];
+
+  // Estimate airdrop cost
+  const estimatedCost = getAirdropCostEstimate(recipients.length, 30000);
+  console.log(`Estimated cost: ${estimatedCost / 1e9} SOL`);
+
+  try {
+    const signatures = await agent.sendCompressedAirdrop(
+      new PublicKey("token-mint"),
+      100,        // 100 tokens per recipient
+      6,          // token decimals
+      recipients,
+      30000,      // priority fee
+      true        // show progress
+    );
+    
+    console.log("Airdrop complete:", signatures);
+  } catch (error) {
+    console.error("Airdrop failed:", error);
+  }
+}
+```
+
+## Implementation Details
+
+- Uses Light Protocol for ZK Compression
+- Batches recipients (5 per instruction)
+- Maximum 1000 recipients per call
+- Automatic retry logic for failures
+- Progress bar for monitoring
+- Requires Helius RPC or compatible endpoint
+
+## Cost Estimation
+
+```typescript
+const cost = getAirdropCostEstimate(
+  numberOfRecipients,
+  priorityFeeInLamports
+);
+```
+
+Cost components:
+- Base fee: 5000 lamports
+- Per-recipient compressed state fee: 300 lamports
+- Priority fee per transaction
+- Transactions needed = ceil(recipients / 15)
+
+## Error Handling
+
+```typescript
+try {
+  const signatures = await agent.sendCompressedAirdrop(...);
+} catch (error) {
+  if (error.message.includes("Max airdrop")) {
+    // Handle recipient limit exceeded
+  } else if (error.message.includes("RPC")) {
+    // Handle RPC issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Pre-airdrop Checks**
+   - Verify token balance
+   - Estimate costs
+   - Check RPC compatibility
+   - Validate recipient addresses
+
+2. **Optimization**
+   - Group recipients optimally
+   - Use appropriate priority fees
+   - Monitor network conditions
+   - Consider time of day
+
+3. **Error Management**
+   - Implement proper error handling
+   - Log failed transactions
+   - Plan for retries
+   - Monitor progress
+
+4. **Cost Management**
+   - Calculate costs beforehand
+   - Account for network fees
+   - Consider priority fee levels
+   - Monitor transaction success
+
+## Limitations
+
+- Maximum 1000 recipients per call
+- Requires compatible RPC (e.g., Helius)
+- Not available on devnet
+- Maximum 5 recipients per instruction
+
+## Common Token Addresses
+
+For reference, here are some common token addresses:
+- BONK: `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`
+- JUP: `JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN`
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+## Related Tools
+
+- `getBalance`: Check token balances
+- `transfer`: Single token transfers
+- `getAirdropCostEstimate`: Calculate airdrop costs

@@ -1,0 +1,175 @@
+---
+title: 'Deploy SPL Token'
+description: 'Learn how to deploy SPL tokens with Metaplex metadata'
+---
+
+# Deploy SPL Token
+
+Deploy fungible tokens on Solana with Metaplex metadata support. This guide covers token deployment with customizable parameters including name, symbol, decimals, and initial supply.
+
+## Usage
+
+```typescript
+const result = await agent.deployToken(
+  "My Token",          // name
+  "https://...",       // uri
+  "MTK",              // symbol
+  9,                  // decimals (optional)
+  1000000            // initialSupply (optional)
+);
+
+console.log("Token Mint Address:", result.mint.toString());
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --------- | ---- | -------- | ------- | ----------- |
+| name | string | Yes | - | The name of your token |
+| uri | string | Yes | - | Metadata URI containing token information |
+| symbol | string | Yes | - | Trading symbol for your token |
+| decimals | number | No | 9 | Number of decimal places |
+| initialSupply | number | No | undefined | Initial amount to mint |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Deploy a new token called 'Awesome Token' with symbol 'AWE'"
+
+"Create a fungible token with 6 decimals and initial supply of 1 million"
+
+"Deploy an SPL token named 'Gaming Credits' with metadata URI pointing to my JSON file"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic token deployment
+{
+  "name": "Awesome Token",
+  "symbol": "AWE",
+  "uri": "https://arweave.net/awesome-token.json"
+}
+
+// Token with custom decimals
+{
+  "name": "Gaming Credits",
+  "symbol": "GCRED",
+  "uri": "https://arweave.net/metadata.json",
+  "decimals": 6
+}
+
+// Token with initial supply
+{
+  "name": "Reward Points",
+  "symbol": "RWPT",
+  "uri": "https://arweave.net/reward-points.json",
+  "decimals": 9,
+  "initialSupply": 1000000
+}
+```
+
+The LangChain tool expects a JSON string input with these parameters. The tool will handle parsing and execute the deployment.
+
+## Example Implementation
+
+Here's a complete example showing token deployment with metadata:
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+async function deployGamingToken(agent: SolanaAgentKit) {
+  const tokenMetadata = {
+    name: "Gaming Credits",
+    symbol: "GCRED",
+    uri: "https://example.com/token-metadata.json",
+    decimals: 6,
+    initialSupply: 1_000_000
+  };
+
+  const result = await agent.deployToken(
+    tokenMetadata.name,
+    tokenMetadata.uri,
+    tokenMetadata.symbol,
+    tokenMetadata.decimals,
+    tokenMetadata.initialSupply
+  );
+
+  return result.mint.toString();
+}
+```
+
+## Metadata URI Format
+
+The metadata URI should point to a JSON file following this format:
+
+```json
+{
+  "name": "Gaming Credits",
+  "symbol": "GCRED",
+  "description": "In-game currency for gaming platform",
+  "image": "https://example.com/token-image.png",
+  "external_url": "https://example.com",
+  "attributes": []
+}
+```
+
+## LangChain Integration
+
+The toolkit provides a LangChain tool for token deployment:
+
+```typescript
+const deployTokenTool = new SolanaDeployTokenTool(agent);
+
+// Tool input format:
+const input = {
+  name: "My Token",
+  uri: "https://example.com/metadata.json",
+  symbol: "MTK",
+  decimals: 9,
+  initialSupply: 1000000
+};
+```
+
+## Implementation Details
+
+- Uses Metaplex's UMI for token creation
+- Supports fungible token standard
+- Creates token with zero seller fee basis points
+- Optional initial supply minting to deployer's wallet
+- Confirms transaction with 'finalized' commitment
+
+## Error Handling
+
+The function includes comprehensive error handling:
+
+```typescript
+try {
+  const result = await agent.deployToken(...);
+} catch (error) {
+  // Handle deployment failures
+  console.error("Token deployment failed:", error.message);
+}
+```
+
+## Best Practices
+
+1. **Metadata Preparation**
+   - Host metadata JSON before deployment
+   - Use permanent storage solutions (e.g., Arweave)
+   - Include all required metadata fields
+
+2. **Initial Supply**
+   - Consider token economics when setting supply
+   - Account for decimal places in calculations
+   - Can mint more later if needed
+
+3. **Symbol Selection**
+   - Use 2-5 characters
+   - Ensure uniqueness
+   - Uppercase letters recommended
+
+4. **Security Considerations**
+   - Secure private keys
+   - Validate all input parameters
+   - Use trusted RPC endpoints

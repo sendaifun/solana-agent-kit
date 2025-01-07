@@ -1,0 +1,154 @@
+---
+title: 'Stake SOL'
+description: 'Learn how to stake SOL using Jupiter Validator'
+---
+
+# Stake SOL
+
+Stake your SOL tokens with Jupiter validator to earn staking rewards. This creates liquid staking positions using jupSOL token.
+
+## Usage
+
+```typescript
+// Stake 1 SOL
+const signature = await agent.stake(1);
+
+// Stake 0.5 SOL
+const signature = await agent.stake(0.5);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Amount of SOL to stake |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Stake 1 SOL with Jupiter validator"
+
+"Create a liquid staking position with 2.5 SOL"
+
+"Stake half a SOL to earn rewards"
+
+"Convert my SOL to jupSOL by staking 5 SOL"
+```
+
+### LangChain Tool Prompts
+```text
+// Stake 1 SOL
+{
+  "amount": 1
+}
+
+// Stake 2.5 SOL
+{
+  "amount": 2.5
+}
+
+// Stake minimum amount
+{
+  "amount": 0.1
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+async function stakeSOL(agent: SolanaAgentKit) {
+  try {
+    // Stake 1 SOL
+    const signature = await agent.stake(1);
+    console.log("Staking successful:", signature);
+    
+    // You'll receive jupSOL tokens in return
+    const jupsolBalance = await agent.getBalance(
+      new PublicKey("jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v")
+    );
+    console.log("jupSOL balance:", jupsolBalance);
+  } catch (error) {
+    console.error("Staking failed:", error);
+  }
+}
+```
+
+## Implementation Details
+
+- Uses Jupiter's validator for staking
+- Converts SOL to jupSOL tokens
+- Automatically handles transaction versioning
+- Includes proper transaction confirmation
+- Provides liquid staking position
+
+## Response Format
+
+```typescript
+// Successful response
+{
+  status: "success",
+  message: "Staked successfully",
+  transaction: "4VfgJ5vVZxUxefDGqzqkVLHzHxVTyYH9StYyHKgvHYmXJgqJKxEqy9k4Rz9LpXrHF9kUZB7",
+  amount: 1
+}
+
+// Error response
+{
+  status: "error",
+  message: "Error message here",
+  code: "ERROR_CODE"
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.stake(amount);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient SOL balance
+  } else if (error.message.includes("slippage")) {
+    // Handle price movement
+  }
+}
+```
+
+## Best Practices
+
+1. **Balance Verification**
+   - Check SOL balance before staking
+   - Account for transaction fees
+   - Consider minimum stake amounts
+
+2. **Transaction Management**
+   - Monitor transaction status
+   - Implement proper error handling
+   - Use appropriate commitment levels
+
+3. **Security**
+   - Verify transaction details
+   - Double-check amounts
+   - Keep private keys secure
+
+4. **User Experience**
+   - Show transaction progress
+   - Display staking rewards
+   - Explain jupSOL conversion
+
+## Important Notes
+
+- Minimum staking amount: 0.1 SOL
+- jupSOL token address: `jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v`
+- Returns liquid staking token (jupSOL)
+- Staking rewards auto-compound
+- No unbonding period required
+
+## Related Functions
+
+- `getBalance`: Check SOL/jupSOL balances
+- `transfer`: Send SOL/jupSOL tokens
+- `trade`: Swap between SOL and jupSOL

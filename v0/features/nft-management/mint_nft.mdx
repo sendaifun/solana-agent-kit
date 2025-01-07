@@ -1,0 +1,210 @@
+---
+title: 'Mint NFT'
+description: 'Learn how to mint NFTs into collections on Solana'
+---
+
+# Mint NFT
+
+Mint new NFTs into existing collections on Solana. Support both self-minting and minting to specific recipients with custom metadata.
+
+## Usage
+
+```typescript
+// Mint to your own wallet
+const nft = await agent.mintNFT(
+  new PublicKey("collection-address"),
+  {
+    name: "My NFT",
+    uri: "https://arweave.net/nft.json"
+  }
+);
+
+// Mint to a recipient
+const nft = await agent.mintNFT(
+  new PublicKey("collection-address"),
+  {
+    name: "Gift NFT",
+    uri: "https://arweave.net/gift.json"
+  },
+  new PublicKey("recipient-address")
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| collectionMint | PublicKey | Yes | Collection address to mint into |
+| metadata.name | string | Yes | Name of the NFT |
+| metadata.uri | string | Yes | Metadata URI for the NFT |
+| recipient | PublicKey | No | Recipient address (defaults to minter) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Mint a new NFT called 'Awesome Art #1' in my collection"
+
+"Create NFT with metadata from arweave and send it to wallet address"
+
+"Mint NFT as a gift to recipient 9aUn5swQzUTRanaaTwmszxiv89cvFwUCjEBv1vZCoT1u"
+
+"Add new NFT to my collection with name 'Rare Item #42'"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic NFT mint to own wallet
+{
+  "collectionMint": "J1S9H3QjnRtBbbuD4HjPV6RpRhwuk4zKbxsnCHuTgh9w",
+  "name": "Awesome Art #1",
+  "uri": "https://arweave.net/nft.json"
+}
+
+// Mint NFT to specific recipient
+{
+  "collectionMint": "J1S9H3QjnRtBbbuD4HjPV6RpRhwuk4zKbxsnCHuTgh9w",
+  "name": "Gift NFT #1",
+  "uri": "https://arweave.net/gift.json",
+  "recipient": "9aUn5swQzUTRanaaTwmszxiv89cvFwUCjEBv1vZCoT1u"
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function mintCollectionNFTs(agent: SolanaAgentKit) {
+  // Collection address
+  const collection = new PublicKey("collection-address");
+  
+  // Mint to own wallet
+  const nft1 = await agent.mintNFT(
+    collection,
+    {
+      name: "My NFT #1",
+      uri: "https://arweave.net/nft1.json"
+    }
+  );
+  console.log("Minted NFT:", nft1.mint.toString());
+
+  // Mint to recipient
+  const recipient = new PublicKey("recipient-address");
+  const nft2 = await agent.mintNFT(
+    collection,
+    {
+      name: "Gift NFT #1",
+      uri: "https://arweave.net/nft2.json"
+    },
+    recipient
+  );
+  console.log("Minted gift NFT:", nft2.mint.toString());
+}
+```
+
+## Metadata Format
+
+Your NFT metadata URI should point to a JSON file with this structure:
+
+```json
+{
+  "name": "NFT Name",
+  "symbol": "SYMBOL",
+  "description": "NFT description",
+  "image": "https://arweave.net/nft-image.png",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Blue"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://arweave.net/nft-image.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}
+```
+
+## Implementation Details
+
+- Verifies collection membership
+- Handles metadata on-chain
+- Supports custom recipient addresses
+- Creates associated token accounts
+- Manages NFT minting authority
+
+## Error Handling
+
+```typescript
+try {
+  const nft = await agent.mintNFT(collection, metadata, recipient);
+} catch (error) {
+  if (error.message.includes("collection not found")) {
+    // Handle invalid collection
+  } else if (error.message.includes("metadata")) {
+    // Handle metadata issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Metadata Management**
+   - Use permanent storage (Arweave)
+   - Include high-quality images
+   - Validate metadata format
+   - Follow collection standards
+
+2. **Collection Verification**
+   - Verify collection existence
+   - Check minting authority
+   - Validate collection standards
+   - Monitor supply limits
+
+3. **Recipient Management**
+   - Validate recipient addresses
+   - Create token accounts
+   - Handle transfer failures
+   - Confirm receipt
+
+4. **Technical Considerations**
+   - Monitor network status
+   - Handle rate limits
+   - Implement retries
+   - Log transactions
+
+## Response Format
+
+```typescript
+// Successful response
+{
+  status: "success",
+  message: "NFT minted successfully",
+  mintAddress: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+  metadata: {
+    name: "My NFT",
+    uri: "https://arweave.net/nft.json"
+  },
+  recipient: "recipient-address"
+}
+
+// Error response
+{
+  status: "error",
+  message: "Error message here",
+  code: "ERROR_CODE"
+}
+```
+
+## Related Functions
+
+- `deployCollection`: Create new collections
+- `transfer`: Transfer NFTs
+- `getBalance`: Check NFT ownership
+- `fetchMetadata`: Get NFT metadata
