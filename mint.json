@@ -44,7 +44,23 @@
     },
     {
       "group": "Features",
-      "pages": [
+      "pages": [{
+        "group": "Token Operations",
+        "pages": [
+          "v0/features/token-operations/transfer_assets",
+          "v0/features/token-operations/stake_sol",
+          "v0/features/token-operations/deploy_spl_metaplex",
+          "v0/features/token-operations/balance_check",
+          "v0/features/token-operations/compressed_airdrop"
+        ]
+      },
+      {
+        "group": "NFT Management",
+        "pages": [
+          "v0/features/nft-management/deploy_collection",
+          "v0/features/nft-management/mint_nft"
+        ]
+      },
         "v0/features/adrena"
       ]
     },
