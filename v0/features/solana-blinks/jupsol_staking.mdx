@@ -1,0 +1,235 @@
+---
+title: 'Jupiter SOL Staking'
+description: 'Stake SOL tokens to receive jupSOL through Jupiter Protocol'
+---
+
+# Jupiter SOL Staking
+
+Stake SOL tokens to receive jupSOL through Jupiter's liquid staking protocol. Earn staking rewards while maintaining liquidity through the jupSOL token.
+
+## Core Features
+
+1. Staking Operations
+   - SOL to jupSOL conversion
+   - Liquid staking rewards
+   - Transaction verification
+   - Automatic rewards
+
+2. Key Benefits
+   - Liquid staking
+   - Automatic compounding
+   - No unbonding period
+   - Protocol security
+
+## Usage
+
+```typescript
+// Stake SOL and receive jupSOL
+const signature = await agent.stake(
+  1.5  // Amount of SOL to stake
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Amount of SOL to stake |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Stake 1 SOL for jupSOL"
+
+"Convert my SOL to jupSOL"
+
+"Stake 2.5 SOL with Jupiter"
+
+"Get jupSOL by staking 0.5 SOL"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic staking
+{
+  "amount": 1.5
+}
+
+// Minimum stake
+{
+  "amount": 0.1
+}
+```
+
+## Implementation Details
+
+### Staking Process
+```typescript
+interface StakeParams {
+  amount: number;     // SOL amount
+  account: string;    // Wallet address
+}
+
+// Features
+- Versioned transactions
+- Blockhash handling
+- Confirmation tracking
+- Retry logic
+```
+
+## Response Format
+
+```typescript
+// Success response
+{
+  status: "success",
+  signature: "5KtPn3...",
+  message: "Successfully staked 1.5 SOL for jupSOL"
+}
+
+// Error response
+{
+  status: "error",
+  message: "jupSOL staking failed: insufficient funds"
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.stake(amount);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("transaction")) {
+    // Handle transaction issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Staking Management**
+   - Verify SOL balance
+   - Consider fees
+   - Monitor transactions
+   - Track rewards
+
+2. **Transaction Handling**
+   - Monitor confirmations
+   - Implement retries
+   - Handle timeouts
+   - Verify success
+
+3. **Balance Management**
+   - Track SOL/jupSOL ratio
+   - Monitor rewards
+   - Consider fees
+   - Plan exits
+
+4. **Security**
+   - Verify transactions
+   - Check approvals
+   - Monitor positions
+   - Track changes
+
+## Common Issues
+
+1. **Staking**
+   - Insufficient SOL
+   - Network congestion
+   - Transaction failures
+   - Price impact
+
+2. **Transaction**
+   - Failed confirmations
+   - Timeout issues
+   - Network errors
+   - Version conflicts
+
+3. **Balance**
+   - Sync delays
+   - Fee calculation
+   - Reward tracking
+   - Rate updates
+
+## Technical Details
+
+### Token Addresses
+```typescript
+const SOL_MINT = "So11111111111111111111111111111111111111112";
+const JUPSOL_MINT = "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v";
+```
+
+### Transaction Flow
+
+1. **Preparation**
+```typescript
+const txn = VersionedTransaction.deserialize(
+  Buffer.from(data.transaction, "base64")
+);
+```
+
+2. **Signing**
+```typescript
+txn.message.recentBlockhash = blockhash;
+txn.sign([agent.wallet]);
+```
+
+3. **Confirmation**
+```typescript
+await connection.confirmTransaction({
+  signature,
+  blockhash,
+  lastValidBlockHeight
+});
+```
+
+## Protocol Features
+
+1. **Liquid Staking**
+   - Immediate liquidity
+   - No lockup period
+   - Tradeable token
+   - Compound rewards
+
+2. **Security**
+   - Audited protocol
+   - Multi-validator system
+   - Emergency withdrawals
+   - Risk management
+
+3. **Rewards**
+   - Automatic compounding
+   - Real-time accrual
+   - No claim required
+   - Performance tracking
+
+## Related Functions
+
+- `getBalance`: Check SOL balance
+- `getJupSolBalance`: Check jupSOL balance
+- `trade`: Trade jupSOL
+- `unstake`: Convert back to SOL
+
+## Notes
+
+1. **Minimum Stake**
+   - Consider network fees
+   - Account for slippage
+   - Monitor minimums
+   - Track changes
+
+2. **Performance**
+   - Monitor APY
+   - Track rewards
+   - Compare rates
+   - Assess fees
+
+3. **Exit Strategy**
+   - No unbonding period
+   - Instant liquidity
+   - Market impact
+   - Fee consideration

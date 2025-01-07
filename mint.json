@@ -73,6 +73,21 @@
             "v0/features/defi-integration/alldomains",
             "v0/features/defi-integration/adrena"
           ]
+        },
+        {
+          "group": "Solana Blinks",
+          "pages": [
+            "v0/features/solana-blinks/lulo",
+            "v0/features/solana-blinks/send_arcade_rps",
+            "v0/features/solana-blinks/jupsol_staking",
+            "v0/features/solana-blinks/solayer_restaking"
+          ]
+        },
+        {
+          "group": "Non-Financial Actions",
+          "pages": [
+            "v0/features/non-financial/gibwork_bounties"
+          ]
         }
       ]
     },

@@ -1,0 +1,218 @@
+---
+title: 'Gib Work Task Creation'
+description: 'Create and manage bounties on Gib Work platform'
+---
+
+# Gib Work Task Creation
+
+Create and manage bounties on the Gib Work platform using SPL tokens for payment. Post tasks, set requirements, and manage payments through an integrated system.
+
+## Core Features
+
+1. Task Management
+   - Create bounties
+   - Set requirements
+   - Tag categorization
+   - Token payments
+
+2. Payment Options
+   - Multiple SPL tokens
+   - Customizable amounts
+   - Secure escrow
+   - Transaction verification
+
+## Usage
+
+```typescript
+const response = await agent.createGibworkTask(
+  "Build Solana dApp",                     // title
+  "Create a React frontend for Solana",    // content
+  "Rust and React experience required",    // requirements
+  ["solana", "rust", "react"],            // tags
+  new PublicKey("token-mint-address"),    // payment token
+  100                                     // amount
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| title | string | Yes | Task title |
+| content | string | Yes | Task description |
+| requirements | string | Yes | Task requirements |
+| tags | string[] | Yes | Task categories |
+| tokenMintAddress | PublicKey | Yes | Payment token mint |
+| tokenAmount | number | Yes | Payment amount |
+| payer | PublicKey | No | Custom payer address |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a Solana development task for 100 USDC"
+
+"Post a bounty for smart contract audit"
+
+"Create new task with USDC payment"
+
+"Add development bounty with requirements"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic task creation
+{
+  "title": "Build Solana dApp",
+  "content": "Create a React frontend for Solana",
+  "requirements": "Rust and React experience required",
+  "tags": ["solana", "rust", "react"],
+  "tokenMintAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "amount": 100
+}
+
+// Task with custom payer
+{
+  "title": "Smart Contract Audit",
+  "content": "Audit Solana smart contract",
+  "requirements": "Security audit experience",
+  "tags": ["audit", "security"],
+  "tokenMintAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "amount": 500,
+  "payer": "custom-wallet-address"
+}
+```
+
+## Response Format
+
+```typescript
+// Success response
+{
+  status: "success",
+  taskId: "task_123",
+  signature: "3YKpM1..."
+}
+
+// Error response
+{
+  status: "error",
+  message: "Failed to create task",
+  code: "CREATE_TASK_ERROR"
+}
+```
+
+## Implementation Details
+
+### Task Creation Process
+```typescript
+interface TaskCreationParams {
+  title: string;           // Task title
+  content: string;         // Description
+  requirements: string;    // Requirements
+  tags: string[];         // Categories
+  payer: string;          // Payer address
+  token: {
+    mintAddress: string;  // Token mint
+    amount: number;      // Payment amount
+  };
+}
+
+// Features
+- Transaction versioning
+- Payment verification
+- Tag validation
+- Response handling
+```
+
+## Error Handling
+
+```typescript
+try {
+  const task = await agent.createGibworkTask(...);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle payment issues
+  } else if (error.message.includes("invalid token")) {
+    // Handle token validation
+  }
+}
+```
+
+## Best Practices
+
+1. **Task Creation**
+   - Clear descriptions
+   - Specific requirements
+   - Appropriate tags
+   - Fair pricing
+
+2. **Payment Setup**
+   - Verify token balance
+   - Consider fees
+   - Set reasonable amounts
+   - Check approvals
+
+3. **Content Management**
+   - Detailed descriptions
+   - Clear requirements
+   - Relevant tags
+   - Regular updates
+
+4. **Security**
+   - Verify transactions
+   - Check permissions
+   - Monitor tasks
+   - Track payments
+
+## Common Issues
+
+1. **Task Creation**
+   - Missing information
+   - Invalid tokens
+   - Insufficient funds
+   - Network issues
+
+2. **Payment**
+   - Token approval
+   - Balance issues
+   - Transaction failures
+   - Fee calculation
+
+3. **Validation**
+   - Tag limits
+   - Content length
+   - Token support
+   - Payer verification
+
+## Common Token Addresses
+
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- BONK: `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`
+
+## Task Management Tips
+
+1. **Description Writing**
+   - Be specific
+   - Include deliverables
+   - Set timelines
+   - Define scope
+
+2. **Payment Planning**
+   - Market rates
+   - Token stability
+   - Payment schedule
+   - Fee consideration
+
+3. **Task Monitoring**
+   - Track submissions
+   - Review progress
+   - Update status
+   - Manage payments
+
+## Related Functions
+
+- `getBalance`: Check token balance
+- `approveToken`: Setup payments
+- `updateTask`: Modify tasks
+- `getTasks`: List tasks
