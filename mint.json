@@ -95,11 +95,13 @@
         },
         {
           "group": "Non-Financial Actions",
-          "pages": [
-            "v0/features/non-financial/gibwork_bounties"
-          ]
+          "pages": ["v0/features/non-financial/gibwork_bounties"]
         }
       ]
+    },
+    {
+      "group": "Utilities",
+      "pages": ["v0/utilities/transaction_utils"]
     },
     {
       "group": "Classes",
