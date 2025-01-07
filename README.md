@@ -35,7 +35,10 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Balance checks
   - Stake SOL
   - Zk compressed Airdrop by Light Protocol and Helius
-
+- **NFTs on 3.Land**
+  - Create your own collection
+  - NFT creation and automatic listing on 3.land
+  - List your NFT for sale in any SPL token
 - **NFT Management via Metaplex**
   - Collection deployment
   - NFT minting
@@ -127,6 +130,57 @@ const result = await agent.deployToken(
 
 console.log("Token Mint Address:", result.mint.toString());
 ```
+### Create NFT Collection on 3Land
+```typescript
+const optionsWithBase58: StoreInitOptions = {
+  privateKey: "",
+  isMainnet: true, // if false, collection will be created on devnet 3.land (dev.3.land)
+};
+
+ const collectionOpts: CreateCollectionOptions = {
+    collectionName: "",
+    collectionSymbol: "",
+    collectionDescription: "",
+    mainImageUrl: ""
+  };
+
+const result = await agent.create3LandCollection(
+      optionsWithBase58,
+      collectionOpts
+    );
+```
+
+### Create NFT on 3Land
+When creating an NFT using 3Land's tool, it automatically goes for sale on 3.land website
+```typescript
+const optionsWithBase58: StoreInitOptions = {
+  privateKey: "",
+  isMainnet: true, // if false, listing will be on devnet 3.land (dev.3.land)
+};
+const collectionAccount = ""; //hash for the collection
+const createItemOptions: CreateSingleOptions = {
+  itemName: "",
+  sellerFee: 500, //5%
+  itemAmount: 100, //total items to be created
+  itemSymbol: "",
+  itemDescription: "",
+  traits: [
+    { trait_type: "", value: "" },
+  ],
+  price: 0, //100000000 == 0.1 sol, can be set to 0 for a free mint
+  mainImageUrl: "",
+  splHash: "", //present if listing is on a specific SPL token, if not present sale will be on $SOL
+};
+const isMainnet = true;
+const result = await agent.create3LandNft(
+  optionsWithBase58,
+  collectionAccount,
+  createItemOptions,
+  isMainnet
+);
+
+```
+
 
 ### Create NFT Collection
 
