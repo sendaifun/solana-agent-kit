@@ -1,0 +1,143 @@
+---
+title: 'Transfer Tokens'
+description: 'Learn how to transfer SOL and SPL tokens to other wallets'
+---
+
+# Transfer Tokens
+
+Transfer SOL or any SPL token to another wallet address. The function automatically handles both native SOL transfers and SPL token transfers with proper decimal adjustment.
+
+## Usage
+
+```typescript
+// Transfer SOL
+const signature = await agent.transfer(
+  new PublicKey("recipient-address"),
+  1.5  // amount in SOL
+);
+
+// Transfer SPL token
+const signature = await agent.transfer(
+  new PublicKey("recipient-address"),
+  100,  // amount in token units
+  new PublicKey("token-mint-address")
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| to | PublicKey | Yes | Recipient's wallet address |
+| amount | number | Yes | Amount to transfer |
+| mint | PublicKey | No | Token mint address (omit for SOL) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Send 1 SOL to wallet 8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk"
+
+"Transfer 100 USDC to Dm9Un6DVCrCfkiUmPAhE4zVgxeUK8kZtUAgH3QUoQmHP"
+
+"Send 50 tokens to recipient using mint address EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+```
+
+### LangChain Tool Prompts
+```text
+// SOL transfer
+{
+  "to": "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk",
+  "amount": 1
+}
+
+// USDC transfer
+{
+  "to": "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk",
+  "amount": 100,
+  "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}
+
+// Custom SPL token transfer
+{
+  "to": "8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk",
+  "amount": 50,
+  "mint": "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa"
+}
+```
+
+## Example Implementation
+
+Here's a complete example showing different types of transfers:
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function executeTransfers(agent: SolanaAgentKit) {
+  // Transfer SOL
+  const solTransfer = await agent.transfer(
+    new PublicKey("recipient"),
+    1.5  // 1.5 SOL
+  );
+  console.log("SOL transfer:", solTransfer);
+
+  // Transfer USDC
+  const usdcTransfer = await agent.transfer(
+    new PublicKey("recipient"),
+    100,  // 100 USDC
+    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+  );
+  console.log("USDC transfer:", usdcTransfer);
+}
+```
+
+## Implementation Details
+
+- Automatically detects SOL vs SPL token transfers
+- Handles decimal adjustment for SPL tokens
+- Creates Associated Token Accounts if needed
+- Uses single-instruction transactions for efficiency
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.transfer(recipient, amount, mint);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("invalid account")) {
+    // Handle invalid addresses
+  }
+}
+```
+
+## Best Practices
+
+1. **Amount Validation**
+   - Always verify token decimals
+   - Check balances before transfer
+   - Account for transaction fees
+
+2. **Address Validation**
+   - Validate recipient addresses
+   - Double-check mint addresses
+   - Use address checksums
+
+3. **Transaction Management**
+   - Monitor transaction status
+   - Implement retry logic
+   - Handle timeouts appropriately
+
+4. **Security**
+   - Verify recipient addresses carefully
+   - Implement confirmation dialogs
+   - Consider using transaction previews
+
+## Common Token Addresses
+
+- SOL: Native token (no mint address needed)
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- BONK: `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`

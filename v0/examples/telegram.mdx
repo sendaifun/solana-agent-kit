@@ -1,0 +1,247 @@
+---
+title: 'Telegram Agent'
+description: 'Build a Solana Agent Kit Telegram Agent'
+---
+
+# Telegram Agent
+
+Create a Telegram bot powered by Solana Agent Kit to interact with Solana blockchain through natural language conversations. This implementation provides a seamless way to execute blockchain operations via Telegram.
+
+## Quick Start
+
+### 1. Agent Setup
+```bash
+# Clone the repository
+npm install -g degit
+degit sendaifun/solana-agent-kit/tree/main/examples/tg-bot-starter tg-agent
+cd tg-agent
+
+# Install dependencies
+pnpm install
+```
+
+### 2. Environment Configuration
+Create a `.env.local` file:
+```env
+OPENAI_API_KEY=your_openai_key
+RPC_URL=your_solana_rpc_url
+SOLANA_PRIVATE_KEY=your_wallet_private_key_base58
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+```
+
+### 3. Create Telegram Bot
+1. Message [@BotFather](https://t.me/BotFather) on Telegram
+2. Use `/newbot` command
+3. Follow instructions to create bot
+4. Save the bot token
+
+## Project Structure
+
+```
+├── app/
+│   ├── api/
+│   │   └── bot/
+│   │       └── route.ts    # Telegram webhook handler
+│   ├── lib/
+│   │   ├── agent.ts       # Solana Agent setup
+│   │   └── telegram.ts    # Telegram utilities
+│   └── config.ts          # Configuration
+├── public/
+└── package.json
+```
+
+## Implementation Steps
+
+### 1. Set Up Webhook
+```bash
+# Using curl
+curl https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<your-domain>/api/bot
+
+# Or visit in browser
+https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<your-domain>/api/bot
+```
+
+### 2. Local Development
+```bash
+# Start development server
+pnpm dev
+
+# Start ngrok tunnel
+ngrok http 3000
+```
+
+## Core Components
+
+### Webhook Handler
+```typescript
+// app/api/bot/route.ts
+export async function POST(req: Request) {
+  const body = await req.json();
+  
+  // Initialize agent
+  const agent = new SolanaAgentKit(
+    process.env.SOLANA_PRIVATE_KEY!,
+    process.env.RPC_URL!,
+    process.env.OPENAI_API_KEY
+  );
+
+  // Process message
+  const response = await processMessage(body, agent);
+  
+  return new Response(JSON.stringify(response));
+}
+```
+
+### Message Processing
+```typescript
+async function processMessage(message: any, agent: SolanaAgentKit) {
+  const { text, chat } = message;
+  
+  // Generate response using agent
+  const response = await agent.chat(text);
+  
+  // Send response to Telegram
+  await sendTelegramMessage(chat.id, response);
+}
+```
+
+## Features
+
+1. **Chat Interaction**
+   - Natural language processing
+   - Command handling
+   - Error responses
+   - Message formatting
+
+2. **Blockchain Operations**
+   - Transaction execution
+   - Balance checking
+   - Token transfers
+   - Price queries
+
+3. **Bot Management**
+   - User session handling
+   - Rate limiting
+   - Error handling
+   - Logging
+
+## Deployment
+
+### Deploy to Vercel
+1. Push code to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsendaifun%2Fsolana-agent-kit%2Ftree%2Fmain%2Fexamples%2Ftg-bot-starter)
+
+### Set Up Webhook
+After deployment:
+1. Get your deployment URL
+2. Set webhook using the URL
+3. Verify webhook status
+4. Test bot functionality
+
+## Security Considerations
+
+1. **Token Security**
+   - Secure storage of bot token
+   - Environment variable protection
+   - Access control
+   - Rate limiting
+
+2. **Request Validation**
+   - Validate Telegram updates
+   - Check message format
+   - Verify user permissions
+   - Monitor activity
+
+3. **Error Handling**
+   - Graceful error messages
+   - Transaction failures
+   - Network issues
+   - API limits
+
+## Example Bot Commands
+
+```
+/balance - Check wallet balance
+/price SOL - Get SOL price
+/transfer 1 SOL address - Transfer SOL
+/help - Show available commands
+```
+
+## Development Tips
+
+1. **Local Testing**
+   - Use ngrok for local development
+   - Test all commands thoroughly
+   - Monitor error logs
+   - Check response times
+
+2. **Message Handling**
+   - Parse commands correctly
+   - Format responses properly
+   - Handle long messages
+   - Implement retry logic
+
+3. **User Experience**
+   - Clear error messages
+   - Progress indicators
+   - Command suggestions
+   - Help documentation
+
+## Common Issues
+
+1. **Webhook Setup**
+   - Invalid URL format
+   - SSL certificate issues
+   - Port configuration
+   - Domain verification
+
+2. **Bot Responses**
+   - Slow response times
+   - Message formatting
+   - Command parsing
+   - Error handling
+
+3. **Deployment**
+   - Environment variables
+   - Webhook configuration
+   - API access
+   - Rate limits
+
+## Testing
+
+### Local Testing
+```bash
+# Start local server
+pnpm dev
+
+# Start ngrok
+ngrok http 3000
+
+# Set webhook to ngrok URL
+curl https://api.telegram.org/bot<token>/setWebhook?url=<ngrok-url>/api/bot
+```
+
+### Production Testing
+1. Send test messages
+2. Check transaction execution
+3. Verify responses
+4. Monitor errors
+
+## Resources
+
+- [Telegram Bot API](https://core.telegram.org/bots/api)
+- [Solana Agent Kit Docs](https://github.com/sendaifun/solana-agent-kit)
+- [Vercel Deployment](https://vercel.com/docs)
+- [ngrok Documentation](https://ngrok.com/docs)
+
+## Support
+
+For support and questions:
+- Create GitHub issue
+- Join Telegram support group
+- Check documentation
+- Contact maintainers

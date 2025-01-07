@@ -1,0 +1,241 @@
+---
+title: 'AllDomains Integration'
+description: 'Manage and resolve domains across multiple TLDs on Solana'
+---
+
+# AllDomains Integration
+
+Comprehensive integration with AllDomains service for managing and resolving domains across multiple TLDs on Solana. Supports domain resolution, ownership lookup, and TLD management.
+
+## Core Features
+
+1. Domain Resolution
+   - Multi-TLD support
+   - Owner lookup
+   - Main domain resolution
+   - Reverse resolution
+
+2. Domain Management
+   - Owned domains lookup
+   - TLD enumeration
+   - Domain registration
+   - Favorite domains
+
+## Usage
+
+### Resolve Domain
+
+```typescript
+// Resolve any domain
+const owner = await agent.resolveAllDomains("mydomain.blink");
+
+// Get owned domains
+const domains = await agent.getOwnedAllDomains(
+  new PublicKey("owner-address")
+);
+
+// Get main domain
+const mainDomain = await agent.getMainAllDomainsDomain(
+  new PublicKey("owner-address")
+);
+```
+
+### List TLDs
+
+```typescript
+// Get all available TLDs
+const tlds = await agent.getAllDomainsTLDs();
+
+// Get owned domains for specific TLD
+const domainsByTld = await agent.getOwnedDomainsForTLD("bonk");
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Resolve mydomain.blink to a wallet address"
+
+"Find all domains owned by this wallet"
+
+"Get the main domain for address ABC..."
+
+"List all available TLDs"
+```
+
+### LangChain Tool Prompts
+
+#### Resolve Domain
+```text
+{
+  "domain": "mydomain.blink"
+}
+```
+
+#### Get Owned Domains
+```text
+{
+  "owner": "7nxQB..."
+}
+```
+
+#### Get Main Domain
+```text
+{
+  "address": "7nxQB..."
+}
+```
+
+## Response Formats
+
+### Domain Resolution
+```typescript
+{
+  status: "success",
+  message: "Domain resolved successfully",
+  owner: "7nxQB..."
+}
+```
+
+### Owned Domains
+```typescript
+{
+  status: "success",
+  message: "Owned domains fetched successfully",
+  domains: ["domain1.blink", "domain2.bonk"]
+}
+```
+
+### TLD List
+```typescript
+{
+  status: "success",
+  message: "TLDs fetched successfully",
+  tlds: [".blink", ".bonk", ".abc"]
+}
+```
+
+## Implementation Details
+
+### Domain Resolution
+```typescript
+interface ResolutionParams {
+  domain: string;        // Full domain with TLD
+  connection: Connection; // RPC connection
+}
+
+// Features
+- Multi-TLD support
+- Error recovery
+- Owner validation
+- Case sensitivity
+```
+
+### Owner Lookup
+```typescript
+interface OwnerLookupParams {
+  owner: PublicKey;     // Wallet address
+  connection: Connection; // RPC connection
+}
+
+// Features
+- Domain enumeration
+- TLD filtering
+- Error handling
+- Batch processing
+```
+
+## Error Handling
+
+```typescript
+try {
+  const owner = await agent.resolveAllDomains(domain);
+} catch (error) {
+  if (error.message.includes("undefined")) {
+    // Handle domain not found
+  } else if (error.message.includes("invalid")) {
+    // Handle invalid domain format
+  }
+}
+```
+
+## Best Practices
+
+1. **Domain Resolution**
+   - Validate domain format
+   - Handle missing domains
+   - Implement caching
+   - Check TLD support
+
+2. **Owner Lookup**
+   - Batch requests
+   - Cache results
+   - Filter inactive domains
+   - Validate addresses
+
+3. **TLD Management**
+   - Monitor new TLDs
+   - Update regularly
+   - Check availability
+   - Handle migrations
+
+4. **Performance**
+   - Cache common lookups
+   - Batch operations
+   - Monitor RPC usage
+   - Handle timeouts
+
+## Common Issues
+
+1. **Resolution**
+   - Invalid formats
+   - Unsupported TLDs
+   - Network errors
+   - Stale data
+
+2. **Owner Lookup**
+   - Missing domains
+   - Invalid addresses
+   - Timeout issues
+   - RPC errors
+
+3. **TLD Issues**
+   - New TLDs
+   - Deprecated TLDs
+   - Format changes
+   - Migration issues
+
+## Common TLDs
+
+- .blink
+- .bonk
+- .abc
+- .glow
+- .backpack
+
+## Integration Notes
+
+1. **Resolution Flow**
+   ```typescript
+   // Step by step resolution
+   const parser = new TldParser(connection);
+   const owner = await parser.getOwnerFromDomainTld(domain);
+   ```
+
+2. **Ownership Verification**
+   ```typescript
+   const domains = await parser.getParsedAllUserDomains(owner);
+   const isOwner = domains.some(d => d.domain === domain);
+   ```
+
+3. **Main Domain**
+   ```typescript
+   const mainDomain = await parser.getFavoriteDomain(owner);
+   ```
+
+## Related Functions
+
+- `resolveAllDomains`: Domain resolution
+- `getOwnedAllDomains`: Domain ownership
+- `getAllDomainsTLDs`: TLD management
+- `getMainAllDomainsDomain`: Primary domains

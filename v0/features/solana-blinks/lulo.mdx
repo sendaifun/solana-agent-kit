@@ -1,0 +1,245 @@
+---
+title: 'Lulo USDC Lending'
+description: 'Earn yield by lending USDC through Lulo protocol'
+---
+
+# Lulo USDC Lending
+
+Lend USDC tokens to earn yield through Lulo protocol. This integration provides automated yield optimization and simplified lending operations.
+
+## Core Features
+
+1. Lending Operations
+   - USDC deposits
+   - Yield generation
+   - APY tracking
+   - Account management
+
+2. Account Features
+   - Real-time APY
+   - Interest tracking
+   - Total value monitoring
+   - Protocol settings
+
+## Usage
+
+```typescript
+// Lend USDC
+const signature = await agent.lendAssets(100); // Lend 100 USDC
+
+// Get account details
+const details: LuloAccountDetailsResponse = {
+  totalValue: 100.5,
+  interestEarned: 0.5,
+  realtimeApy: 5.2,
+  settings: {
+    owner: "wallet-address",
+    allowedProtocols: null,
+    homebase: null,
+    minimumRate: "4.8"
+  }
+};
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Lend 100 USDC to earn yield"
+
+"Deposit USDC into Lulo for interest"
+
+"Start earning yield on my USDC"
+
+"Put my USDC to work in Lulo"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic lending
+{
+  "amount": 100
+}
+
+// Alternative format
+"100"  // Direct amount input
+```
+
+## Response Formats
+
+### Lending Response
+```typescript
+{
+  status: "success",
+  message: "Asset lent successfully",
+  transaction: "5UfgJ5vVZxUx...",
+  amount: 100
+}
+```
+
+### Account Details
+```typescript
+interface LuloAccountDetailsResponse {
+  totalValue: number;        // Total value in USDC
+  interestEarned: number;    // Total interest earned
+  realtimeApy: number;       // Current APY
+  settings: {
+    owner: string;           // Wallet address
+    allowedProtocols: string | null;
+    homebase: string | null;
+    minimumRate: string;     // Minimum acceptable APY
+  }
+}
+```
+
+## Implementation Details
+
+### Lending Process
+```typescript
+// Parameters
+interface LendParams {
+  amount: number;      // USDC amount
+  symbol: string;      // Always "USDC"
+  account: string;     // Wallet address
+}
+
+// Features
+- Transaction versioning
+- Blockhash handling
+- Confirmation tracking
+- Retry logic
+```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.lendAssets(amount);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("slippage")) {
+    // Handle price movement
+  }
+}
+```
+
+## Best Practices
+
+1. **Amount Management**
+   - Verify USDC balance
+   - Consider gas fees
+   - Set reasonable amounts
+   - Monitor minimums
+
+2. **Transaction Handling**
+   - Monitor confirmations
+   - Implement retries
+   - Handle timeouts
+   - Verify success
+
+3. **Yield Optimization**
+   - Monitor APY changes
+   - Track interest earned
+   - Consider lock periods
+   - Compare rates
+
+4. **Security**
+   - Verify transactions
+   - Check approvals
+   - Monitor positions
+   - Regular audits
+
+## Common Issues
+
+1. **Transaction Failures**
+   - Insufficient funds
+   - Network congestion
+   - Invalid parameters
+   - Timeout issues
+
+2. **Yield Related**
+   - APY fluctuations
+   - Interest calculation
+   - Rate changes
+   - Protocol updates
+
+3. **Account Issues**
+   - Access problems
+   - Balance sync
+   - Setting updates
+   - Protocol limits
+
+## Protocol Features
+
+1. **Yield Generation**
+   - Automated optimization
+   - Best APY routing
+   - Compound interest
+   - Protocol diversity
+
+2. **Security**
+   - Audited contracts
+   - Risk management
+   - Fund protection
+   - Regular updates
+
+3. **Management**
+   - Account dashboard
+   - Performance tracking
+   - Setting configuration
+   - Protocol selection
+
+## Transaction Flow
+
+1. **Pre-lending Checks**
+```typescript
+// Verify balance
+const balance = await getBalance(USDC_MINT);
+if (balance < amount) throw new Error("Insufficient balance");
+```
+
+2. **Transaction Creation**
+```typescript
+// Create and sign transaction
+const txn = VersionedTransaction.deserialize(buffer);
+txn.message.recentBlockhash = blockhash;
+txn.sign([wallet]);
+```
+
+3. **Confirmation**
+```typescript
+// Wait for confirmation
+await connection.confirmTransaction({
+  signature,
+  blockhash,
+  lastValidBlockHeight
+});
+```
+
+## Related Functions
+
+- `getBalance`: Check USDC balance
+- `withdrawAssets`: Withdraw from Lulo
+- `getAccountDetails`: Get account info
+- `checkYield`: Monitor current APY
+
+## Notes
+
+1. **Protocol Specifics**
+   - USDC only supported
+   - Minimum deposit amounts
+   - APY variations
+   - Protocol fees
+
+2. **Performance Tips**
+   - Larger deposits preferred
+   - Long-term holding benefits
+   - APY threshold setting
+   - Regular monitoring
+
+3. **Risk Management**
+   - Diversification strategy
+   - Position sizing
+   - Exit planning
+   - Market monitoring

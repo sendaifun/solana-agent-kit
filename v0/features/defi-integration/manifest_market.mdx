@@ -1,0 +1,258 @@
+---
+title: 'Manifest Market Operations'
+description: 'Create markets and place orders using Manifest Protocol'
+---
+
+# Manifest Market Operations
+
+Create markets and manage orders on Manifest Protocol, including limit orders, batch orders, and market management operations.
+
+## Core Features
+
+1. Market Management
+   - Create new markets
+   - Place limit orders
+   - Place batch orders
+   - Cancel orders
+   - Withdraw funds
+
+2. Order Types
+   - Single limit orders
+   - Batch orders
+   - Pattern-based orders
+   - Buy/Sell orders
+
+## Usage
+
+### Create Market
+
+```typescript
+const [signature, marketId] = await agent.manifestCreateMarket(
+  new PublicKey("base-token-mint"),   // Base token (e.g., SOL)
+  new PublicKey("quote-token-mint")   // Quote token (e.g., USDC)
+);
+```
+
+### Place Limit Order
+
+```typescript
+const signature = await agent.limitOrder(
+  new PublicKey("market-id"),
+  1.5,        // quantity
+  "Buy",      // side
+  100         // price
+);
+```
+
+### Place Batch Orders
+
+```typescript
+const orders = [
+  { quantity: 1, side: "Buy", price: 95 },
+  { quantity: 1, side: "Buy", price: 90 }
+];
+
+const signature = await agent.batchOrder(
+  new PublicKey("market-id"),
+  orders
+);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a new SOL/USDC market on Manifest"
+
+"Place a limit buy order for 2 SOL at $90"
+
+"Set up 5 buy orders between $85 and $90"
+
+"Cancel all my open orders in the market"
+```
+
+### LangChain Tool Prompts
+
+#### Limit Order
+```text
+{
+  "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+  "quantity": 1.5,
+  "side": "Buy",
+  "price": 90
+}
+```
+
+#### Batch Orders List
+```text
+{
+  "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+  "orders": [
+    { "quantity": 1, "side": "Buy", "price": 90 },
+    { "quantity": 1, "side": "Buy", "price": 85 }
+  ]
+}
+```
+
+#### Batch Orders Pattern
+```text
+{
+  "marketId": "ENhU8LsaR7vDD2G1CsWcsuSGNrih9Cv5WZEk7q9kPapQ",
+  "pattern": {
+    "side": "Buy",
+    "totalQuantity": 5,
+    "priceRange": { "min": 85, "max": 90 },
+    "numberOfOrders": 5
+  }
+}
+```
+
+## Implementation Details
+
+### Market Creation
+```typescript
+interface MarketParams {
+  baseMint: PublicKey;    // Token being traded
+  quoteMint: PublicKey;   // Token used for pricing
+}
+
+// Features
+- Fixed header size
+- Rent exemption calculation
+- Transaction bundling
+```
+
+### Limit Orders
+```typescript
+interface LimitOrderParams {
+  marketId: PublicKey;    // Market identifier
+  quantity: number;       // Order size
+  side: "Buy" | "Sell";  // Order direction
+  price: number;         // Limit price
+}
+
+// Features
+- Required deposit handling
+- Client order ID generation
+- Transaction confirmation
+```
+
+### Batch Orders
+```typescript
+interface BatchOrderPattern {
+  side: "Buy" | "Sell";
+  totalQuantity?: number;
+  individualQuantity?: number;
+  priceRange: {
+    min?: number;
+    max?: number;
+  };
+  spacing?: {
+    type: "percentage" | "fixed";
+    value: number;
+  };
+  numberOfOrders?: number;
+}
+
+// Features
+- Pattern-based generation
+- Cross-order validation
+- Price spacing options
+- Quantity distribution
+```
+
+## Error Handling
+
+```typescript
+try {
+  const order = await agent.limitOrder(...);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle balance issues
+  } else if (error.message.includes("invalid price")) {
+    // Handle price validation issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Order Management**
+   - Validate prices
+   - Check balances
+   - Monitor slippage
+   - Use batch orders
+
+2. **Market Creation**
+   - Verify token pairs
+   - Check decimals
+   - Consider volumes
+   - Monitor fees
+
+3. **Batch Orders**
+   - Use patterns for consistency
+   - Check price ranges
+   - Validate order crosses
+   - Monitor total exposure
+
+4. **Transaction Handling**
+   - Include retries
+   - Monitor confirmations
+   - Handle timeouts
+   - Log transactions
+
+## Common Issues
+
+1. **Order Placement**
+   - Insufficient funds
+   - Invalid prices
+   - Market restrictions
+   - Transaction failures
+
+2. **Batch Orders**
+   - Crossed orders
+   - Invalid patterns
+   - Size limitations
+   - Price gaps
+
+3. **Market Operations**
+   - Invalid tokens
+   - Market constraints
+   - Permission issues
+   - State conflicts
+
+## Common Token Pairs
+
+- SOL/USDC: Base `So11111111111111111111111111111111111111112`
+- BONK/USDC: Base `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`
+- Quote (USDC): `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+
+## Pattern Generation Examples
+
+1. **Fixed Price Spacing**
+```typescript
+const pattern = {
+  side: "Buy",
+  totalQuantity: 10,
+  priceRange: { min: 90, max: 100 },
+  spacing: { type: "fixed", value: 2 }
+};
+```
+
+2. **Percentage Spacing**
+```typescript
+const pattern = {
+  side: "Buy",
+  individualQuantity: 1,
+  priceRange: { min: 90 },
+  spacing: { type: "percentage", value: 1 },
+  numberOfOrders: 5
+};
+```
+
+## Related Functions
+
+- `cancelAllOrders`: Cancel all orders
+- `withdrawAll`: Withdraw funds
+- `getBalance`: Check balances
+- `fetchMarketData`: Get market info

@@ -1,0 +1,162 @@
+---
+title: 'Check Token Balances'
+description: 'Learn how to check SOL and SPL token balances for any wallet'
+---
+
+# Check Token Balances
+
+Check SOL or SPL token balances for any wallet address. The toolkit provides two main methods:
+- `getBalance`: Check balances for your own wallet
+- `getBalanceOther`: Check balances for other wallets
+
+## Usage
+
+```typescript
+// Check your SOL balance
+const solBalance = await agent.getBalance();
+
+// Check your SPL token balance
+const tokenBalance = await agent.getBalance(
+  new PublicKey("token-mint-address")
+);
+
+// Check another wallet's SOL balance
+const otherSolBalance = await agent.getBalanceOther(
+  new PublicKey("wallet-address")
+);
+
+// Check another wallet's token balance
+const otherTokenBalance = await agent.getBalanceOther(
+  new PublicKey("wallet-address"),
+  new PublicKey("token-mint-address")
+);
+```
+
+## Parameters
+
+### getBalance
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| tokenAddress | PublicKey | No | Token mint address (omit for SOL) |
+
+### getBalanceOther
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| walletAddress | PublicKey | Yes | Wallet to check balance for |
+| tokenAddress | PublicKey | No | Token mint address (omit for SOL) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"What's my SOL balance?"
+
+"Check my USDC balance"
+
+"Show the balance of wallet GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME"
+
+"Get BONK token balance for wallet 8x2dR8Mpzuz2YqyZyZjUbYWKSWesBo5jMx2Q9Y86udVk"
+```
+
+### LangChain Tool Prompts
+
+For checking your own balance:
+```text
+// Check SOL balance
+{}
+
+// Check USDC balance
+{
+  "tokenAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}
+```
+
+For checking other wallets:
+```text
+// Check other wallet's SOL balance
+{
+  "walletAddress": "GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME"
+}
+
+// Check other wallet's token balance
+{
+  "walletAddress": "GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME",
+  "tokenAddress": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function checkBalances(agent: SolanaAgentKit) {
+  // Check own balances
+  const mySolBalance = await agent.getBalance();
+  console.log("My SOL balance:", mySolBalance);
+
+  const myUsdcBalance = await agent.getBalance(
+    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+  );
+  console.log("My USDC balance:", myUsdcBalance);
+
+  // Check other wallet's balances
+  const otherWallet = new PublicKey("GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME");
+  
+  const otherSolBalance = await agent.getBalanceOther(otherWallet);
+  console.log("Other wallet SOL balance:", otherSolBalance);
+
+  const otherUsdcBalance = await agent.getBalanceOther(
+    otherWallet,
+    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+  );
+  console.log("Other wallet USDC balance:", otherUsdcBalance);
+}
+```
+
+## Implementation Details
+
+- Returns balances in UI units (e.g., SOL instead of lamports)
+- Handles non-existent token accounts gracefully
+- Supports all SPL tokens
+- Returns 0 for non-existent accounts
+
+## Error Handling
+
+```typescript
+try {
+  const balance = await agent.getBalance(tokenMint);
+} catch (error) {
+  if (error.message.includes("invalid account")) {
+    // Handle invalid addresses
+  } else if (error.message.includes("not found")) {
+    // Handle non-existent accounts
+  }
+}
+```
+
+## Best Practices
+
+1. **Error Handling**
+   - Handle non-existent accounts gracefully
+   - Validate addresses before querying
+   - Consider caching for frequent checks
+
+2. **Performance**
+   - Batch balance checks when possible
+   - Consider using getMultipleAccounts
+   - Cache results for short periods
+
+3. **UI Display**
+   - Format numbers appropriately
+   - Show proper decimal places
+   - Include token symbols
+
+## Common Token Addresses
+
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- BONK: `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`
+- RAY: `4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R`
+- SRM: `SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWR

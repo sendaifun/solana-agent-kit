@@ -1,0 +1,206 @@
+---
+title: 'Deploy NFT Collection'
+description: 'Learn how to deploy NFT collections on Solana'
+---
+
+# Deploy NFT Collection
+
+Deploy a new NFT collection on Solana with customizable parameters including name, metadata URI, and royalties.
+
+## Usage
+
+```typescript
+const collection = await agent.deployCollection({
+  name: "My Collection",
+  uri: "https://arweave.net/collection.json",
+  royaltyBasisPoints: 500  // 5% royalty
+});
+
+console.log("Collection Address:", collection.collectionAddress.toString());
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| name | string | Yes | Name of the collection |
+| uri | string | Yes | Metadata URI for the collection |
+| royaltyBasisPoints | number | No | Royalty percentage in basis points (100 = 1%) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a new NFT collection called 'Awesome Art' with 5% royalties"
+
+"Deploy an NFT collection with metadata from my Arweave URI"
+
+"Launch a collection named 'Pixel Warriors' with 7.5% creator royalties"
+
+"Create a free collection with no royalties for my community"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic collection deployment
+{
+  "name": "Awesome Art",
+  "uri": "https://arweave.net/collection.json"
+}
+
+// Collection with royalties
+{
+  "name": "Pixel Warriors",
+  "uri": "https://arweave.net/metadata.json",
+  "royaltyBasisPoints": 750
+}
+
+// Community collection without royalties
+{
+  "name": "Community Collection",
+  "uri": "https://arweave.net/community.json",
+  "royaltyBasisPoints": 0
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+async function deployArtCollection(agent: SolanaAgentKit) {
+  try {
+    const collection = await agent.deployCollection({
+      name: "Digital Art Collection",
+      uri: "https://arweave.net/art-collection.json",
+      royaltyBasisPoints: 500  // 5% royalty
+    });
+
+    console.log("Collection deployed:", {
+      address: collection.collectionAddress.toString(),
+      name: "Digital Art Collection"
+    });
+
+    return collection;
+  } catch (error) {
+    console.error("Collection deployment failed:", error);
+    throw error;
+  }
+}
+```
+
+## Metadata Format
+
+Your collection URI should point to a JSON file with this structure:
+
+```json
+{
+  "name": "My Collection",
+  "symbol": "MYCOL",
+  "description": "A unique collection of digital art",
+  "image": "https://arweave.net/collection-image.png",
+  "external_url": "https://example.com",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://arweave.net/collection-image.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}
+```
+
+## Implementation Details
+
+- Creates verified collection with Metaplex standards
+- Supports custom royalty configurations
+- Automatically handles token program initialization
+- Supports collection-wide metadata
+- Uses Metaplex's certified collection standard
+
+## Error Handling
+
+```typescript
+try {
+  const collection = await agent.deployCollection(options);
+} catch (error) {
+  if (error.message.includes("invalid uri")) {
+    // Handle metadata issues
+  } else if (error.message.includes("insufficient funds")) {
+    // Handle balance issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Metadata Preparation**
+   - Host metadata on permanent storage (e.g., Arweave)
+   - Include high-quality collection image
+   - Provide comprehensive description
+   - Include all required properties
+
+2. **Royalty Configuration**
+   - Consider market standards
+   - Plan distribution model
+   - Document royalty splits
+   - Verify basis points calculation
+
+3. **Collection Management**
+   - Save collection address securely
+   - Document deployment details
+   - Plan update strategy
+   - Consider governance
+
+4. **Technical Considerations**
+   - Verify metadata before deployment
+   - Test with small transactions
+   - Monitor network conditions
+   - Use reliable RPC endpoints
+
+## Response Format
+
+```typescript
+// Successful response
+{
+  status: "success",
+  message: "Collection deployed successfully",
+  collectionAddress: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+  name: "My Collection"
+}
+
+// Error response
+{
+  status: "error",
+  message: "Error message here",
+  code: "ERROR_CODE"
+}
+```
+
+## Related Functions
+
+- `mintNFT`: Mint NFTs to the collection
+- `getBalance`: Check wallet balance
+- `transfer`: Transfer NFTs
+- `fetchMetadata`: Get collection metadata
+
+## Common Issues
+
+1. **Metadata Issues**
+   - Invalid URI format
+   - Missing required fields
+   - Temporary storage links
+   - Incorrect file types
+
+2. **Transaction Failures**
+   - Insufficient funds
+   - Network congestion
+   - RPC node issues
+   - Invalid parameters
+
+3. **Royalty Configuration**
+   - Invalid basis points
+   - Missing creator addresses
+   - Incorrect percentages
+   - Verification failures

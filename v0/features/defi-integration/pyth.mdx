@@ -1,0 +1,237 @@
+---
+title: 'Pyth Price Feeds'
+description: 'Fetch real-time price data from Pyth Network oracles'
+---
+
+# Pyth Price Feeds
+
+Fetch real-time price data from Pyth Network's decentralized oracle network. Access price feeds for various crypto assets with support for symbol lookup and price formatting.
+
+## Core Features
+
+1. Price Feed Management
+   - Symbol-based feed lookup
+   - Price feed ID resolution
+   - Real-time price fetching
+   - Decimal adjustment
+
+2. Price Operations
+   - Multi-symbol support
+   - Price scaling
+   - Error handling
+   - Format conversion
+
+## Usage
+
+### Get Price Feed ID
+
+```typescript
+// Get feed ID by token symbol
+const feedId = await agent.getPythPriceFeedID("SOL");
+console.log("SOL Price Feed ID:", feedId);
+```
+
+### Fetch Current Price
+
+```typescript
+// Fetch current price using feed ID
+const price = await agent.getPythPrice(feedId);
+console.log("Current Price:", price);
+
+// Or chain the operations
+const symbol = "SOL";
+const feedId = await agent.getPythPriceFeedID(symbol);
+const price = await agent.getPythPrice(feedId);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Get the current SOL price from Pyth"
+
+"Check ETH price using Pyth oracle"
+
+"Fetch BTC/USD price feed"
+
+"Look up price feed ID for USDC"
+```
+
+### LangChain Tool Prompts
+
+#### Fetch Price
+```text
+{
+  "tokenSymbol": "SOL"
+}
+```
+
+#### Direct Feed Query
+```text
+{
+  "priceFeedId": "H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"
+}
+```
+
+## Implementation Details
+
+### Price Feed ID Lookup
+```typescript
+interface PythPriceFeedIDItem {
+  id: string;
+  attributes: {
+    base: string;
+    quote: string;
+    asset_type: string;
+  };
+}
+
+// Features
+- Case-insensitive matching
+- Multiple feed handling
+- Asset type filtering
+- Error recovery
+```
+
+### Price Fetching
+```typescript
+interface PythPrice {
+  price: {
+    price: string;
+    expo: number;
+  };
+}
+
+// Features
+- Decimal adjustment
+- Price scaling
+- Format handling
+- BN precision
+```
+
+## Response Formats
+
+### Price Feed ID Response
+```typescript
+{
+  status: "success",
+  feedId: "H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG"
+}
+```
+
+### Price Response
+```typescript
+{
+  status: "success",
+  price: "23.45",
+  message: "Current price: $23.45"
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const price = await agent.getPythPrice(feedId);
+} catch (error) {
+  if (error.message.includes("No price feed")) {
+    // Handle missing feed
+  } else if (error.message.includes("HTTP error")) {
+    // Handle network issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Feed ID Management**
+   - Cache common feeds
+   - Validate symbols
+   - Handle multiple matches
+   - Monitor updates
+
+2. **Price Fetching**
+   - Handle decimals properly
+   - Validate responses
+   - Consider staleness
+   - Format consistently
+
+3. **Error Handling**
+   - Implement retries
+   - Validate inputs
+   - Check feed status
+   - Log errors
+
+4. **Performance**
+   - Cache feed IDs
+   - Batch requests
+   - Monitor latency
+   - Handle timeouts
+
+## Common Issues
+
+1. **Feed Lookup**
+   - Invalid symbols
+   - Multiple matches
+   - Missing feeds
+   - Network errors
+
+2. **Price Fetching**
+   - Stale prices
+   - Decimal errors
+   - Format issues
+   - Connection problems
+
+3. **Data Quality**
+   - Price accuracy
+   - Update frequency
+   - Feed reliability
+   - Data consistency
+
+## Common Price Feeds
+
+| Symbol | Feed ID (Mainnet) |
+|--------|------------------|
+| SOL/USD | H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG |
+| BTC/USD | GVXRSBjFk6e6J3NbVPXohDJetcTjaeeuykUpbQF8UoMU |
+| ETH/USD | JBu1AL4obBcCMqKBBxhpWCNUt136ijcuMZLFvTP7iWdB |
+| USDC/USD | Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD |
+
+## Price Update Frequency
+
+- Most feeds update every 400ms
+- Updates depend on market conditions
+- Consider confidence intervals
+- Monitor update timestamps
+
+## Integration Tips
+
+1. **Price Monitoring**
+   ```typescript
+   // Regular price checks
+   setInterval(async () => {
+     const price = await agent.getPythPrice(feedId);
+     console.log(`Current price: $${price}`);
+   }, 5000);
+   ```
+
+2. **Error Recovery**
+   ```typescript
+   async function getPriceWithRetry(feedId: string, retries = 3) {
+     for (let i = 0; i < retries; i++) {
+       try {
+         return await agent.getPythPrice(feedId);
+       } catch (error) {
+         if (i === retries - 1) throw error;
+         await new Promise(r => setTimeout(r, 1000));
+       }
+     }
+   }
+   ```
+
+## Related Functions
+
+- `getTokenData`: Get token information
+- `trade`: Execute trades
+- `fetchMarketData`: Get market info
+- `calculatePositionValue`: Value positions

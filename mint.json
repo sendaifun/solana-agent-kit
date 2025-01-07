@@ -28,9 +28,16 @@
   "navigation": [
     {
       "group": "Getting Started",
+      "pages": ["v0/introduction", "v0/quickstart"]
+    },
+    {
+      "group": "Examples",
       "pages": [
-        "v0/introduction",
-        "v0/quickstart"
+        "v0/examples/nextjs",
+        "v0/examples/telegram",
+        "v0/examples/persistent_agent",
+        "v0/examples/langgraph",
+        "v0/examples/market_maker"
       ]
     },
     {
@@ -45,15 +52,61 @@
     {
       "group": "Features",
       "pages": [
-        "v0/features/adrena"
+        {
+          "group": "Token Operations",
+          "pages": [
+            "v0/features/token-operations/transfer_assets",
+            "v0/features/token-operations/stake_sol",
+            "v0/features/token-operations/deploy_spl_metaplex",
+            "v0/features/token-operations/balance_check",
+            "v0/features/token-operations/compressed_airdrop"
+          ]
+        },
+        {
+          "group": "NFT Management",
+          "pages": [
+            "v0/features/nft-management/deploy_collection",
+            "v0/features/nft-management/mint_nft"
+          ]
+        },
+        {
+          "group": "Defi Integrations",
+          "pages": [
+            "v0/features/defi-integration/jupiter_exchange_swaps",
+            "v0/features/defi-integration/launch_pumpfun",
+            "v0/features/defi-integration/raydium_pools",
+            "v0/features/defi-integration/orca_whirlpool",
+            "v0/features/defi-integration/manifest_market",
+            "v0/features/defi-integration/openbook_market",
+            "v0/features/defi-integration/sns",
+            "v0/features/defi-integration/pyth",
+            "v0/features/defi-integration/alldomains",
+            "v0/features/defi-integration/adrena"
+          ]
+        },
+        {
+          "group": "Solana Blinks",
+          "pages": [
+            "v0/features/solana-blinks/lulo",
+            "v0/features/solana-blinks/send_arcade_rps",
+            "v0/features/solana-blinks/jupsol_staking",
+            "v0/features/solana-blinks/solayer_restaking"
+          ]
+        },
+        {
+          "group": "Non-Financial Actions",
+          "pages": ["v0/features/non-financial/gibwork_bounties"]
+        }
       ]
+    },
+    {
+      "group": "Utilities",
+      "pages": ["v0/utilities/transaction_utils"]
     },
     {
       "group": "Classes",
       "icon": "cube",
-      "pages": [
-        "v0/classes/SolanaAgentKit"
-      ]
+      "pages": ["v0/classes/SolanaAgentKit"]
     },
     {
       "group": "Functions",

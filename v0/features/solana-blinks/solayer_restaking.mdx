@@ -1,0 +1,245 @@
+---
+title: 'Solayer SOL Restaking'
+description: 'Restake SOL to receive sSOL through Solayer Protocol'
+---
+
+# Solayer SOL Restaking
+
+Restake SOL tokens to receive sSOL (Solayer SOL) through Solayer's restaking protocol. Earn enhanced yields through restaking while maintaining liquidity through the sSOL token.
+
+## Core Features
+
+1. Restaking Operations
+   - SOL to sSOL conversion
+   - Enhanced staking yields
+   - Liquid staking token (LST)
+   - Automatic compounding
+
+2. Key Benefits
+   - Higher APY through restaking
+   - Liquid token representation
+   - Double-yield potential
+   - Protocol security
+
+## Usage
+
+```typescript
+// Restake SOL to receive sSOL
+const signature = await agent.restake(
+  1.0  // Amount of SOL to restake
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Amount of SOL to restake |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Restake 1 SOL on Solayer"
+
+"Convert SOL to sSOL for better yields"
+
+"Stake 2.5 SOL with Solayer restaking"
+
+"Get sSOL by staking 0.5 SOL"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic restaking
+{
+  "amount": 1.0
+}
+
+// Minimum stake
+{
+  "amount": 0.1
+}
+
+// Direct amount input
+"1.5"
+```
+
+## Implementation Details
+
+### Restaking Process
+```typescript
+interface RestakeParams {
+  amount: number;     // SOL amount
+  account: string;    // Wallet address
+}
+
+// Features
+- Versioned transactions
+- Blockhash handling
+- Multiple retries
+- Confirmation tracking
+```
+
+## Response Format
+
+```typescript
+// Success response
+{
+  status: "success",
+  message: "Staked successfully",
+  transaction: "3FgHn9...",
+  amount: 1.0
+}
+
+// Error response
+{
+  status: "error",
+  message: "Solayer sSOL staking failed: insufficient funds",
+  code: "UNKNOWN_ERROR"
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.restake(amount);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("request failed")) {
+    // Handle API issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Restaking Management**
+   - Verify SOL balance
+   - Consider gas fees
+   - Monitor yields
+   - Track restaking rewards
+
+2. **Transaction Handling**
+   - Implement retries
+   - Check confirmations
+   - Handle timeouts
+   - Monitor failures
+
+3. **Balance Management**
+   - Track SOL/sSOL ratio
+   - Monitor yield rates
+   - Consider unlock periods
+   - Plan exit strategy
+
+4. **Security**
+   - Verify transactions
+   - Check approvals
+   - Monitor positions
+   - Review permissions
+
+## Common Issues
+
+1. **Restaking**
+   - Insufficient SOL
+   - Network congestion
+   - API timeouts
+   - Rate limits
+
+2. **Transaction**
+   - Failed confirmations
+   - Version mismatches
+   - Blockhash issues
+   - Signature errors
+
+3. **Balance**
+   - Sync delays
+   - Fee calculations
+   - Reward tracking
+   - Rate updates
+
+## Technical Details
+
+### Token Information
+```typescript
+// Token addresses and information
+const SSOL_MINT = "..."; // Solayer SOL mint address
+const RESTAKING_PROGRAM = "..."; // Solayer program ID
+```
+
+### Transaction Flow
+
+1. **Initialize**
+```typescript
+// Prepare restaking request
+const response = await fetch(
+  `https://app.solayer.org/api/action/restake/ssol?amount=${amount}`
+);
+```
+
+2. **Process**
+```typescript
+// Deserialize and sign transaction
+const txn = VersionedTransaction.deserialize(buffer);
+txn.message.recentBlockhash = blockhash;
+txn.sign([wallet]);
+```
+
+3. **Confirm**
+```typescript
+// Wait for confirmation
+await connection.confirmTransaction({
+  signature,
+  blockhash,
+  lastValidBlockHeight
+});
+```
+
+## Protocol Features
+
+1. **Restaking Mechanism**
+   - Enhanced yield generation
+   - Automatic compounding
+   - Multiple validator support
+   - Risk distribution
+
+2. **Security**
+   - Audited contracts
+   - Distributed validation
+   - Emergency procedures
+   - Risk management
+
+3. **Rewards**
+   - Double-yield potential
+   - Automatic processing
+   - Real-time tracking
+   - Compound interest
+
+## Related Functions
+
+- `getBalance`: Check SOL balance
+- `getSsolBalance`: Check sSOL balance
+- `unrestake`: Convert back to SOL
+- `checkYield`: View current APY
+
+## Notes
+
+1. **Minimum Stake**
+   - Network fees consideration
+   - Slippage tolerance
+   - Minimum amounts
+   - Protocol limits
+
+2. **Performance**
+   - Monitor APY changes
+   - Track restaking rewards
+   - Compare rates
+   - Review fees
+
+3. **Risk Management**
+   - Diversification strategy
+   - Exit planning
+   - Market monitoring
+   - Protocol updates

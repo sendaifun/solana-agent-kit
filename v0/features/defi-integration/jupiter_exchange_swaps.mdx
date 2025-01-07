@@ -1,0 +1,191 @@
+---
+title: 'Jupiter Exchange Swaps'
+description: 'Learn how to swap tokens using Jupiter Exchange integration'
+---
+
+# Jupiter Exchange Swaps
+
+Execute token swaps on Solana using Jupiter Exchange aggregation. Support for all SPL tokens with automatic SOL wrapping/unwrapping and slippage protection.
+
+## Usage
+
+```typescript
+// Swap SOL for USDC
+const signature = await agent.trade(
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+  1, // 1 SOL
+);
+
+// Swap USDC for SOL with custom slippage
+const signature = await agent.trade(
+  new PublicKey("So11111111111111111111111111111111111111112"), // SOL
+  100, // 100 USDC
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+  100 // 1% slippage
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| outputMint | PublicKey | Yes | Target token mint address |
+| inputAmount | number | Yes | Amount to swap |
+| inputMint | PublicKey | No | Source token mint (defaults to SOL) |
+| slippageBps | number | No | Slippage tolerance in basis points (default: 300) |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Swap 1 SOL for USDC"
+
+"Exchange 100 USDC for SOL with 1% slippage"
+
+"Trade my BONK tokens for USDC"
+
+"Convert 50 USDT to jitoSOL"
+```
+
+### LangChain Tool Prompts
+```text
+// Swap SOL for USDC
+{
+  "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "inputAmount": 1
+}
+
+// Swap USDC for SOL with custom slippage
+{
+  "outputMint": "So11111111111111111111111111111111111111112",
+  "inputAmount": 100,
+  "inputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "slippageBps": 100
+}
+
+// Swap with specific decimals
+{
+  "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "inputAmount": 1000,
+  "inputMint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  "inputDecimal": 5
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function executeSwaps(agent: SolanaAgentKit) {
+  // Common token addresses
+  const USDC = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+  const SOL = new PublicKey("So11111111111111111111111111111111111111112");
+  
+  try {
+    // Swap SOL for USDC
+    const swap1 = await agent.trade(
+      USDC,
+      1  // 1 SOL
+    );
+    console.log("SOL -> USDC swap:", swap1);
+
+    // Swap USDC back to SOL
+    const swap2 = await agent.trade(
+      SOL,
+      100,  // 100 USDC
+      USDC,
+      100   // 1% slippage
+    );
+    console.log("USDC -> SOL swap:", swap2);
+  } catch (error) {
+    console.error("Swap failed:", error);
+  }
+}
+```
+
+## Implementation Details
+
+- Uses Jupiter Exchange for best prices
+- Automatic SOL wrapping/unwrapping
+- Dynamic compute unit limits
+- Auto-calculated priority fees
+- Optional referral integration
+- Direct route optimization
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.trade(outputMint, amount, inputMint);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("slippage")) {
+    // Handle price movement
+  }
+}
+```
+
+## Best Practices
+
+1. **Slippage Management**
+   - Use appropriate slippage for token
+   - Consider market volatility
+   - Monitor price impact
+   - Handle failed transactions
+
+2. **Amount Calculation**
+   - Account for token decimals
+   - Check minimum amounts
+   - Consider fees
+   - Verify available balance
+
+3. **Error Handling**
+   - Implement retries
+   - Monitor transaction status
+   - Handle timeouts
+   - Verify swap results
+
+4. **Performance**
+   - Use direct routes when possible
+   - Set appropriate compute limits
+   - Monitor network conditions
+   - Consider priority fees
+
+## Common Token Addresses
+
+- SOL: `So11111111111111111111111111111111111111112`
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- BONK: `DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263`
+- jitoSOL: `J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn`
+
+## Response Format
+
+```typescript
+// Successful response
+{
+  status: "success",
+  message: "Trade executed successfully",
+  transaction: "5UfgJ5vVZxUxefDGqzqkVLHzHxVTyYH9StYyHKgvHYmXJgqJKxEqy9k4Rz9LpXrHF9kUZB7",
+  inputAmount: 1,
+  inputToken: "SOL",
+  outputToken: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+}
+
+// Error response
+{
+  status: "error",
+  message: "Error message here",
+  code: "ERROR_CODE"
+}
+```
+
+## Related Functions
+
+- `getBalance`: Check token balances
+- `fetchPrice`: Get token prices
+- `getTokenData`: Get token information
+- `transfer`: Transfer tokens

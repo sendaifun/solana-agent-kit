@@ -1,0 +1,239 @@
+---
+title: 'SEND Arcade Games'
+description: 'Play Rock Paper Scissors on Solana to win SEND tokens'
+---
+
+# SEND Arcade Games
+
+Play Rock Paper Scissors on Solana using Send Arcade. Bet SOL and win SEND tokens in this interactive blockchain game.
+
+## Core Features
+
+1. Game Mechanics
+   - Three choices: rock, paper, scissors
+   - Multiple bet sizes
+   - Automated opponent
+   - Instant outcomes
+
+2. Prize System
+   - SEND token rewards
+   - Automated claiming
+   - Transaction verification
+   - Multi-step collection
+
+## Usage
+
+```typescript
+const result = await agent.rockPaperScissors(
+  0.01,          // Amount in SOL
+  "rock"         // Choice: "rock", "paper", or "scissors"
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Values | Description |
+| --------- | ---- | -------- | ------ | ----------- |
+| amount | number | Yes | 0.005, 0.01, 0.1 | Bet amount in SOL |
+| choice | string | Yes | "rock", "paper", "scissors" | Player's move |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Play rock paper scissors with 0.01 SOL"
+
+"Choose rock and bet 0.1 SOL"
+
+"Play scissors in RPS for minimum bet"
+
+"Challenge with paper for 0.01 SOL"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic game
+{
+  "choice": "rock",
+  "amount": 0.01
+}
+
+// Maximum bet
+{
+  "choice": "paper",
+  "amount": 0.1
+}
+
+// Minimum bet
+{
+  "choice": "scissors",
+  "amount": 0.005
+}
+```
+
+## Game Flow
+
+1. **Game Initiation**
+   ```typescript
+   // Start game
+   const gameResult = await agent.rockPaperScissors(0.01, "rock");
+   ```
+
+2. **Outcome Resolution**
+   ```typescript
+   // Results can be:
+   "You won! Scissors beats Paper"
+   "You lost! Paper beats Rock"
+   "It's a tie!"
+   ```
+
+3. **Prize Claiming**
+   ```typescript
+   // Automated for wins:
+   "Prize claimed Successfully"
+   "You won X SEND tokens!"
+   ```
+
+## Implementation Details
+
+### Game Process
+```typescript
+interface GameParams {
+  amount: number;     // Bet amount
+  choice: string;     // Player's choice
+  account: string;    // Player's wallet
+}
+
+// Features
+- Transaction signing
+- Outcome verification
+- Prize distribution
+- Multi-step claiming
+```
+
+## Error Handling
+
+```typescript
+try {
+  const result = await agent.rockPaperScissors(amount, choice);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient SOL
+  } else if (error.message.includes("invalid choice")) {
+    // Handle invalid move
+  }
+}
+```
+
+## Best Practices
+
+1. **Game Strategy**
+   - Verify SOL balance
+   - Start with small bets
+   - Monitor outcomes
+   - Track winnings
+
+2. **Transaction Management**
+   - Wait for confirmations
+   - Handle timeouts
+   - Monitor failures
+   - Verify claims
+
+3. **Prize Collection**
+   - Confirm receipts
+   - Track transactions
+   - Monitor balances
+   - Save signatures
+
+4. **Error Recovery**
+   - Handle timeouts
+   - Retry claims
+   - Monitor status
+   - Save game IDs
+
+## Common Issues
+
+1. **Game Initiation**
+   - Invalid bet amounts
+   - Insufficient balance
+   - Network issues
+   - Timeout errors
+
+2. **Outcome Resolution**
+   - Transaction failures
+   - Confirmation delays
+   - Status errors
+   - Connection issues
+
+3. **Prize Collection**
+   - Claim failures
+   - Transaction errors
+   - Timeout issues
+   - Balance updates
+
+## Game Mechanics
+
+### Bet Amounts
+- 0.005 SOL (minimum)
+- 0.01 SOL (medium)
+- 0.1 SOL (maximum)
+
+### Winning Combinations
+- Rock beats Scissors
+- Paper beats Rock
+- Scissors beats Paper
+
+### Prize Structure
+- Win: Receive SEND tokens
+- Loss: Lose bet amount
+- Tie: Return bet amount
+
+## Transaction Flow
+
+1. **Place Bet**
+```typescript
+// Create and sign bet transaction
+const txn = Transaction.from(Buffer.from(data.transaction, "base64"));
+txn.sign(agent.wallet);
+```
+
+2. **Resolve Outcome**
+```typescript
+// Check game result
+const outcome = await checkOutcome(signature, href);
+```
+
+3. **Claim Prize**
+```typescript
+// For wins, claim automatically
+if (outcome.won) {
+  await claimPrize(href);
+}
+```
+
+## Related Functions
+
+- `getBalance`: Check SOL balance
+- `getSendBalance`: Check SEND balance
+- `transfer`: Transfer tokens
+- `getGameHistory`: View past games
+
+## Notes
+
+1. **Game Rules**
+   - One game at a time
+   - Fixed bet amounts
+   - Instant resolution
+   - Automated opponent
+
+2. **Prize Details**
+   - SEND token rewards
+   - Automatic claiming
+   - Instant distribution
+   - Balance updates
+
+3. **Security Tips**
+   - Verify transactions
+   - Check amounts
+   - Monitor outcomes
+   - Save records

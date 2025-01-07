@@ -1,0 +1,229 @@
+---
+title: 'Transaction Utilities'
+description: 'Handle Solana transaction priority fees and transaction sending'
+---
+
+# Transaction Utilities
+
+Utilities for handling Solana transaction priority fees and sending transactions with proper compute budget settings. These utilities help optimize transaction success rates and manage network congestion.
+
+## Priority Fee Tiers
+
+```typescript
+const feeTiers = {
+  min: 0.01,   // Minimum priority fee (1st percentile)
+  mid: 0.5,    // Medium priority fee (50th percentile)
+  max: 0.95,   // Maximum priority fee (95th percentile)
+};
+```
+
+## Compute Budget Instructions
+
+Get compute budget instructions based on transaction simulation and current network conditions.
+
+```typescript
+const {
+  blockhash,
+  computeBudgetLimitInstruction,
+  computeBudgetPriorityFeeInstructions
+} = await getComputeBudgetInstructions(
+  agent,
+  instructions,
+  "mid"  // fee tier
+);
+```
+
+### Parameters
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| agent | SolanaAgentKit | Yes | Agent instance |
+| instructions | TransactionInstruction[] | Yes | Transaction instructions |
+| feeTier | "min" \| "mid" \| "max" | Yes | Priority fee tier |
+
+### Returns
+```typescript
+interface ComputeBudgetInstructions {
+  blockhash: string;
+  computeBudgetLimitInstruction: TransactionInstruction;
+  computeBudgetPriorityFeeInstructions: TransactionInstruction;
+}
+```
+
+## Send Transaction
+
+Send a transaction with proper compute budget and priority fees.
+
+```typescript
+const signature = await sendTx(
+  agent,
+  instructions,
+  otherKeypairs  // optional additional signers
+);
+```
+
+### Parameters
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| agent | SolanaAgentKit | Yes | Agent instance |
+| instructions | TransactionInstruction[] | Yes | Transaction instructions |
+| otherKeypairs | Keypair[] | No | Additional signers |
+
+## Implementation Details
+
+### Compute Budget Calculation
+```typescript
+// Calculate safe compute units
+const safeComputeUnits = Math.ceil(
+  estimatedComputeUnits
+    ? Math.max(
+        estimatedComputeUnits + 100000,
+        estimatedComputeUnits * 1.2
+      )
+    : 200000
+);
+```
+
+### Priority Fee Calculation
+```typescript
+// Get priority fee from recent fees
+const priorityFee = await connection
+  .getRecentPrioritizationFees()
+  .then(fees => 
+    fees.sort((a, b) => 
+      a.prioritizationFee - b.prioritizationFee
+    )[Math.floor(fees.length * feeTiers[feeTier])]
+    .prioritizationFee
+  );
+```
+
+## Usage Example
+
+```typescript
+async function executeTransaction(
+  agent: SolanaAgentKit,
+  instructions: TransactionInstruction[]
+) {
+  try {
+    // Send transaction with mid-tier priority fees
+    const signature = await sendTx(
+      agent,
+      instructions
+    );
+    
+    console.log('Transaction successful:', signature);
+    return signature;
+  } catch (error) {
+    console.error('Transaction failed:', error);
+    throw error;
+  }
+}
+```
+
+## Error Handling
+
+```typescript
+// Handle common transaction errors
+try {
+  const signature = await sendTx(agent, instructions);
+} catch (error) {
+  if (error.message.includes("Transaction timeout")) {
+    // Handle timeout
+  } else if (error.message.includes("Transaction failed")) {
+    // Handle transaction failure
+  }
+}
+```
+
+## Best Practices
+
+1. **Fee Management**
+   - Use appropriate fee tiers
+   - Monitor network congestion
+   - Adjust compute limits
+   - Track fees spent
+
+2. **Transaction Optimization**
+   - Simulate transactions
+   - Set proper compute limits
+   - Use versioned transactions
+   - Handle timeouts
+
+3. **Error Recovery**
+   - Implement retries
+   - Monitor signatures
+   - Log failures
+   - Track statistics
+
+## Common Issues
+
+1. **Transaction Failures**
+   - Insufficient priority fees
+   - Compute limit exceeded
+   - Timeout issues
+   - Network congestion
+
+2. **Performance**
+   - High fees
+   - Slow confirmations
+   - Failed simulations
+   - Budget limitations
+
+3. **Technical**
+   - Invalid blockhash
+   - Signature errors
+   - Budget calculation
+   - Timeout configuration
+
+## Performance Tips
+
+### Transaction Sending
+```typescript
+// Optimized transaction sending
+const signature = await connection.sendTransaction(transaction, {
+  maxRetries: 0,           // Handle retries manually
+  skipPreflight: false,    // Run preflight checks
+});
+```
+
+### Status Checking
+```typescript
+// Efficient status checking
+const statuses = await connection.getSignatureStatuses([signature]);
+if (statuses.value[0]?.err) {
+  throw new Error(`Transaction failed: ${statuses.value[0].err}`);
+}
+```
+
+## Related Functions
+
+- `simulateTransaction`: Simulate transaction execution
+- `getLatestBlockhash`: Get recent blockhash
+- `getSignatureStatus`: Check transaction status
+- `confirmTransaction`: Wait for confirmation
+
+## Technical Notes
+
+1. **Compute Budget**
+   - Base limit: 200,000 units
+   - Safety margin: +100,000 units
+   - Scaling factor: 1.2x
+   - Dynamic adjustment
+
+2. **Priority Fees**
+   - Three tier levels
+   - Percentile-based
+   - Dynamic pricing
+   - Network-aware
+
+3. **Timeouts**
+   - Default: 90 seconds
+   - Retry interval: 1 second
+   - Status polling
+   - Error handling
+
+## Resources
+
+- [Solana Transaction Format](https://docs.solana.com/developing/programming-model/transactions)
+- [Compute Budget Program](https://docs.solana.com/developing/runtime-facilities/programs#compute-budget)
+- [Priority Fees](https://docs.solana.com/developing/runtime-facilities/priority-fees)
+- [Transaction Versions](https://docs.solana.com/developing/versioned-transactions)

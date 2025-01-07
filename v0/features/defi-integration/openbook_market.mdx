@@ -1,0 +1,186 @@
+---
+title: 'OpenBook Market Creation'
+description: 'Create and configure markets on OpenBook DEX'
+---
+
+# OpenBook Market Creation
+
+Create new trading markets on OpenBook DEX with customizable parameters for lot size and tick size. Supports integration with Raydium AMM v4.
+
+## Usage
+
+```typescript
+const signatures = await agent.openbookCreateMarket(
+  new PublicKey("base-token-mint"),   // Base token
+  new PublicKey("quote-token-mint"),  // Quote token
+  1,                                  // Lot size
+  0.01                               // Tick size
+);
+```
+
+## Parameters
+
+| Parameter | Type | Required | Default | Description |
+| --------- | ---- | -------- | ------- | ----------- |
+| baseMint | PublicKey | Yes | - | Base token mint address |
+| quoteMint | PublicKey | Yes | - | Quote token mint address |
+| lotSize | number | No | 1 | Minimum order size |
+| tickSize | number | No | 0.01 | Minimum price increment |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a new USDC/SOL market on OpenBook"
+
+"Setup trading pair for my token with 0.1 tick size"
+
+"Create market with custom lot size of 100"
+
+"Initialize OpenBook DEX market for token pair"
+```
+
+### LangChain Tool Prompts
+```text
+// Basic market creation
+{
+  "baseMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteMint": "So11111111111111111111111111111111111111112"
+}
+
+// Custom configuration
+{
+  "baseMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "quoteMint": "So11111111111111111111111111111111111111112",
+  "lotSize": 100,
+  "tickSize": 0.1
+}
+```
+
+## Example Implementation
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
+
+async function createTradingMarket(agent: SolanaAgentKit) {
+  try {
+    // Create USDC/SOL market
+    const signatures = await agent.openbookCreateMarket(
+      new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+      new PublicKey("So11111111111111111111111111111111111111112"), // SOL
+      1,    // 1 unit minimum order
+      0.01  // $0.01 minimum price increment
+    );
+    
+    console.log("Market created:", signatures);
+    return signatures;
+  } catch (error) {
+    console.error("Market creation failed:", error);
+    throw error;
+  }
+}
+```
+
+## Market Configuration
+
+### Lot Size
+- Determines minimum order size
+- Must be positive number
+- Affects order book granularity
+- Consider token decimals
+
+### Tick Size
+- Sets price increment
+- Must be positive number
+- Affects price precision
+- Balance precision vs liquidity
+
+## Implementation Details
+
+- Uses Raydium SDK for market creation
+- Supports standard SPL tokens
+- Sequential transaction execution
+- Multiple signature requirements
+
+## Error Handling
+
+```typescript
+try {
+  const signatures = await agent.openbookCreateMarket(...);
+} catch (error) {
+  if (error.message.includes("TOKEN_PROGRAM_ID")) {
+    // Handle token program mismatch
+  } else if (error.message.includes("decimals")) {
+    // Handle decimal configuration issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Market Configuration**
+   - Choose appropriate lot sizes
+   - Set reasonable tick sizes
+   - Consider token decimals
+   - Plan for volume
+
+2. **Token Compatibility**
+   - Verify token programs
+   - Check token standards
+   - Validate decimals
+   - Test with small amounts
+
+3. **Transaction Management**
+   - Handle multiple signatures
+   - Monitor confirmations
+   - Implement retries
+   - Log market details
+
+4. **Integration**
+   - Plan Raydium integration
+   - Consider AMM v4 usage
+   - Test order flow
+   - Monitor market health
+
+## Common Issues
+
+1. **Token Program**
+   - Incompatible token standards
+   - Wrong program IDs
+   - Missing approvals
+   - Invalid mints
+
+2. **Configuration**
+   - Invalid lot sizes
+   - Inappropriate tick sizes
+   - Decimal mismatches
+   - Parameter conflicts
+
+3. **Transaction**
+   - Signature failures
+   - RPC timeouts
+   - Network congestion
+   - Balance issues
+
+## Common Token Addresses
+
+- USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+- SOL: `So11111111111111111111111111111111111111112`
+- USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
+- RAY: `4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R`
+
+## Related Functions
+
+- `raydiumCreateAmmV4`: Create AMM with market
+- `getBalance`: Check token balances
+- `trade`: Execute trades
+- `createTokenAccount`: Setup accounts
+
+## Notes for Raydium Integration
+
+When creating markets for Raydium AMM v4:
+1. Create OpenBook market first
+2. Use market ID for AMM creation
+3. Ensure token program compatibility
+4. Consider fee configurations

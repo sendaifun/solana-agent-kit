@@ -1,0 +1,224 @@
+---
+title: 'Getting Started with NextJS'
+description: 'Build a Solana Agent Kit chat interface with NextJS'
+---
+
+# Getting Started with NextJS
+
+Build a conversational interface for Solana Agent Kit using Next.js and LangChain. This implementation provides a streaming chat interface with real-time responses and blockchain interactions.
+
+## Quick Start
+
+### 1. Project Setup
+```bash
+# Clone the repository
+npm install -g degit
+degit sendaifun/solana-agent-kit/tree/main/examples/agent-kit-nextjs-langchain agent-kit-nextjs-langchain
+cd agent-kit-nextjs-langchain
+
+# Install dependencies
+pnpm install
+```
+
+### 2. Environment Configuration
+Create a `.env.local` file with the following variables:
+```env
+OPENAI_API_KEY=your_openai_key
+RPC_URL=your_solana_rpc_url
+SOLANA_PRIVATE_KEY=your_wallet_private_key_base58
+```
+
+### 3. Start Development Server
+```bash
+pnpm dev
+```
+
+## Project Structure
+
+```
+├── app/
+│   ├── api/
+│   │   └── chat/
+│   │       └── route.ts      # API endpoint for chat
+│   ├── components/
+│   │   ├── chat.tsx         # Chat interface
+│   │   └── message.tsx      # Message component
+│   └── page.tsx             # Main page
+├── public/
+│   └── images/              # Static assets
+└── package.json
+```
+
+## Core Components
+
+### Chat Interface
+```typescript
+// app/components/chat.tsx
+export function Chat() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  
+  return (
+    <div className="flex flex-col h-full">
+      <Messages messages={messages} />
+      <Input 
+        value={input}
+        onChange={handleInputChange}
+        onSubmit={handleSubmit}
+      />
+    </div>
+  );
+}
+```
+
+### API Route
+```typescript
+// app/api/chat/route.ts
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+  
+  const solanaKit = new SolanaAgentKit(
+    process.env.SOLANA_PRIVATE_KEY!,
+    process.env.RPC_URL!,
+    process.env.OPENAI_API_KEY
+  );
+
+  return StreamingTextResponse(response);
+}
+```
+
+## Features
+
+1. **Real-time Streaming**
+   - Message streaming
+   - Typing indicators
+   - Markdown support
+   - Code highlighting
+
+2. **Blockchain Integration**
+   - Wallet connection
+   - Transaction handling
+   - Balance checking
+   - Token management
+
+3. **UI Components**
+   - Chat interface
+   - Message history
+   - Input handling
+   - Error states
+
+## Example Usage
+
+### Basic Chat
+```typescript
+import { Chat } from '@/components/chat';
+
+export default function Home() {
+  return (
+    <div className="container">
+      <Chat />
+    </div>
+  );
+}
+```
+
+### Custom Styling
+```typescript
+// Add custom styles to chat component
+<Chat className="rounded-lg shadow-lg" />
+```
+
+## Deployment
+
+### Deploy to Vercel
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsendaifun%2Fsolana-agent-kit%2Ftree%2Fmain%2Fexamples%2Fagent-kit-nextjs-langchain)
+
+### Environment Variables
+Required variables for deployment:
+- `OPENAI_API_KEY`
+- `RPC_URL`
+- `SOLANA_PRIVATE_KEY`
+
+## Customization
+
+### Modify Chat Behavior
+```typescript
+// app/api/chat/route.ts
+const agent = new SolanaAgentKit({
+  temperature: 0.7,
+  maxTokens: 1000,
+  // Add custom settings
+});
+```
+
+### Add Custom Tools
+```typescript
+// Add new tool to agent
+const customTool = {
+  name: 'custom_tool',
+  description: 'Custom functionality',
+  execute: async (input) => {
+    // Implementation
+  }
+};
+
+agent.addTool(customTool);
+```
+
+## Bundle Size Optimization
+
+- Uses partial imports
+- Tree shaking enabled
+- Dynamic imports where needed
+- Optimized dependencies
+
+## Development Tips
+
+1. **Local Development**
+   - Use `pnpm dev` for hot reloading
+   - Check `.env.local` for variables
+   - Monitor API rate limits
+   - Test transactions on devnet
+
+2. **Testing**
+   - Test chat functionality
+   - Verify blockchain operations
+   - Check error handling
+   - Monitor performance
+
+3. **Deployment**
+   - Set environment variables
+   - Configure RPC endpoints
+   - Monitor usage
+   - Check logs
+
+## Common Issues
+
+1. **Environment Setup**
+   - Missing variables
+   - Invalid API keys
+   - RPC connection issues
+   - Wallet configuration
+
+2. **API Errors**
+   - Rate limiting
+   - Token validation
+   - Response formatting
+   - Stream handling
+
+3. **UI Issues**
+   - Message rendering
+   - Stream buffering
+   - Style conflicts
+   - Mobile responsiveness
+
+## Resources
+
+- [NextJS Documentation](https://nextjs.org/docs)
+- [LangChain Documentation](https://js.langchain.com/docs/)
+- [Solana Agent Kit GitHub](https://github.com/sendaifun/solana-agent-kit)
+- [Vercel Deployment](https://vercel.com/docs)
