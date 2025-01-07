@@ -1,0 +1,288 @@
+---
+title: 'Persistent Agent with PostgreSQL'
+description: 'Build a Solana Agent with persistent memory using PostgreSQL'
+---
+
+# Persistent Agent with PostgreSQL
+
+Create a Solana Agent with persistent memory across sessions using PostgreSQL. This implementation enables the agent to maintain context and remember past interactions, providing a more personalized user experience.
+
+## Core Features
+
+1. **Memory Persistence**
+   - Session history storage
+   - Cross-session memory
+   - Contextual awareness
+   - Long-term retention
+
+2. **Database Integration**
+   - PostgreSQL storage
+   - Efficient querying
+   - Scalable architecture
+   - Data management
+
+## Quick Start
+
+### 1. Setup Database
+```bash
+# Install PostgreSQL (if not already installed)
+brew install postgresql
+
+# Start PostgreSQL service
+brew services start postgresql
+
+# Create database
+createdb agent_memory
+```
+
+### 2. Environment Configuration
+```env
+# .env.local
+DATABASE_URL=postgresql://user:password@localhost:5432/agent_memory
+OPENAI_API_KEY=your_openai_key
+RPC_URL=your_solana_rpc_url
+SOLANA_PRIVATE_KEY=your_wallet_private_key
+```
+
+### 3. Project Structure
+```
+├── src/
+│   ├── db/
+│   │   ├── schema.sql
+│   │   └── persistence.ts
+│   ├── agent/
+│   │   └── memory.ts
+│   └── index.ts
+└── package.json
+```
+
+## Implementation
+
+### Database Schema
+```sql
+-- schema.sql
+CREATE TABLE IF NOT EXISTS memory (
+  id SERIAL PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  content JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Memory Integration
+```typescript
+// memory.ts
+import { PostgresSaver } from "langgraph/checkpoint_postgres";
+
+const memorySaver = new PostgresSaver({
+  sessionId: "unique-session-id",
+  connectionString: process.env.DATABASE_URL,
+  tableName: "memory"
+});
+
+export const agent = new SolanaAgentKit({
+  memory: memorySaver,
+  // other configurations
+});
+```
+
+## Usage Examples
+
+### Without Persistence
+```typescript
+// Regular chat without memory
+const agent = new SolanaAgentKit();
+
+// First session
+await agent.chat("I am Arpit");
+// Response: "Hello Arpit! How can I assist you today?"
+
+// New session (no memory)
+await agent.chat("Do you know my name?");
+// Response: "I don't know your name yet. If you'd like, you can share it."
+```
+
+### With Persistence
+```typescript
+// Chat with persistent memory
+const agent = new SolanaAgentKit({
+  memory: memorySaver
+});
+
+// First session
+await agent.chat("I am Arpit");
+// Response: "Hello Arpit! How can I assist you today?"
+
+// New session (with memory)
+await agent.chat("Do you know my name?");
+// Response: "Yes, you mentioned that your name is Arpit. How can I help you today?"
+```
+
+## Memory Management
+
+### Session Handling
+```typescript
+interface Session {
+  id: string;
+  createdAt: Date;
+  lastAccessed: Date;
+  content: {
+    messages: Message[];
+    context: any;
+  };
+}
+
+// Create new session
+const session = await createSession();
+
+// Restore existing session
+const existingSession = await restoreSession(sessionId);
+```
+
+### Data Storage
+```typescript
+async function saveToMemory(content: any) {
+  await db.query(`
+    INSERT INTO memory (session_id, content)
+    VALUES ($1, $2)
+  `, [sessionId, content]);
+}
+
+async function retrieveFromMemory(sessionId: string) {
+  const result = await db.query(`
+    SELECT content FROM memory
+    WHERE session_id = $1
+    ORDER BY created_at DESC
+    LIMIT 1
+  `, [sessionId]);
+  return result.rows[0]?.content;
+}
+```
+
+## Modes of Operation
+
+### 1. Chat Mode
+- Interactive conversations
+- Memory retention
+- Context awareness
+- Natural responses
+
+### 2. Auto Mode
+- Autonomous actions
+- Scheduled tasks
+- Event-driven responses
+- Background processing
+
+## Best Practices
+
+1. **Database Management**
+   - Regular backups
+   - Index optimization
+   - Query efficiency
+   - Connection pooling
+
+2. **Memory Optimization**
+   - Relevant data storage
+   - Memory cleanup
+   - Session management
+   - Data compression
+
+3. **Error Handling**
+   - Database connectivity
+   - Query failures
+   - Session errors
+   - Memory corruption
+
+## Common Issues
+
+1. **Database Connection**
+   - Connection timeouts
+   - Authentication errors
+   - Pool exhaustion
+   - Network issues
+
+2. **Memory Management**
+   - Memory leaks
+   - Large sessions
+   - Slow queries
+   - Data consistency
+
+3. **Performance**
+   - Query optimization
+   - Connection pooling
+   - Cache usage
+   - Resource management
+
+## Monitoring
+
+### Key Metrics
+```typescript
+interface MemoryMetrics {
+  sessionCount: number;
+  averageSessionSize: number;
+  queryLatency: number;
+  activeConnections: number;
+}
+
+async function getMetrics(): Promise<MemoryMetrics> {
+  // Implementation
+}
+```
+
+### Health Checks
+```typescript
+async function checkHealth() {
+  try {
+    // Check database connection
+    await db.query('SELECT 1');
+    
+    // Check memory usage
+    const metrics = await getMetrics();
+    
+    return {
+      status: 'healthy',
+      metrics
+    };
+  } catch (error) {
+    return {
+      status: 'unhealthy',
+      error
+    };
+  }
+}
+```
+
+## Development Tips
+
+1. **Local Development**
+   - Use local PostgreSQL
+   - Test with sample data
+   - Monitor performance
+   - Profile queries
+
+2. **Testing**
+   - Unit tests
+   - Integration tests
+   - Memory tests
+   - Load testing
+
+3. **Deployment**
+   - Database migration
+   - Backup strategy
+   - Monitoring setup
+   - Scaling plan
+
+## Resources
+
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [LangGraph.js Documentation](https://js.langchain.com/docs/modules/memory)
+- [Solana Agent Kit GitHub](https://github.com/sendaifun/solana-agent-kit)
+- [Database Design Patterns](https://www.postgresql.org/docs/current/patterns.html)
+
+## Support
+
+For issues and questions:
+- GitHub Issues
+- Documentation
+- Community Forums
+- Development Team

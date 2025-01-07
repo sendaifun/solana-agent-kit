@@ -31,6 +31,16 @@
       "pages": ["v0/introduction", "v0/quickstart"]
     },
     {
+      "group": "Examples",
+      "pages": [
+        "v0/examples/nextjs",
+        "v0/examples/telegram",
+        "v0/examples/persistent_agent",
+        "v0/examples/langgraph",
+        "v0/examples/market_maker"
+      ]
+    },
+    {
       "group": "Guides",
       "icon": "book-open",
       "pages": [

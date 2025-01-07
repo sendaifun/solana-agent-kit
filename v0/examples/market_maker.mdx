@@ -1,0 +1,275 @@
+---
+title: 'AI Guided Market Making Agent'
+description: 'Automated market making on Manifest DEX using Solana Agent Kit'
+---
+
+# AI Guided Market Making Agent
+
+Build an intelligent market making bot for Manifest DEX using Solana Agent Kit. This implementation provides automated quote management with randomization to prevent front-running.
+
+## Core Features
+
+1. **Automated Market Making**
+   - Two-sided quoting
+   - Configurable parameters
+   - Automatic quote refreshing
+   - Random pricing model
+
+2. **Trading Strategy**
+   - Configurable depth
+   - Multiple quote levels
+   - Balance management
+   - Risk controls
+
+## Quick Start
+
+### 1. Setup
+```bash
+# Clone repository
+git clone https://github.com/sendaifun/solana-agent-kit/tree/main/examples/market-making-agent
+cd market-maker
+
+# Install dependencies
+pnpm install
+
+# Configure environment
+cp .env.example .env.local
+```
+
+### 2. Configuration Parameters
+
+```typescript
+interface MarketMakerConfig {
+  marketId: string;          // Manifest market ID
+  baseToken: string;         // Base token symbol
+  quoteToken: string;        // Quote token symbol
+  quoteParams: {
+    number: number;          // Quotes per side
+    minDepth: number;        // Min price distance
+    maxDepth: number;        // Max price distance
+  };
+  allowance: {
+    base: number;           // Base token allowance
+    quote: number;          // Quote token allowance
+  };
+  intervalSeconds: number;   // Update interval
+}
+```
+
+## Example Configuration
+
+```json
+{
+  "marketId": "2Uj8277fkaVBtTU6Wp2GPRbQC86SkSdgQ2mp1Q5N2LHc",
+  "baseToken": "SEND",
+  "quoteToken": "USDC",
+  "quoteParams": {
+    "number": 4,
+    "minDepth": 0.1,
+    "maxDepth": 2
+  },
+  "allowance": {
+    "base": 2,
+    "quote": 3
+  },
+  "intervalSeconds": 20
+}
+```
+
+## Implementation Details
+
+### Quote Generation
+```typescript
+function generateQuotes(midPrice: number, params: QuoteParams): Quote[] {
+  const quotes = [];
+  for (let i = 0; i < params.number; i++) {
+    // Add randomization to prevent front-running
+    const randomFactor = 1 + (Math.random() - 0.5) * 0.01;
+    const depth = params.minDepth + 
+      (params.maxDepth - params.minDepth) * (i / params.number);
+    
+    quotes.push({
+      price: midPrice * (1 + depth) * randomFactor,
+      size: calculateSize(depth)
+    });
+  }
+  return quotes;
+}
+```
+
+### Market Making Loop
+```typescript
+async function startMarketMaking(config: MarketMakerConfig) {
+  while (true) {
+    try {
+      // 1. Get current market state
+      const marketState = await getMarketState(config.marketId);
+      
+      // 2. Generate quotes
+      const quotes = generateQuotes(marketState.midPrice, config.quoteParams);
+      
+      // 3. Place orders
+      await placeOrders(quotes);
+      
+      // 4. Wait for interval
+      await sleep(config.intervalSeconds * 1000);
+    } catch (error) {
+      console.error('Market making error:', error);
+    }
+  }
+}
+```
+
+## Trading Parameters
+
+### Quote Depth
+- **Minimum**: Distance from mid price for closest quote
+- **Maximum**: Distance from mid price for furthest quote
+- **Number**: Quotes to place on each side
+
+### Size Parameters
+- **Base Allowance**: Maximum base token usage
+- **Quote Allowance**: Maximum quote token usage
+- **Size Distribution**: How size scales with depth
+
+## Risk Management
+
+1. **Balance Monitoring**
+   - Track token usage
+   - Enforce allowance limits
+   - Monitor exposure
+   - Balance reallocation
+
+2. **Quote Management**
+   - Price sanity checks
+   - Size limits
+   - Spread controls
+   - Update frequency
+
+3. **Error Handling**
+   - Transaction failures
+   - Network issues
+   - Market conditions
+   - Balance issues
+
+## Example Usage
+
+### Start Market Making
+```typescript
+// Initialize configuration
+const config = {
+  marketId: "your-market-id",
+  baseToken: "SEND",
+  quoteToken: "USDC",
+  quoteParams: {
+    number: 4,
+    minDepth: 0.1,
+    maxDepth: 2
+  },
+  allowance: {
+    base: 2,
+    quote: 3
+  },
+  intervalSeconds: 20
+};
+
+// Start market making
+await startMarketMaking(config);
+```
+
+## Common Issues
+
+1. **Market Conditions**
+   - Insufficient liquidity
+   - High volatility
+   - Wide spreads
+   - Price impact
+
+2. **Technical Issues**
+   - Network latency
+   - Transaction failures
+   - API limits
+   - Balance sync
+
+3. **Configuration**
+   - Parameter tuning
+   - Quote spacing
+   - Size allocation
+   - Update frequency
+
+## Performance Optimization
+
+1. **Quote Management**
+   - Batch updates
+   - Cancel strategies
+   - Order tracking
+   - State management
+
+2. **Network Optimization**
+   - RPC endpoint selection
+   - Retry strategies
+   - Confirmation levels
+   - Transaction priority
+
+3. **Resource Usage**
+   - Memory management
+   - CPU utilization
+   - Network bandwidth
+   - Storage efficiency
+
+## Monitoring
+
+### Metrics to Track
+- Quote placement success rate
+- Fill rates per level
+- Token utilization
+- P&L tracking
+
+### Logging
+```typescript
+interface MarketMakingLog {
+  timestamp: number;
+  midPrice: number;
+  spreads: number[];
+  balances: {
+    base: number;
+    quote: number;
+  };
+  activeQuotes: number;
+}
+```
+
+## Development Tips
+
+1. **Testing**
+   - Use devnet first
+   - Test with small sizes
+   - Monitor closely
+   - Log everything
+
+2. **Deployment**
+   - Secure key management
+   - Environment setup
+   - Monitoring setup
+   - Backup systems
+
+3. **Maintenance**
+   - Regular updates
+   - Parameter tuning
+   - Performance analysis
+   - Risk assessment
+
+## Resources
+
+- [Manifest DEX Documentation](https://docs.manifest.com)
+- [Solana Agent Kit GitHub](https://github.com/sendaifun/solana-agent-kit)
+- [Market Making Strategies](https://docs.manifest.com/market-making)
+- [Risk Management Guide](https://docs.manifest.com/risk)
+
+## Support
+
+For support and questions:
+- GitHub issues
+- Documentation
+- Community channels
+- Development team
