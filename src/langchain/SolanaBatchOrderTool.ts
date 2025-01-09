@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 
 export class SolanaBatchOrderTool extends Tool {
   name = "solana_batch_order";
-  description = `Places multiple limit orders in one transaction using Manifest. Submit orders either as a list or pattern:
+  description = `Places multiple limit orders in one transaction using Manifest. Submit orders as a list or pattern:
   
     1. List format:
     {
@@ -29,12 +29,7 @@ export class SolanaBatchOrderTool extends Tool {
       }
     }
   
-    Examples:
-    - "Place 5 buy orders totaling 100 tokens, 1% apart below $1"
-    - "Create 3 sell orders of 10 tokens each between $50-$55"
-    - "Place buy orders worth 50 tokens, $0.10 spacing from $0.80"
-  
-    Important: All orders must be in one transaction. Combine buy and sell orders into a single pattern or list. Never break the orders down to individual buy or sell orders.`;
+    Combine buy and sell orders into a single pattern or list.`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
