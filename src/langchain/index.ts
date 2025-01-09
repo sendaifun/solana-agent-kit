@@ -2534,5 +2534,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaFlashOpenTrade(solanaKit),
     new SolanaFlashCloseTrade(solanaKit),
     new Solana3LandCreateSingle(solanaKit),
+    new SolanaCastProposalVote(solanaKit),
   ];
 }
