@@ -18,10 +18,10 @@ const fluxbeamCreatePoolAction: Action = {
     [
       {
         input: {
-          token_a: "So11111111111111111111111111111111111111112",
-          token_a_amount: 1,
-          token_b: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-          token_b_amount: 1000,
+          tokenA: "So11111111111111111111111111111111111111112",
+          tokenAAmount: 1,
+          tokenB: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          tokenBAmount: 1000,
         },
         output: {
           status: "success",
@@ -39,10 +39,10 @@ const fluxbeamCreatePoolAction: Action = {
     [
       {
         input: {
-          token_a: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-          token_a_amount: 1000,
-          token_b: "7i5KKsX2weiTkry7jA4ZwSuXGhs5eJBEjY8vVxR4pfRx",
-          token_b_amount: 1000,
+          tokenA: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          tokenAAmount: 1000,
+          tokenB: "7i5KKsX2weiTkry7jA4ZwSuXGhs5eJBEjY8vVxR4pfRx",
+          tokenBAmount: 1000,
         },
         output: {
           status: "success",
@@ -57,39 +57,30 @@ const fluxbeamCreatePoolAction: Action = {
         explanation: "Create a new USDC-USDT pool with 1000 USDC and 1000 USDT",
       },
     ],
+    [
+      {
+        input: {
+          tokenA: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          tokenAAmount: 1000,
+          tokenB: "7i5KKsX2weiTkry7jA4ZwSuXGhs5eJBEjY8vVxR4pfRx",
+          tokenBAmount: 1000,
+        },
+        output: {
+          status: "error",
+          message: "Balance is not enough to create pool",
+        },
+        explanation: "There isn't enough balance to create a new pool",
+      },
+    ],
   ],
   schema: z.object({
-    token_a: z
-      .string()
-      .regex(/^[A-Za-z0-9]{32,44}$/, "Invalid token_a mint address format")
-      .min(32, "Token A mint address is too short"),
-    token_a_amount: z
-      .number()
-      .positive("Token A amount must be positive")
-      .max(1_000_000, "Token A amount is too high"), // Optional max value
-    token_b: z
-      .string()
-      .regex(/^[A-Za-z0-9]{32,44}$/, "Invalid token_b mint address format")
-      .min(32, "Token B mint address is too short"),
-    token_b_amount: z
-      .number()
-      .positive("Token B amount must be positive")
-      .max(1_000_000, "Token B amount is too high"), // Optional max value
+    tokenA: z.string().min(32, "Token A mint address is too short"),
+    tokenAAmount: z.number().positive("Token A amount must be positive"),
+    tokenB: z.string().min(32, "Token B mint address is too short"),
+    tokenBAmount: z.number().positive("Token B amount must be positive"),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
-    try {
-      return await createFluxBeamPoolHandler(agent, input);
-    } catch (error: any) {
-      console.error(
-        "FluxBeam pool creation error:",
-        error.stack || error.message,
-      );
-      return {
-        status: "error",
-        message: `FluxBeam pool creation failed: ${error.message || "Unknown error"}`,
-        error: error.message || "Unknown error",
-      };
-    }
+    return await createFluxBeamPoolHandler(agent, input);
   },
 };
 
@@ -98,23 +89,30 @@ const createFluxBeamPoolHandler = async (
   agent: SolanaAgentKit,
   input: Record<string, any>,
 ) => {
-  const tx = await createPoolFluxBeam(
-    agent,
-    new PublicKey(input.token_a),
-    input.token_a_amount,
-    new PublicKey(input.token_b),
-    input.token_b_amount,
-  );
-
-  return {
-    status: "success",
-    message: "Pool created successfully on FluxBeam",
-    transaction: tx,
-    token_a: input.token_a,
-    token_a_amount: input.token_a_amount,
-    token_b: input.token_b,
-    token_b_amount: input.token_b_amount,
-  };
+  try {
+    const tx = await createPoolFluxBeam(
+      agent,
+      new PublicKey(input.tokenA),
+      input.token_a_amount,
+      new PublicKey(input.tokenB),
+      input.token_b_amount,
+    );
+    return {
+      status: "success",
+      message: "Pool created successfully on FluxBeam",
+      transaction: tx,
+      token_a: input.tokenA,
+      token_a_amount: input.tokenAAmount,
+      token_b: input.tokenB,
+      token_b_amount: input.tokenBAmount,
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      message: `FluxBeam pool creation failed: ${error.message}`,
+      error: error.message,
+    };
+  }
 };
 
 export default fluxbeamCreatePoolAction;
