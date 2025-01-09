@@ -1,9 +1,16 @@
 import { HermesClient } from "@pythnetwork/hermes-client";
 import { OraclePrice } from "flash-sdk";
 import { AnchorProvider, BN, Wallet } from "@coral-xyz/anchor";
-import { PoolConfig, Token, Referral, PerpetualsClient } from "flash-sdk";
+import {
+  PoolConfig,
+  Token,
+  Referral,
+  PerpetualsClient,
+  Privilege,
+} from "flash-sdk";
 import { Cluster, PublicKey, Connection, Keypair } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { SolanaAgentKit } from "../index";
 
 const POOL_NAMES = [
   "Crypto.1",
@@ -277,4 +284,17 @@ export function createPerpClient(
     POOL_CONFIGS[0].rewardDistributionProgram.programId,
     {},
   );
+}
+
+export function get_flash_privilege(agent: SolanaAgentKit): Privilege {
+  const FLASH_PRIVILEGE = agent.config.FLASH_PRIVILEGE || "None";
+
+  switch (FLASH_PRIVILEGE.toLowerCase()) {
+    case "referral":
+      return Privilege.Referral;
+    case "nft":
+      return Privilege.NFT;
+    default:
+      return Privilege.None;
+  }
 }

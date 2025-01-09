@@ -4,7 +4,6 @@
 
 ![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
 
-
 ![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/sendaifun/solana-agent-kit?style=for-the-badge)
@@ -23,7 +22,6 @@ An open-source toolkit for connecting AI agents to Solana protocols. Now, any ag
 
 Anyone - whether an SF-based AI researcher or a crypto-native builder - can bring their AI agents trained with any model and seamlessly integrate with Solana.
 
-
 [![Run on Repl.it](https://replit.com/badge/github/sendaifun/solana-agent-kit)](https://replit.com/@sendaifun/Solana-Agent-Kit)
 > Replit template created by [Arpit Singh](https://github.com/The-x-35)
 
@@ -35,7 +33,10 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Balance checks
   - Stake SOL
   - Zk compressed Airdrop by Light Protocol and Helius
-
+- **NFTs on 3.Land**
+  - Create your own collection
+  - NFT creation and automatic listing on 3.land
+  - List your NFT for sale in any SPL token
 - **NFT Management via Metaplex**
   - Collection deployment
   - NFT minting
@@ -90,6 +91,9 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Price feed integration for market analysis
   - Automated decision-making capabilities
 
+## 📃 Documentation
+You can view the full documentation of the kit at [docs.solanaagentkit.xyz](https://docs.solanaagentkit.xyz)
+
 ## 📦 Installation
 
 ```bash
@@ -127,6 +131,57 @@ const result = await agent.deployToken(
 
 console.log("Token Mint Address:", result.mint.toString());
 ```
+### Create NFT Collection on 3Land
+```typescript
+const optionsWithBase58: StoreInitOptions = {
+  privateKey: "",
+  isMainnet: true, // if false, collection will be created on devnet 3.land (dev.3.land)
+};
+
+ const collectionOpts: CreateCollectionOptions = {
+    collectionName: "",
+    collectionSymbol: "",
+    collectionDescription: "",
+    mainImageUrl: ""
+  };
+
+const result = await agent.create3LandCollection(
+      optionsWithBase58,
+      collectionOpts
+    );
+```
+
+### Create NFT on 3Land
+When creating an NFT using 3Land's tool, it automatically goes for sale on 3.land website
+```typescript
+const optionsWithBase58: StoreInitOptions = {
+  privateKey: "",
+  isMainnet: true, // if false, listing will be on devnet 3.land (dev.3.land)
+};
+const collectionAccount = ""; //hash for the collection
+const createItemOptions: CreateSingleOptions = {
+  itemName: "",
+  sellerFee: 500, //5%
+  itemAmount: 100, //total items to be created
+  itemSymbol: "",
+  itemDescription: "",
+  traits: [
+    { trait_type: "", value: "" },
+  ],
+  price: 0, //100000000 == 0.1 sol, can be set to 0 for a free mint
+  mainImageUrl: "",
+  splHash: "", //present if listing is on a specific SPL token, if not present sale will be on $SOL
+};
+const isMainnet = true;
+const result = await agent.create3LandNft(
+  optionsWithBase58,
+  collectionAccount,
+  createItemOptions,
+  isMainnet
+);
+
+```
+
 
 ### Create NFT Collection
 
@@ -247,6 +302,13 @@ const signature = await agent.closePerpTradeLong({
 });
 ```
 
+### Close Empty Token Accounts
+
+``` typescript
+
+const { signature } = await agent.closeEmptyTokenAccounts();
+```
+
 ## Examples
 
 ### LangGraph Multi-Agent System
@@ -286,7 +348,6 @@ Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to co
 <a href="https://github.com/sendaifun/solana-agent-kit/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=sendaifun/solana-agent-kit" />
 </a>
-
 
 ## Star History
 

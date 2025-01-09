@@ -3,7 +3,6 @@ import {
   PerpetualsClient,
   OraclePrice,
   PoolConfig,
-  Privilege,
   Side,
   CustodyAccount,
   Custody,
@@ -18,6 +17,7 @@ import {
   OPEN_POSITION_CU,
   fetchOraclePrice,
   createPerpClient,
+  get_flash_privilege,
 } from "../utils/flashUtils";
 import { FlashTradeParams } from "../types";
 
@@ -141,7 +141,7 @@ export async function flashOpenTrade(
       positionSize,
       side === "long" ? Side.Long : Side.Short,
       poolConfig,
-      Privilege.Referral,
+      get_flash_privilege(agent),
       tradingAccounts.nftTradingAccountPk,
       tradingAccounts.nftReferralAccountPK,
       tradingAccounts.nftOwnerRebateTokenAccountPk!,

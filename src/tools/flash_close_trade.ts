@@ -1,5 +1,5 @@
 import { ComputeBudgetProgram } from "@solana/web3.js";
-import { PoolConfig, Privilege, Side } from "flash-sdk";
+import { PoolConfig, Side } from "flash-sdk";
 import { BN } from "@coral-xyz/anchor";
 import { SolanaAgentKit } from "../index";
 import {
@@ -9,6 +9,7 @@ import {
   getNftTradingAccountInfo,
   fetchOraclePrice,
   createPerpClient,
+  get_flash_privilege,
 } from "../utils/flashUtils";
 import { FlashCloseTradeParams } from "../types";
 
@@ -93,7 +94,7 @@ export async function flashCloseTrade(
       priceWithSlippage,
       sideEnum,
       poolConfig,
-      Privilege.Referral,
+      get_flash_privilege(agent),
       tradingAccounts.nftTradingAccountPk,
       tradingAccounts.nftReferralAccountPK,
       tradingAccounts.nftOwnerRebateTokenAccountPk,
