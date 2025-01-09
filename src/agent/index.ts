@@ -63,6 +63,7 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
+  cast_proposal_vote,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -602,5 +603,13 @@ export class SolanaAgentKit {
       isMainnet,
     );
     return `Transaction: ${tx}`;
+  }
+
+  async castProposalVote(
+    realmId: string,
+    proposalId: string,
+    voteType: string,
+  ) {
+    return cast_proposal_vote(this, realmId, proposalId, voteType);
   }
 }

@@ -2435,6 +2435,45 @@ export class SolanaCloseEmptyTokenAccounts extends Tool {
   }
 }
 
+export class SolanaCastProposalVote extends Tool {
+  name = "solana_cast_proposal_vote";
+  description = `Vote on a created proposal with given proposalId, realmId, and vote type
+  
+  Inputs:
+  realmId: string, represents the realm address(of a pre-existing realm) (required),
+  proposalId: string, the address of the created proposal (required),
+  voteOption: string, the kind of vote, should be either "yes" or "no" (required),
+  `;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const parsedInput = JSON.parse(input);
+
+      const getVoteAccount = await this.solanaKit.castProposalVote(
+        parsedInput.realmId,
+        parsedInput.proposalId,
+        parsedInput.voteType,
+      );
+
+      return JSON.stringify({
+        status: getVoteAccount.status,
+        message: `Successfully Casted Vote on Proposal`,
+        signature: getVoteAccount.signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
