@@ -11,8 +11,15 @@ import {
   getRealm,
   VoteKind,
 } from "@solana/spl-governance";
-// import { REALM_VOTER_ID } from "@solana/governance-program-library";
 import { SolanaAgentKit } from "../agent";
+
+/**
+ * Cast a vote on a given proposal.
+ * @param realmId      Realm Address
+ * @param proposalId   Address of created proposal on which voting happens
+ * @param voteType     Type of vote("yes"/"no")
+ * @returns            signature of vote cast transaction
+ */
 
 export async function cast_proposal_vote(
   agent: SolanaAgentKit,
