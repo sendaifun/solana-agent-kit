@@ -287,13 +287,13 @@ export class SolanaPerpCloseTradeTool extends Tool {
       const tx =
         parsedInput.side === "long"
           ? await this.solanaKit.closePerpTradeLong({
-              price: parsedInput.price,
-              tradeMint: new PublicKey(parsedInput.tradeMint),
-            })
+            price: parsedInput.price,
+            tradeMint: new PublicKey(parsedInput.tradeMint),
+          })
           : await this.solanaKit.closePerpTradeShort({
-              price: parsedInput.price,
-              tradeMint: new PublicKey(parsedInput.tradeMint),
-            });
+            price: parsedInput.price,
+            tradeMint: new PublicKey(parsedInput.tradeMint),
+          });
 
       return JSON.stringify({
         status: "success",
@@ -337,21 +337,21 @@ export class SolanaPerpOpenTradeTool extends Tool {
       const tx =
         parsedInput.side === "long"
           ? await this.solanaKit.openPerpTradeLong({
-              price: parsedInput.price,
-              collateralAmount: parsedInput.collateralAmount,
-              collateralMint: new PublicKey(parsedInput.collateralMint),
-              leverage: parsedInput.leverage,
-              tradeMint: new PublicKey(parsedInput.tradeMint),
-              slippage: parsedInput.slippage,
-            })
+            price: parsedInput.price,
+            collateralAmount: parsedInput.collateralAmount,
+            collateralMint: new PublicKey(parsedInput.collateralMint),
+            leverage: parsedInput.leverage,
+            tradeMint: new PublicKey(parsedInput.tradeMint),
+            slippage: parsedInput.slippage,
+          })
           : await this.solanaKit.openPerpTradeLong({
-              price: parsedInput.price,
-              collateralAmount: parsedInput.collateralAmount,
-              collateralMint: new PublicKey(parsedInput.collateralMint),
-              leverage: parsedInput.leverage,
-              tradeMint: new PublicKey(parsedInput.tradeMint),
-              slippage: parsedInput.slippage,
-            });
+            price: parsedInput.price,
+            collateralAmount: parsedInput.collateralAmount,
+            collateralMint: new PublicKey(parsedInput.collateralMint),
+            leverage: parsedInput.leverage,
+            tradeMint: new PublicKey(parsedInput.tradeMint),
+            slippage: parsedInput.slippage,
+          });
 
       return JSON.stringify({
         status: "success",
@@ -807,23 +807,23 @@ export class SolanaFlashOpenTrade extends Tool {
       if (!Object.keys(marketTokenMap).includes(parsedInput.token)) {
         throw new Error(
           "Token must be one of " +
-            Object.keys(marketTokenMap).join(", ") +
-            ", received: " +
-            parsedInput.token +
-            "\n" +
-            "Please check https://beast.flash.trade/ for the list of supported tokens",
+          Object.keys(marketTokenMap).join(", ") +
+          ", received: " +
+          parsedInput.token +
+          "\n" +
+          "Please check https://beast.flash.trade/ for the list of supported tokens",
         );
       }
       if (!["long", "short"].includes(parsedInput.type)) {
         throw new Error(
           'Type must be either "long" or "short", received: ' +
-            parsedInput.type,
+          parsedInput.type,
         );
       }
       if (!parsedInput.collateral || parsedInput.collateral <= 0) {
         throw new Error(
           "Collateral amount must be positive, received: " +
-            parsedInput.collateral,
+          parsedInput.collateral,
         );
       }
       if (!parsedInput.leverage || parsedInput.leverage <= 0) {
@@ -2044,9 +2044,9 @@ export class SolanaRockPaperScissorsTool extends Tool {
       const result = await this.solanaKit.rockPaperScissors(
         Number(parsedInput['"amount"']),
         parsedInput['"choice"'].replace(/^"|"$/g, "") as
-          | "rock"
-          | "paper"
-          | "scissors",
+        | "rock"
+        | "paper"
+        | "scissors",
       );
 
       return JSON.stringify({
@@ -2435,6 +2435,150 @@ export class SolanaCloseEmptyTokenAccounts extends Tool {
   }
 }
 
+export class CastGovernanceVoteTool extends Tool {
+  name = "solana_governance_vote";
+  description = `Cast a vote on a governance proposal.
+
+  Inputs ( input is a JSON string ):
+  realmAccount: string, eg "7nxQB..." (required)
+  proposalAccount: string, eg "8x2dR..." (required)
+  vote: string, either "yes" or "no" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realmAccount, proposalAccount, vote } = JSON.parse(input);
+
+      if (!["yes", "no"].includes(vote.toLowerCase())) {
+        throw new Error("Invalid voteType. Allowed values: 'yes', 'no'");
+      }
+      // Validate public keys
+      if (
+        !PublicKey.isOnCurve(realmAccount) ||
+        !PublicKey.isOnCurve(proposalAccount)
+      ) {
+        throw new Error("Invalid realmAccount or proposalAccount");
+      }
+      const signature = await this.solanaKit.castGovernanceVote(
+        new PublicKey(realmAccount),
+        new PublicKey(proposalAccount),
+        vote,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Vote cast successfully",
+        transaction: signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class GetVotingPowerTool extends Tool {
+  name = "get_voting_power";
+  description =
+    "Get current voting power in a realm. Input should be a JSON string containing: realm (address) and governingTokenMint (address).";
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realm, governingTokenMint } = JSON.parse(input);
+      const votingPower = await this.solanaKit.getVotingPower(
+        new PublicKey(realm),
+        new PublicKey(governingTokenMint),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Voting power fetched successfully",
+        data: votingPower,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class DelegateVoteTool extends Tool {
+  name = "delegate_vote";
+  description =
+    "Delegate voting power to another wallet. Input should be a JSON string containing: realm (address), governingTokenMint (address), and delegate (address).";
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realm, governingTokenMint, delegate } = JSON.parse(input);
+      const signature = await this.solanaKit.delegateVotingPower(
+        new PublicKey(realm),
+        new PublicKey(governingTokenMint),
+        new PublicKey(delegate),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Voting power delegated successfully",
+        data: { signature },
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class GetVotingOutcomeTool extends Tool {
+  name = "get_voting_outcome";
+  description =
+    "Get the current outcome of a governance proposal. Input should be a JSON string containing: proposal (address).";
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { proposal } = JSON.parse(input);
+      const outcome = await this.solanaKit.getVotingOutcome(
+        new PublicKey(proposal),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Voting outcome fetched successfully",
+        data: outcome,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -2495,5 +2639,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaFlashOpenTrade(solanaKit),
     new SolanaFlashCloseTrade(solanaKit),
     new Solana3LandCreateSingle(solanaKit),
+    new CastVoteTool(solanaKit),
+    new GetVotingPowerTool(solanaKit),
+    new DelegateVoteTool(solanaKit),
+    new GetVotingOutcomeTool(solanaKit),
   ];
 }

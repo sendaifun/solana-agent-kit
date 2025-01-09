@@ -63,6 +63,7 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
+  castGovernanceVote,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -602,5 +603,86 @@ export class SolanaAgentKit {
       isMainnet,
     );
     return `Transaction: ${tx}`;
+  }
+
+  async castGovernanceVote(
+    realmAccount: PublicKey,
+    proposalAccount: PublicKey,
+    voteType: "yes" | "no",
+  ): Promise<string> {
+    return await castGovernanceVote(
+      this,
+      realmAccount,
+      proposalAccount,
+      voteType,
+    );
+  }
+
+  async getVotingPower(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+  ): Promise<{
+    votingPower: number;
+    delegatedPower: number;
+    totalPower: number;
+  }> {
+    const governance = new SplGovernance(this.connection);
+    const tokenHolding = await governance.getTokenOwnerRecordByOwner(
+      realm,
+      governingTokenMint,
+      this.wallet_address,
+    );
+
+    if (!tokenHolding) {
+      return { votingPower: 0, delegatedPower: 0, totalPower: 0 };
+    }
+
+    return {
+      votingPower: tokenHolding.governingTokenDepositAmount.toNumber(),
+      delegatedPower: tokenHolding.totalDelegatedVoterWeight.toNumber(),
+      totalPower: tokenHolding.governingTokenDepositAmount
+        .add(tokenHolding.totalDelegatedVoterWeight)
+        .toNumber(),
+    };
+  }
+
+  async delegateVotingPower(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    delegate: PublicKey,
+  ): Promise<string> {
+    const governance = new SplGovernance(this.connection);
+    const instruction = await governance.setGovernanceDelegate(
+      realm,
+      governingTokenMint,
+      this.wallet_address,
+      delegate,
+    );
+    return await this.connection.sendTransaction(instruction, [this.wallet]);
+  }
+
+  async getVotingOutcome(proposal: PublicKey): Promise<{
+    status: string;
+    yesVotes: number;
+    noVotes: number;
+    abstainVotes: number;
+    isFinalized: boolean;
+    votingEndTime: number;
+  }> {
+    const governance = new SplGovernance(this.connection);
+    const proposalData = await governance.getProposalByPubkey(proposal);
+
+    if (!proposalData) {
+      throw new Error("Proposal not found");
+    }
+
+    return {
+      status: proposalData.state,
+      yesVotes: proposalData.getYesVoteCount().toNumber(),
+      noVotes: proposalData.getNoVoteCount().toNumber(),
+      abstainVotes: proposalData.getAbstainVoteCount().toNumber(),
+      isFinalized: proposalData.isVoteFinalized(),
+      votingEndTime: proposalData.votingEndTime.toNumber(),
+    };
   }
 }

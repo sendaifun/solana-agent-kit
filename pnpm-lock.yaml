@@ -74,6 +74,9 @@ importers:
       '@raydium-io/raydium-sdk-v2':
         specifier: 0.1.95-alpha
         version: 0.1.95-alpha(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
+      '@solana/spl-governance':
+        specifier: ^0.3.28
+        version: 0.3.28(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@solana/spl-token':
         specifier: ^0.4.9
         version: 0.4.9(@solana/web3.js@1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
@@ -110,6 +113,9 @@ importers:
       form-data:
         specifier: ^4.0.1
         version: 4.0.1
+      governance-idl-sdk:
+        specifier: ^0.0.4
+        version: 0.0.4(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       langchain:
         specifier: ^0.3.8
         version: 0.3.9(@langchain/core@0.3.27(openai@4.77.3(zod@3.24.1)))(@langchain/groq@0.1.2(@langchain/core@0.3.27(openai@4.77.3(zod@3.24.1))))(axios@1.7.9)(openai@4.77.3(zod@3.24.1))
@@ -964,6 +970,9 @@ packages:
     peerDependencies:
       '@solana/web3.js': ^1.50.1
 
+  '@solana/spl-governance@0.3.28':
+    resolution: {integrity: sha512-CUi1hMvzId2rAtMFTlxMwOy0EmFeT0VcmiC+iQnDhRBuM8LLLvRrbTYBWZo3xIvtPQW9HfhVBoL7P/XNFIqYVQ==}
+
   '@solana/spl-token-group@0.0.4':
     resolution: {integrity: sha512-7+80nrEMdUKlK37V6kOe024+T7J4nNss0F8LQ9OOPYdWCCfJmsGUzVx2W3oeizZR4IHM6N4yC9v1Xqwc3BTPWw==}
     engines: {node: '>=16'}
@@ -1060,6 +1069,9 @@ packages:
 
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+
+  '@types/bn.js@4.11.6':
+    resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
 
   '@types/bn.js@5.1.6':
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
@@ -1434,6 +1446,9 @@ packages:
   body-parser@1.20.3:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+
+  borsh@0.3.1:
+    resolution: {integrity: sha512-gJoSTnhwLxN/i2+15Y7uprU8h3CKI+Co4YKZKvrGYUy0FwHWM20x5Sx7eU8Xv4HQqV+7rb4r3P7K1cBIQe3q8A==}
 
   borsh@0.7.0:
     resolution: {integrity: sha512-CLCsZGIBCFnPtkNnieW/a8wmreDmfUtjU2m9yHrzPXIlNbqVs0AQrSatSG6vdNYUqdc83tkQi2eHfF98ubzQLA==}
@@ -2162,6 +2177,9 @@ packages:
   got@11.8.6:
     resolution: {integrity: sha512-6tfZ91bOr7bOXnK7PRDCGBLa1H4U080YHNaAQ2KsMGlLEzRbk44nsZF2E1IeRc3vtJHPVbKCYgdFbaGO2ljd8g==}
     engines: {node: '>=10.19.0'}
+
+  governance-idl-sdk@0.0.4:
+    resolution: {integrity: sha512-90B5lZBxEnraiK74jHWIYbMec7Y0aQEyPz/MF7KeRCGc2ImcIa6xwWvscVxyZhtU7dys9FBJaUN/EZj9TET32Q==}
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
@@ -5220,6 +5238,21 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@solana/spl-governance@0.3.28(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@solana/web3.js': 1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      axios: 1.7.9
+      bignumber.js: 9.1.2
+      bn.js: 5.2.1
+      borsh: 0.3.1
+      bs58: 4.0.1
+      superstruct: 0.15.5
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - encoding
+      - utf-8-validate
+
   '@solana/spl-token-group@0.0.4(@solana/web3.js@1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(fastestsmallesttextencoderdecoder@1.0.22)':
     dependencies:
       '@solana/codecs': 2.0.0-preview.2(fastestsmallesttextencoderdecoder@1.0.22)
@@ -5534,6 +5567,10 @@ snapshots:
   '@tsconfig/node14@1.0.3': {}
 
   '@tsconfig/node16@1.0.4': {}
+
+  '@types/bn.js@4.11.6':
+    dependencies:
+      '@types/node': 22.10.5
 
   '@types/bn.js@5.1.6':
     dependencies:
@@ -6016,6 +6053,13 @@ snapshots:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
+
+  borsh@0.3.1:
+    dependencies:
+      '@types/bn.js': 4.11.6
+      bn.js: 5.2.1
+      bs58: 4.0.1
+      text-encoding-utf-8: 1.0.2
 
   borsh@0.7.0:
     dependencies:
@@ -6861,6 +6905,16 @@ snapshots:
       lowercase-keys: 2.0.0
       p-cancelable: 2.1.1
       responselike: 2.0.1
+
+  governance-idl-sdk@0.0.4(bufferutil@4.0.9)(utf-8-validate@5.0.10):
+    dependencies:
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@solana/web3.js': 1.98.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      bn.js: 5.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
 
   graceful-fs@4.2.11:
     optional: true
