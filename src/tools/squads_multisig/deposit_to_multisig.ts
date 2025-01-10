@@ -54,7 +54,7 @@ export async function deposit_to_multisig(
         mint,
         agent.wallet_address,
       );
-      let transaction = new Transaction();
+      const transaction = new Transaction();
       const toAta = await getAssociatedTokenAddress(mint, to, true);
       const toTokenAccountInfo = await agent.connection.getAccountInfo(toAta);
       // Create associated token account if it doesn't exist
