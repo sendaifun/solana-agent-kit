@@ -79,7 +79,7 @@ import {
 import {
   createCollection,
   createSingle,
-} from "../tools/create_3land_collectible";
+} from "../tools/3Land/create_3land_collectible";
 import {
   CreateCollectionOptions,
   CreateSingleOptions,

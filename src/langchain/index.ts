@@ -2,7 +2,7 @@ import { SolanaAgentKit } from "../index";
 
 import { SolanaBalanceTool } from "./Balance/SolanaBalanceTool";
 import { SolanaBalanceOtherTool } from "./Balance/SolanaBalanceOtherTool";
-import { SolanaTransferTool } from "./Transfer/SolanaTransferTool";
+import { SolanaTransferTool } from "./AgentTools/SolanaTransferTool";
 import { SolanaDeployTokenTool } from "./Metaplex/SolanaDeployTokenTool";
 import { SolanaDeployCollectionTool } from "./Metaplex/SolanaDeployCollectionTool";
 import { SolanaPerpCloseTradeTool } from "./Adrena/SolanaPerpCloseTradeTool";
@@ -12,11 +12,11 @@ import { SolanaLimitOrderTool } from "./Manifest/SolanaLimitOrderTool";
 import { SolanaBatchOrderTool } from "./Manifest/SolanaBatchOrderTool";
 import { SolanaCancelAllOrdersTool } from "./Manifest/SolanaCancelAllOrdersTool";
 import { SolanaWithdrawAllTool } from "./Manifest/SolanaWithdrawAllTool";
-import { SolanaRequestFundsTool } from "./AgentDetails/SolanaRequestFundsTool";
+import { SolanaRequestFundsTool } from "./AgentTools/SolanaRequestFundsTool";
 import { SolanaRegisterDomainTool } from "./BonfidaNameService/SolanaRegisterDomainTool";
 import { SolanaResolveDomainTool } from "./BonfidaNameService/SolanaResolveDomainTool";
 import { SolanaGetDomainTool } from "./BonfidaNameService/SolanaGetDomainTool";
-import { SolanaGetWalletAddressTool } from "./AgentDetails/SolanaGetWalletAddressTool";
+import { SolanaGetWalletAddressTool } from "./AgentTools/SolanaGetWalletAddressTool";
 import { SolanaFlashOpenTrade } from "./FlashTrade/SolanaFlashOpenTrade";
 import { SolanaFlashCloseTrade } from "./FlashTrade/SolanaFlashCloseTrade";
 import { SolanaPumpfunTokenLaunchTool } from "./PumpFun/SolanaPumpfunTokenLaunchTool";
@@ -55,7 +55,7 @@ import { SolanaFetchTokenReportSummaryTool } from "./RugCheck/SolanaFetchTokenRe
 import { SolanaFetchTokenDetailedReportTool } from "./RugCheck/SolanaFetchTokenDetailedReportTool";
 import { Solana3LandCreateSingle } from "./3Land/Solana3LandCreateSingle";
 import { Solana3LandCreateCollection } from "./3Land/Solana3LandCreateCollection";
-import { SolanaCloseEmptyTokenAccounts } from "./AgentDetails/SolanaCloseEmptyTokenAccounts";
+import { SolanaCloseEmptyTokenAccounts } from "./AgentTools/SolanaCloseEmptyTokenAccounts";
 import { SolanaMintNFTTool } from "./Metaplex/SolanaMintNftTool";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {

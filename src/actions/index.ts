@@ -1,6 +1,6 @@
 import deployTokenAction from "./Metaplex/deployToken";
 import balanceAction from "./Balance/balance";
-import transferAction from "./Transfer/transfer";
+import transferAction from "./AgentActions/transfer";
 import deployCollectionAction from "./Metaplex/deployCollection";
 import mintNFTAction from "./Metaplex/mintNFT";
 import tradeAction from "./Jupiter/trade";

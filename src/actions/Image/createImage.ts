@@ -1,7 +1,7 @@
 import { Action } from "../../types/action";
 import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { create_image } from "../../tools/create_image";
+import { create_image } from "../../tools";
 
 const createImageAction: Action = {
   name: "CREATE_IMAGE",
