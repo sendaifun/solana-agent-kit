@@ -17,7 +17,6 @@ export async function create_squads_multisig(
 ): Promise<string> {
   const connection = agent.connection;
   const createKey = agent.wallet; // can be any keypair, using the agent wallet as only one multisig is required
-  console.log("Multisig Create Key:", createKey.publicKey.toBase58());
 
   const [multisigPda] = multisig.getMultisigPda({
     createKey: createKey.publicKey,
