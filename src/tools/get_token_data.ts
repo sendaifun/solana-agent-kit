@@ -9,17 +9,14 @@ export async function getTokenDataByAddress(
       throw new Error("Mint address is required");
     }
 
-    const response = await fetch("https://tokens.jup.ag/tokens?tags=verified", {
+    const response = await fetch(`https://tokens.jup.ag/token/${mint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    const data = (await response.json()) as JupiterTokenData[];
-    const token = data.find((token: JupiterTokenData) => {
-      return token.address === mint.toBase58();
-    });
+    const token = (await response.json()) as JupiterTokenData;
     return token;
   } catch (error: any) {
     throw new Error(`Error fetching token data: ${error.message}`);
@@ -27,11 +24,11 @@ export async function getTokenDataByAddress(
 }
 
 export async function getTokenAddressFromTicker(
-  ticker: string
+  ticker: string,
 ): Promise<string | null> {
   try {
     const response = await fetch(
-      `https://api.dexscreener.com/latest/dex/search?q=${ticker}`
+      `https://api.dexscreener.com/latest/dex/search?q=${ticker}`,
     );
     const data = await response.json();
 
@@ -46,7 +43,7 @@ export async function getTokenAddressFromTicker(
 
     solanaPairs = solanaPairs.filter(
       (pair: any) =>
-        pair.baseToken.symbol.toLowerCase() === ticker.toLowerCase()
+        pair.baseToken.symbol.toLowerCase() === ticker.toLowerCase(),
     );
 
     // Return the address of the highest FDV Solana pair
@@ -58,7 +55,7 @@ export async function getTokenAddressFromTicker(
 }
 
 export async function getTokenDataByTicker(
-  ticker: string
+  ticker: string,
 ): Promise<JupiterTokenData | undefined> {
   const address = await getTokenAddressFromTicker(ticker);
   if (!address) {

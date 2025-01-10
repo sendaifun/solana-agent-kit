@@ -26,8 +26,9 @@ export async function raydiumCreateCpmm(
   const [mintInfoA, mintInfoB] = await agent.connection.getMultipleAccountsInfo(
     [mintA, mintB],
   );
-  if (mintInfoA === null || mintInfoB === null)
+  if (mintInfoA === null || mintInfoB === null) {
     throw Error("fetch mint info error");
+  }
 
   const mintDecodeInfoA = MintLayout.decode(mintInfoA.data);
   const mintDecodeInfoB = MintLayout.decode(mintInfoB.data);
@@ -55,7 +56,7 @@ export async function raydiumCreateCpmm(
     extensions: {},
   };
 
-  const { execute, extInfo } = await raydium.cpmm.createPool({
+  const { execute } = await raydium.cpmm.createPool({
     programId: CREATE_CPMM_POOL_PROGRAM,
     poolFeeAccount: CREATE_CPMM_POOL_FEE_ACC,
     mintA: mintFormatInfoA,
@@ -63,7 +64,7 @@ export async function raydiumCreateCpmm(
     mintAAmount,
     mintBAmount,
     startTime,
-    //@ts-ignore
+    //@ts-expect-error sdk bug
     feeConfig: { id: configId.toString() },
     associatedOnly: false,
     ownerInfo: {

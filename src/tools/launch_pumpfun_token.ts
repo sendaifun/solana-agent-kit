@@ -21,9 +21,15 @@ async function uploadMetadata(
 
   formData.append("showName", "true");
 
-  if (options?.twitter) formData.append("twitter", options.twitter);
-  if (options?.telegram) formData.append("telegram", options.telegram);
-  if (options?.website) formData.append("website", options.website);
+  if (options?.twitter) {
+    formData.append("twitter", options.twitter);
+  }
+  if (options?.telegram) {
+    formData.append("telegram", options.telegram);
+  }
+  if (options?.website) {
+    formData.append("website", options.website);
+  }
 
   const imageResponse = await fetch(imageUrl);
   const imageBlob = await imageResponse.blob();

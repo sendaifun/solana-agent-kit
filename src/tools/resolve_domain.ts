@@ -10,20 +10,20 @@ import { PublicKey } from "@solana/web3.js";
  */
 export async function resolveAllDomains(
   agent: SolanaAgentKit,
-  domain: string
+  domain: string,
 ): Promise<PublicKey | undefined> {
   try {
-    console.log("domain", domain);
-    let tld = await new TldParser(agent.connection).getOwnerFromDomainTld(
-      domain
+    const tld = await new TldParser(agent.connection).getOwnerFromDomainTld(
+      domain,
     );
-    console.log("tld", tld);
     return tld;
   } catch (error: any) {
-    // console.log("error", error.);
-
-    if(error.message.includes("Cannot read properties of undefined (reading 'owner')")) {
-      return undefined
+    if (
+      error.message.includes(
+        "Cannot read properties of undefined (reading 'owner')",
+      )
+    ) {
+      return undefined;
     }
     throw new Error(`Domain resolution failed: ${error.message}`);
   }

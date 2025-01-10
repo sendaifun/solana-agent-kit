@@ -1,0 +1,5 @@
+{
+  "**/*.+(ts|tsx)": [
+    "eslint . --ext .ts --fix"
+  ]
+}

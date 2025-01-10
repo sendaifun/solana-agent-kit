@@ -49,12 +49,12 @@ The project includes a test script located at `test/index.ts`. To execute the te
 
 ### Token Deployment
 ```typescript
-import { deploy_token } from "solana-agent-kit";
+import { SolanaAgentKit } from "solana-agent-kit";
 
-const result = await deploy_token(
-  agent,
-  9,                // decimals
-  1000000          // initial supply
+const agent = new SolanaAgentKit("your_private_key");
+
+const result = await agent.deployToken(
+  9, // decimals
 );
 
 console.log("Token Mint Address:", result.mint.toString());
@@ -62,9 +62,11 @@ console.log("Token Mint Address:", result.mint.toString());
 
 ### NFT Collection Creation
 ```typescript
-import { deploy_collection } from "solana-agent-kit";
+import { SolanaAgentKit } from "solana-agent-kit";
 
-const collection = await deploy_collection(agent, {
+const agent = new SolanaAgentKit("your_private_key");
+
+const collection = await agent.deployCollection({
   name: "My NFT Collection",
   uri: "https://arweave.net/metadata.json",
   royaltyBasisPoints: 500,  // 5%

@@ -9,7 +9,7 @@ import { getAllDomainsTLDs } from "./get_all_domains_tlds";
  * @returns Array of all registered domain names with their TLDs
  */
 export async function getAllRegisteredAllDomains(
-  agent: SolanaAgentKit
+  agent: SolanaAgentKit,
 ): Promise<string[]> {
   try {
     // First get all TLDs
@@ -20,7 +20,7 @@ export async function getAllRegisteredAllDomains(
     for (const tld of tlds) {
       const domains = await getAllDomains(
         agent.connection,
-        new PublicKey("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX")
+        new PublicKey("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX"),
       );
 
       // Add domains with TLD suffix

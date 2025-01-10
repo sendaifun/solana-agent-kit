@@ -25,8 +25,9 @@ export async function raydiumCreateClmm(
   const [mintInfo1, mintInfo2] = await agent.connection.getMultipleAccountsInfo(
     [mint1, mint2],
   );
-  if (mintInfo1 === null || mintInfo2 === null)
+  if (mintInfo1 === null || mintInfo2 === null) {
     throw Error("fetch mint info error");
+  }
 
   const mintDecodeInfo1 = MintLayout.decode(mintInfo1.data);
   const mintDecodeInfo2 = MintLayout.decode(mintInfo2.data);
@@ -59,7 +60,7 @@ export async function raydiumCreateClmm(
     // programId: DEVNET_PROGRAM_ID.CLMM,
     mint1: mintFormatInfo1,
     mint2: mintFormatInfo2,
-    // @ts-ignore
+    // @ts-expect-error sdk bug
     ammConfig: { id: configId },
     initialPrice,
     startTime,

@@ -1,6 +1,6 @@
 import { SolanaAgentKit } from "../agent";
 import { PublicKey } from "@solana/web3.js";
-import { NameAccountAndDomain, TldParser } from "@onsol/tldparser";
+import { TldParser } from "@onsol/tldparser";
 
 /**
  * Get all domains owned domains for a specific TLD for the agent's wallet
@@ -10,11 +10,13 @@ import { NameAccountAndDomain, TldParser } from "@onsol/tldparser";
  */
 export async function getOwnedAllDomains(
   agent: SolanaAgentKit,
-  owner:PublicKey
+  owner: PublicKey,
 ): Promise<string[]> {
   try {
-    let domains = await new TldParser(agent.connection).getParsedAllUserDomains(owner);
-    return domains.map((domain) => domain.domain)
+    const domains = await new TldParser(
+      agent.connection,
+    ).getParsedAllUserDomains(owner);
+    return domains.map((domain) => domain.domain);
   } catch (error: any) {
     throw new Error(`Failed to fetch owned domains: ${error.message}`);
   }
