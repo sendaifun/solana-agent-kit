@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../langchain/agent";
 import { PublicKey } from "@solana/web3.js";
 import { TldParser } from "@onsol/tldparser";
 

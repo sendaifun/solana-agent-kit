@@ -1,5 +1,5 @@
 import { Action } from "../types/action";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../langchain/agent";
 import { ACTIONS } from "../actions";
 
 /**

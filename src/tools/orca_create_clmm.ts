@@ -4,7 +4,7 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../langchain/agent";
 import { Wallet } from "@coral-xyz/anchor";
 import { Decimal } from "decimal.js";
 import {

@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../langchain/agent";
 import { z } from "zod";
 
 /**

@@ -1,5 +1,5 @@
 import { sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../langchain/agent";
 
 export async function rock_paper_scissor(
   agent: SolanaAgentKit,
