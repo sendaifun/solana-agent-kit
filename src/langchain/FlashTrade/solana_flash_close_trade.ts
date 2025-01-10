@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../index";
+import { SolanaAgentKit } from "../../index";
 
 export class SolanaFlashCloseTrade extends Tool {
   name = "solana_flash_close_trade";

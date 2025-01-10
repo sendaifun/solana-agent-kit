@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { Tool } from "langchain/tools";
-import { OrderParams, SolanaAgentKit } from "../index";
-import { generateOrdersfromPattern } from "../tools";
+import { OrderParams, SolanaAgentKit } from "../../index";
+import { generateOrdersfromPattern } from "../../tools";
 
 export class SolanaBatchOrderTool extends Tool {
   name = "solana_batch_order";

@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../index";
+import { SolanaAgentKit } from "../../index";
 
 export class SolanaResolveAllDomainsTool extends Tool {
   name = "solana_resolve_all_domains";
