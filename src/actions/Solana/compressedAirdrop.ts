@@ -1,7 +1,7 @@
-import { Action } from "../types/action";
-import { SolanaAgentKit } from "../agent";
+import { Action } from "../../types/action";
+import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { sendCompressedAirdrop } from "../tools";
+import { sendCompressedAirdrop } from "../../tools";
 
 const compressedAirdropAction: Action = {
   name: "COMPRESSED_AIRDROP",

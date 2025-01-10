@@ -1,5 +1,5 @@
 import { getAllDomains } from "@bonfida/spl-name-service";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { PublicKey } from "@solana/web3.js";
 import { getAllDomainsTLDs } from "./get_all_domains_tlds";
 

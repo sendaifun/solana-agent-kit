@@ -1,6 +1,6 @@
 import { getPrimaryDomain as _getPrimaryDomain } from "@bonfida/spl-name-service";
 import { PublicKey } from "@solana/web3.js";
-import { SolanaAgentKit } from "../index";
+import { SolanaAgentKit } from "../../index";
 
 /**
  * Retrieves the primary .sol domain associated with a given Solana public key.

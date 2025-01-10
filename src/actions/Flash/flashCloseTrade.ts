@@ -1,7 +1,7 @@
-import { Action } from "../types/action";
-import { SolanaAgentKit } from "../agent";
+import { Action } from "../../types/action";
+import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { flashCloseTrade } from "../tools";
+import { flashCloseTrade } from "../../tools";
 
 const flashCloseTradeAction: Action = {
   name: "FLASH_CLOSE_TRADE",

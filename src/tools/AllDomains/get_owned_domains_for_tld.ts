@@ -1,5 +1,5 @@
 import { TldParser } from "@onsol/tldparser";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 /**
  * Get all domains owned by an address for a specific TLD
  * @param agent SolanaAgentKit instance
