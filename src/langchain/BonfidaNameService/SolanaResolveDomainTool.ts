@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaResolveDomainTool extends Tool {
   name = "solana_resolve_domain";

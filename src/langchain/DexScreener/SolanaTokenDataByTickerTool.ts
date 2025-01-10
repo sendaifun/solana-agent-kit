@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaTokenDataByTickerTool extends Tool {
   name = "solana_token_data_by_ticker";

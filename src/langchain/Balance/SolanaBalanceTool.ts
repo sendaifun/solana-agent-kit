@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";

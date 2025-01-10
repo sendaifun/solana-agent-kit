@@ -2,7 +2,7 @@ import {
   CreateCollectionOptions,
   StoreInitOptions,
 } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { Tool } from "langchain/tools";
 
 export class Solana3LandCreateCollection extends Tool {

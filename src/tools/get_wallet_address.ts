@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "../langchain/agent";
+import { SolanaAgentKit } from "../agent";
 
 /**
  * Get the agents wallet address

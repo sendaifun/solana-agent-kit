@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { create_image } from "../../tools";
 
 export class SolanaCreateImageTool extends Tool {

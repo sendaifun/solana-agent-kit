@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { PythFetchPriceResponse } from "../../types";
 
 export class SolanaPythFetchPrice extends Tool {

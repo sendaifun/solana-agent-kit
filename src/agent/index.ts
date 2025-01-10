@@ -2,8 +2,8 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
-import { DEFAULT_OPTIONS } from "../../constants";
-import { Config, TokenCheck } from "../../types";
+import { DEFAULT_OPTIONS } from "../constants";
+import { Config, TokenCheck } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -63,7 +63,7 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
-} from "../../tools";
+} from "../tools";
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -75,11 +75,11 @@ import {
   OrderParams,
   FlashTradeParams,
   FlashCloseTradeParams,
-} from "../../types";
+} from "../types";
 import {
   createCollection,
   createSingle,
-} from "../../tools/create_3land_collectible";
+} from "../tools/create_3land_collectible";
 import {
   CreateCollectionOptions,
   CreateSingleOptions,

@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaGetAllTlds extends Tool {
   name = "solana_get_all_tlds";

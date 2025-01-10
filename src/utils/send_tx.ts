@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "../langchain/agent";
+import { SolanaAgentKit } from "../agent";
 import {
   Keypair,
   Signer,

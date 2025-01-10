@@ -1,5 +1,5 @@
 import { tool, type CoreTool } from "ai";
-import { SolanaAgentKit } from "../langchain/agent";
+import { SolanaAgentKit } from "../agent";
 import { executeAction } from "../utils/actionExecutor";
 import { ACTIONS } from "../actions";
 

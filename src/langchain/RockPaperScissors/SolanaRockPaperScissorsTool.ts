@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaRockPaperScissorsTool extends Tool {
   name = "rock_paper_scissors";

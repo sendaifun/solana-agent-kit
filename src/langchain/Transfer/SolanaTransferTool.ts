@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { PublicKey } from "@solana/web3.js";
 
 export class SolanaTransferTool extends Tool {

@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { OrderParams } from "../../types";
 import { generateOrdersfromPattern } from "../../tools";
 import { PublicKey } from "@solana/web3.js";

@@ -1,5 +1,5 @@
 import { Action } from "../../types/action";
-import { SolanaAgentKit } from "../../langchain/agent";
+import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
 import { request_faucet_funds } from "../../tools";
 

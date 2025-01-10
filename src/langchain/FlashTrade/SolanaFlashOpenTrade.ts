@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { marketTokenMap } from "../../utils/flashUtils";
 
 export class SolanaFlashOpenTrade extends Tool {

@@ -1,5 +1,5 @@
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class SolanaCloseEmptyTokenAccounts extends Tool {
   name = "close_empty_token_accounts";

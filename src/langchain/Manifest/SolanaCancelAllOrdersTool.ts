@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 import { Tool } from "langchain/tools";
 
 export class SolanaCancelAllOrdersTool extends Tool {
