@@ -1,6 +1,6 @@
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../../agent";
-import { create_image } from "../../tools/create_image";
+import { create_image } from "../../tools/agent/create_image";
 
 export class SolanaGetWalletAddressTool extends Tool {
   name = "solana_get_wallet_address";

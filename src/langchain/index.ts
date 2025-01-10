@@ -78,7 +78,7 @@ import {
   SolanaApproveProposal2by2Multisig,
   SolanaRejectProposal2by2Multisig,
   SolanaExecuteProposal2by2Multisig,
-} from "./squads";
+} from "./squads_multisig";
 import { SolanaListNFTForSaleTool, SolanaCancelNFTListingTool } from "./tensor";
 import { SolanaTipLinkTool } from "./tiplink";
 

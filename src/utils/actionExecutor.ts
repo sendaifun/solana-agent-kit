@@ -10,7 +10,9 @@ export function findAction(query: string): Action | undefined {
   return Object.values(ACTIONS).find(
     (action) =>
       action.name.toLowerCase() === normalizedQuery ||
-      action.similes.some((simile) => simile.toLowerCase() === normalizedQuery),
+      action.similes.some(
+        (simile: any) => simile.toLowerCase() === normalizedQuery,
+      ),
   );
 }
 
