@@ -287,13 +287,13 @@ export class SolanaPerpCloseTradeTool extends Tool {
       const tx =
         parsedInput.side === "long"
           ? await this.solanaKit.closePerpTradeLong({
-            price: parsedInput.price,
-            tradeMint: new PublicKey(parsedInput.tradeMint),
-          })
+              price: parsedInput.price,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+            })
           : await this.solanaKit.closePerpTradeShort({
-            price: parsedInput.price,
-            tradeMint: new PublicKey(parsedInput.tradeMint),
-          });
+              price: parsedInput.price,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+            });
 
       return JSON.stringify({
         status: "success",
@@ -337,21 +337,21 @@ export class SolanaPerpOpenTradeTool extends Tool {
       const tx =
         parsedInput.side === "long"
           ? await this.solanaKit.openPerpTradeLong({
-            price: parsedInput.price,
-            collateralAmount: parsedInput.collateralAmount,
-            collateralMint: new PublicKey(parsedInput.collateralMint),
-            leverage: parsedInput.leverage,
-            tradeMint: new PublicKey(parsedInput.tradeMint),
-            slippage: parsedInput.slippage,
-          })
+              price: parsedInput.price,
+              collateralAmount: parsedInput.collateralAmount,
+              collateralMint: new PublicKey(parsedInput.collateralMint),
+              leverage: parsedInput.leverage,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+              slippage: parsedInput.slippage,
+            })
           : await this.solanaKit.openPerpTradeLong({
-            price: parsedInput.price,
-            collateralAmount: parsedInput.collateralAmount,
-            collateralMint: new PublicKey(parsedInput.collateralMint),
-            leverage: parsedInput.leverage,
-            tradeMint: new PublicKey(parsedInput.tradeMint),
-            slippage: parsedInput.slippage,
-          });
+              price: parsedInput.price,
+              collateralAmount: parsedInput.collateralAmount,
+              collateralMint: new PublicKey(parsedInput.collateralMint),
+              leverage: parsedInput.leverage,
+              tradeMint: new PublicKey(parsedInput.tradeMint),
+              slippage: parsedInput.slippage,
+            });
 
       return JSON.stringify({
         status: "success",
@@ -807,23 +807,23 @@ export class SolanaFlashOpenTrade extends Tool {
       if (!Object.keys(marketTokenMap).includes(parsedInput.token)) {
         throw new Error(
           "Token must be one of " +
-          Object.keys(marketTokenMap).join(", ") +
-          ", received: " +
-          parsedInput.token +
-          "\n" +
-          "Please check https://beast.flash.trade/ for the list of supported tokens",
+            Object.keys(marketTokenMap).join(", ") +
+            ", received: " +
+            parsedInput.token +
+            "\n" +
+            "Please check https://beast.flash.trade/ for the list of supported tokens",
         );
       }
       if (!["long", "short"].includes(parsedInput.type)) {
         throw new Error(
           'Type must be either "long" or "short", received: ' +
-          parsedInput.type,
+            parsedInput.type,
         );
       }
       if (!parsedInput.collateral || parsedInput.collateral <= 0) {
         throw new Error(
           "Collateral amount must be positive, received: " +
-          parsedInput.collateral,
+            parsedInput.collateral,
         );
       }
       if (!parsedInput.leverage || parsedInput.leverage <= 0) {
@@ -2044,9 +2044,9 @@ export class SolanaRockPaperScissorsTool extends Tool {
       const result = await this.solanaKit.rockPaperScissors(
         Number(parsedInput['"amount"']),
         parsedInput['"choice"'].replace(/^"|"$/g, "") as
-        | "rock"
-        | "paper"
-        | "scissors",
+          | "rock"
+          | "paper"
+          | "scissors",
       );
 
       return JSON.stringify({

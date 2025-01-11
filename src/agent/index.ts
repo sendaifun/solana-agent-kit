@@ -64,6 +64,7 @@ import {
   flashOpenTrade,
   flashCloseTrade,
   castGovernanceVote,
+  getVotingPower,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -676,26 +677,11 @@ export class SolanaAgentKit {
   ): Promise<{
     votingPower: number;
     delegatedPower: number;
-    totalPower: number;
+    totalVotesCount: number;
+    unrelinquishedVotesCount: number;
+    outstandingProposalCount: number;
   }> {
-    const governance = new SplGovernance(this.connection);
-    const tokenHolding = await governance.getTokenOwnerRecordByOwner(
-      realm,
-      governingTokenMint,
-      this.wallet_address,
-    );
-
-    if (!tokenHolding) {
-      return { votingPower: 0, delegatedPower: 0, totalPower: 0 };
-    }
-
-    return {
-      votingPower: tokenHolding.governingTokenDepositAmount.toNumber(),
-      delegatedPower: tokenHolding.totalDelegatedVoterWeight.toNumber(),
-      totalPower: tokenHolding.governingTokenDepositAmount
-        .add(tokenHolding.totalDelegatedVoterWeight)
-        .toNumber(),
-    };
+    return await getVotingPower(this, realm, governingTokenMint);
   }
 
   async delegateVotingPower(
