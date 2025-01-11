@@ -1,11 +1,12 @@
 import {
   Keypair,
   PublicKey,
+  TransactionInstruction,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
-import { Wallet } from "@coral-xyz/anchor";
+import { Wallet } from "../utils/keypair";
 import { Decimal } from "decimal.js";
 import {
   ORCA_WHIRLPOOL_PROGRAM_ID,
@@ -119,17 +120,17 @@ export async function orcaOpenSingleSidedPosition(
       lowerTick,
       upperTick,
     ]);
-    let txIds: string = "";
+    let instructions: TransactionInstruction[] = [];
+    let signers: Keypair[] = [];
     if (txBuilderTickArrays !== null) {
       const txPayloadTickArrays = await txBuilderTickArrays.build();
       const txPayloadTickArraysDecompiled = TransactionMessage.decompile(
         (txPayloadTickArrays.transaction as VersionedTransaction).message,
       );
-      const instructions = txPayloadTickArraysDecompiled.instructions;
-      const signers = txPayloadTickArrays.signers as Keypair[];
-
-      const tickArrayTxId = await sendTx(agent, instructions, signers);
-      txIds += tickArrayTxId + ",";
+      instructions = instructions.concat(
+        txPayloadTickArraysDecompiled.instructions,
+      );
+      signers = signers.concat(txPayloadTickArrays.signers as Keypair[]);
     }
 
     const tokenExtensionCtx: TokenExtensionContextForPool = {
@@ -161,14 +162,13 @@ export async function orcaOpenSingleSidedPosition(
     const txPayloadDecompiled = TransactionMessage.decompile(
       (txPayload.transaction as VersionedTransaction).message,
     );
-    const instructions = txPayloadDecompiled.instructions;
-    const signers = txPayload.signers as Keypair[];
+    instructions = instructions.concat(txPayloadDecompiled.instructions);
+    signers = signers.concat(txPayload.signers as Keypair[]);
 
-    const positionTxId = await sendTx(agent, instructions, signers);
-    txIds += positionTxId;
+    const txId = await sendTx(agent, instructions, signers);
 
     return JSON.stringify({
-      transactionIds: txIds,
+      transactionIds: txId,
       positionMint: positionMint.toString(),
     });
   } catch (error) {
