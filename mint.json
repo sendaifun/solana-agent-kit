@@ -86,6 +86,12 @@
           ]
         },
         {
+          "group": "Squads Protocol Multisig",
+          "pages": [
+            "v0/features/squads/squads_operations"
+          ]
+        },
+        {
           "group": "Solana Blinks",
           "pages": [
             "v0/features/solana-blinks/lulo",
