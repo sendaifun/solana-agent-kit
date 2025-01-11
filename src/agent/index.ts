@@ -1,4 +1,9 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
@@ -92,6 +97,13 @@ import { create_proposal } from "../tools/squads_multisig/create_proposal";
 import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
 import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
 import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
+import {
+  createGovernanceProposal,
+  cancelGovernanceProposal,
+  executeGovernanceProposal,
+  getGovernanceProposalState,
+} from "../tools/proposals_governance";
+import { ProposalState } from "@solana/spl-governance";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -654,5 +666,40 @@ export class SolanaAgentKit {
     transactionIndex?: number | bigint,
   ): Promise<string> {
     return execute_transaction(this, transactionIndex);
+  }
+
+  async createGovernanceProposal(
+    realm: PublicKey,
+    governance: PublicKey,
+    name: string,
+    description: string,
+    instructions: TransactionInstruction[],
+  ): Promise<string> {
+    return createGovernanceProposal(
+      this,
+      realm,
+      governance,
+      name,
+      description,
+      instructions,
+    );
+  }
+
+  async cancelGovernanceProposal(proposal: PublicKey): Promise<string> {
+    return cancelGovernanceProposal(this, proposal);
+  }
+
+  async executeGovernanceProposal(proposal: PublicKey): Promise<string> {
+    return executeGovernanceProposal(this, proposal);
+  }
+
+  async getGovernanceProposalState(proposal: PublicKey): Promise<{
+    state: ProposalState;
+    name: string;
+    description: string;
+    yesVotes: number;
+    noVotes: number;
+  }> {
+    return getGovernanceProposalState(this, proposal);
   }
 }

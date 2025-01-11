@@ -15,6 +15,7 @@ import {
   CreateSingleOptions,
   StoreInitOptions,
 } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { TransactionInstruction } from "@solana/web3.js";
 
 export class SolanaBalanceTool extends Tool {
   name = "solana_balance";
@@ -2687,6 +2688,159 @@ export class SolanaExecuteProposal2by2Multisig extends Tool {
     }
   }
 }
+export class SolanaCreateGovernanceProposalTool extends Tool {
+  name = "create_governance_proposal";
+  description = `Creates a new governance proposal in a DAO.
+  
+  Inputs (JSON string):
+  - realm: string, the realm public key (required)
+  - governance: string, the governance account public key (required)
+  - name: string, name of the proposal (required)
+  - description: string, description of the proposal (required)
+  - instructions: string[], array of serialized instructions (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const params = JSON.parse(input);
+      const instructions = params.instructions.map((i: string) => {
+        const decoded = Buffer.from(i, "base64");
+        // Deserialize the instruction data
+        const data = decoded.slice(0, -32); // Last 32 bytes are programId
+        const programId = new PublicKey(decoded.slice(-32));
+
+        // Note: You might need to adjust this depending on your exact serialization format
+        // This assumes the instruction data contains keys and their metadata
+        return new TransactionInstruction({
+          programId,
+          keys: [], // You'll need to populate this based on your serialized format
+          data,
+        });
+      });
+
+      const signature = await this.solanaKit.createGovernanceProposal(
+        new PublicKey(params.realm),
+        new PublicKey(params.governance),
+        params.name,
+        params.description,
+        instructions,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Governance proposal created successfully",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "CREATE_GOVERNANCE_PROPOSAL_ERROR",
+      });
+    }
+  }
+}
+export class SolanaCancelGovernanceProposalTool extends Tool {
+  name = "cancel_governance_proposal";
+  description = `Cancel an existing governance proposal in a DAO.
+  
+  Inputs (JSON string):
+  - proposal: string, the proposal public key (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const params = JSON.parse(input);
+      const signature = await this.solanaKit.cancelGovernanceProposal(
+        new PublicKey(params.proposal),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Governance proposal cancelled successfully",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "CANCEL_GOVERNANCE_PROPOSAL_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaExecuteGovernanceProposalTool extends Tool {
+  name = "execute_governance_proposal";
+  description = `Execute an existing governance proposal in a DAO.
+  
+  Inputs (JSON string):
+  - proposal: string, the proposal public key (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const params = JSON.parse(input);
+      const signature = await this.solanaKit.executeGovernanceProposal(
+        new PublicKey(params.proposal),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Governance proposal executed successfully",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "EXECUTE_GOVERNANCE_PROPOSAL_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaGetGovernanceProposalStateTool extends Tool {
+  name = "get_governance_proposal_state";
+  description = `Get the current state of an existing governance proposal in a DAO.
+  
+  Inputs (JSON string):
+  - proposal: string, the proposal public key (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const params = JSON.parse(input);
+      const state = await this.solanaKit.getGovernanceProposalState(
+        new PublicKey(params.proposal),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Governance proposal state fetched successfully",
+        state,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "GET_GOVERNANCE_PROPOSAL_STATE_ERROR",
+      });
+    }
+  }
+}
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -2755,5 +2909,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaRejectProposal2by2Multisig(solanaKit),
     new SolanaExecuteProposal2by2Multisig(solanaKit),
+    new SolanaCreateGovernanceProposalTool(solanaKit),
+    new SolanaCancelGovernanceProposalTool(solanaKit),
+    new SolanaExecuteGovernanceProposalTool(solanaKit),
+    new SolanaGetGovernanceProposalStateTool(solanaKit),
   ];
 }
