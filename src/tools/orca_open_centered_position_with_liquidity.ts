@@ -6,7 +6,7 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
-import { Wallet } from "@coral-xyz/anchor";
+import { Wallet } from "../utils/keypair";
 import { Decimal } from "decimal.js";
 import {
   ORCA_WHIRLPOOL_PROGRAM_ID,

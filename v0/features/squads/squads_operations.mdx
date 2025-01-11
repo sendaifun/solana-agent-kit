@@ -1,0 +1,431 @@
+---
+title: 'Squads Protocol Multisig'
+description: 'Create and manage 2-of-2 multisig accounts using Squads Protocol'
+---
+
+This implementation enables secure shared control over assets between an AI agent and a user.
+
+## Core Features
+
+1. **Multisig Management**
+   - Create 2-of-2 multisig
+   - Deposit funds
+   - Create proposals
+   - Execute transactions
+
+2. **Proposal Operations**
+   - Create proposals
+   - Approve proposals
+   - Reject proposals
+   - Execute transactions
+
+## Quick Start
+
+```typescript
+// Create multisig
+const multisig = await agent.createSquadsMultisig(
+  new PublicKey("creator-address")
+);
+
+// Deposit funds
+const deposit = await agent.depositToMultisig(
+  1.5  // amount in SOL
+);
+
+// Transfer from multisig
+const transfer = await agent.transferFromMultisig(
+  1.0,  // amount
+  new PublicKey("recipient")
+);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a 2-of-2 multisig with me"
+
+"Deposit 1 SOL to our multisig"
+
+"Transfer 0.5 SOL from multisig to address"
+
+"Approve pending proposal"
+```
+
+### LangChain Tool Prompts
+
+#### Create Multisig
+```text
+{
+  "creator": "creator-public-key"
+}
+```
+
+#### Deposit Funds
+```text
+{
+  "amount": 1.5
+}
+```
+
+#### Transfer Funds
+```text
+{
+  "amount": 1.0,
+  "recipient": "recipient-address"
+}
+```
+
+## Detailed Function Reference
+
+### Creation Operations
+
+#### createSquadsMultisig
+```typescript
+async function create_squads_multisig(
+  agent: SolanaAgentKit,
+  creator: PublicKey
+): Promise<string>
+```
+Creates a new 2-of-2 multisig account with the agent and creator as members.
+- `agent`: SolanaAgentKit instance
+- `creator`: Public key of the second member
+- Returns: Transaction signature
+
+#### depositToMultisig
+```typescript
+async function deposit_to_multisig(
+  agent: SolanaAgentKit,
+  amount: number,
+  vaultIndex?: number,
+  mint?: PublicKey
+): Promise<string>
+```
+Deposits funds to the multisig vault.
+- `amount`: Amount to deposit
+- `vaultIndex`: Optional vault index (default: 0)
+- `mint`: Optional SPL token mint address
+- Returns: Transaction signature
+
+### Proposal Operations
+
+#### createProposal
+```typescript
+async function create_proposal(
+  agent: SolanaAgentKit,
+  transactionIndex?: number | bigint
+): Promise<string>
+```
+Creates a new proposal for a pending transaction.
+- `transactionIndex`: Optional specific transaction index
+- Returns: Transaction signature
+
+#### approveProposal
+```typescript
+async function approve_proposal(
+  agent: SolanaAgentKit,
+  transactionIndex?: number | bigint
+): Promise<string>
+```
+Approves a pending proposal.
+- `transactionIndex`: Optional specific transaction index
+- Returns: Transaction signature
+
+#### rejectProposal
+```typescript
+async function reject_proposal(
+  agent: SolanaAgentKit,
+  transactionIndex?: number | bigint
+): Promise<string>
+```
+Rejects a pending proposal.
+- `transactionIndex`: Optional specific transaction index
+- Returns: Transaction signature
+
+### Transaction Operations
+
+#### transferFromMultisig
+```typescript
+async function transfer_from_multisig(
+  agent: SolanaAgentKit,
+  amount: number,
+  to: PublicKey,
+  vaultIndex?: number = 0,
+  mint?: PublicKey
+): Promise<string>
+```
+Creates a transaction to transfer funds from the multisig vault.
+- `amount`: Amount to transfer
+- `to`: Recipient address
+- `vaultIndex`: Optional vault index (default: 0)
+- `mint`: Optional SPL token mint address
+- Returns: Transaction signature
+
+#### executeTransaction
+```typescript
+async function execute_transaction(
+  agent: SolanaAgentKit,
+  transactionIndex?: number | bigint
+): Promise<string>
+```
+Executes an approved transaction.
+- `transactionIndex`: Optional specific transaction index
+- Returns: Transaction signature
+
+## Usage Examples
+
+### Complete Workflow Example
+```typescript
+// 1. Create multisig
+const multisig = await create_squads_multisig(
+  agent,
+  new PublicKey("creator")
+);
+
+// 2. Deposit funds
+const deposit = await deposit_to_multisig(
+  agent,
+  1.5  // SOL amount
+);
+
+// 3. Create transfer
+const transfer = await transfer_from_multisig(
+  agent,
+  1.0,  // amount
+  new PublicKey("recipient")
+);
+
+// 4. Create proposal
+const proposal = await create_proposal(agent);
+
+// 5. Approve proposal
+const approval = await approve_proposal(agent);
+
+// 6. Execute transaction
+const execution = await execute_transaction(agent);
+```
+
+### SPL Token Example
+```typescript
+// Deposit SPL tokens
+const tokenDeposit = await deposit_to_multisig(
+  agent,
+  100,
+  0,  // vault index
+  new PublicKey("token-mint")
+);
+
+// Transfer SPL tokens
+const tokenTransfer = await transfer_from_multisig(
+  agent,
+  50,
+  new PublicKey("recipient"),
+  0,  // vault index
+  new PublicKey("token-mint")
+);
+```
+
+## Common Function Patterns
+
+### Transaction Index Management
+```typescript
+// Get current transaction index
+const multisigInfo = await Multisig.fromAccountAddress(
+  agent.connection,
+  multisigPda
+);
+const currentIndex = Number(multisigInfo.transactionIndex);
+
+// Use specific or current index
+const transactionIndex = specificIndex || BigInt(currentIndex);
+```
+
+### Error Handling
+```typescript
+try {
+  const result = await function();
+} catch (error) {
+  throw new Error(`Operation failed: ${error.message}`);
+}
+```
+
+## Multisig Operations
+
+### 1. Create Multisig
+```typescript
+interface MultisigParams {
+  threshold: number;        // Always 2 for 2-of-2
+  members: {
+    key: PublicKey;
+    permissions: number;
+  }[];
+  timeLock?: number;       // Optional timelock
+}
+```
+
+### 2. Deposit Funds
+```typescript
+interface DepositParams {
+  amount: number;          // Amount to deposit
+  vaultIndex?: number;     // Optional vault index
+  mint?: PublicKey;        // Optional SPL token mint
+}
+```
+
+### 3. Create Transfer
+```typescript
+interface TransferParams {
+  amount: number;          // Amount to transfer
+  recipient: PublicKey;    // Recipient address
+  vaultIndex?: number;     // Optional vault index
+  mint?: PublicKey;        // Optional SPL token mint
+}
+```
+
+## Proposal Lifecycle
+
+1. **Create Proposal**
+```typescript
+const proposal = await agent.createMultisigProposal();
+```
+
+2. **Approve Proposal**
+```typescript
+const approval = await agent.approveMultisigProposal(
+  proposalIndex  // Optional
+);
+```
+
+3. **Execute Transaction**
+```typescript
+const execution = await agent.executeMultisigTransaction(
+  proposalIndex  // Optional
+);
+```
+
+## Implementation Details
+
+### Member Permissions
+```typescript
+const permissions = multisig.types.Permissions.all();
+// Includes:
+// - INITIATE
+// - VOTE
+// - EXECUTE
+// - CANCEL
+```
+
+### Transaction Workflow
+1. Create transaction
+2. Create proposal
+3. Collect approvals
+4. Execute transaction
+
+## Error Handling
+
+```typescript
+try {
+  const tx = await agent.createMultisigProposal();
+} catch (error) {
+  if (error.message.includes("insufficient approvals")) {
+    // Handle approval issues
+  } else if (error.message.includes("already executed")) {
+    // Handle duplicate execution
+  }
+}
+```
+
+## Best Practices
+
+1. **Account Management**
+   - Secure private keys
+   - Track proposal indices
+   - Monitor balances
+   - Verify permissions
+
+2. **Transaction Flow**
+   - Validate amounts
+   - Check approvals
+   - Monitor timeouts
+   - Handle failures
+
+3. **Security**
+   - Double-check recipients
+   - Verify amounts
+   - Confirm approvals
+   - Track transactions
+
+## Common Issues
+
+1. **Transaction Failures**
+   - Insufficient approvals
+   - Invalid indices
+   - Balance issues
+   - Permission errors
+
+2. **Proposal Management**
+   - Missing approvals
+   - Invalid sequences
+   - Timeout issues
+   - Execution failures
+
+3. **Account Issues**
+   - Permission problems
+   - Invalid addresses
+   - Wrong indices
+   - State conflicts
+
+## Response Format
+
+### Success Response
+```typescript
+{
+  status: "success",
+  message: "Operation completed successfully",
+  transaction: "transaction-signature",
+  // Additional operation-specific data
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "Error message",
+  code: "ERROR_CODE"
+}
+```
+
+## Technical Notes
+
+1. **Vault Management**
+   - Vault indices
+   - Balance tracking
+   - Token support
+   - Permission checks
+
+2. **Proposal Tracking**
+   - Index management
+   - State tracking
+   - Approval counting
+   - Execution status
+
+3. **Transaction Building**
+   - Instruction creation
+   - Message compilation
+   - Signature collection
+   - Execution verification
+
+## Related Functions
+
+- `getMultisigBalance`: Check vault balance
+- `getProposalStatus`: Check proposal state
+- `getApprovals`: Get approval count
+- `cancelProposal`: Cancel pending proposal
+
+## Resources
+
+- [Squads Protocol Docs](https://docs.squads.so)
+- [Squads Multisig SDK](https://github.com/squads-dapp/squads-mpl)
+- [Solana Docs](https://docs.solana.com)
+- [Transaction Format](https://docs.solana.com/developing/programming-model/transactions)
