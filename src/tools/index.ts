@@ -41,6 +41,7 @@ export * from "./send_compressed_airdrop";
 export * from "./stake_with_jup";
 export * from "./stake_with_solayer";
 export * from "./tensor_trade";
+export * from "./spl_governance_voting";
 
 export * from "./close_empty_token_accounts";
 

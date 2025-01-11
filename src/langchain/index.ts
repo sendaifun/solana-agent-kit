@@ -2688,6 +2688,176 @@ export class SolanaExecuteProposal2by2Multisig extends Tool {
   }
 }
 
+export class SolanaCastProposalVoteTool extends Tool {
+  name = "solana_cast_proposal_vote";
+  description = `Vote on a created proposal with given proposalId, realmId, and vote type.
+  
+  Inputs (input is a JSON string):
+  - realmId: string, the address of the realm (required)
+  - proposalId: string, the address of the proposal (required)
+  - voteOption: string, the type of vote, either "yes" or "no" (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realmId, proposalId, voteOption } = JSON.parse(input);
+
+      const voteResult = await this.solanaKit.castProposalVote(
+        realmId,
+        proposalId,
+        voteOption,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Successfully casted vote on proposal",
+        signature: voteResult.signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaTrackVotingPowerTool extends Tool {
+  name = "solana_track_voting_power";
+  description = `Track the voting power of a user in a realm.
+  
+  Inputs (input is a JSON string):
+  - realmId: string, the address of the realm (required)
+  - tokenOwnerRecordPk: string, the PublicKey of the Token Owner Record (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { tokenOwnerRecordPk } = JSON.parse(input);
+
+      const votingPower = await this.solanaKit.trackVotingPower(
+        new PublicKey(tokenOwnerRecordPk),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Successfully tracked voting power",
+        votingPower,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaManageVoteDelegationTool extends Tool {
+  name = "solana_manage_vote_delegation";
+  description = `Delegate voting power to another user.
+  
+  Inputs (input is a JSON string):
+  - programId: string, the PublicKey of the governance program (required)
+  - programVersion: number, the version of the governance program (required)
+  - realm: string, the address of the realm (required)
+  - governingTokenMint: string, the PublicKey of the governing token mint (required)
+  - governingTokenOwner: string, the PublicKey of the current token owner (required)
+  - governanceAuthority: string, the PublicKey of the wallet executing the delegation (required)
+  - newGovernanceDelegate: string, the PublicKey of the new delegate (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const {
+        programId,
+        programVersion,
+        realm,
+        governingTokenMint,
+        governingTokenOwner,
+        governanceAuthority,
+        newGovernanceDelegate,
+      } = JSON.parse(input);
+
+      // Validate and convert inputs
+      const programIdKey = new PublicKey(programId);
+      const realmKey = new PublicKey(realm);
+      const governingTokenMintKey = new PublicKey(governingTokenMint);
+      const governingTokenOwnerKey = new PublicKey(governingTokenOwner);
+      const governanceAuthorityKey = new PublicKey(governanceAuthority);
+      const newGovernanceDelegateKey = new PublicKey(newGovernanceDelegate);
+
+      // Call the SolanaAgentKit manageVoteDelegation method
+      const signature = await this.solanaKit.manageVoteDelegation(
+        programIdKey,
+        programVersion,
+        realmKey,
+        governingTokenMintKey,
+        governingTokenOwnerKey,
+        governanceAuthorityKey,
+        newGovernanceDelegateKey,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Successfully managed vote delegation",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaMonitorVotingOutcomesTool extends Tool {
+  name = "solana_monitor_voting_outcomes";
+  description = `Monitor the voting outcomes for a given proposal.
+  
+  Inputs (input is a JSON string):
+  - proposalId: string, the address of the proposal (required)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { proposalId } = JSON.parse(input);
+
+      const votingOutcomes = await this.solanaKit.monitorVotingOutcomes(
+        new PublicKey(proposalId),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Successfully monitored voting outcomes",
+        votingOutcomes,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "UNKNOWN_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -2755,5 +2925,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaRejectProposal2by2Multisig(solanaKit),
     new SolanaExecuteProposal2by2Multisig(solanaKit),
+    new SolanaMonitorVotingOutcomesTool(solanaKit),
+    new SolanaCastProposalVoteTool(solanaKit),
+    new SolanaTrackVotingPowerTool(solanaKit),
+    new SolanaManageVoteDelegationTool(solanaKit),
   ];
 }

@@ -30,6 +30,9 @@ import launchPumpfunTokenAction from "./launchPumpfunToken";
 import getWalletAddressAction from "./getWalletAddress";
 import flashOpenTradeAction from "./flashOpenTrade";
 import flashCloseTradeAction from "./flashCloseTrade";
+import manageVoteDelegationAction from "./manageVotingDelegation";
+import monitorVotingOutcomesAction from "./manageVotingOutcomes";
+import trackVotingPowerAction from "./trackVotingPower";
 
 export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -65,6 +68,9 @@ export const ACTIONS = {
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  MANAGE_VOTING_DELEGATION: manageVoteDelegationAction,
+  MANAGE_VOTING_OUTCOMES: monitorVotingOutcomesAction,
+  TRACK_VOTING_POWER: trackVotingPowerAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
