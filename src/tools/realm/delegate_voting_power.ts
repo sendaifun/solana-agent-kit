@@ -5,6 +5,7 @@ import {
   getTokenOwnerRecordAddress,
   withSetGovernanceDelegate,
 } from "@solana/spl-governance";
+import { GOVERNANCE_PROGRAM_ADDRESS } from "../../constants";
 
 /**
  * Delegate voting power to another wallet in a governance realm
@@ -34,22 +35,9 @@ export async function delegateVotingPower(
   governingTokenMint: PublicKey,
   delegate: PublicKey,
 ): Promise<string> {
-  // Validate public keys
-  // if (
-  //   !PublicKey.isOnCurve(realm.toBytes()) ||
-  //   !PublicKey.isOnCurve(governingTokenMint.toBytes()) ||
-  //   !PublicKey.isOnCurve(delegate.toBytes())
-  // ) {
-  //   throw new Error(
-  //     "Invalid public key provided for realm, governingTokenMint, or delegate",
-  //   );
-  // }
-
   try {
     const connection = agent.connection;
-    const governanceProgramId = new PublicKey(
-      "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
-    );
+    const governanceProgramId = new PublicKey(GOVERNANCE_PROGRAM_ADDRESS);
 
     // Get governance program version for the connected chain
     const programVersion = await getGovernanceProgramVersion(
@@ -108,34 +96,4 @@ export async function delegateVotingPower(
     }
     throw new Error(`Failed to delegate voting power: ${error.message}`);
   }
-}
-
-/**
- * Remove voting power delegation
- *
- * @param agent {SolanaAgentKit} The Solana Agent Kit instance
- * @param realm {PublicKey} The public key of the realm
- * @param governingTokenMint {PublicKey} The mint of the governing token
- *
- * @returns {Promise<string>} Transaction signature
- *
- * @example
- * const signature = await removeDelegation(
- *   agent,
- *   new PublicKey("realm-address"),
- *   new PublicKey("token-mint-address")
- * );
- */
-export async function removeDelegation(
-  agent: SolanaAgentKit,
-  realm: PublicKey,
-  governingTokenMint: PublicKey,
-): Promise<string> {
-  // Can use the same function with null delegate to remove delegation
-  return delegateVotingPower(
-    agent,
-    realm,
-    governingTokenMint,
-    PublicKey.default, // Pass default/null public key to remove delegation
-  );
 }

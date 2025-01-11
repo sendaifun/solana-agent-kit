@@ -237,3 +237,11 @@ export interface FlashCloseTradeParams {
   token: string;
   side: "long" | "short";
 }
+
+export interface VotingPowerInfo {
+  votingPower: number;
+  delegatedPower: number;
+  totalVotesCount: number;
+  unrelinquishedVotesCount: number;
+  outstandingProposalCount: number;
+}

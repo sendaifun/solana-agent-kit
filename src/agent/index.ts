@@ -3,7 +3,7 @@ import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
 import { DEFAULT_OPTIONS } from "../constants";
-import { Config, TokenCheck } from "../types";
+import { Config, TokenCheck, VotingPowerInfo } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -65,6 +65,8 @@ import {
   flashCloseTrade,
   castGovernanceVote,
   getVotingPower,
+  delegateVotingPower,
+  getVotingOutcome,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -94,6 +96,7 @@ import { create_proposal } from "../tools/squads_multisig/create_proposal";
 import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
 import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
 import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
+import { Proposal } from "@solana/spl-governance";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -663,25 +666,14 @@ export class SolanaAgentKit {
     proposalAccount: PublicKey,
     voteType: "yes" | "no",
   ): Promise<string> {
-    return await castGovernanceVote(
-      this,
-      realmAccount,
-      proposalAccount,
-      voteType,
-    );
+    return castGovernanceVote(this, realmAccount, proposalAccount, voteType);
   }
 
   async getVotingPower(
     realm: PublicKey,
     governingTokenMint: PublicKey,
-  ): Promise<{
-    votingPower: number;
-    delegatedPower: number;
-    totalVotesCount: number;
-    unrelinquishedVotesCount: number;
-    outstandingProposalCount: number;
-  }> {
-    return await getVotingPower(this, realm, governingTokenMint);
+  ): Promise<VotingPowerInfo> {
+    return getVotingPower(this, realm, governingTokenMint);
   }
 
   async delegateVotingPower(
@@ -689,38 +681,10 @@ export class SolanaAgentKit {
     governingTokenMint: PublicKey,
     delegate: PublicKey,
   ): Promise<string> {
-    const governance = new SplGovernance(this.connection);
-    const instruction = await governance.setGovernanceDelegate(
-      realm,
-      governingTokenMint,
-      this.wallet_address,
-      delegate,
-    );
-    return await this.connection.sendTransaction(instruction, [this.wallet]);
+    return delegateVotingPower(this, realm, governingTokenMint, delegate);
   }
 
-  async getVotingOutcome(proposal: PublicKey): Promise<{
-    status: string;
-    yesVotes: number;
-    noVotes: number;
-    abstainVotes: number;
-    isFinalized: boolean;
-    votingEndTime: number;
-  }> {
-    const governance = new SplGovernance(this.connection);
-    const proposalData = await governance.getProposalByPubkey(proposal);
-
-    if (!proposalData) {
-      throw new Error("Proposal not found");
-    }
-
-    return {
-      status: proposalData.state,
-      yesVotes: proposalData.getYesVoteCount().toNumber(),
-      noVotes: proposalData.getNoVoteCount().toNumber(),
-      abstainVotes: proposalData.getAbstainVoteCount().toNumber(),
-      isFinalized: proposalData.isVoteFinalized(),
-      votingEndTime: proposalData.votingEndTime.toNumber(),
-    };
+  async getVotingOutcome(proposal: PublicKey): Promise<Proposal> {
+    return getVotingOutcome(this, proposal);
   }
 }

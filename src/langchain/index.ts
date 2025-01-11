@@ -2688,14 +2688,14 @@ export class SolanaExecuteProposal2by2Multisig extends Tool {
   }
 }
 
-export class CastGovernanceVoteTool extends Tool {
+export class SolanaCastGovernanceVoteTool extends Tool {
   name = "solana_governance_vote";
   description = `Cast a vote on a governance proposal.
 
-  Inputs ( input is a JSON string ):
-  realmAccount: string, eg "7nxQB..." (required)
-  proposalAccount: string, eg "8x2dR..." (required)
-  vote: string, either "yes" or "no" (required)`;
+   Inputs (input is a JSON string):
+  - realmAccount: string, the address eg "7nxQB..." of the realm (required)
+  - proposalAccount: string, the address eg "8x2dR..." of the proposal (required)
+  - vote: string, the type of vote, either "yes" or "no" (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -2736,10 +2736,13 @@ export class CastGovernanceVoteTool extends Tool {
   }
 }
 
-export class GetVotingPowerTool extends Tool {
+export class SolanaGetVotingPowerTool extends Tool {
   name = "get_voting_power";
-  description =
-    "Get current voting power in a realm. Input should be a JSON string containing: realm (address) and governingTokenMint (address).";
+  description = `Get current voting power in a realm.
+    
+  Inputs (input is a JSON string):
+  - realmAccount: string, the address eg "7nxQB..." of the realm (required)
+  - governingTokenMint: string, the PublicKey of the Governing Token Mint (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -2748,6 +2751,16 @@ export class GetVotingPowerTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const { realm, governingTokenMint } = JSON.parse(input);
+
+      if (
+        !PublicKey.isOnCurve(realm) ||
+        !PublicKey.isOnCurve(governingTokenMint)
+      ) {
+        throw new Error(
+          "Invalid public key provided for realm or governingTokenMint",
+        );
+      }
+
       const votingPower = await this.solanaKit.getVotingPower(
         new PublicKey(realm),
         new PublicKey(governingTokenMint),
@@ -2768,10 +2781,15 @@ export class GetVotingPowerTool extends Tool {
   }
 }
 
-export class DelegateVoteTool extends Tool {
+export class SolanaDelegateVoteTool extends Tool {
   name = "delegate_vote";
-  description =
-    "Delegate voting power to another wallet. Input should be a JSON string containing: realm (address), governingTokenMint (address), and delegate (address).";
+  description = `Delegate voting power to another wallet. 
+    
+    Input should be a JSON string containing: 
+    
+    - realmAccount : string, the address eg "7nxQB..." of the realm (required)
+    - governingTokenMint: string, the PublicKey of the governing token mint (required)
+    - delegate: string, the PublicKey of the new delegate (required) `;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -2780,6 +2798,17 @@ export class DelegateVoteTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const { realm, governingTokenMint, delegate } = JSON.parse(input);
+
+      // Validate public keys
+      if (
+        !PublicKey.isOnCurve(realm) ||
+        !PublicKey.isOnCurve(governingTokenMint) ||
+        !PublicKey.isOnCurve(delegate)
+      ) {
+        throw new Error(
+          "Invalid public key provided for realm, governingTokenMint, or delegate",
+        );
+      }
       const signature = await this.solanaKit.delegateVotingPower(
         new PublicKey(realm),
         new PublicKey(governingTokenMint),
@@ -2801,10 +2830,12 @@ export class DelegateVoteTool extends Tool {
   }
 }
 
-export class GetVotingOutcomeTool extends Tool {
+export class SolanaGetVotingOutcomeTool extends Tool {
   name = "get_voting_outcome";
-  description =
-    "Get the current outcome of a governance proposal. Input should be a JSON string containing: proposal (address).";
+  description = `Get the current outcome of a governance proposal. 
+    
+  Input should be a JSON string containing: 
+  - proposalAccount: string, the address of the proposal (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -2813,6 +2844,11 @@ export class GetVotingOutcomeTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const { proposal } = JSON.parse(input);
+
+      if (!PublicKey.isOnCurve(proposal)) {
+        throw new Error("Invalid public key provided for proposal");
+      }
+
       const outcome = await this.solanaKit.getVotingOutcome(
         new PublicKey(proposal),
       );
@@ -2899,9 +2935,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaRejectProposal2by2Multisig(solanaKit),
     new SolanaExecuteProposal2by2Multisig(solanaKit),
-    new CastVoteTool(solanaKit),
-    new GetVotingPowerTool(solanaKit),
-    new DelegateVoteTool(solanaKit),
-    new GetVotingOutcomeTool(solanaKit),
+    new SolanaCastGovernanceVoteTool(solanaKit),
+    new SolanaGetVotingPowerTool(solanaKit),
+    new SolanaDelegateVoteTool(solanaKit),
+    new SolanaGetVotingOutcomeTool(solanaKit),
   ];
 }

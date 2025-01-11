@@ -11,6 +11,7 @@ import {
   getRealm,
   VoteKind,
 } from "@solana/spl-governance";
+import { GOVERNANCE_PROGRAM_ADDRESS } from "../../constants";
 
 /**
  * Cast a vote on a governance proposal
@@ -40,9 +41,7 @@ export async function castGovernanceVote(
 ): Promise<string> {
   try {
     const connection = agent.connection;
-    const governanceProgramId = new PublicKey(
-      "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
-    );
+    const governanceProgramId = new PublicKey(GOVERNANCE_PROGRAM_ADDRESS);
 
     // Get governance program version for the connected chain
     const programVersion = await getGovernanceProgramVersion(

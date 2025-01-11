@@ -33,3 +33,10 @@ export const DEFAULT_OPTIONS = {
 export const JUP_API = "https://quote-api.jup.ag/v6";
 export const JUP_REFERRAL_ADDRESS =
   "REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3";
+
+/**
+ * Governance Program Address
+ */
+
+export const GOVERNANCE_PROGRAM_ADDRESS =
+  "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw";

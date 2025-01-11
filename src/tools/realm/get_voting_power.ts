@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
-import { SolanaAgentKit } from "../../index";
+import { SolanaAgentKit, VotingPowerInfo } from "../../index";
 import { getTokenOwnerRecordsByOwner } from "@solana/spl-governance";
+import { GOVERNANCE_PROGRAM_ADDRESS } from "../../constants";
 
 /**
  * Get current voting power for a wallet in a realm including delegated power
@@ -9,7 +10,7 @@ import { getTokenOwnerRecordsByOwner } from "@solana/spl-governance";
  * @param realm {PublicKey} The public key of the realm
  * @param governingTokenMint {PublicKey} The mint of the governing token to check power for
  *
- * @returns {Promise<Object>} Object containing voting power details:
+ * @returns {Promise<VotingPowerInfo>} VotingPowerInfo containing voting power details:
  * - votingPower: Direct voting power from token deposits
  * - delegatedPower: Additional voting power from delegations
  * - totalVotesCount: Total number of votes cast
@@ -30,26 +31,10 @@ export async function getVotingPower(
   agent: SolanaAgentKit,
   realm: PublicKey,
   governingTokenMint: PublicKey,
-): Promise<{
-  votingPower: number;
-  delegatedPower: number;
-  totalVotesCount: number;
-  unrelinquishedVotesCount: number;
-  outstandingProposalCount: number;
-}> {
-  // Validate public keys
-  if (
-    !PublicKey.isOnCurve(realm.toBytes()) ||
-    !PublicKey.isOnCurve(governingTokenMint.toBytes())
-  ) {
-    throw new Error("Invalid realm or governingTokenMint address");
-  }
-
+): Promise<VotingPowerInfo> {
   try {
     const connection = agent.connection;
-    const governanceProgramId = new PublicKey(
-      "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
-    );
+    const governanceProgramId = new PublicKey(GOVERNANCE_PROGRAM_ADDRESS);
 
     // Get all token owner records for this wallet
     const tokenOwnerRecords = await getTokenOwnerRecordsByOwner(
@@ -76,7 +61,6 @@ export async function getVotingPower(
     return {
       votingPower:
         relevantRecord.account.governingTokenDepositAmount.toNumber(),
-      // Calculate delegated power based on presence of governance delegate
       delegatedPower: relevantRecord.account.governanceDelegate
         ? relevantRecord.account.governingTokenDepositAmount.toNumber()
         : 0,
