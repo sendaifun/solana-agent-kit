@@ -2688,6 +2688,142 @@ export class SolanaExecuteProposal2by2Multisig extends Tool {
   }
 }
 
+export class SolanaProposeTransactionTool extends Tool {
+  name = "propose_transaction";
+  description = `Propose a transaction in a Solana DAO governance program.
+  
+  Inputs (JSON string):
+  - realmId: string, the public key of the realm.
+  - governanceId: string, the public key of the governance account.
+  - name: string, the name of the proposal.
+  - descriptionLink: string, a link to the description of the proposal.
+  - options: string[], the options for the proposal (e.g., "yes", "no").
+  - voteType: string, the type of vote ("single" or "multi").
+  - choiceType: string, for multi-choice votes ("FullWeight" or "Weighted").
+  - useDenyOption: boolean (optional), whether to include a deny option.`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const {
+        realmId,
+        governanceId,
+        name,
+        descriptionLink,
+        options,
+        voteType,
+        choiceType,
+        useDenyOption,
+      } = JSON.parse(input);
+
+      const proposalPublicKey = await this.solanaKit.proposeTransaction(
+        realmId,
+        governanceId,
+        name,
+        descriptionLink,
+        options,
+        voteType,
+        choiceType,
+        useDenyOption,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        proposalPublicKey,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "PROPOSE_TRANSACTION_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaMonitorTreasuryBalancesTool extends Tool {
+  name = "monitor_treasury_balances";
+  description = `Monitor the balances of treasuries associated with a Solana governance program.
+  
+  Inputs (JSON string):
+  - governancePubkey: string, the public key of the governance account.`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { governancePubkey } = JSON.parse(input);
+
+      const balances = await this.solanaKit.monitorTreasuryBalances(
+        new PublicKey(governancePubkey),
+      );
+
+      return JSON.stringify({
+        status: "success",
+        balances,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "MONITOR_TREASURY_BALANCES_ERROR",
+      });
+    }
+  }
+}
+
+export class SolanaExecuteApprovedTreasuryActionsTool extends Tool {
+  name = "execute_approved_treasury_actions";
+  description = `Execute an approved transaction from a proposal in a Solana DAO governance program.
+  
+  Inputs (JSON string):
+  - realmId: string, the public key of the realm.
+  - governanceId: string, the public key of the governance account.
+  - proposalId: string, the public key of the proposal.
+  - transactionAddress: string, the public key of the transaction.
+  - transactionInstructions: InstructionData[], the instructions for the transaction.`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const {
+        realmId,
+        governanceId,
+        proposalId,
+        transactionAddress,
+        transactionInstructions,
+      } = JSON.parse(input);
+
+      const signature = await this.solanaKit.executeApprovedTreasuryActions(
+        realmId,
+        governanceId,
+        proposalId,
+        transactionAddress,
+        transactionInstructions,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+        code: error.code || "EXECUTE_APPROVED_TREASURY_ACTIONS_ERROR",
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -2755,5 +2891,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaRejectProposal2by2Multisig(solanaKit),
     new SolanaExecuteProposal2by2Multisig(solanaKit),
+    new SolanaProposeTransactionTool(solanaKit),
+    new SolanaMonitorTreasuryBalancesTool(solanaKit),
+    new SolanaExecuteApprovedTreasuryActionsTool(solanaKit),
   ];
 }

@@ -5,83 +5,126 @@ import {
   TransactionInstruction,
   Signer,
 } from "@solana/web3.js";
-import { withCreateProposal, VoteType } from "@solana/spl-governance";
+import {
+  withCreateProposal,
+  VoteType,
+  getGovernanceProgramVersion,
+  getRealm,
+  getTokenOwnerRecordAddress,
+  MultiChoiceType,
+} from "@solana/spl-governance";
 import { SolanaAgentKit } from "../agent";
 
 /**
  * Propose a transaction to the Solana governance program.
  *
- * @param connection The Solana RPC connection
- * @param programId The program ID of the governance program
- * @param programVersion The program version of the governance program
- * @param realm The realm public key
- * @param governance The governance public key
- * @param tokenOwnerRecord The token owner record public key
- * @param governingTokenMint The governing token mint public key
- * @param governanceAuthority The governance authority public key
- * @param payer The payer wallet
- * @param name The proposal name
- * @param descriptionLink The proposal description link
- * @param options The proposal options
- * @param useDenyOption Whether to use the deny option (default: true)
- * @param proposalIndex The proposal index (default: undefined)
- * @param voterWeightRecord The voter weight record public key (default: undefined)
- * @returns The proposal public key
- * @throws Error if the proposal fails
+ * @param agent           The SolanaAgentKit instance.
+ * @param realmId         The public key of the realm as a string.
+ * @param governanceId    The public key of the governance as a string.
+ * @param name            The proposal name.
+ * @param descriptionLink The proposal description link.
+ * @param options         The proposal options.
+ * @param voteType        The type of vote ("single" or "multi").
+ * @param choiceType      The type of multi-choice voting ("FullWeight" or "Weighted") for multi-choice votes.
+ * @param useDenyOption   Whether to use the deny option (default: true).
+ * @returns               The public key of the created proposal.
  */
-
-export async function propose_transaction(
+export async function proposeTransaction(
   agent: SolanaAgentKit,
-  programId: PublicKey,
-  programVersion: number,
-  realm: PublicKey,
-  governance: PublicKey,
-  tokenOwnerRecord: PublicKey,
-  governingTokenMint: PublicKey,
-  governanceAuthority: PublicKey,
-  payer: Signer,
+  realmId: string,
+  governanceId: string,
   name: string,
   descriptionLink: string,
   options: string[],
-  voteType: VoteType,
+  voteType: string,
+  choiceType: string = "FullWeight",
   useDenyOption: boolean = true,
-  proposalIndex?: number,
-  voterWeightRecord?: PublicKey,
-) {
+): Promise<PublicKey> {
+  const connection = agent.connection;
+  const realmPublicKey = new PublicKey(realmId);
+  const governancePublicKey = new PublicKey(governanceId);
+  const governanceProgramId = new PublicKey(
+    "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
+  );
+
+  let mappedVoteType: VoteType;
+  if (voteType.toLowerCase() === "single") {
+    mappedVoteType = VoteType.SINGLE_CHOICE;
+  } else if (voteType.toLowerCase() === "multi") {
+    const choiceTypeMapping: { [key: string]: MultiChoiceType } = {
+      fullweight: MultiChoiceType.FullWeight,
+      weighted: MultiChoiceType.Weighted,
+    };
+
+    const mappedChoiceType = choiceTypeMapping[choiceType.toLowerCase()];
+    if (!mappedChoiceType) {
+      throw new Error(
+        `Invalid choiceType '${choiceType}'. Allowed values are 'FullWeight' or 'Weighted' for multi-choice votes.`,
+      );
+    }
+
+    mappedVoteType = VoteType.MULTI_CHOICE(
+      mappedChoiceType,
+      1,
+      options.length,
+      1,
+    );
+  } else {
+    throw new Error(
+      `Invalid voteType '${voteType}'. Allowed values are 'single' or 'multi'.`,
+    );
+  }
+
   try {
-    const connection = agent.connection;
+    // Fetch the program version
+    const programVersion = await getGovernanceProgramVersion(
+      connection,
+      governanceProgramId,
+    );
+
+    // Fetch realm and token information
+    const realm = await getRealm(connection, realmPublicKey);
+    const governingTokenMint = realm.account.communityMint;
+
+    // Get the token owner record
+    const tokenOwnerRecordAddress = await getTokenOwnerRecordAddress(
+      governanceProgramId,
+      realmPublicKey,
+      governingTokenMint,
+      agent.wallet.publicKey,
+    );
+
+    // Create the proposal
     const transaction = new Transaction();
     const instructions: TransactionInstruction[] = [];
 
-    // Create the proposal
     const proposalPublicKey = await withCreateProposal(
       instructions,
-      programId,
+      governanceProgramId,
       programVersion,
-      realm,
-      governance,
-      tokenOwnerRecord,
+      realmPublicKey,
+      governancePublicKey,
+      tokenOwnerRecordAddress,
       name,
       descriptionLink,
       governingTokenMint,
-      governanceAuthority,
-      proposalIndex,
-      voteType,
+      agent.wallet.publicKey,
+      undefined,
+      mappedVoteType,
       options,
       useDenyOption,
-      payer.publicKey,
-      voterWeightRecord,
+      agent.wallet.publicKey,
     );
 
-    // Add the instructions to the transaction
     transaction.add(...instructions);
 
     // Send and confirm the transaction
-    await sendAndConfirmTransaction(connection, transaction, [payer]);
+    await sendAndConfirmTransaction(connection, transaction, [
+      agent.wallet as Signer,
+    ]);
 
     return proposalPublicKey;
-  } catch (error) {
-    console.error("Failed to propose transaction:", error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(`Failed to propose transaction: ${error.message}`);
   }
 }

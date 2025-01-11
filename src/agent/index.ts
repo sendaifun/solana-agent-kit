@@ -63,6 +63,9 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
+  monitor_treasury_balances,
+  proposeTransaction,
+  executeApprovedTreasuryActions,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -654,5 +657,50 @@ export class SolanaAgentKit {
     transactionIndex?: number | bigint,
   ): Promise<string> {
     return execute_transaction(this, transactionIndex);
+  }
+
+  async monitorTreasuryBalances(governancePubkey: PublicKey): Promise<string> {
+    const res = monitor_treasury_balances(this, governancePubkey);
+    return JSON.stringify(res);
+  }
+  async proposeTransaction(
+    realmId: PublicKey,
+    governanceId: PublicKey,
+    name: string,
+    descriptionLink: string,
+    options: string[],
+    voteType: string,
+    choiceType: string = "FullWeight",
+    useDenyOption: boolean = true,
+  ): Promise<string> {
+    const res = proposeTransaction(
+      this,
+      realmId.toString(),
+      governanceId.toString(),
+      name,
+      descriptionLink,
+      options,
+      voteType,
+      choiceType,
+      useDenyOption,
+    );
+    return res.toString();
+  }
+
+  async executeApprovedTreasuryActions(
+    realmId: string,
+    governanceId: string,
+    proposalId: string,
+    transactionAddress: string,
+    transactionInstructions: any[],
+  ): Promise<string> {
+    return executeApprovedTreasuryActions(
+      this,
+      realmId,
+      governanceId,
+      proposalId,
+      transactionAddress,
+      transactionInstructions,
+    );
   }
 }
