@@ -91,6 +91,9 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Price feed integration for market analysis
   - Automated decision-making capabilities
 
+## 📃 Documentation
+You can view the full documentation of the kit at [docs.solanaagentkit.xyz](https://docs.solanaagentkit.xyz)
+
 ## 📦 Installation
 
 ```bash
