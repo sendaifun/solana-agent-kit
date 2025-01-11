@@ -50,3 +50,7 @@ export * from "./flash_open_trade";
 export * from "./flash_close_trade";
 
 export * from "./create_3land_collectible";
+export * from "./manage_vote_delegation";
+export * from "./cast_proposal_vote";
+export * from "./track_voting_power";
+export * from "./monitor_voting_outcomes";

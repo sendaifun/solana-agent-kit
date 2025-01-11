@@ -63,6 +63,10 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
+  manageVoteDelegation,
+  castProposalVote,
+  trackVotingPower,
+  monitorVotingOutcomes,
 } from "../tools";
 import {
   CollectionDeployment,
@@ -654,5 +658,40 @@ export class SolanaAgentKit {
     transactionIndex?: number | bigint,
   ): Promise<string> {
     return execute_transaction(this, transactionIndex);
+  }
+
+  async manageVoteDelegation(
+    realmId: string,
+    governingTokenMintId: string,
+    governingTokenOwnerId: string,
+    newDelegateId: string,
+  ): Promise<string> {
+    return manageVoteDelegation(
+      this,
+      realmId,
+      governingTokenMintId,
+      governingTokenOwnerId,
+      newDelegateId,
+    );
+  }
+
+  async castProposalVote(
+    realmId: string,
+    proposalId: string,
+    voteType: string,
+  ): Promise<string> {
+    return castProposalVote(this, realmId, proposalId, voteType);
+  }
+
+  async trackVotingPower(
+    realmId: string,
+    walletId: string,
+    governingTokenMint: string,
+  ): Promise<number> {
+    return trackVotingPower(this, realmId, walletId, governingTokenMint);
+  }
+
+  async monitorVotingOutcomes(proposalId: string): Promise<string> {
+    return monitorVotingOutcomes(this, proposalId);
   }
 }

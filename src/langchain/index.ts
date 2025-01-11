@@ -2688,6 +2688,155 @@ export class SolanaExecuteProposal2by2Multisig extends Tool {
   }
 }
 
+export class SolanaCastProposalVoteTool extends Tool {
+  name = "cast_proposal_vote";
+  description = `Cast a vote on a governance proposal within a realm on Solana.
+
+  Inputs (JSON string):
+  - realmId: string (Realm Address)
+  - proposalId: string (Proposal Address)
+  - voteType: string ("yes" or "no")`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realmId, proposalId, voteType } = JSON.parse(input);
+
+      const signature = await this.solanaKit.castProposalVote(
+        realmId,
+        proposalId,
+        voteType,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Vote cast successfully",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+}
+
+export class SolanaTrackVotingPowerTool extends Tool {
+  name = "track_voting_power";
+  description = `Track the voting power of a specific wallet address in a realm on Solana.
+
+  Inputs (JSON string):
+  - realmId: string (Public key of the realm)
+  - walletId: string (Public key of the wallet)
+  - governingTokenMint: string (Public key of the governing token mint)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { realmId, walletId, governingTokenMint } = JSON.parse(input);
+
+      const votingPower = await this.solanaKit.trackVotingPower(
+        realmId,
+        walletId,
+        governingTokenMint,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Voting power fetched successfully",
+        votingPower,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+}
+
+export class SolanaMonitorVotingOutcomesTool extends Tool {
+  name = "monitor_voting_outcomes";
+  description = `Monitor the voting outcome of a proposal on Solana.
+
+  Inputs (JSON string):
+  - proposalId: string (Public key of the proposal)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const { proposalId } = JSON.parse(input);
+
+      const state = await this.solanaKit.monitorVotingOutcomes(proposalId);
+
+      return JSON.stringify({
+        status: "success",
+        message: "Proposal state fetched successfully",
+        state,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+}
+
+export class SolanaManageVoteDelegationTool extends Tool {
+  name = "manage_vote_delegation";
+  description = `Set a governance delegate for a realm and token owner on Solana.
+
+  Inputs (JSON string):
+  - realmId: string (Public key of the realm)
+  - governingTokenMintId: string (Public key of the governing token mint)
+  - governingTokenOwnerId: string (Public key of the governing token owner)
+  - newDelegateId: string (Public key of the new delegate)`;
+
+  constructor(private solanaKit: SolanaAgentKit) {
+    super();
+  }
+
+  protected async _call(input: string): Promise<string> {
+    try {
+      const {
+        realmId,
+        governingTokenMintId,
+        governingTokenOwnerId,
+        newDelegateId,
+      } = JSON.parse(input);
+
+      const signature = await this.solanaKit.manageVoteDelegation(
+        realmId,
+        governingTokenMintId,
+        governingTokenOwnerId,
+        newDelegateId,
+      );
+
+      return JSON.stringify({
+        status: "success",
+        message: "Governance delegate set successfully",
+        signature,
+      });
+    } catch (error: any) {
+      return JSON.stringify({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+}
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -2755,5 +2904,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaRejectProposal2by2Multisig(solanaKit),
     new SolanaExecuteProposal2by2Multisig(solanaKit),
+    new SolanaCastProposalVoteTool(solanaKit),
+    new SolanaTrackVotingPowerTool(solanaKit),
+    new SolanaMonitorVotingOutcomesTool(solanaKit),
+    new SolanaManageVoteDelegationTool(solanaKit),
   ];
 }
