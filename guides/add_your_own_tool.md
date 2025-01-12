@@ -9,7 +9,8 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 3. Implement supporting functions in SolanaAgentKit
 4. Export the new tool
 5. Integrate the tool into the agent
-6. Use the custom tool
+6. Add your new action schema
+7. Use the custom tool
 
 ## Implementation Guide
 
@@ -17,9 +18,11 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 
 Create a new TypeScript file in the `src/tools/` directory for your tool (e.g., `custom_tool.ts`).
 
+The subdirectories in `/src/tools/` are based on the protocol that is integrated, check if a directory for the protocol you are integrating already exists, if not create a new one.
+
 ### 2. Implement the Tool Class
-> `src/langchain/index.ts`
-```typescript:src/langchain/index.ts
+> `src/langchain/<your_protocol>/<your_tool>.ts`
+```typescript
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../agent";
 
@@ -64,11 +67,11 @@ export class SolanaAgentKit {
 ```
 
 ### 4. Export the Tool
+In case you have created a new directory for your protocol, you need to create an index.ts file in that directory and also export the tool in the `src/tools/index.ts` file.
+
 > `src/tools/index.ts`
 ```typescript:src/tools/index.ts
-export * from "./request_faucet_funds";
-export * from "./deploy_token";
-export * from "./custom_tool"; // Add your new tool
+export * from "./<your_protocol>/"; // Add your new tool
 ```
 
 ### 5. Integrate with Agent
@@ -84,7 +87,22 @@ export function createSolanaTools(agent: SolanaAgentKit) {
 }
 ```
 
-### 6. Usage Example
+### 6. Add your new action schema
+
+Based on your action's protocol, add a new action schema to the `src/actions/<your_protocol>/<your_action>.ts` file. 
+View other action schemas for examples.
+
+Also make sure to add your new action to the dictionary of all actions in the `src/actions/index.ts` file.
+
+> `src/actions/index.ts`
+```typescript:src/actions/index.ts
+export const ACTIONS = {
+  //  existing actions ...
+  YOUR_CUSTOM_ACTION: yourCustomAction,
+};
+```
+
+### 7. Usage Example
 
 Add a code example in the `README.md` file.
 
