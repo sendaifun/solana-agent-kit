@@ -63,8 +63,7 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
-  cast_proposal_vote,
-} from "../tools";
+} from "../tools/";
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -80,7 +79,7 @@ import {
 import {
   createCollection,
   createSingle,
-} from "../tools/create_3land_collectible";
+} from "../tools/3land/create_3land_collectible";
 import {
   CreateCollectionOptions,
   CreateSingleOptions,
@@ -93,10 +92,10 @@ import { create_proposal } from "../tools/squads_multisig/create_proposal";
 import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
 import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
 import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
-import { monitorVotingOutcomes } from "../tools/monitor_voting_outcomes";
-import { trackVotingPower } from "../tools/track_voting_power";
-import { manageVoteDelegation } from "../tools/manage_vote_delegation";
+import { monitorVotingOutcomes } from "../tools/realm/monitor_voting_outcomes";
+import { trackVotingPower } from "../tools/realm/track_voting_power";
 import { ProgramAccount, Proposal } from "@solana/spl-governance";
+import { castProposalVote, manageVoteDelegation } from "../tools/realm";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -662,11 +661,11 @@ export class SolanaAgentKit {
   }
 
   async castProposalVote(
-    realmID: string,
-    proposalID: string,
+    realmID: PublicKey,
+    proposalID: PublicKey,
     voteType: "yes" | "no",
   ) {
-    return cast_proposal_vote(this, realmID, proposalID, voteType);
+    return castProposalVote(this, realmID, proposalID, voteType);
   }
 
   async monitorVotingOutcomes(
@@ -680,22 +679,12 @@ export class SolanaAgentKit {
   }
 
   async manageVoteDelegation(
-    programId: PublicKey,
-    programVersion: number,
     realm: PublicKey,
     governingTokenMint: PublicKey,
-    governingTokenOwner: PublicKey,
-    governanceAuthority: PublicKey,
-    newGovernanceDelegate: PublicKey,
-  ): Promise<Transaction> {
+    delegate: PublicKey,
+  ): Promise<string> {
     return manageVoteDelegation(
-      programId,
-      programVersion,
-      realm,
-      governingTokenMint,
-      governingTokenOwner,
-      governanceAuthority,
-      newGovernanceDelegate,
+      this, realm, governingTokenMint, delegate
     );
   }
 }
