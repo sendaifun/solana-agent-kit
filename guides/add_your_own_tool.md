@@ -71,7 +71,10 @@ In case you have created a new directory for your protocol, you need to create a
 
 > `src/tools/index.ts`
 ```typescript:src/tools/index.ts
-export * from "./<your_protocol>/"; // Add your new tool
+export * from "./gibwork";
+export * from "./jupiter";
+// ... existing tools ...
+export * from "./<your_protocol>/"; // Include your new tool directory
 ```
 
 ### 5. Integrate with Agent
@@ -81,8 +84,10 @@ import { CustomTool } from "../tools/custom_tool";
 
 export function createSolanaTools(agent: SolanaAgentKit) {
   return [
+    new SolanaBalanceTool(solanaKit),
+    new SolanaTransferTool(solanaKit),
     // ... existing tools ...
-    new CustomTool(agent),
+    new CustomTool(agent), // Include your new tool
   ];
 }
 ```
@@ -97,6 +102,8 @@ Also make sure to add your new action to the dictionary of all actions in the `s
 > `src/actions/index.ts`
 ```typescript:src/actions/index.ts
 export const ACTIONS = {
+  WALLET_ADDRESS_ACTION: getWalletAddressAction,
+  DEPLOY_TOKEN_ACTION: deployTokenAction,
   //  existing actions ...
   YOUR_CUSTOM_ACTION: yourCustomAction,
 };
