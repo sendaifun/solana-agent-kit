@@ -2,7 +2,6 @@ import { PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../../agent";
 import { Tool } from "langchain/tools";
 
-
 export class SolanaCreatePoolFluxBeamTool extends Tool {
   name = "solana_create_pool_fluxbeam";
   description = `This tool can be used to create a new liquidity pool using FluxBeam.
