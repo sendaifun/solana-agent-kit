@@ -1,67 +1,36 @@
 ---
 title: 'Helius Integration and Transaction Management'
-description: 'Comprehensive system for Solana transaction management, webhooks, and asset tracking using Helius API'
+description: 'Manage Solana transactions, webhooks, and asset tracking using Helius API'
 ---
 
-A complete system for managing Solana transactions with priority fees, webhook management, and asset tracking using the Helius API. This implementation provides tools for transaction parsing, webhook creation/management, and asset retrieval.
+Manage Solana transactions with priority fees, webhook creation, and asset tracking using the Helius API integration. This implementation enables transaction parsing, webhook management, and comprehensive asset retrieval.
 
 ## Core Features
 
 1. **Transaction Management**
    - Priority fee estimation
-   - SOL and SPL token transfers
+   - SOL and SPL transfers
    - Transaction parsing
    - Compute budget optimization
 
 2. **Webhook Management**
-   - Webhook creation
-   - Webhook retrieval
-   - Webhook deletion
-   - Account monitoring
+   - Create and delete webhooks
+   - Monitor account activities
+   - Enhanced transaction tracking
+   - Webhook status retrieval
 
-3. **Asset Tracking**
-   - Asset retrieval by owner
-   - Fungible token support
-   - Digital Asset Standard (DAS)
-   - Pagination handling
+## Transaction Management
 
-## Functions and Tools Overview
-
-1. **Transaction Management**
-   - `sendTransactionWithPriorityFee`: Send transactions with priority fees
-   - `SolanaSendTransactionWithPriorityFee`: LangChain tool for priority transactions
-
-2. **Asset Management**
-   - `getAssetsByOwner`: Fetch assets by wallet address
-   - `SolanaGetAllAssetsByOwner`: LangChain tool for asset retrieval
-
-3. **Transaction Parsing**
-   - `parseTransaction`: Parse transaction details using Helius API
-   - `SolanaParseTransactionHeliusTool`: LangChain tool for transaction parsing
-
-4. **Webhook Management**
-   - `create_HeliusWebhook`: Create new webhooks
-   - `getHeliusWebhook`: Retrieve webhook information
-   - `deleteHeliusWebhook`: Delete existing webhooks
-   - `SolanaHeliusWebhookTool`: LangChain tool for webhook creation
-   - `SolanaGetHeliusWebhookTool`: LangChain tool for webhook retrieval
-   - `SolanaDeleteHeliusWebhookTool`: LangChain tool for webhook deletion
-
-## Usage
-
-### Send Transaction with Priority Fee
 ```typescript
-// Send SOL with priority fee
-const result = await sendTransactionWithPriorityFee(
-  agent,
+// Send transaction with priority fee
+const tx = await agent.sendTranctionWithPriority(
   "Medium",
   1.0, // amount in SOL
   new PublicKey("recipient-address")
 );
 
 // Send SPL token with priority fee
-const result = await sendTransactionWithPriorityFee(
-  agent,
+const tx = await agent.sendTranctionWithPriority(
   "High",
   100, // token amount
   new PublicKey("recipient-address"),
@@ -69,212 +38,89 @@ const result = await sendTransactionWithPriorityFee(
 );
 ```
 
-### Get Assets By Owner
+### Priority Fee Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| priorityLevel | string | Yes | Priority level (NONE, Min, Low, Medium, High, VeryHigh, UnsafeMax) |
+| amount | number | Yes | Amount to transfer |
+| to | PublicKey | Yes | Recipient address |
+| splmintAddress | PublicKey | No | SPL token mint address for token transfers |
+
+## Asset Retrieval
+
 ```typescript
-// Fetch assets for a wallet
-const assets = await getAssetsByOwner(
-  agent,
-  new PublicKey("owner-wallet-address"),
+// Get assets by owner
+const assets = await agent.getAllAssetsbyOwner(
+  new PublicKey("owner-address"),
   20 // limit
 );
 
-// Using LangChain tool
-const assetsTool = new SolanaGetAllAssetsByOwner(agent);
-const result = await assetsTool._call(JSON.stringify({
-  owner: "wallet-address",
-  limit: 20
-}));
-```
-
-### Parse Transaction
-```typescript
-// Parse transaction details
-const txDetails = await parseTransaction(
-  agent,
+// Parse transaction
+const txDetails = await agent.heliusParseTransactions(
   "transaction-signature"
 );
-
-// Using LangChain tool
-const parseTool = new SolanaParseTransactionHeliusTool(agent);
-const result = await parseTool._call("transaction-signature");
 ```
 
-### Create Webhook
+### Asset Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| ownerPublicKey | PublicKey | Yes | Owner's wallet address |
+| limit | number | No | Maximum number of assets to retrieve |
+
+## Webhook Management
+
 ```typescript
-// Create webhook directly
-const webhook = await create_HeliusWebhook(
-  agent,
+// Create webhook
+const webhook = await agent.CreateWebhook(
   ["account-address-1", "account-address-2"],
   "https://your-webhook-url.com"
 );
 
-// Using LangChain tool
-const webhookTool = new SolanaHeliusWebhookTool(agent);
-const result = await webhookTool._call(JSON.stringify({
-  accountAddresses: ["address1", "address2"],
-  webhookURL: "https://webhook-url.com"
-}));
+// Get webhook details
+const details = await agent.getWebhook("webhook-id");
+
+// Delete webhook
+const result = await agent.deleteWebhook("webhook-id");
 ```
 
-### Get Webhook
-```typescript
-// Get webhook details directly
-const webhookDetails = await getHeliusWebhook(
-  agent,
-  "webhook-id"
-);
+### Webhook Parameters
 
-// Using LangChain tool
-const getWebhookTool = new SolanaGetHeliusWebhookTool(agent);
-const result = await getWebhookTool._call(JSON.stringify({
-  webhookID: "webhook-id"
-}));
-```
-
-### Delete Webhook
-```typescript
-// Delete webhook directly
-const deleteResult = await deleteHeliusWebhook(
-  agent,
-  "webhook-id"
-);
-
-// Using LangChain tool
-const deleteWebhookTool = new SolanaDeleteHeliusWebhookTool(agent);
-const result = await deleteWebhookTool._call(JSON.stringify({
-  webhookID: "webhook-id"
-}));
-// Create account monitoring webhook
-const webhook = await create_HeliusWebhook(
-  agent,
-  ["account-address-1", "account-address-2"],
-  "https://your-webhook-url.com"
-);
-```
-
-## Data Structures
-
-### Function Responses
-
-### Priority Fee Transaction Response
-```typescript
-interface PriorityFeeResult {
-  transactionId: string;
-  fee: number;
-}
-```
-
-### Asset Response
-```typescript
-interface AssetResponse {
-  status: "success" | "error";
-  message: string;
-  assets?: any[];
-  code?: string;
-}
-```
-
-### Webhook Responses
-```typescript
-interface PriorityFeeResponse {
-  jsonrpc: string;
-  id: string;
-  method: string;
-  params: [{
-    transaction: string;
-    options: {
-      priorityLevel: string;
-    };
-  }];
-}
-```
-
-### Webhook Response
-```typescript
-interface HeliusWebhookResponse {
-  webhookURL: string;
-  webhookID: string;
-}
-```
-
-### Transaction Parse Response
-```typescript
-interface ParseTransactionResponse {
-  status: "success" | "error";
-  message: string;
-  transaction?: any;
-  code?: string;
-}
-```
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| accountAddresses | string[] | Yes | Addresses to monitor |
+| webhookURL | string | Yes | Webhook endpoint URL |
+| webhookID | string | Yes | Webhook identifier for get/delete operations |
 
 ## Example Prompts
 
 ### Natural Language Prompts
 ```text
-"Send 5 SOL with medium priority to address"
+"Send 5 SOL with medium priority"
 
-"What's the parsed data for transaction 5UJ..."
-
-"Show me all NFTs owned by wallet address"
-
-"Create a webhook to monitor these addresses"
-
-"Get the webhook details for ID abc123"
-
-"Delete webhook abc123"
-
-"What's the priority fee estimate for my transaction"
-
-"List all assets for this wallet"
-"Send 1 SOL with high priority"
-
-"Create webhook for monitoring address"
-
-"Get all NFTs owned by wallet"
+"Get all NFTs owned by this wallet"
 
 "Parse transaction details"
+
+"Create webhook to monitor these addresses"
 
 "Delete webhook monitoring"
 ```
 
 ### LangChain Tool Prompts
+
+#### Send Priority Transaction
 ```text
-// Parse transaction
-{
-  "transactionId": "5UJkAwXC..."
-}
-
-// Get assets by owner
-{
-  "owner": "4Be9CvxqHW6BYiRAxW9Q3xu1ycTMWaL5z8NX4HR3ha7t",
-  "limit": 20
-}
-
-// Create webhook
-{
-  "accountAddresses": ["BVdNLvyG2DNiWAXBE9qAmc4MTQXymd5Bzfo9xrQSUzVP"],
-  "webhookURL": "https://webhook.site/123"
-}
-
-// Get webhook
-{
-  "webhookID": "1ed4244d-a591-4854-ac31-cc28d40b8255"
-}
-
-// Delete webhook
-{
-  "webhookID": "1ed4244d-a591-4854-ac31-cc28d40b8255"
-}
-
-// Send priority transaction
-// Send priority transaction
 {
   "priorityLevel": "High",
   "amount": 1.0,
   "to": "recipient-address"
 }
+```
 
-// Create webhook
+#### Create Webhook
+```text
 {
   "accountAddresses": ["address1", "address2"],
   "webhookURL": "https://webhook-url.com"
@@ -285,42 +131,26 @@ interface ParseTransactionResponse {
 
 ### Priority Fee Transaction
 ```typescript
-async function sendTransactionWithPriorityFee(
-  agent: SolanaAgentKit,
-  priorityLevel: string,
-  amount: number,
-  to: PublicKey,
-  splmintAddress?: PublicKey
-): Promise<{ transactionId: string; fee: number }> {
-  const transaction = new Transaction();
-  // Add priority fee instruction
-  // Add transfer instruction
-  return sendAndConfirmTransaction(...);
+interface PriorityFeeResponse {
+  jsonrpc: "2.0";
+  id: "1";
+  method: "getPriorityFeeEstimate";
+  params: [{
+    transaction: string;
+    options: {
+      priorityLevel: string;
+    };
+  }];
 }
 ```
 
-### Asset Retrieval
+### Webhook Structure
 ```typescript
-async function getAssetsByOwner(
-  agent: SolanaAgentKit,
-  ownerPublicKey: PublicKey,
-  limit: number
-): Promise<any> {
-  const response = await fetch(
-    `https://mainnet.helius-rpc.com/?api-key=${apiKey}`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        method: "getAssetsByOwner",
-        params: {
-          ownerAddress: ownerPublicKey.toString(),
-          limit: limit
-        }
-      })
-    }
-  );
-  return response.json();
+interface HeliusWebhookResponse {
+  webhookURL: string;
+  webhookID: string;
+  accountAddresses: string[];
+  webhookType: string;
 }
 ```
 
@@ -328,12 +158,12 @@ async function getAssetsByOwner(
 
 ```typescript
 try {
-  const result = await create_HeliusWebhook(agent, addresses, webhookURL);
+  const tx = await agent.sendTranctionWithPriority(...);
 } catch (error) {
-  if (error.message.includes("API key")) {
-    // Handle authentication errors
-  } else if (error.message.includes("rate limit")) {
-    // Handle rate limiting
+  if (error.message.includes("insufficient balance")) {
+    // Handle insufficient funds
+  } else if (error.message.includes("invalid account")) {
+    // Handle invalid accounts
   }
 }
 ```
@@ -341,40 +171,40 @@ try {
 ## Best Practices
 
 1. **Transaction Management**
-   - Set appropriate priority fees
-   - Handle token decimals
-   - Validate addresses
-   - Confirm transactions
+   - Test priority levels
+   - Monitor fees
+   - Verify recipients
+   - Handle confirmations
 
-2. **Webhook Management**
-   - Validate URLs
-   - Monitor webhook status
-   - Handle rate limits
-   - Secure endpoints
-
-3. **Asset Tracking**
+2. **Asset Tracking**
    - Paginate results
    - Cache responses
-   - Handle timeouts
    - Validate data
+   - Handle timeouts
+
+3. **Webhook Management**
+   - Validate endpoints
+   - Monitor status
+   - Handle updates
+   - Secure URLs
 
 ## Common Issues
 
 1. **Transaction Issues**
    - Priority fee too low
-   - Insufficient balance
-   - Invalid accounts
+   - Invalid addresses
    - Network congestion
+   - Timeout errors
 
 2. **Webhook Issues**
    - Invalid endpoints
    - Rate limiting
-   - Missing addresses
-   - Authentication errors
+   - Network errors
+   - Authentication failures
 
 3. **Asset Issues**
-   - Pagination errors
    - Missing metadata
+   - Pagination errors
    - API timeouts
    - Invalid responses
 
@@ -384,9 +214,12 @@ try {
 ```typescript
 {
   status: "success",
-  message: "Operation completed successfully",
+  message: "Operation completed",
   data: {
-    // Operation-specific data
+    transactionId?: string;
+    fee?: number;
+    webhookID?: string;
+    assets?: any[];
   }
 }
 ```
@@ -400,48 +233,16 @@ try {
 }
 ```
 
-## Tips for Integration
+## Related Functions
 
-1. **API Management**
-   - Handle rate limits
-   - Cache responses
-   - Monitor usage
-   - Log errors
-
-2. **Transaction Handling**
-   - Validate inputs
-   - Check balances
-   - Set priorities
-   - Monitor status
-
-3. **Data Processing**
-   - Validate responses
-   - Handle timeouts
-   - Parse data
-   - Cache results
-
-## Common Constants
-
-```typescript
-const PRIORITY_LEVELS = {
-  NONE: "NONE",
-  MIN: "Min",
-  LOW: "Low",
-  MEDIUM: "Medium",
-  HIGH: "High",
-  VERY_HIGH: "VeryHigh",
-  UNSAFE_MAX: "UnsafeMax"
-};
-
-const API_ENDPOINTS = {
-  MAINNET: "https://mainnet.helius-rpc.com",
-  WEBHOOK: "https://api.helius.xyz/v0/webhooks"
-};
-```
+- `heliusParseTransactions`: Parse transaction details
+- `getAllAssetsbyOwner`: Get wallet assets
+- `getWebhook`: Get webhook details
+- `deleteWebhook`: Delete webhook
 
 ## Resources
 
-- [Helius API Docs](https://docs.helius.xyz/introduction/overview)
-- [Solana Web3.js](https://solana-labs.github.io/solana-web3.js)
-- [Digital Asset Standard](https://docs.helius.xyz/compression-and-das-api/digital-asset-standard-das)
+- [Helius API Documentation](https://docs.helius.xyz)
 - [Priority Fees Guide](https://docs.helius.xyz/solana-rpc-nodes/priority-fees)
+- [Webhook Documentation](https://docs.helius.xyz/webhooks-and-websockets)
+- [Digital Asset Standard](https://docs.helius.xyz/compression-and-das-api/digital-asset-standard-das)
