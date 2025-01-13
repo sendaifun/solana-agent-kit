@@ -24,6 +24,7 @@ export * from "./tiplink";
 export * from "./sns";
 export * from "./lightprotocol";
 export * from "./squads";
+export * from "./verification";
 
 import { SolanaAgentKit } from "../agent";
 import {

@@ -76,6 +76,10 @@ import {
   multisig_reject_proposal,
   multisig_approve_proposal,
   multisig_execute_proposal,
+  verifyProgram,
+  checkVerificationStatus,
+  cancelVerification,
+  VerificationOptions,
 } from "../tools";
 import {
   Config,
@@ -653,5 +657,37 @@ export class SolanaAgentKit {
     transactionIndex?: number | bigint,
   ): Promise<string> {
     return multisig_execute_proposal(this, transactionIndex);
+  }
+
+  async verifyProgram(
+    programId: string,
+    repository: string,
+    commitHash: string,
+    options?: VerificationOptions,
+  ) {
+    const processedOptions: VerificationOptions | undefined = options
+      ? {
+          libName: options.libName ?? null,
+          bpfFlag: options.bpfFlag ?? null,
+          cargoArgs: options.cargoArgs ?? null,
+          verifyProgramId: options.verifyProgramId ?? null,
+        }
+      : undefined;
+
+    return verifyProgram(
+      this,
+      programId,
+      repository,
+      commitHash,
+      processedOptions,
+    );
+  }
+
+  async checkVerificationStatus(programId: string) {
+    return checkVerificationStatus(programId);
+  }
+
+  async cancelVerification(programId: PublicKey, verifyProgramId?: PublicKey) {
+    return cancelVerification(this, programId, verifyProgramId);
   }
 }
