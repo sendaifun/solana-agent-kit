@@ -10,7 +10,7 @@ const { Multisig } = multisig.accounts;
  * @returns A promise that resolves to the transaction ID of the rejection transaction.
  * @throws Will throw an error if the transaction fails.
  */
-export async function reject_proposal(
+export async function multisig_reject_proposal(
   agent: SolanaAgentKit,
   transactionIndex?: number | bigint,
 ): Promise<string> {

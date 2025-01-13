@@ -7,6 +7,7 @@ export interface Config {
   JUPITER_REFERRAL_ACCOUNT?: string;
   JUPITER_FEE_BPS?: number;
   FLASH_PRIVILEGE?: string;
+  HELIUS_API_KEY?: string;
 }
 
 export interface Creator {
@@ -236,4 +237,26 @@ export interface FlashTradeParams {
 export interface FlashCloseTradeParams {
   token: string;
   side: "long" | "short";
+}
+
+export interface HeliusWebhookResponse {
+  webhookURL: string;
+  webhookID: string;
+}
+export interface HeliusWebhookIdResponse {
+  wallet: string;
+  webhookURL: string;
+  transactionTypes: string[];
+  accountAddresses: string[];
+  webhookType: string;
+}
+
+export interface PriorityFeeResponse {
+  jsonrpc: string;
+  id: string;
+  method: string;
+  params: Array<{
+    transaction: string;
+    options: { priorityLevel: string };
+  }>;
 }

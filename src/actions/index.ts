@@ -30,8 +30,21 @@ import launchPumpfunTokenAction from "./pumpfun/launchPumpfunToken";
 import getWalletAddressAction from "./agent/getWalletAddress";
 import flashOpenTradeAction from "./flash/flashOpenTrade";
 import flashCloseTradeAction from "./flash/flashCloseTrade";
-import { fluxbeamCreatePoolAction } from "./fluxbeam/fluxbeamCreatePool";
+import fluxbeamCreatePoolAction from "./fluxbeam/fluxbeamCreatePool";
 import fluxbeamSwapAction from "./fluxbeam/fluxbeamSwapAction";
+import createMultisigAction from "./squads/createMultisig";
+import approveMultisigProposalAction from "./squads/approveMultisigProposal";
+import createMultisigProposalAction from "./squads/createMultisigProposal";
+import depositToMultisigAction from "./squads/depositToMultisigTreasury";
+import executeMultisigProposalAction from "./squads/executeMultisigProposal";
+import rejectMultisigProposalAction from "./squads/rejectMultisigProposal";
+import transferFromMultisigAction from "./squads/transferFromMultisigTreasury";
+import createWebhookAction from "./helius/createWebhook";
+import deleteWebhookAction from "./helius/deleteWebhook";
+import getAssetsByOwnerAction from "./helius/getAssetsbyOwner";
+import getWebhookAction from "./helius/getWebhook";
+import parseSolanaTransactionAction from "./helius/parseTransaction";
+import sendTransactionWithPriorityFeeAction from "./helius/sendTransactionWithPriority";
 
 export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -69,6 +82,19 @@ export const ACTIONS = {
   FLUXBEAM_SWAP_ACTION: fluxbeamSwapAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  CREATE_MULTISIG_ACTION: createMultisigAction,
+  DEPOSIT_TO_MULTISIG_ACTION: depositToMultisigAction,
+  TRANSFER_FROM_MULTISIG_ACTION: transferFromMultisigAction,
+  CREATE_MULTISIG_PROPOSAL_ACTION: createMultisigProposalAction,
+  APPROVE_MULTISIG_PROPOSAL_ACTION: approveMultisigProposalAction,
+  REJECT_MULTISIG_PROPOSAL_ACTION: rejectMultisigProposalAction,
+  EXECUTE_MULTISIG_PROPOSAL_ACTION: executeMultisigProposalAction,
+  CREATE_WEBHOOK_ACTION: createWebhookAction,
+  DELETE_WEBHOOK_ACTION: deleteWebhookAction,
+  GET_ASSETS_BY_OWNER_ACTION: getAssetsByOwnerAction,
+  GET_WEBHOOK_ACTION: getWebhookAction,
+  PARSE_TRANSACTION_ACTION: parseSolanaTransactionAction,
+  SEND_TRANSACTION_WITH_PRIORITY_ACTION: sendTransactionWithPriorityFeeAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

@@ -3,14 +3,14 @@ import * as multisig from "@sqds/multisig";
 const { Multisig } = multisig.accounts;
 
 /**
- * Creates a proposal for a multisig transaction.
+ * Executes a transaction on the Solana blockchain using the provided agent.
  *
- * @param {SolanaAgentKit} agent - The Solana agent kit instance.
- * @param {number | bigint} [transactionIndex] - Optional transaction index. If not provided, the current transaction index will be used.
- * @returns {Promise<string>} - The transaction ID of the created proposal.
- * @throws {Error} - Throws an error if the proposal creation fails.
+ * @param {SolanaAgentKit} agent - The Solana agent kit instance containing the wallet and connection.
+ * @param {number | bigint} [transactionIndex] - Optional transaction index to execute. If not provided, the current transaction index from the multisig account will be used.
+ * @returns {Promise<string>} - A promise that resolves to the transaction signature string.
+ * @throws {Error} - Throws an error if the transaction execution fails.
  */
-export async function create_proposal(
+export async function multisig_execute_proposal(
   agent: SolanaAgentKit,
   transactionIndex?: number | bigint,
 ): Promise<string> {
@@ -29,12 +29,13 @@ export async function create_proposal(
     } else if (typeof transactionIndex !== "bigint") {
       transactionIndex = BigInt(transactionIndex);
     }
-    const multisigTx = multisig.transactions.proposalCreate({
+    const multisigTx = await multisig.transactions.vaultTransactionExecute({
+      connection: agent.connection,
       blockhash: (await agent.connection.getLatestBlockhash()).blockhash,
-      feePayer: agent.wallet_address,
+      feePayer: agent.wallet.publicKey,
       multisigPda,
       transactionIndex,
-      creator: agent.wallet_address,
+      member: agent.wallet.publicKey,
     });
 
     multisigTx.sign([agent.wallet]);

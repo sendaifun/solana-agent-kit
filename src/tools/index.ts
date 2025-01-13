@@ -24,3 +24,4 @@ export * from "./tiplink";
 export * from "./lightprotocol";
 export * from "./squads_multisig";
 export * from "./fluxbeam";
+export * from "./helius";

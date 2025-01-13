@@ -4,7 +4,7 @@ import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
 import { createPoolFluxBeam } from "../../tools";
 
-export const fluxbeamCreatePoolAction: Action = {
+const fluxbeamCreatePoolAction: Action = {
   name: "FLUXBEAM_CREATE_POOL",
   similes: [
     "create liquidity pool on fluxbeam",
@@ -92,3 +92,5 @@ export const fluxbeamCreatePoolAction: Action = {
     }
   },
 };
+
+export default fluxbeamCreatePoolAction;

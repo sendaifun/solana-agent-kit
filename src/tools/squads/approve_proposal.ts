@@ -3,14 +3,14 @@ import * as multisig from "@sqds/multisig";
 const { Multisig } = multisig.accounts;
 
 /**
- * Executes a transaction on the Solana blockchain using the provided agent.
+ * Approves a proposal in a Solana multisig wallet.
  *
- * @param {SolanaAgentKit} agent - The Solana agent kit instance containing the wallet and connection.
- * @param {number | bigint} [transactionIndex] - Optional transaction index to execute. If not provided, the current transaction index from the multisig account will be used.
- * @returns {Promise<string>} - A promise that resolves to the transaction signature string.
- * @throws {Error} - Throws an error if the transaction execution fails.
+ * @param {SolanaAgentKit} agent - The Solana agent kit instance.
+ * @param {number | bigint} [transactionIndex] - The index of the transaction to approve. If not provided, the current transaction index will be used.
+ * @returns {Promise<string>} - A promise that resolves to the transaction ID of the approved proposal.
+ * @throws {Error} - Throws an error if the approval process fails.
  */
-export async function execute_transaction(
+export async function multisig_approve_proposal(
   agent: SolanaAgentKit,
   transactionIndex?: number | bigint,
 ): Promise<string> {
@@ -29,12 +29,15 @@ export async function execute_transaction(
     } else if (typeof transactionIndex !== "bigint") {
       transactionIndex = BigInt(transactionIndex);
     }
-    const multisigTx = await multisig.transactions.vaultTransactionExecute({
-      connection: agent.connection,
+    // const [proposalPda, proposalBump] = multisig.getProposalPda({
+    //   multisigPda,
+    //   transactionIndex,
+    // });
+    const multisigTx = multisig.transactions.proposalApprove({
       blockhash: (await agent.connection.getLatestBlockhash()).blockhash,
       feePayer: agent.wallet.publicKey,
       multisigPda,
-      transactionIndex,
+      transactionIndex: transactionIndex,
       member: agent.wallet.publicKey,
     });
 

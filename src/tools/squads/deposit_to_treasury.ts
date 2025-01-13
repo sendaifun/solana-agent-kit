@@ -17,7 +17,7 @@ import * as multisig from "@sqds/multisig";
  * @param mint Optional mint address for SPL tokens
  * @returns Transaction signature
  */
-export async function deposit_to_multisig(
+export async function multisig_deposit_to_treasury(
   agent: SolanaAgentKit,
   amount: number,
   vaultIndex?: number,

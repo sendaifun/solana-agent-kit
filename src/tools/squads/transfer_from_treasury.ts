@@ -23,7 +23,7 @@ const { Multisig } = multisig.accounts;
  * @param mint - Optional mint address for SPL tokens.
  * @returns Transaction signature.
  */
-export async function transfer_from_multisig(
+export async function multisig_transfer_from_treasury(
   agent: SolanaAgentKit,
   amount: number,
   to: PublicKey,

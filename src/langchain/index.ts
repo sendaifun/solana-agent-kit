@@ -24,6 +24,8 @@ export * from "./tiplink";
 export * from "./sns";
 export * from "./lightprotocol";
 export * from "./fluxbeam";
+export * from "./squads";
+export * from "./helius";
 
 import { SolanaAgentKit } from "../agent";
 import {
@@ -85,9 +87,21 @@ import {
   SolanaFlashOpenTrade,
   SolanaFlashCloseTrade,
   SolanaCreatePoolFluxBeamTool,
-  SolanaSwapFluxBeamTool
+  SolanaSwapFluxBeamTool,
+  SolanaCreate2by2Multisig,
+  SolanaDepositTo2by2Multisig,
+  SolanaTransferFrom2by2Multisig,
+  SolanaCreateProposal2by2Multisig,
+  SolanaApproveProposal2by2Multisig,
+  SolanaExecuteProposal2by2Multisig,
+  SolanaRejectProposal2by2Multisig,
+  SolanaSendTransactionWithPriorityFee,
+  SolanaHeliusWebhookTool,
+  SolanaGetHeliusWebhookTool,
+  SolanaDeleteHeliusWebhookTool,
+  SolanaParseTransactionHeliusTool,
+  SolanaGetAllAssetsByOwner,
 } from "./index";
-
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -150,5 +164,23 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaSwapFluxBeamTool(solanaKit),
     new SolanaFlashOpenTrade(solanaKit),
     new SolanaFlashCloseTrade(solanaKit),
+    new SolanaCreate2by2Multisig(solanaKit),
+    new SolanaCreateProposal2by2Multisig(solanaKit),
+    new SolanaApproveProposal2by2Multisig(solanaKit),
+    new SolanaRejectProposal2by2Multisig(solanaKit),
+    new SolanaExecuteProposal2by2Multisig(solanaKit),
+    new SolanaDepositTo2by2Multisig(solanaKit),
+    new SolanaTransferFrom2by2Multisig(solanaKit),
+    new SolanaSendTransactionWithPriorityFee(solanaKit),
+    new SolanaHeliusWebhookTool(solanaKit),
+    new SolanaGetHeliusWebhookTool(solanaKit),
+    new SolanaDeleteHeliusWebhookTool(solanaKit),
+    new SolanaParseTransactionHeliusTool(solanaKit),
+    new SolanaGetAllAssetsByOwner(solanaKit),
+    new Solana3LandCreateSingle(solanaKit),
+    new SolanaSendTransactionWithPriorityFee(solanaKit),
+    new SolanaHeliusWebhookTool(solanaKit),
+    new SolanaGetHeliusWebhookTool(solanaKit),
+    new SolanaDeleteHeliusWebhookTool(solanaKit),
   ];
 }

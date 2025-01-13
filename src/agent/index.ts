@@ -2,8 +2,12 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
+import {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+  StoreInitOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 import { DEFAULT_OPTIONS } from "../constants";
-import { Config, TokenCheck } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -65,8 +69,25 @@ import {
   createPoolFluxBeam,
   flashOpenTrade,
   flashCloseTrade,
-} from "../tools/";
+  createCollection,
+  createSingle,
+  multisig_transfer_from_treasury,
+  create_squads_multisig,
+  multisig_create_proposal,
+  multisig_deposit_to_treasury,
+  multisig_reject_proposal,
+  multisig_approve_proposal,
+  multisig_execute_proposal,
+  parseTransaction,
+  sendTransactionWithPriorityFee,
+  getAssetsByOwner,
+  getHeliusWebhook,
+  create_HeliusWebhook,
+  deleteHeliusWebhook,
+} from "../tools";
 import {
+  Config,
+  TokenCheck,
   CollectionDeployment,
   CollectionOptions,
   GibworkCreateTaskReponse,
@@ -77,23 +98,9 @@ import {
   OrderParams,
   FlashTradeParams,
   FlashCloseTradeParams,
+  HeliusWebhookIdResponse,
+  HeliusWebhookResponse,
 } from "../types";
-import {
-  createCollection,
-  createSingle,
-} from "../tools/3land/create_3land_collectible";
-import {
-  CreateCollectionOptions,
-  CreateSingleOptions,
-  StoreInitOptions,
-} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
-import { create_squads_multisig } from "../tools/squads_multisig/create_multisig";
-import { deposit_to_multisig } from "../tools/squads_multisig/deposit_to_multisig";
-import { transfer_from_multisig } from "../tools/squads_multisig/transfer_from_multisig";
-import { create_proposal } from "../tools/squads_multisig/create_proposal";
-import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
-import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
-import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -612,6 +619,12 @@ export class SolanaAgentKit {
   async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
     return flashCloseTrade(this, params);
   }
+  async heliusParseTransactions(transactionId: string): Promise<any> {
+    return parseTransaction(this, transactionId);
+  }
+  async getAllAssetsbyOwner(owner: PublicKey, limit: number): Promise<any> {
+    return getAssetsByOwner(this, owner, limit);
+  }
 
   async create3LandCollection(
     optionsWithBase58: StoreInitOptions,
@@ -635,6 +648,20 @@ export class SolanaAgentKit {
     );
     return `Transaction: ${tx}`;
   }
+  async sendTranctionWithPriority(
+    priorityLevel: string,
+    amount: number,
+    to: PublicKey,
+    splmintAddress?: PublicKey,
+  ): Promise<{ transactionId: string; fee: number }> {
+    return sendTransactionWithPriorityFee(
+      this,
+      priorityLevel,
+      amount,
+      to,
+      splmintAddress,
+    );
+  }
 
   async createSquadsMultisig(creator: PublicKey): Promise<string> {
     return create_squads_multisig(this, creator);
@@ -645,7 +672,7 @@ export class SolanaAgentKit {
     vaultIndex: number = 0,
     mint?: PublicKey,
   ): Promise<string> {
-    return deposit_to_multisig(this, amount, vaultIndex, mint);
+    return multisig_deposit_to_treasury(this, amount, vaultIndex, mint);
   }
 
   async transferFromMultisig(
@@ -654,30 +681,42 @@ export class SolanaAgentKit {
     vaultIndex: number = 0,
     mint?: PublicKey,
   ): Promise<string> {
-    return transfer_from_multisig(this, amount, to, vaultIndex, mint);
+    return multisig_transfer_from_treasury(this, amount, to, vaultIndex, mint);
   }
 
   async createMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return create_proposal(this, transactionIndex);
+    return multisig_create_proposal(this, transactionIndex);
   }
 
   async approveMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return approve_proposal(this, transactionIndex);
+    return multisig_approve_proposal(this, transactionIndex);
   }
 
   async rejectMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return reject_proposal(this, transactionIndex);
+    return multisig_reject_proposal(this, transactionIndex);
   }
 
   async executeMultisigTransaction(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return execute_transaction(this, transactionIndex);
+    return multisig_execute_proposal(this, transactionIndex);
+  }
+  async CreateWebhook(
+    accountAddresses: string[],
+    webhookURL: string,
+  ): Promise<HeliusWebhookResponse> {
+    return create_HeliusWebhook(this, accountAddresses, webhookURL);
+  }
+  async getWebhook(id: string): Promise<HeliusWebhookIdResponse> {
+    return getHeliusWebhook(this, id);
+  }
+  async deleteWebhook(webhookID: string): Promise<any> {
+    return deleteHeliusWebhook(this, webhookID);
   }
 }
