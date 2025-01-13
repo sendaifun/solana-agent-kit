@@ -1,0 +1,235 @@
+---
+title: 'Tensor NFT Marketplace'
+description: 'List and manage NFTs on Tensor Trade'
+---
+
+Interact with Tensor Trade marketplace to list and manage NFTs. This implementation provides functionality for listing NFTs for sale and canceling existing listings.
+
+## Core Features
+
+1. **Listing Management**
+   - List NFTs for sale
+   - Cancel listings
+   - Price setting
+   - Ownership verification
+
+2. **Token Account**
+   - Associated token validation
+   - Ownership checks
+   - Balance verification
+   - Account creation
+
+## Usage
+
+### List NFT for Sale
+```typescript
+// List NFT
+const signature = await agent.tensorListNFT(
+  new PublicKey("nft-mint-address"),
+  1.5  // Price in SOL
+);
+```
+
+### Cancel Listing
+```typescript
+// Cancel listing
+const signature = await agent.tensorCancelListing(
+  new PublicKey("nft-mint-address")
+);
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"List my NFT for 2 SOL on Tensor"
+
+"Cancel my NFT listing on Tensor"
+
+"Put NFT up for sale at 1.5 SOL"
+
+"Remove NFT listing from marketplace"
+```
+
+### LangChain Tool Prompts
+
+#### List NFT
+```text
+{
+  "nftMint": "nft-mint-address",
+  "price": 1.5
+}
+```
+
+#### Cancel Listing
+```text
+{
+  "nftMint": "nft-mint-address"
+}
+```
+
+## Implementation Details
+
+### Listing Process
+```typescript
+interface ListingParams {
+  nftMint: PublicKey;      // NFT mint address
+  nftSource: PublicKey;    // Token account
+  owner: PublicKey;        // Owner address
+  price: BN;              // Price in lamports
+  tokenProgram: PublicKey; // Token program ID
+  payer: PublicKey;       // Transaction payer
+}
+
+// Price conversion
+const priceInLamports = new BN(price * 1e9);
+```
+
+### Ownership Verification
+```typescript
+// Get Associated Token Account
+const ata = await getAssociatedTokenAddress(
+  nftMint, 
+  ownerAddress
+);
+
+// Verify ownership
+const tokenAccount = await getAccount(
+  connection,
+  ata
+);
+
+if (!tokenAccount || tokenAccount.amount <= 0) {
+  throw new Error("NFT not owned");
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const tx = await agent.tensorListNFT(mint, price);
+} catch (error) {
+  if (error.message.includes("NFT not found")) {
+    // Handle missing NFT
+  } else if (error.message.includes("Invalid mint")) {
+    // Handle invalid address
+  }
+}
+```
+
+## Best Practices
+
+1. **Listing Management**
+   - Verify ownership first
+   - Check token accounts
+   - Validate prices
+   - Monitor transactions
+
+2. **Token Handling**
+   - Verify mint addresses
+   - Check balances
+   - Validate accounts
+   - Handle permissions
+
+3. **Transaction Processing**
+   - Build transactions properly
+   - Include all signers
+   - Handle timeouts
+   - Monitor status
+
+## Common Issues
+
+1. **Listing Issues**
+   - Invalid mint address
+   - NFT not owned
+   - Price formatting
+   - Account mismatch
+
+2. **Cancellation Issues**
+   - Listing not found
+   - Permission denied
+   - Network errors
+   - Transaction failures
+
+3. **Account Issues**
+   - Missing ATA
+   - Zero balance
+   - Wrong owner
+   - Program mismatch
+
+## Response Format
+
+### Success Response
+```typescript
+{
+  status: "success",
+  message: "NFT listed successfully",
+  transaction: "transaction-signature",
+  price: 1.5,
+  nftMint: "mint-address"
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "Error message",
+  code: "ERROR_CODE"
+}
+```
+
+## SDK Integration
+
+### TensorSwap SDK Setup
+```typescript
+const provider = new AnchorProvider(
+  connection,
+  wallet,
+  AnchorProvider.defaultOptions()
+);
+
+const tensorSwapSdk = new TensorSwapSDK({ provider });
+```
+
+### Transaction Building
+```typescript
+// Build transaction
+const { tx } = await tensorSwapSdk.list(params);
+
+// Create and send transaction
+const transaction = new Transaction();
+transaction.add(...tx.ixs);
+return await connection.sendTransaction(
+  transaction,
+  [wallet, ...tx.extraSigners]
+);
+```
+
+## Advanced Features
+
+1. **Custom Token Programs**
+   - SPL Token support
+   - Program validation
+   - Account creation
+   - Balance management
+
+2. **Authorization**
+   - Auth data handling
+   - Permission checks
+   - Signature validation
+   - Access control
+
+3. **Price Management**
+   - Lamport conversion
+   - Price validation
+   - Fee calculation
+   - Slippage protection
+
+## Resources
+
+- [Tensor Documentation](https://docs.tensor.trade)
+- [TensorSwap SDK](https://github.com/tensor-oss/tensorswap-sdk)
+- [SPL Token](https://spl.solana.com/token)
+- [Solana Web3.js](https://solana-labs.github.io/solana-web3.js)

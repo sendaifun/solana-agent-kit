@@ -8,9 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@langchain/community": "^0.3.20",
     "@langchain/core": "^0.3.26",
@@ -20,12 +17,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.0.0"
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
   }
 }

@@ -1,0 +1,249 @@
+---
+title: 'Discord Agent Integration'
+description: 'Create a Discord Agent powered by Solana Agent Kit'
+---
+
+Build a Discord Agent that leverages Solana Agent Kit capabilities to interact with the Solana blockchain through Discord messages. This integration enables natural language interactions with blockchain functionality.
+
+## Core Features
+
+1. **Bot Infrastructure**
+   - Direct message handling
+   - Typing indicators
+   - Chat history management
+   - Stream processing
+
+2. **AI Integration**
+   - LangChain React agent
+   - GPT-4 language model
+   - Memory persistence
+   - Tool integration
+
+## Quick Start
+
+### 1. Prerequisites
+```bash
+# Required versions
+Node.js >= v20
+pnpm >= v9
+
+# Installation
+pnpm install
+```
+
+### 2. Environment Setup
+```env
+# .env file
+DISCORD_BOT_TOKEN=your_discord_bot_token
+SOLANA_PRIVATE_KEY=your_solana_private_key
+SOLANA_RPC_URL=your_rpc_url
+OPENAI_API_KEY=your_openai_key
+```
+
+### 3. Discord Bot Setup
+
+1. Create Application
+```text
+1. Visit Discord Developer Portal
+2. Create New Application
+3. Add Bot to Application
+4. Copy Bot Token
+```
+
+2. Enable Intents
+```typescript
+const client = new Client({
+  intents: [
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages
+  ],
+  partials: [
+    Partials.Message,
+    Partials.Channel
+  ]
+});
+```
+
+## Implementation Details
+
+### Agent Initialization
+```typescript
+async function initializeAgent() {
+  // Initialize Language Model
+  const llm = new ChatOpenAI({
+    modelName: 'gpt-4-mini',
+    temperature: 0.3
+  });
+
+  // Setup Solana Agent
+  const solanaAgent = new SolanaAgentKit(
+    process.env.SOLANA_PRIVATE_KEY!,
+    process.env.SOLANA_RPC_URL!,
+    {
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY!
+    }
+  );
+
+  // Create Tools and Agent
+  const tools = createSolanaTools(solanaAgent);
+  const memory = new MemorySaver();
+  
+  return createReactAgent({
+    llm,
+    tools,
+    checkpointSaver: memory,
+    messageModifier: customPrompt
+  });
+}
+```
+
+### Message Handling
+```typescript
+client.on(Events.MessageCreate, async (message) => {
+  // Check for DM
+  if (message.channel.type !== ChannelType.DM) return;
+  
+  // Process Message
+  const { agent, config } = await initializeAgent();
+  
+  // Handle Response Stream
+  const stream = await agent.stream({
+    messages: userChatHistory
+  }, config);
+  
+  // Process Chunks
+  for await (const chunk of stream) {
+    if ('agent' in chunk) {
+      await message.reply(chunk.agent.messages[0].content);
+    }
+  }
+});
+```
+
+## Chat History Management
+
+### Memory Structure
+```typescript
+const chatHistory = new Map();
+
+// Add message to history
+const userChatHistory = chatHistory.get(userId) || [];
+userChatHistory.push(new HumanMessage(message.content));
+```
+
+### Stream Processing
+```typescript
+const replyIfNotEmpty = async (content: string) => {
+  if (content.trim() !== '') {
+    await message.reply(content);
+  }
+};
+```
+
+## Agent Configuration
+
+### Custom Prompt
+```typescript
+const messageModifier = `
+  You are a helpful agent that can interact onchain using the Solana Agent Kit.
+  You are empowered to interact onchain using your tools.
+  If you ever need funds, you can request them from the faucet.
+  Be concise and helpful with your responses.
+`;
+```
+
+### Tool Integration
+```typescript
+const tools = createSolanaTools(solanaAgent);
+// Available tools:
+// - Token operations
+// - NFT management
+// - DeFi integration
+// - Blockchain queries
+```
+
+## Error Handling
+
+```typescript
+try {
+  await processMessage(message);
+} catch (error) {
+  console.error('Error handling message:', error);
+  await message.reply('An error occurred. Please try again later.');
+}
+```
+
+## Best Practices
+
+1. **Message Processing**
+   - Validate inputs
+   - Handle timeouts
+   - Manage rate limits
+   - Track errors
+
+2. **Agent Management**
+   - Cache initialization
+   - Monitor memory
+   - Handle disconnects
+   - Log interactions
+
+3. **Security**
+   - Validate permissions
+   - Secure keys
+   - Monitor usage
+   - Rate limit users
+
+## Common Issues
+
+1. **Discord API**
+   - Rate limits
+   - Token expiration
+   - Permission issues
+   - Connection drops
+
+2. **Agent Integration**
+   - Initialization failures
+   - Memory leaks
+   - Tool errors
+   - Stream interrupts
+
+3. **Blockchain Operations**
+   - RPC errors
+   - Transaction failures
+   - Network congestion
+   - Balance issues
+
+## Development Tips
+
+1. **Local Testing**
+   - Use test bot
+   - Monitor memory
+   - Check responses
+   - Log everything
+
+2. **Production Deploy**
+   - Use PM2/similar
+   - Monitor resources
+   - Set up alerts
+   - Regular backups
+
+3. **Maintenance**
+   - Update dependencies
+   - Monitor logs
+   - Check performance
+   - Update prompts
+
+## Resources
+
+- [Discord.js Guide](https://discordjs.guide/)
+- [Solana Agent Kit Docs](https://docs.solanaagentkit.xyz)
+- [LangChain Documentation](https://js.langchain.com/docs)
+- [OpenAI Documentation](https://platform.openai.com/docs)
+
+## Support
+
+For assistance:
+- Discord Community
+- GitHub Issues
+- Documentation
+- Stack Overflow

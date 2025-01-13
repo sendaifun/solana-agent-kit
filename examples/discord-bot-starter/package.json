@@ -1,0 +1,39 @@
+{
+  "name": "discord-bot-starter",
+  "version": "1.0.0",
+  "description": "Discord bot starter template using the Solana Agent Kit by Send AI",
+  "main": "index.ts",
+  "scripts": {
+    "start": "nodemon ./src/index.ts",
+    "lint": "eslint -c .eslintrc.js --ext .ts ./src",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+  },
+  "author": "dimitrov-d",
+  "dependencies": {
+    "discord.js": "^14.17.2",
+    "dotenv": "^16.4.7",
+    "solana-agent-kit": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/parser": "8.19.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-sonarjs": "^3.0.1",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "nodemonConfig": {
+    "ext": "*.ts",
+    "exec": "tsx",
+    "delay": 1000
+  }
+}

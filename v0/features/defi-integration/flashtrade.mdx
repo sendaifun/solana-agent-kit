@@ -1,0 +1,249 @@
+---
+title: 'Flash Trade Integration'
+description: 'Leverage trading on Flash.Trade with position management'
+---
+
+Implement leveraged trading on Flash.Trade protocol, supporting position opening and closing with multiple tokens and configurable leverage.
+
+## Core Features
+
+1. **Position Management**
+   - Open positions
+   - Close positions
+   - Position sizing
+   - Leverage control
+
+2. **Market Support**
+   - Multiple tokens (SOL, BTC, ETH)
+   - Long/Short positions
+   - Oracle price integration
+   - Slippage protection
+
+## Quick Start
+
+### Opening Position
+```typescript
+const position = await agent.flashOpenTrade({
+  token: "SOL",              // Token to trade
+  side: "long",              // Position side
+  collateralUsd: 1000,       // Collateral in USD
+  leverage: 5                // Leverage multiplier
+});
+```
+
+### Closing Position
+```typescript
+const closure = await agent.flashCloseTrade({
+  token: "SOL",              // Token to close
+  side: "long"               // Position side
+});
+```
+
+## Market Configuration
+
+```typescript
+const MARKET_TOKENS = {
+  SOL: {
+    long: { marketID: "..." },
+    short: { marketID: "..." }
+  },
+  BTC: {
+    long: { marketID: "..." },
+    short: { marketID: "..." }
+  },
+  ETH: {
+    long: { marketID: "..." },
+    short: { marketID: "..." }
+  }
+};
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Open a 5x leveraged long SOL position with 1000 USD"
+
+"Close my ETH short position"
+
+"Create a 10x BTC long with 500 USD collateral"
+
+"Exit my SOL long position"
+```
+
+### LangChain Tool Prompts
+
+#### Open Position
+```text
+{
+  "token": "SOL",
+  "type": "long",
+  "collateral": 1000,
+  "leverage": 5
+}
+```
+
+#### Close Position
+```text
+{
+  "token": "SOL",
+  "side": "long"
+}
+```
+
+## Implementation Details
+
+### Position Opening
+```typescript
+interface FlashTradeParams {
+  token: string;           // Token symbol
+  side: "long" | "short"; // Position side
+  collateralUsd: number;  // Collateral amount
+  leverage: number;       // Leverage multiplier
+}
+
+// Calculate position size
+const positionSize = perpClient.getSizeAmountFromLeverageAndCollateral(
+  collateralAmount,
+  leverage,
+  targetToken,
+  collateralToken,
+  side,
+  targetPrice,
+  collateralPrice,
+  targetCustody,
+  collateralCustody
+);
+```
+
+### Position Closing
+```typescript
+interface FlashCloseTradeParams {
+  token: string;           // Token symbol
+  side: "long" | "short"; // Position side
+}
+
+// Calculate exit price with slippage
+const priceWithSlippage = perpClient.getPriceAfterSlippage(
+  false,              // isEntry
+  new BN(100),        // 1% slippage
+  targetPrice.price,
+  side
+);
+```
+
+## Transaction Structure
+
+### Compute Budget
+```typescript
+// Opening positions
+const OPEN_POSITION_CU = 400000;
+
+// Closing positions
+const CLOSE_POSITION_CU = 300000;
+
+const computeBudgetIx = ComputeBudgetProgram.setComputeUnitLimit({
+  units: OPEN_POSITION_CU // or CLOSE_POSITION_CU
+});
+```
+
+## Error Handling
+
+```typescript
+try {
+  const tx = await agent.flashOpenTrade(params);
+} catch (error) {
+  if (error.message.includes("Token not supported")) {
+    // Handle unsupported token
+  } else if (error.message.includes("slippage")) {
+    // Handle excessive slippage
+  }
+}
+```
+
+## Best Practices
+
+1. **Position Management**
+   - Validate tokens
+   - Check market status
+   - Monitor slippage
+   - Verify collateral
+
+2. **Risk Management**
+   - Set reasonable leverage
+   - Monitor liquidation
+   - Use stop losses
+   - Track positions
+
+3. **Market Interaction**
+   - Check oracle prices
+   - Verify calculations
+   - Monitor fees
+   - Handle timeouts
+
+## Common Issues
+
+1. **Position Opening**
+   - Insufficient collateral
+   - Invalid leverage
+   - Market closed
+   - Price impact
+
+2. **Position Closing**
+   - Position not found
+   - High slippage
+   - Network congestion
+   - Oracle delays
+
+3. **Technical Issues**
+   - NFT account missing
+   - Invalid custody
+   - Computation limits
+   - Transaction failure
+
+## Helper Functions
+
+### Price Conversion
+```typescript
+function convertPriceToNumber(oraclePrice: OraclePrice): number {
+  const price = parseInt(oraclePrice.price.toString("hex"), 16);
+  const exponent = parseInt(oraclePrice.exponent.toString("hex"), 16);
+  return price * Math.pow(10, exponent);
+}
+```
+
+### Collateral Calculation
+```typescript
+function calculateCollateralAmount(
+  usdAmount: number,
+  tokenPrice: number,
+  decimals: number
+): BN {
+  return new BN((usdAmount / tokenPrice) * Math.pow(10, decimals));
+}
+```
+
+## Market Support
+
+### Supported Tokens
+- SOL/USD
+- BTC/USD
+- ETH/USD
+
+### Configuration
+```typescript
+const marketSdkInfo = {
+  [marketId]: {
+    tokenPair: string;     // e.g., "SOL/USD"
+    pool: string;          // Pool identifier
+    // Additional market data
+  }
+};
+```
+
+## Resources
+
+- [Flash Trade Documentation](https://docs.flash.trade)
+- [Flash SDK Reference](https://github.com/flash-protocol/flash-sdk)
+- [Oracle Integration](https://docs.flash.trade/price-feeds)
+- [Market Configuration](https://docs.flash.trade/markets)

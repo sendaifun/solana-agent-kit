@@ -1,0 +1,239 @@
+---
+title: 'TipLink Creation and Transfer'
+description: 'Create and manage TipLinks for SOL and SPL token transfers on Solana'
+---
+
+Create and manage TipLinks for transferring SOL and SPL tokens on Solana. This implementation enables quick creation of shareable links for token transfers with comprehensive transaction handling and error management.
+
+## Core Features
+
+1. **TipLink Creation**
+   - SOL transfer support
+   - SPL token support
+   - Associated account creation
+   - Transaction optimization
+
+2. **Transaction Management**
+   - Compute budget handling
+   - Minimum balance management
+   - Multi-instruction bundling
+   - Confirmation handling
+
+## Usage
+
+### Create SOL TipLink
+```typescript
+// Create TipLink for SOL transfer
+const { url, signature } = await create_TipLink(
+  agent,
+  1.0 // Amount in SOL
+);
+
+// Returns TipLink URL and transaction signature
+console.log(url, signature);
+```
+
+### Create SPL Token TipLink
+```typescript
+// Create TipLink for SPL token transfer
+const { url, signature } = await create_TipLink(
+  agent,
+  100, // Amount in token units
+  new PublicKey("TokenMintAddress")
+);
+
+// Returns TipLink URL and transaction signature
+console.log(url, signature);
+```
+
+## Data Structures
+
+### TipLink Response
+```typescript
+interface TipLinkResponse {
+  url: string;           // TipLink URL
+  signature: string;     // Transaction signature
+}
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a TipLink for 1 SOL"
+
+"Generate a link to send 100 USDC"
+
+"Make a TipLink for sending BONK tokens"
+
+"Create a shareable link for 5 SOL"
+```
+
+### LangChain Tool Prompts
+```text
+// SOL transfer
+{
+  "amount": 1.0
+}
+
+// SPL token transfer
+{
+  "amount": 100,
+  "splmintAddress": "TokenMintAddress123"
+}
+```
+
+## Implementation Details
+
+### SOL Transfer Implementation
+```typescript
+async function createSolTipLink(
+  agent: SolanaAgentKit,
+  amount: number
+): Promise<TipLinkResponse> {
+  const tiplink = await TipLink.create();
+  const transaction = new Transaction();
+  
+  transaction.add(
+    SystemProgram.transfer({
+      fromPubkey: agent.wallet_address,
+      toPubkey: tiplink.keypair.publicKey,
+      lamports: amount * LAMPORTS_PER_SOL,
+    })
+  );
+
+  return sendAndConfirmTransaction(...);
+}
+```
+
+### SPL Token Implementation
+```typescript
+async function createSplTipLink(
+  agent: SolanaAgentKit,
+  amount: number,
+  splmintAddress: PublicKey
+): Promise<TipLinkResponse> {
+  const tiplink = await TipLink.create();
+  const transaction = new Transaction();
+  
+  // Add compute budget instruction
+  // Add minimum SOL transfer
+  // Create ATA
+  // Transfer tokens
+  
+  return sendAndConfirmTransaction(...);
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const result = await create_TipLink(agent, amount, splmintAddress);
+} catch (error) {
+  if (error.message.includes("insufficient balance")) {
+    // Handle insufficient funds
+  } else if (error.message.includes("invalid account")) {
+    // Handle invalid accounts
+  }
+}
+```
+
+## Best Practices
+
+1. **Transaction Optimization**
+   - Set compute budget
+   - Bundle instructions
+   - Handle confirmations
+   - Validate inputs
+
+2. **Balance Management**
+   - Check balances
+   - Include rent
+   - Handle decimals
+   - Validate amounts
+
+3. **Error Management**
+   - Handle timeouts
+   - Validate responses
+   - Log errors
+   - Implement retries
+
+## Common Issues
+
+1. **Transaction Issues**
+   - Insufficient balance
+   - Invalid accounts
+   - Failed confirmations
+   - Timeout errors
+
+2. **Token Issues**
+   - Missing ATAs
+   - Invalid mints
+   - Decimal mismatches
+   - Transfer failures
+
+3. **Network Issues**
+   - Connection errors
+   - Confirmation delays
+   - RPC issues
+   - Timeout errors
+
+## Response Format
+
+### Success Response
+```typescript
+{
+  status: "success",
+  url: "https://tiplink.io/t/...",
+  signature: "transaction-signature",
+  amount: 1.0,
+  tokenType: "SOL", // or "SPL"
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "Error message",
+  code: "ERROR_CODE"
+}
+```
+
+## Tips for TipLink Creation
+
+1. **Transaction Building**
+   - Order instructions properly
+   - Include all necessary accounts
+   - Set proper compute budget
+   - Handle confirmations
+
+2. **Token Handling**
+   - Check decimals
+   - Validate addresses
+   - Create ATAs
+   - Handle balances
+
+3. **Error Prevention**
+   - Validate inputs
+   - Check balances
+   - Handle timeouts
+   - Log operations
+
+## Common Token Addresses
+
+```typescript
+const COMMON_TOKENS = {
+  USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  SOL: "So11111111111111111111111111111111111111112",
+  BONK: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+};
+```
+
+## Resources
+
+- [TipLink API Docs](https://docs.tiplink.io)
+- [Solana Web3.js](https://solana-labs.github.io/solana-web3.js)
+- [SPL Token](https://spl.solana.com/token)
+- [Solana Cookbook](https://solanacookbook.com)
