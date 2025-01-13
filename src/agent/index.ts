@@ -56,6 +56,7 @@ import {
   create_TipLink,
   listNFTForSale,
   cancelListing,
+  closeEmptyTokenAccounts,
   fetchTokenReportSummary,
   fetchTokenDetailedReport,
   fetchPythPrice,
@@ -64,7 +65,7 @@ import {
   createPoolFluxBeam,
   flashOpenTrade,
   flashCloseTrade,
-} from "../tools";
+} from "../tools/";
 import {
   CollectionDeployment,
   CollectionOptions,
@@ -77,6 +78,22 @@ import {
   FlashTradeParams,
   FlashCloseTradeParams,
 } from "../types";
+import {
+  createCollection,
+  createSingle,
+} from "../tools/3land/create_3land_collectible";
+import {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+  StoreInitOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { create_squads_multisig } from "../tools/squads_multisig/create_multisig";
+import { deposit_to_multisig } from "../tools/squads_multisig/deposit_to_multisig";
+import { transfer_from_multisig } from "../tools/squads_multisig/transfer_from_multisig";
+import { create_proposal } from "../tools/squads_multisig/create_proposal";
+import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
+import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
+import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -540,6 +557,13 @@ export class SolanaAgentKit {
     return cancelListing(this, nftMint);
   }
 
+  async closeEmptyTokenAccounts(): Promise<{
+    signature: string;
+    size: number;
+  }> {
+    return closeEmptyTokenAccounts(this);
+  }
+
   async fetchTokenReportSummary(mint: string): Promise<TokenCheck> {
     return fetchTokenReportSummary(mint);
   }
@@ -587,5 +611,73 @@ export class SolanaAgentKit {
    */
   async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
     return flashCloseTrade(this, params);
+  }
+
+  async create3LandCollection(
+    optionsWithBase58: StoreInitOptions,
+    collectionOpts: CreateCollectionOptions,
+  ): Promise<string> {
+    const tx = await createCollection(optionsWithBase58, collectionOpts);
+    return `Transaction: ${tx}`;
+  }
+
+  async create3LandNft(
+    optionsWithBase58: StoreInitOptions,
+    collectionAccount: string,
+    createItemOptions: CreateSingleOptions,
+    isMainnet: boolean,
+  ): Promise<string> {
+    const tx = await createSingle(
+      optionsWithBase58,
+      collectionAccount,
+      createItemOptions,
+      isMainnet,
+    );
+    return `Transaction: ${tx}`;
+  }
+
+  async createSquadsMultisig(creator: PublicKey): Promise<string> {
+    return create_squads_multisig(this, creator);
+  }
+
+  async depositToMultisig(
+    amount: number,
+    vaultIndex: number = 0,
+    mint?: PublicKey,
+  ): Promise<string> {
+    return deposit_to_multisig(this, amount, vaultIndex, mint);
+  }
+
+  async transferFromMultisig(
+    amount: number,
+    to: PublicKey,
+    vaultIndex: number = 0,
+    mint?: PublicKey,
+  ): Promise<string> {
+    return transfer_from_multisig(this, amount, to, vaultIndex, mint);
+  }
+
+  async createMultisigProposal(
+    transactionIndex?: number | bigint,
+  ): Promise<string> {
+    return create_proposal(this, transactionIndex);
+  }
+
+  async approveMultisigProposal(
+    transactionIndex?: number | bigint,
+  ): Promise<string> {
+    return approve_proposal(this, transactionIndex);
+  }
+
+  async rejectMultisigProposal(
+    transactionIndex?: number | bigint,
+  ): Promise<string> {
+    return reject_proposal(this, transactionIndex);
+  }
+
+  async executeMultisigTransaction(
+    transactionIndex?: number | bigint,
+  ): Promise<string> {
+    return execute_transaction(this, transactionIndex);
   }
 }
