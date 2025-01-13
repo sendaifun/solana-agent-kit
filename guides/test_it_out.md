@@ -13,7 +13,7 @@ The project includes a test script located at `test/index.ts`. To execute the te
    ```bash
    pnpm run test
    ```
-   This will run the `test/index.ts` script using `ts-node`. Ensure that your environment variables are correctly set in the `.env` file before running the tests.
+   This will run the `test/index.ts` script using `tsx`. Ensure that your environment variables are correctly set in the `.env` file before running the tests.
 
 ## Interactive Modes
 

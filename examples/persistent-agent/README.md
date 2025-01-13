@@ -27,7 +27,7 @@ Starting chat mode... Type 'exit' to end.
 Prompt: i am arpit
 Hello Arpit! How can I assist you today?
 Prompt: ^С
-® arpitsingh Mac persistent-agent & ts-node index.ts
+$ ts-node index.ts
 Starting Agent...
 Available modes:
 1. chat
@@ -51,7 +51,7 @@ Starting chat mode... Type 'exit' to end.
 Prompt: i am arpit
 Hello Arpit! How can I assist you today?
 Prompt: ^С
-® arpitsingh Mac persistent-agent & ts-node index.ts
+$ ts-node index.ts
 Starting Agent...
 Available modes:
 1. chat

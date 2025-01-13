@@ -5,11 +5,13 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 ## Overview
 
 1. Create a new tool file
-2. Implement the tool class
-3. Implement supporting functions in SolanaAgentKit
-4. Export the new tool
-5. Integrate the tool into the agent
-6. Use the custom tool
+2. Export the new tool
+3. Add supporting functions in SolanaAgentKit
+4. Implement the Langchain tool class
+5. Export the Langchain tool
+6. Define Action class for given tool
+7. Export Action
+8. Use the custom tool
 
 ## Implementation Guide
 
@@ -17,7 +19,29 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 
 Create a new TypeScript file in the `src/tools/` directory for your tool (e.g., `custom_tool.ts`).
 
-### 2. Implement the Tool Class
+
+### 2. Export the Tool
+> `src/tools/index.ts`
+```typescript:src/tools/index.ts
+export * from "./request_faucet_funds";
+export * from "./deploy_token";
+export * from "./custom_tool"; // Add your new tool
+```
+
+### 3. Add Supporting Functions to SolanaAgentKit
+> `src/agent/index.ts`
+```typescript:src/agent/index.ts
+export class SolanaAgentKit {
+  // ... existing code ...
+
+  async customFunction(input: string): Promise<string> {
+    // Implement your custom functionality
+    return `Processed input: ${input}`;
+  }
+}
+```
+
+### 4. Implement the Langchain Tool Class
 > `src/langchain/index.ts`
 ```typescript:src/langchain/index.ts
 import { Tool } from "langchain/tools";
@@ -50,31 +74,10 @@ export class CustomTool extends Tool {
 }
 ```
 
-### 3. Add Supporting Functions to SolanaAgentKit
-> `src/agent/index.ts`
-```typescript:src/agent/index.ts
-export class SolanaAgentKit {
-  // ... existing code ...
-
-  async customFunction(input: string): Promise<string> {
-    // Implement your custom functionality
-    return `Processed input: ${input}`;
-  }
-}
-```
-
-### 4. Export the Tool
-> `src/tools/index.ts`
-```typescript:src/tools/index.ts
-export * from "./request_faucet_funds";
-export * from "./deploy_token";
-export * from "./custom_tool"; // Add your new tool
-```
-
-### 5. Integrate with Agent
+### 5. Export Langchain Tool
 > `src/langchain/index.ts`
 ```typescript:src/langchain/index.ts
-import { CustomTool } from "../tools/custom_tool";
+import { CustomTool } from "../tools";
 
 export function createSolanaTools(agent: SolanaAgentKit) {
   return [
@@ -84,7 +87,53 @@ export function createSolanaTools(agent: SolanaAgentKit) {
 }
 ```
 
-### 6. Usage Example
+### 6. Define Action class for given tool
+
+> `src/actions/custom_action.ts`
+```typescript:src/actions/custom_action.ts
+import { Action } from "../types/action";
+import { SolanaAgentKit } from "../agent";
+import { z } from "zod";
+import { custom_tool } from "../tools";
+
+const customAction: Action = {
+  name: "CUSTOM_ACTION",
+  similes: ["custom tool"],
+  description: "Description of what the custom tool does.",
+  examples: [
+    {
+      input: {},
+      output: {
+        status: "success",
+        message: "Custom tool executed successfully",
+        data: result,
+      },
+      explanation: "Custom tool executed successfully",
+    },
+  ],
+  schema: z.object({
+    input: z.string(),
+  }),
+  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+    const result = await agent.customFunction(input);
+    return result;
+  },
+};
+```
+
+### 7. Export Action
+> `src/actions/index.ts`
+```typescript:src/actions/index.ts
+export * from "./balance";
+export * from "./custom_action";
+
+export const ACTIONS = {
+    // ... existing actions ...
+  CUSTOM_ACTION: customAction,
+}
+```
+
+### 8. Usage Example
 
 Add a code example in the `README.md` file.
 
@@ -106,7 +155,7 @@ if (customTool) {
 }
 
 // or alternatively
-const result = await agent.customFunction("your-input"); // assuming you have a `customFunction` method in SolanaAgentKit
+const result = await agent.customFunction("your-input"); // assuming you have implemented `customFunction` method in SolanaAgentKit
 console.log(result);
 ```
 
@@ -172,6 +221,43 @@ export class SolanaAgentKit {
     return mockPrices[tokenSymbol.toUpperCase()];
   }
 }
+```
+
+Add Action for given tool:
+> `src/actions/fetch_token_price.ts`
+```typescript:src/actions/fetch_token_price.ts
+import { Action } from "../types/action";
+import { SolanaAgentKit } from "../agent";
+import { z } from "zod";
+import { fetch_token_price } from "../tools";
+
+const fetchTokenPriceAction: Action = {
+  name: "FETCH_TOKEN_PRICE",
+  similes: ["fetch token price"],
+  description: "Fetches the current price of a specified token.",
+  examples: [
+    {
+      input: { tokenSymbol: "SOL" },
+      output: {
+        status: "success",
+        message: "Price fetched successfully for SOL.",
+        price: 150,
+      },
+      explanation: "Fetch the current price of SOL token in USDC",
+    },
+  ],
+  schema: z.object({
+    tokenSymbol: z.string().describe("The symbol of the token to fetch the price for"),
+  }),
+  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+    const price = await agent.getTokenPrice(input.tokenSymbol);
+    return {
+      status: "success",
+      price,
+      message: `Price fetched successfully for ${input.tokenSymbol}.`,
+    };
+  },
+};
 ```
 
 Then it can be used as such:
