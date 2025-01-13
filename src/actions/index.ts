@@ -37,6 +37,12 @@ import depositToMultisigAction from "./squads/depositToMultisigTreasury";
 import executeMultisigProposalAction from "./squads/executeMultisigProposal";
 import rejectMultisigProposalAction from "./squads/rejectMultisigProposal";
 import transferFromMultisigAction from "./squads/transferFromMultisigTreasury";
+import createWebhookAction from "./helius/createWebhook";
+import deleteWebhookAction from "./helius/deleteWebhook";
+import getAssetsByOwnerAction from "./helius/getAssetsbyOwner";
+import getWebhookAction from "./helius/getWebhook";
+import parseSolanaTransactionAction from "./helius/parseTransaction";
+import sendTransactionWithPriorityFeeAction from "./helius/sendTransactionWithPriority";
 
 export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -79,6 +85,12 @@ export const ACTIONS = {
   APPROVE_MULTISIG_PROPOSAL_ACTION: approveMultisigProposalAction,
   REJECT_MULTISIG_PROPOSAL_ACTION: rejectMultisigProposalAction,
   EXECUTE_MULTISIG_PROPOSAL_ACTION: executeMultisigProposalAction,
+  CREATE_WEBHOOK_ACTION: createWebhookAction,
+  DELETE_WEBHOOK_ACTION: deleteWebhookAction,
+  GET_ASSETS_BY_OWNER_ACTION: getAssetsByOwnerAction,
+  GET_WEBHOOK_ACTION: getWebhookAction,
+  PARSE_TRANSACTION_ACTION: parseSolanaTransactionAction,
+  SEND_TRANSACTION_WITH_PRIORITY_ACTION: sendTransactionWithPriorityFeeAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

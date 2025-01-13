@@ -24,6 +24,7 @@ export * from "./tiplink";
 export * from "./sns";
 export * from "./lightprotocol";
 export * from "./squads";
+export * from "./helius";
 
 import { SolanaAgentKit } from "../agent";
 import {
@@ -91,6 +92,12 @@ import {
   SolanaApproveProposal2by2Multisig,
   SolanaExecuteProposal2by2Multisig,
   SolanaRejectProposal2by2Multisig,
+  SolanaSendTransactionWithPriorityFee,
+  SolanaHeliusWebhookTool,
+  SolanaGetHeliusWebhookTool,
+  SolanaDeleteHeliusWebhookTool,
+  SolanaParseTransactionHeliusTool,
+  SolanaGetAllAssetsByOwner,
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -159,5 +166,16 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaExecuteProposal2by2Multisig(solanaKit),
     new SolanaDepositTo2by2Multisig(solanaKit),
     new SolanaTransferFrom2by2Multisig(solanaKit),
+    new SolanaSendTransactionWithPriorityFee(solanaKit),
+    new SolanaHeliusWebhookTool(solanaKit),
+    new SolanaGetHeliusWebhookTool(solanaKit),
+    new SolanaDeleteHeliusWebhookTool(solanaKit),
+    new SolanaParseTransactionHeliusTool(solanaKit),
+    new SolanaGetAllAssetsByOwner(solanaKit),
+    new Solana3LandCreateSingle(solanaKit),
+    new SolanaSendTransactionWithPriorityFee(solanaKit),
+    new SolanaHeliusWebhookTool(solanaKit),
+    new SolanaGetHeliusWebhookTool(solanaKit),
+    new SolanaDeleteHeliusWebhookTool(solanaKit),
   ];
 }
