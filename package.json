@@ -58,6 +58,7 @@
     "dotenv": "^16.4.7",
     "flash-sdk": "^2.24.3",
     "form-data": "^4.0.1",
+    "governance-idl-sdk": "^0.0.4",
     "langchain": "^0.3.8",
     "openai": "^4.77.0",
     "typedoc": "^0.27.6",
@@ -77,5 +78,6 @@
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }

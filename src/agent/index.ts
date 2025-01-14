@@ -2,6 +2,12 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
+import { SplGovernance } from "governance-idl-sdk";
+import type {
+  TokenOwnerRecord,
+  VoteRecord,
+  RealmV2 as Realm,
+} from "governance-idl-sdk";
 import {
   CreateCollectionOptions,
   CreateSingleOptions,
@@ -99,6 +105,28 @@ import {
   HeliusWebhookIdResponse,
   HeliusWebhookResponse,
 } from "../types";
+import {
+  createNewRealm,
+  createNewProposal,
+  castVoteOnProposal,
+  getRealmInfo,
+  getTokenOwnerRecord,
+  getVoterHistory,
+} from "../actions/governance";
+import { RealmConfig, ProposalConfig, VoteConfig } from "../types/governance";
+import {
+  GovernanceMonitor,
+  MembershipChangeCallback,
+  VotingPowerChangeCallback,
+} from "../actions/governance-monitor";
+import {
+  configureCouncilSettings,
+  addCouncilMember,
+  removeCouncilMember,
+  updateCouncilMemberWeight,
+  CouncilConfig,
+  CouncilMemberConfig,
+} from "../actions/council-governance";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -115,6 +143,7 @@ export class SolanaAgentKit {
   public wallet: Keypair;
   public wallet_address: PublicKey;
   public config: Config;
+  private governanceMonitors: Map<string, GovernanceMonitor> = new Map();
 
   /**
    * @deprecated Using openai_api_key directly in constructor is deprecated.
@@ -693,5 +722,118 @@ export class SolanaAgentKit {
   }
   async deleteWebhook(webhookID: string): Promise<any> {
     return deleteHeliusWebhook(this, webhookID);
+  }
+
+  // Governance Methods
+  async createRealm(config: RealmConfig): Promise<PublicKey> {
+    return createNewRealm(this, config);
+  }
+
+  async createProposal(
+    realm: PublicKey,
+    config: ProposalConfig,
+  ): Promise<PublicKey> {
+    return createNewProposal(this, realm, config);
+  }
+
+  async castVote(config: VoteConfig): Promise<string> {
+    return castVoteOnProposal(this, config);
+  }
+
+  async getRealm(realm: PublicKey): Promise<Realm | null> {
+    return getRealmInfo(this, realm);
+  }
+
+  async getTokenOwnerRecord(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    governingTokenOwner: PublicKey,
+  ): Promise<TokenOwnerRecord | undefined> {
+    return getTokenOwnerRecord(
+      this,
+      realm,
+      governingTokenMint,
+      governingTokenOwner,
+    );
+  }
+
+  async getVoterHistory(voter: PublicKey): Promise<VoteRecord[]> {
+    return getVoterHistory(this, voter);
+  }
+
+  async monitorRealmMembership(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    callback: MembershipChangeCallback,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    let monitor = this.governanceMonitors.get(key);
+
+    if (!monitor) {
+      monitor = new GovernanceMonitor(this, realm, governingTokenMint);
+      this.governanceMonitors.set(key, monitor);
+    }
+
+    await monitor.monitorMembershipChanges(callback);
+  }
+
+  async monitorVotingPower(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    callback: VotingPowerChangeCallback,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    let monitor = this.governanceMonitors.get(key);
+
+    if (!monitor) {
+      monitor = new GovernanceMonitor(this, realm, governingTokenMint);
+      this.governanceMonitors.set(key, monitor);
+    }
+
+    await monitor.monitorVotingPowerChanges(callback);
+  }
+
+  async stopMonitoring(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    const monitor = this.governanceMonitors.get(key);
+
+    if (monitor) {
+      await monitor.stopMonitoring();
+      this.governanceMonitors.delete(key);
+    }
+  }
+
+  async configureCouncil(
+    realm: PublicKey,
+    config: CouncilConfig,
+  ): Promise<string> {
+    return configureCouncilSettings(this, realm, config);
+  }
+
+  async addCouncilMember(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    memberConfig: CouncilMemberConfig,
+  ): Promise<string> {
+    return addCouncilMember(this, realm, councilMint, memberConfig);
+  }
+
+  async removeCouncilMember(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    member: PublicKey,
+  ): Promise<string> {
+    return removeCouncilMember(this, realm, councilMint, member);
+  }
+
+  async updateCouncilMemberWeight(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    memberConfig: CouncilMemberConfig,
+  ): Promise<string> {
+    return updateCouncilMemberWeight(this, realm, councilMint, memberConfig);
   }
 }

@@ -100,6 +100,13 @@ import {
   SolanaGetAllAssetsByOwner,
 } from "./index";
 
+import {
+  SolanaCreateRealmTool,
+  SolanaCreateProposalTool,
+  SolanaCastVoteTool,
+  SolanaGetRealmInfoTool,
+} from "./tools/governance";
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaBalanceTool(solanaKit),
@@ -177,5 +184,10 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaHeliusWebhookTool(solanaKit),
     new SolanaGetHeliusWebhookTool(solanaKit),
     new SolanaDeleteHeliusWebhookTool(solanaKit),
+    new SolanaCreateRealmTool(solanaKit),
+    new SolanaCreateProposalTool(solanaKit),
+    new SolanaCastVoteTool(solanaKit),
+    new SolanaGetRealmInfoTool(solanaKit),
+    new SolanaApproveProposal2by2Multisig(solanaKit),
   ];
 }
