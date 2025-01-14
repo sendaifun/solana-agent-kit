@@ -92,9 +92,7 @@
         },
         {
           "group": "Squads Protocol Multisig",
-          "pages": [
-            "v0/features/squads/squads_operations"
-          ]
+          "pages": ["v0/features/squads/squads_operations"]
         },
         {
           "group": "Solana Blinks",
@@ -113,7 +111,7 @@
     },
     {
       "group": "Utilities",
-      "pages": ["v0/utilities/transaction_utils"]
+      "pages": ["v0/utilities/transaction_utils", "v0/utilities/helius_utils"]
     },
     {
       "group": "Classes",
