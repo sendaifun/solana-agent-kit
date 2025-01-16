@@ -114,6 +114,10 @@ import {
   SolanaUpdateDriftVaultTool,
   SolanaWithdrawFromDriftAccountTool,
   SolanaWithdrawFromDriftVaultTool,
+  SolanaGetAssetTool,
+  SolanaGetAssetsByAuthorityTool,
+  SolanaGetAssetsByCreatorTool,
+  SolanaSearchAssetsTool,
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -208,5 +212,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaDriftVaultInfoTool(solanaKit),
     new SolanaWithdrawFromDriftAccountTool(solanaKit),
     new SolanaWithdrawFromDriftVaultTool(solanaKit),
+    new SolanaGetAssetTool(solanaKit),
+    new SolanaGetAssetsByAuthorityTool(solanaKit),
+    new SolanaGetAssetsByCreatorTool(solanaKit),
+    new SolanaSearchAssetsTool(solanaKit),
   ];
 }

@@ -471,6 +471,12 @@ Update the address a drift vault is delegated to.
 const signature = await agent.updateDriftVaultDelegate("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU", "new-address")
 ```
 
+### Get a Solana asset by its ID
+
+```typescript
+const asset = await agent.getAsset("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+```
+
 ## Examples
 
 ### LangGraph Multi-Agent System
@@ -494,6 +500,7 @@ The toolkit relies on several key Solana and Metaplex libraries:
 
 - @solana/web3.js
 - @solana/spl-token
+- @metaplex-foundation/digital-asset-standard-api
 - @metaplex-foundation/mpl-token-metadata
 - @metaplex-foundation/mpl-core
 - @metaplex-foundation/umi
