@@ -1,3 +1,4 @@
+import tokenBalancesAction from "./tokenBalances";
 import deployTokenAction from "./metaplex/deployToken";
 import balanceAction from "./solana/balance";
 import transferAction from "./solana/transfer";
@@ -61,6 +62,7 @@ import updateDriftVaultDelegateAction from "./drift/updateDriftVaultDelegate";
 
 export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
+  TOKEN_BALANCES_ACTION: tokenBalancesAction,
   DEPLOY_TOKEN_ACTION: deployTokenAction,
   BALANCE_ACTION: balanceAction,
   TRANSFER_ACTION: transferAction,
