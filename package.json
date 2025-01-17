@@ -28,6 +28,8 @@
     "@bonfida/spl-name-service": "^3.0.7",
     "@cks-systems/manifest-sdk": "0.1.59",
     "@coral-xyz/anchor": "0.29",
+    "@drift-labs/sdk": "2.107.0-beta.3",
+    "@drift-labs/vaults-sdk": "^0.2.49",
     "@langchain/core": "^0.3.26",
     "@langchain/groq": "^0.1.2",
     "@langchain/langgraph": "^0.2.36",
@@ -77,5 +79,6 @@
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "packageManager": "pnpm@9.15.3"
 }

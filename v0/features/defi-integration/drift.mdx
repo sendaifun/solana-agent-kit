@@ -1,0 +1,298 @@
+---
+title: 'Drift Protocol Integration'
+description: 'Manage Drift user accounts, vaults, and trading on Solana'
+---
+
+Integrate with Drift Protocol for managing user accounts, vaults, perpetual trading, and deposits/withdrawals. This implementation provides comprehensive functionality for interacting with Drift's spot and perpetual markets.
+
+## Core Features
+
+1. **Account Management**
+   - User account creation
+   - Vault management
+   - Deposits and withdrawals
+   - Account information
+
+2. **Trading Features**
+   - Perpetual trading
+   - Market/limit orders
+   - Position management
+   - Vault delegation
+
+## Account Creation
+
+```typescript
+// Create user account with initial deposit
+const account = await agent.createDriftUserAccount(
+  100, // amount
+  "USDC" // symbol
+);
+
+// Create vault
+const vault = await agent.createDriftVault({
+  name: "MyVault",
+  marketName: "USDC-SPOT",
+  redeemPeriod: 1,
+  maxTokens: 1000,
+  minDepositAmount: 100,
+  managementFee: 2,
+  profitShare: 20
+});
+```
+
+### Account Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Initial deposit amount |
+| symbol | string | Yes | Token symbol (e.g., "USDC") |
+
+### Vault Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| name | string | Yes | Unique vault name |
+| marketName | string | Yes | Market in TOKEN-SPOT format |
+| redeemPeriod | number | Yes | Days until redemption |
+| maxTokens | number | Yes | Maximum vault capacity |
+| minDepositAmount | number | Yes | Minimum deposit |
+| managementFee | number | Yes | Management fee percentage |
+| profitShare | number | Yes | Profit share percentage |
+| hurdleRate | number | No | Optional hurdle rate |
+| permissioned | boolean | No | Whether vault uses whitelist |
+
+## Trading Operations
+
+```typescript
+// Place perpetual trade
+const trade = await agent.tradeUsingDriftPerpAccount(
+  1000, // amount in USD
+  "SOL", // symbol
+  "long", // direction
+  "market" // order type
+);
+
+// Place limit order
+const limitOrder = await agent.tradeUsingDriftPerpAccount(
+  1000,
+  "SOL",
+  "long",
+  "limit",
+  50 // price
+);
+
+// Trade using vault
+const vaultTrade = await agent.tradeUsingDelegatedDriftVault(
+  "vault-address",
+  1000,
+  "SOL",
+  "long",
+  "market"
+);
+```
+
+### Trading Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Trade amount in USD |
+| symbol | string | Yes | Token symbol |
+| action | string | Yes | "long" or "short" |
+| type | string | Yes | "market" or "limit" |
+| price | number | No | Required for limit orders |
+
+## Deposits and Withdrawals
+
+```typescript
+// Deposit to user account
+const deposit = await agent.depositToDriftUserAccount(
+  100,
+  "USDC",
+  false // isRepay
+);
+
+// Deposit to vault
+const vaultDeposit = await agent.depositIntoDriftVault(
+  100,
+  "vault-address"
+);
+
+// Request vault withdrawal
+const withdrawal = await agent.requestWithdrawalFromDriftVault(
+  50,
+  "vault-address"
+);
+
+// Execute withdrawal after period
+const execute = await agent.withdrawFromDriftVault(
+  "vault-address"
+);
+```
+
+### Deposit Parameters
+
+| Parameter | Type | Required | Description |
+| --------- | ---- | -------- | ----------- |
+| amount | number | Yes | Amount to deposit |
+| symbol | string | Yes | Token symbol |
+| isRepay | boolean | No | Whether deposit is loan repayment |
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Create a new Drift account with 1000 USDC"
+
+"Open a long position in SOL perps"
+
+"Create a trading vault with 2% fees"
+
+"Deposit 100 USDC to my account"
+
+"Get my account positions and balances"
+
+"Create a limit order for SOL at $50"
+
+"Withdraw from my vault"
+```
+
+### LangChain Tool Prompts
+
+#### Create Account
+```text
+{
+  "amount": 1000,
+  "symbol": "USDC"
+}
+```
+
+#### Trade Perpetuals
+```text
+{
+  "amount": 1000,
+  "symbol": "SOL",
+  "action": "long",
+  "type": "market"
+}
+```
+
+## Implementation Details
+
+### Market Structure
+```typescript
+interface MarketParams {
+  marketIndex: number;
+  marketType: MarketType;
+  baseAssetSymbol: string;
+  marketPrice: number;
+}
+```
+
+### Vault Structure
+```typescript
+interface VaultConfig {
+  name: string;
+  redeemPeriod: number;
+  maxTokens: number;
+  minDepositAmount: number;
+  managementFee: number;
+  profitShare: number;
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const tx = await agent.tradeUsingDriftPerpAccount(...);
+} catch (error) {
+  if (error.message.includes("insufficient collateral")) {
+    // Handle collateral errors
+  } else if (error.message.includes("price impact")) {
+    // Handle slippage issues
+  }
+}
+```
+
+## Best Practices
+
+1. **Account Management**
+   - Monitor collateral levels
+   - Track positions regularly
+   - Keep sufficient margin
+   - Use appropriate leverage
+
+2. **Trading Operations**
+   - Set reasonable limits
+   - Monitor price impact
+   - Handle slippage
+   - Track positions
+
+3. **Vault Management**
+   - Plan redemption periods
+   - Monitor fund utilization
+   - Track performance
+   - Manage delegations
+
+## Common Issues
+
+1. **Trading Issues**
+   - Insufficient collateral
+   - Price impact too high
+   - Oracle price issues
+   - Network congestion
+
+2. **Account Issues**
+   - Account not initialized
+   - Insufficient funds
+   - Position limits
+   - Margin requirements
+
+3. **Vault Issues**
+   - Redemption period
+   - Insufficient liquidity
+   - Delegation errors
+   - Permission issues
+
+## Response Format
+
+### Success Response
+```typescript
+{
+  status: "success",
+  message: "Operation completed successfully",
+  data: {
+    signature?: string,
+    account?: string,
+    positions?: Position[],
+    balances?: Balance[]
+  }
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "Error description",
+  code: "ERROR_CODE"
+}
+```
+
+## Related Functions
+
+- `createDriftUserAccount`: Create new user account
+- `depositToDriftUserAccount`: Deposit to account
+- `withdrawFromDriftAccount`: Withdraw from account
+- `tradeUsingDriftPerpAccount`: Execute trades
+- `getDriftVaultInfo`: Get vault information
+- `createDriftVault`: Create new vault
+- `depositIntoDriftVault`: Deposit to vault
+- `withdrawFromDriftVault`: Withdraw from vault
+
+## Resources
+
+- [Drift Protocol Docs](https://docs.drift.trade)
+- [SDK Documentation](https://drift-labs.github.io/protocol-v2/sdk/)
+- [Perpetual Trading](https://docs.drift.trade/technical-specifications/perpetuals)
+- [Vault Documentation](https://docs.drift.trade/technical-specifications/vaults)

@@ -87,7 +87,8 @@
             "v0/features/defi-integration/pyth",
             "v0/features/defi-integration/alldomains",
             "v0/features/defi-integration/adrena",
-            "v0/features/defi-integration/flashtrade"
+            "v0/features/defi-integration/flashtrade",
+            "v0/features/defi-integration/drift"
           ]
         },
         {
