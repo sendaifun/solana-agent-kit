@@ -1,0 +1,61 @@
+.wallet-adapter-button {
+    background-color: rgba(32, 225, 255, 0.15) !important;
+    padding: 0.75rem 1.25rem !important;
+    padding-left: 2.75rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: rgb(220, 255, 255) !important;
+    border: 1px solid rgba(32, 225, 255, 0.3) !important;
+    transition: all 0.2s ease-in-out !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    position: relative !important;
+    min-width: 190px !important;
+    justify-content: center !important;
+    box-shadow: 0 0 10px rgba(32, 225, 255, 0.1) !important;
+}
+
+.wallet-adapter-button:hover {
+    background-color: rgba(32, 225, 255, 0.25) !important;
+    box-shadow: 0 0 15px rgba(32, 225, 255, 0.2) !important;
+    border-color: rgba(32, 225, 255, 0.5) !important;
+}
+
+/* Wallet icon */
+.wallet-adapter-button::before {
+    content: "";
+    position: absolute !important;
+    left: 1rem !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(220, 255, 255)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 7h18'/%3E%3C/svg%3E") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    opacity: 0.9 !important;
+}
+
+/* Welcome screen specific styling */
+.welcome-wallet-button .wallet-adapter-button {
+    width: 100% !important;
+    padding: 1rem 1.5rem !important;
+    padding-left: 3rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    background-color: rgba(32, 225, 255, 0.15) !important;
+    border: 1px solid rgba(32, 225, 255, 0.3) !important;
+    box-shadow: 0 0 20px rgba(32, 225, 255, 0.1) !important;
+}
+
+.welcome-wallet-button .wallet-adapter-button:hover {
+    background-color: rgba(32, 225, 255, 0.25) !important;
+    box-shadow: 0 0 30px rgba(32, 225, 255, 0.2) !important;
+}
+
+/* Connected state */
+.wallet-adapter-button-connected {
+    background-color: rgba(32, 225, 255, 0.1) !important;
+    border: 1px solid rgba(32, 225, 255, 0.2) !important;
+}
