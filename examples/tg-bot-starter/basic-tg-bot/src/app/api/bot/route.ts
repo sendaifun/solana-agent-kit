@@ -15,6 +15,8 @@ if (!token) {
 }
 const bot = new Bot(token);
 
+console.log("Bot started");
+
 async function initializeAgent(userId: string) {
   try {
     const llm = new ChatOpenAI({
@@ -27,6 +29,7 @@ async function initializeAgent(userId: string) {
       process.env.RPC_URL,
       process.env.OPENAI_API_KEY!,
     );
+    console.log("Solana Agent Kit initialized");
 
     const tools = createSolanaTools(solanaKit);
     const memory = new MemorySaver();
