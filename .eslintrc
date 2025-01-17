@@ -13,6 +13,7 @@
     "no-constant-condition": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "curly": ["error", "all"],
@@ -30,4 +31,4 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   }
-} 
+}

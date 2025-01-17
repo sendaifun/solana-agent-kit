@@ -14,6 +14,9 @@ jobs:
         with:
           version: 9.4.0
 
+      - name: Install node-gyp prerequisites
+        run: sudo apt update && sudo apt install -y build-essential python3 pkg-config libudev-dev libusb-1.0-0-dev
+
       - uses: actions/setup-node@v4
         with:
           node-version: "23"
@@ -21,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install -r --no-frozen-lockfile
- 
+
       - name: Run lint and fix
         run: pnpm run lint:fix
 

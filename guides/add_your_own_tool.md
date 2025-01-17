@@ -9,23 +9,23 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 3. Add supporting functions in SolanaAgentKit
 4. Implement the Langchain tool class
 5. Export the Langchain tool
-6. Define Action class for given tool
-7. Export Action
-8. Use the custom tool
+6. Export your protocol's langchain tools (if not already exported)
+7. Define Action class for given tool
+8. Export Action
+9. Use the custom tool
 
 ## Implementation Guide
 
 ### 1. Create a New Tool File
 
-Create a new TypeScript file in the `src/tools/` directory for your tool (e.g., `custom_tool.ts`).
+Create a new TypeScript file in the `src/tools/your_protocol` directory for your tool (e.g., `custom_tool.ts`). If the `src/tools/your_protocol` directory does not exist, create it.
 
-
-### 2. Export the Tool
+### 2. Export the Tool (if not already exported)
 > `src/tools/index.ts`
 ```typescript:src/tools/index.ts
-export * from "./request_faucet_funds";
-export * from "./deploy_token";
-export * from "./custom_tool"; // Add your new tool
+export * from "./squads";
+export * from "./jupiter";
+export * from "./your_protocol"; // Add your protocol here if it's not already in the list
 ```
 
 ### 3. Add Supporting Functions to SolanaAgentKit
@@ -42,10 +42,10 @@ export class SolanaAgentKit {
 ```
 
 ### 4. Implement the Langchain Tool Class
-> `src/langchain/index.ts`
-```typescript:src/langchain/index.ts
+> `src/langchain/your_protocol/custom_tool.ts`
+```typescript:src/langchain/your_protocol/custom_tool.ts
 import { Tool } from "langchain/tools";
-import { SolanaAgentKit } from "../agent";
+import { SolanaAgentKit } from "../../agent";
 
 export class CustomTool extends Tool {
   name = "custom_tool";
@@ -75,26 +75,26 @@ export class CustomTool extends Tool {
 ```
 
 ### 5. Export Langchain Tool
-> `src/langchain/index.ts`
-```typescript:src/langchain/index.ts
-import { CustomTool } from "../tools";
-
-export function createSolanaTools(agent: SolanaAgentKit) {
-  return [
-    // ... existing tools ...
-    new CustomTool(agent),
-  ];
-}
+> `src/langchain/your_protocol/index.ts`
+```typescript:src/langchain/your_protocol/index.ts
+export * from "./custom_tool";
 ```
 
-### 6. Define Action class for given tool
+### 6. Export your protocol's langchain tools (if not already exported)
+> `src/langchain/index.ts`
+```typescript:src/langchain/index.ts
+export * from "./tiplink";
+export * from "./your_protocol"; // Add your protocol here if it's not already in the list
+```
 
-> `src/actions/custom_action.ts`
-```typescript:src/actions/custom_action.ts
-import { Action } from "../types/action";
-import { SolanaAgentKit } from "../agent";
+### 7. Define Action class for given tool
+
+> `src/actions/your_protocol/custom_action.ts`
+```typescript:src/actions/your_protocol/custom_action.ts
+import { Action } from "../../types/action";
+import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { custom_tool } from "../tools";
+import { custom_tool } from "../../tools";
 
 const customAction: Action = {
   name: "CUSTOM_ACTION",
@@ -121,11 +121,10 @@ const customAction: Action = {
 };
 ```
 
-### 7. Export Action
+### 8. Export Action
 > `src/actions/index.ts`
 ```typescript:src/actions/index.ts
-export * from "./balance";
-export * from "./custom_action";
+import customAction from "./your_protocol/custom_action";
 
 export const ACTIONS = {
     // ... existing actions ...
@@ -133,7 +132,7 @@ export const ACTIONS = {
 }
 ```
 
-### 8. Usage Example
+### 9. Usage Example
 
 Add a code example in the `README.md` file.
 

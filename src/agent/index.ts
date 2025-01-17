@@ -82,6 +82,22 @@ import {
   getHeliusWebhook,
   create_HeliusWebhook,
   deleteHeliusWebhook,
+  createDriftUserAccount,
+  createVault,
+  depositIntoVault,
+  depositToDriftUserAccount,
+  getVaultAddress,
+  doesUserHaveDriftAccount,
+  driftUserAccountInfo,
+  requestWithdrawalFromVault,
+  tradeDriftVault,
+  driftPerpTrade,
+  updateVault,
+  getVaultInfo,
+  withdrawFromDriftUserAccount,
+  withdrawFromDriftVault,
+  updateVaultDelegate,
+  get_token_balance,
 } from "../tools";
 import {
   Config,
@@ -172,6 +188,19 @@ export class SolanaAgentKit {
 
   async getBalance(token_address?: PublicKey): Promise<number> {
     return get_balance(this, token_address);
+  }
+
+  async getTokenBalances(wallet_address?: PublicKey): Promise<{
+    sol: number;
+    tokens: Array<{
+      tokenAddress: string;
+      name: string;
+      symbol: string;
+      balance: number;
+      decimals: number;
+    }>;
+  }> {
+    return get_token_balance(this, wallet_address);
   }
 
   async getBalanceOther(
@@ -693,5 +722,103 @@ export class SolanaAgentKit {
   }
   async deleteWebhook(webhookID: string): Promise<any> {
     return deleteHeliusWebhook(this, webhookID);
+  }
+
+  async createDriftUserAccount(depositAmount: number, depositSymbol: string) {
+    return await createDriftUserAccount(this, depositAmount, depositSymbol);
+  }
+  async createDriftVault(params: {
+    name: string;
+    marketName: `${string}-${string}`;
+    redeemPeriod: number;
+    maxTokens: number;
+    minDepositAmount: number;
+    managementFee: number;
+    profitShare: number;
+    hurdleRate?: number;
+    permissioned?: boolean;
+  }) {
+    return await createVault(this, params);
+  }
+  async depositIntoDriftVault(amount: number, vault: string) {
+    return await depositIntoVault(this, amount, vault);
+  }
+  async depositToDriftUserAccount(
+    amount: number,
+    symbol: string,
+    isRepayment?: boolean,
+  ) {
+    return await depositToDriftUserAccount(this, amount, symbol, isRepayment);
+  }
+  async deriveDriftVaultAddress(name: string) {
+    return await getVaultAddress(this, name);
+  }
+  async doesUserHaveDriftAccount() {
+    return await doesUserHaveDriftAccount(this);
+  }
+  async driftUserAccountInfo() {
+    return await driftUserAccountInfo(this);
+  }
+  async requestWithdrawalFromDriftVault(amount: number, vault: string) {
+    return await requestWithdrawalFromVault(this, amount, vault);
+  }
+  async tradeUsingDelegatedDriftVault(
+    vault: string,
+    amount: number,
+    symbol: string,
+    action: "long" | "short",
+    type: "market" | "limit",
+    price?: number,
+  ) {
+    return await tradeDriftVault(
+      this,
+      vault,
+      amount,
+      symbol,
+      action,
+      type,
+      price,
+    );
+  }
+  async tradeUsingDriftPerpAccount(
+    amount: number,
+    symbol: string,
+    action: "long" | "short",
+    type: "market" | "limit",
+    price?: number,
+  ) {
+    return await driftPerpTrade(this, { action, amount, symbol, type, price });
+  }
+  async updateDriftVault(
+    vaultAddress: string,
+    params: {
+      name: string;
+      marketName: `${string}-${string}`;
+      redeemPeriod: number;
+      maxTokens: number;
+      minDepositAmount: number;
+      managementFee: number;
+      profitShare: number;
+      hurdleRate?: number;
+      permissioned?: boolean;
+    },
+  ) {
+    return await updateVault(this, vaultAddress, params);
+  }
+  async getDriftVaultInfo(vaultName: string) {
+    return await getVaultInfo(this, vaultName);
+  }
+  async withdrawFromDriftAccount(
+    amount: number,
+    symbol: string,
+    isBorrow?: boolean,
+  ) {
+    return await withdrawFromDriftUserAccount(this, amount, symbol, isBorrow);
+  }
+  async withdrawFromDriftVault(vault: string) {
+    return await withdrawFromDriftVault(this, vault);
+  }
+  async updateDriftVaultDelegate(vaultAddress: string, delegate: string) {
+    return await updateVaultDelegate(this, vaultAddress, delegate);
   }
 }
