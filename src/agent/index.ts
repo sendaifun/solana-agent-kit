@@ -114,6 +114,7 @@ import {
   voltrGetPositionValues,
   voltrDepositStrategy,
   voltrWithdrawStrategy,
+  createMeteoraDlmmLpPosition,
 } from "../tools";
 import {
   Config,
@@ -450,6 +451,13 @@ export class SolanaAgentKit {
     );
   }
 
+  async createMeteoraDlmmLpPosition(
+    pool: PublicKey,
+    totalXAmount: BN,
+  ): Promise<string> {
+    return createMeteoraDlmmLpPosition(this, pool, totalXAmount);
+  }
+
   async orcaClosePosition(positionMintAddress: PublicKey) {
     return orcaClosePosition(this, positionMintAddress);
   }
@@ -654,6 +662,7 @@ export class SolanaAgentKit {
   ) {
     return rock_paper_scissor(this, amount, choice);
   }
+
   async createTiplink(amount: number, splmintAddress?: PublicKey) {
     return create_TipLink(this, amount, splmintAddress);
   }
@@ -698,9 +707,11 @@ export class SolanaAgentKit {
   async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
     return flashCloseTrade(this, params);
   }
+
   async heliusParseTransactions(transactionId: string): Promise<any> {
     return parseTransaction(this, transactionId);
   }
+
   async getAllAssetsbyOwner(owner: PublicKey, limit: number): Promise<any> {
     return getAssetsByOwner(this, owner, limit);
   }
@@ -746,6 +757,7 @@ export class SolanaAgentKit {
     );
     return `Transaction: ${tx}`;
   }
+
   async sendTranctionWithPriority(
     priorityLevel: string,
     amount: number,
@@ -805,15 +817,18 @@ export class SolanaAgentKit {
   ): Promise<string> {
     return multisig_execute_proposal(this, transactionIndex);
   }
+
   async CreateWebhook(
     accountAddresses: string[],
     webhookURL: string,
   ): Promise<HeliusWebhookResponse> {
     return create_HeliusWebhook(this, accountAddresses, webhookURL);
   }
+
   async getWebhook(id: string): Promise<HeliusWebhookIdResponse> {
     return getHeliusWebhook(this, id);
   }
+
   async deleteWebhook(webhookID: string): Promise<any> {
     return deleteHeliusWebhook(this, webhookID);
   }
@@ -839,6 +854,7 @@ export class SolanaAgentKit {
   async depositIntoDriftVault(amount: number, vault: string) {
     return await depositIntoVault(this, amount, vault);
   }
+
   async depositToDriftUserAccount(
     amount: number,
     symbol: string,
@@ -846,18 +862,23 @@ export class SolanaAgentKit {
   ) {
     return await depositToDriftUserAccount(this, amount, symbol, isRepayment);
   }
+
   async deriveDriftVaultAddress(name: string) {
     return await getVaultAddress(this, name);
   }
+
   async doesUserHaveDriftAccount() {
     return await doesUserHaveDriftAccount(this);
   }
+
   async driftUserAccountInfo() {
     return await driftUserAccountInfo(this);
   }
+
   async requestWithdrawalFromDriftVault(amount: number, vault: string) {
     return await requestWithdrawalFromVault(this, amount, vault);
   }
+
   async tradeUsingDelegatedDriftVault(
     vault: string,
     amount: number,
@@ -876,6 +897,7 @@ export class SolanaAgentKit {
       price,
     );
   }
+
   async tradeUsingDriftPerpAccount(
     amount: number,
     symbol: string,
@@ -885,6 +907,7 @@ export class SolanaAgentKit {
   ) {
     return await driftPerpTrade(this, { action, amount, symbol, type, price });
   }
+
   async updateDriftVault(
     vaultAddress: string,
     params: {
@@ -901,9 +924,11 @@ export class SolanaAgentKit {
   ) {
     return await updateVault(this, vaultAddress, params);
   }
+
   async getDriftVaultInfo(vaultName: string) {
     return await getVaultInfo(this, vaultName);
   }
+
   async withdrawFromDriftAccount(
     amount: number,
     symbol: string,
@@ -911,9 +936,11 @@ export class SolanaAgentKit {
   ) {
     return await withdrawFromDriftUserAccount(this, amount, symbol, isBorrow);
   }
+
   async withdrawFromDriftVault(vault: string) {
     return await withdrawFromDriftVault(this, vault);
   }
+
   async updateDriftVaultDelegate(vaultAddress: string, delegate: string) {
     return await updateVaultDelegate(this, vaultAddress, delegate);
   }
@@ -931,15 +958,19 @@ export class SolanaAgentKit {
         };
     }
   }
+
   async stakeToDriftInsuranceFund(amount: number, symbol: string) {
     return await stakeToDriftInsuranceFund(this, amount, symbol);
   }
+
   async requestUnstakeFromDriftInsuranceFund(amount: number, symbol: string) {
     return await requestUnstakeFromDriftInsuranceFund(this, amount, symbol);
   }
+
   async unstakeFromDriftInsuranceFund(symbol: string) {
     return await unstakeFromDriftInsuranceFund(this, symbol);
   }
+
   async driftSpotTokenSwap(
     params: {
       fromSymbol: string;
@@ -962,12 +993,14 @@ export class SolanaAgentKit {
       slippage: params.slippage,
     });
   }
+
   async getPerpMarketFundingRate(
     symbol: `${string}-PERP`,
     period: "year" | "hour" = "year",
   ) {
     return calculatePerpMarketFundingRate(this, symbol, period);
   }
+
   async getEntryQuoteOfPerpTrade(
     amount: number,
     symbol: `${string}-PERP`,
@@ -975,6 +1008,7 @@ export class SolanaAgentKit {
   ) {
     return getEntryQuoteOfPerpTrade(symbol, amount, action);
   }
+
   async getLendAndBorrowAPY(symbol: string) {
     return getLendingAndBorrowAPY(this, symbol);
   }
