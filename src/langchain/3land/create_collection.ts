@@ -1,16 +1,12 @@
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../../agent";
-import {
-  CreateCollectionOptions,
-  StoreInitOptions,
-} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { CreateCollectionOptions } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 
 export class Solana3LandCreateCollection extends Tool {
   name = "3land_minting_tool";
   description = `Creates an NFT Collection that you can visit on 3.land's website (3.land/collection/{collectionAccount})
   
   Inputs:
-  privateKey (required): represents the privateKey of the wallet - can be an array of numbers, Uint8Array or base58 string
   isMainnet (required): defines is the tx takes places in mainnet
   collectionSymbol (required): the symbol of the collection
   collectionName (required): the name of the collection
@@ -26,13 +22,7 @@ export class Solana3LandCreateCollection extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const inputFormat = JSON.parse(input);
-      const privateKey = inputFormat.privateKey;
       const isMainnet = inputFormat.isMainnet;
-
-      const optionsWithBase58: StoreInitOptions = {
-        ...(privateKey && { privateKey }),
-        ...(isMainnet && { isMainnet }),
-      };
 
       const collectionSymbol = inputFormat?.collectionSymbol;
       const collectionName = inputFormat?.collectionName;
@@ -49,8 +39,8 @@ export class Solana3LandCreateCollection extends Tool {
       };
 
       const tx = await this.solanaKit.create3LandCollection(
-        optionsWithBase58,
         collectionOpts,
+        !isMainnet,
       );
       return JSON.stringify({
         status: "success",

@@ -1,16 +1,12 @@
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../../agent";
-import {
-  CreateSingleOptions,
-  StoreInitOptions,
-} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { CreateSingleOptions } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 
 export class Solana3LandCreateSingle extends Tool {
   name = "3land_minting_tool";
   description = `Creates an NFT and lists it on 3.land's website
 
   Inputs:
-  privateKey (required): represents the privateKey of the wallet - can be an array of numbers, Uint8Array or base58 string
   collectionAccount (optional): represents the account for the nft collection
   itemName (required): the name of the NFT
   sellerFee (required): the fee of the seller
@@ -21,7 +17,9 @@ export class Solana3LandCreateSingle extends Tool {
   mainImageUrl (required): the main image of the NFT
   coverImageUrl (optional): the cover image of the NFT
   splHash (optional): the hash of the spl token, if not provided listing will be in $SOL
-  isMainnet (required): defines is the tx takes places in mainnet
+  poolName (optional): the name of the pool
+  isMainnet (required): defines if the tx takes places in mainnet
+  withPool (optional): defines if minted edition will be tied to a liquidity pool
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -31,13 +29,9 @@ export class Solana3LandCreateSingle extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const inputFormat = JSON.parse(input);
-      const privateKey = inputFormat.privateKey;
       const isMainnet = inputFormat.isMainnet;
-
-      const optionsWithBase58: StoreInitOptions = {
-        ...(privateKey && { privateKey }),
-        ...(isMainnet && { isMainnet }),
-      };
+      const withPool = inputFormat.withPool;
+      const poolName = inputFormat.poolName;
 
       const collectionAccount = inputFormat.collectionAccount;
 
@@ -52,6 +46,15 @@ export class Solana3LandCreateSingle extends Tool {
       const coverImageUrl = inputFormat?.coverImageUrl;
       const splHash = inputFormat?.splHash;
 
+      if (withPool) {
+        if (!poolName) {
+          throw new Error("poolName is required when withPool is true");
+        }
+        if (!splHash) {
+          throw new Error("splHash is required when withPool is true");
+        }
+      }
+
       const createItemOptions: CreateSingleOptions = {
         ...(itemName && { itemName }),
         ...(sellerFee && { sellerFee }),
@@ -63,6 +66,7 @@ export class Solana3LandCreateSingle extends Tool {
         ...(mainImageUrl && { mainImageUrl }),
         ...(coverImageUrl && { coverImageUrl }),
         ...(splHash && { splHash }),
+        ...(poolName && { poolName }),
       };
 
       if (!collectionAccount) {
@@ -70,10 +74,10 @@ export class Solana3LandCreateSingle extends Tool {
       }
 
       const tx = await this.solanaKit.create3LandNft(
-        optionsWithBase58,
         collectionAccount,
         createItemOptions,
-        isMainnet,
+        !isMainnet,
+        withPool,
       );
       return JSON.stringify({
         status: "success",

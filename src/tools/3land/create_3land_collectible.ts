@@ -37,7 +37,8 @@ export async function createSingle(
   optionsWithBase58: StoreInitOptions,
   collectionAccount: string,
   createItemOptions: CreateSingleOptions,
-  isMainnet: boolean,
+  isMainnet: boolean = false,
+  withPool: boolean = false,
 ) {
   try {
     const landStore = isMainnet
@@ -49,6 +50,8 @@ export async function createSingle(
       landStore,
       collectionAccount,
       createItemOptions,
+      true, //isAI
+      withPool,
     );
     return singleEditionTx;
   } catch (error: any) {

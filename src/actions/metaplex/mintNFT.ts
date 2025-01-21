@@ -13,7 +13,7 @@ const mintNFTAction: Action = {
     "create token",
     "add nft to collection",
   ],
-  description: `Mint a new NFT in a collection on Solana blockchain.`,
+  description: "Mint a new NFT in a collection on Solana blockchain.",
   examples: [
     [
       {

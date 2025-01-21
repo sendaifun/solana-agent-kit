@@ -95,7 +95,6 @@ async function runChatMode() {
   );
 
   const tools = createVercelAITools(solanaAgent);
-  console.log(tools);
 
   const rl = readline.createInterface({
     input: process.stdin,

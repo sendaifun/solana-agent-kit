@@ -4,10 +4,13 @@ import { z } from "zod";
 
 export interface Config {
   OPENAI_API_KEY?: string;
+  PERPLEXITY_API_KEY?: string;
   JUPITER_REFERRAL_ACCOUNT?: string;
   JUPITER_FEE_BPS?: number;
   FLASH_PRIVILEGE?: string;
+  FLEXLEND_API_KEY?: string;
   HELIUS_API_KEY?: string;
+  PRIORITY_LEVEL?: string; // medium, high, or veryHigh
 }
 
 export interface Creator {
