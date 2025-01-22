@@ -1,0 +1,10 @@
+.wallet-adapter-dropdown-list {
+  position: relative !important;
+  border: 1px solid #581c87 !important;
+  background: linear-gradient(
+    to bottom right,
+    rgba(30, 58, 138, 0.2),
+    black,
+    rgba(88, 28, 135, 0.2)
+  );
+}
