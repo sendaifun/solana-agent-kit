@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
+import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 
 export interface Config {
   OPENAI_API_KEY?: string;
@@ -11,6 +12,9 @@ export interface Config {
   FLEXLEND_API_KEY?: string;
   HELIUS_API_KEY?: string;
   PRIORITY_LEVEL?: string; // medium, high, or veryHigh
+  ALLORA_API_KEY?: string;
+  ALLORA_API_URL?: string;
+  ALLORA_NETWORK?: string;
 }
 
 export interface Creator {
@@ -262,4 +266,28 @@ export interface PriorityFeeResponse {
     transaction: string;
     options: { priorityLevel: string };
   }>;
+}
+
+export interface AlloraPriceInferenceResponse {
+  status: "success" | "error";
+  tokenSymbol?: string;
+  timeframe?: string;
+  priceInference?: string;
+  message?: string;
+  code?: string;
+}
+
+export interface AlloraGetAllTopicsResponse {
+  status: "success" | "error";
+  topics?: AlloraTopic[];
+  message?: string;
+  code?: string;
+}
+
+export interface AlloraGetInferenceByTopicIdResponse {
+  status: "success" | "error";
+  topicId?: number;
+  inference?: AlloraInference;
+  message?: string;
+  code?: string;
 }

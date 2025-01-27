@@ -13,7 +13,7 @@ const agent = new SolanaAgentKit(
   { OPENAI_API_KEY: process.env.OPENAI_API_KEY! },
 );
 
-const isDevnet = true;
+const isDevnet = false;
 
 /****************************** CREATING COLLECTION ******************************** */
 
@@ -24,10 +24,13 @@ const collectionOpts: CreateCollectionOptions = {
   mainImageUrl: "",
 };
 
+//const priorityFeeParam = 100000;
+
 (async () => {
   const collection = await agent.create3LandCollection(
     collectionOpts,
     isDevnet,
+    //priorityFeeParam,
   );
 
   console.log("collection: ", collection);
@@ -42,13 +45,14 @@ const createItemOptions: CreateSingleOptions = {
   itemSymbol: "",
   itemDescription: "",
   traits: [{ trait_type: "", value: "" }],
-  price: 100000000, //100000000 == 0.1 sol,
+  price: 1000000, //100000000 == 0.1 sol,
   splHash: "",
   poolName: "",
   mainImageUrl: "",
 };
 
 const withPool = true;
+//const priorityFeeParam = 100000;
 
 (async () => {
   const result = agent.create3LandNft(
@@ -56,6 +60,7 @@ const withPool = true;
     createItemOptions,
     isDevnet,
     withPool,
+    //priorityFeeParam,
   );
   console.log("result: ", result);
 })();

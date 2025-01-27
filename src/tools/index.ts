@@ -28,3 +28,4 @@ export * from "./fluxbeam";
 export * from "./meteora";
 export * from "./helius";
 export * from "./voltr";
+export * from "./allora";

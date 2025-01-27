@@ -20,6 +20,7 @@ export class Solana3LandCreateSingle extends Tool {
   poolName (optional): the name of the pool
   isMainnet (required): defines if the tx takes places in mainnet
   withPool (optional): defines if minted edition will be tied to a liquidity pool
+  priorityFeeParam (optional): default value is 50000, if tx doesnt land this param can help it land
   `;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -32,6 +33,7 @@ export class Solana3LandCreateSingle extends Tool {
       const isMainnet = inputFormat.isMainnet;
       const withPool = inputFormat.withPool;
       const poolName = inputFormat.poolName;
+      const priorityFeeParam = inputFormat?.priorityFeeParam;
 
       const collectionAccount = inputFormat.collectionAccount;
 
@@ -78,6 +80,7 @@ export class Solana3LandCreateSingle extends Tool {
         createItemOptions,
         !isMainnet,
         withPool,
+        priorityFeeParam,
       );
       return JSON.stringify({
         status: "success",

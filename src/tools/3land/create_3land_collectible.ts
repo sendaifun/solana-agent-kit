@@ -14,11 +14,13 @@ import {
 export async function createCollection(
   optionsWithBase58: StoreInitOptions,
   collectionOpts: CreateCollectionOptions,
+  priorityFeeParam?: number,
 ) {
   try {
     const collection = await createCollectionImp(
       optionsWithBase58,
       collectionOpts,
+      priorityFeeParam,
     );
     return collection;
   } catch (error: any) {
@@ -39,6 +41,7 @@ export async function createSingle(
   createItemOptions: CreateSingleOptions,
   isMainnet: boolean = false,
   withPool: boolean = false,
+  priorityFeeParam?: number,
 ) {
   try {
     const landStore = isMainnet
@@ -52,6 +55,7 @@ export async function createSingle(
       createItemOptions,
       true, //isAI
       withPool,
+      priorityFeeParam,
     );
     return singleEditionTx;
   } catch (error: any) {
