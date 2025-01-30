@@ -9,6 +9,7 @@
     "docs": "typedoc src --out docs",
     "test": "tsx test/index.ts",
     "test:vercel-ai": "tsx test/agent_sdks/vercel_ai.ts",
+    "test:actions": "./scripts/run-tests.sh",
     "generate": "tsx src/utils/keypair.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
