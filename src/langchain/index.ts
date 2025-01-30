@@ -24,10 +24,14 @@ export * from "./tiplink";
 export * from "./sns";
 export * from "./lightprotocol";
 export * from "./squads";
+export * from "./meteora";
 export * from "./helius";
 export * from "./drift";
+export * from "./voltr";
+export * from "./mayan";
+export * from "./allora";
 
-import { SolanaAgentKit } from "../agent";
+import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
   SolanaBalanceOtherTool,
@@ -42,6 +46,8 @@ import {
   SolanaPumpfunTokenLaunchTool,
   SolanaCreateImageTool,
   SolanaLendAssetTool,
+  SolanaLuloLendTool,
+  SolanaLuloWithdrawTool,
   SolanaTPSCalculatorTool,
   SolanaStakeTool,
   SolanaRestakeTool,
@@ -93,6 +99,8 @@ import {
   SolanaApproveProposal2by2Multisig,
   SolanaExecuteProposal2by2Multisig,
   SolanaRejectProposal2by2Multisig,
+  SolanaMeteoraCreateDynamicPool,
+  SolanaMeteoraCreateDlmmPool,
   SolanaSendTransactionWithPriorityFee,
   SolanaHeliusWebhookTool,
   SolanaGetHeliusWebhookTool,
@@ -114,10 +122,29 @@ import {
   SolanaUpdateDriftVaultTool,
   SolanaWithdrawFromDriftAccountTool,
   SolanaWithdrawFromDriftVaultTool,
+  SolanaDriftLendAndBorrowAPYTool,
+  SolanaDriftEntryQuoteOfPerpTradeTool,
+  SolanaDriftPerpMarketFundingRateTool,
+  SolanaDriftSpotTokenSwapTool,
+  SolanaRequestUnstakeFromDriftInsuranceFundTool,
+  SolanaStakeToDriftInsuranceFundTool,
+  SolanaUnstakeFromDriftInsuranceFundTool,
+  SolanaVoltrGetPositionValues,
+  SolanaVoltrDepositStrategy,
+  SolanaVoltrWithdrawStrategy,
+  SolanaGetAssetTool,
+  SolanaGetAssetsByAuthorityTool,
+  SolanaGetAssetsByCreatorTool,
+  SolanaGetInfoTool,
+  SolanaCrossChainSwapTool,
+  SolanaAlloraGetPriceInference,
+  SolanaAlloraGetAllTopics,
+  SolanaAlloraGetInferenceByTopicId,
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
+    new SolanaGetInfoTool(solanaKit),
     new SolanaBalanceTool(solanaKit),
     new SolanaBalanceOtherTool(solanaKit),
     new SolanaTransferTool(solanaKit),
@@ -131,6 +158,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaPumpfunTokenLaunchTool(solanaKit),
     new SolanaCreateImageTool(solanaKit),
     new SolanaLendAssetTool(solanaKit),
+    new SolanaLuloLendTool(solanaKit),
+    new SolanaLuloWithdrawTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),
     new SolanaStakeTool(solanaKit),
     new SolanaRestakeTool(solanaKit),
@@ -148,6 +177,8 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaBatchOrderTool(solanaKit),
     new SolanaCancelAllOrdersTool(solanaKit),
     new SolanaWithdrawAllTool(solanaKit),
+    new SolanaMeteoraCreateDynamicPool(solanaKit),
+    new SolanaMeteoraCreateDlmmPool(solanaKit),
     new SolanaClosePosition(solanaKit),
     new SolanaOrcaCreateCLMM(solanaKit),
     new SolanaOrcaCreateSingleSideLiquidityPool(solanaKit),
@@ -188,11 +219,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaDeleteHeliusWebhookTool(solanaKit),
     new SolanaParseTransactionHeliusTool(solanaKit),
     new SolanaGetAllAssetsByOwner(solanaKit),
-    new Solana3LandCreateSingle(solanaKit),
-    new SolanaSendTransactionWithPriorityFee(solanaKit),
-    new SolanaHeliusWebhookTool(solanaKit),
-    new SolanaGetHeliusWebhookTool(solanaKit),
-    new SolanaDeleteHeliusWebhookTool(solanaKit),
     new SolanaCreateDriftUserAccountTool(solanaKit),
     new SolanaCreateDriftVaultTool(solanaKit),
     new SolanaDepositIntoDriftVaultTool(solanaKit),
@@ -208,5 +234,22 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaDriftVaultInfoTool(solanaKit),
     new SolanaWithdrawFromDriftAccountTool(solanaKit),
     new SolanaWithdrawFromDriftVaultTool(solanaKit),
+    new SolanaDriftSpotTokenSwapTool(solanaKit),
+    new SolanaStakeToDriftInsuranceFundTool(solanaKit),
+    new SolanaRequestUnstakeFromDriftInsuranceFundTool(solanaKit),
+    new SolanaUnstakeFromDriftInsuranceFundTool(solanaKit),
+    new SolanaDriftLendAndBorrowAPYTool(solanaKit),
+    new SolanaDriftEntryQuoteOfPerpTradeTool(solanaKit),
+    new SolanaDriftPerpMarketFundingRateTool(solanaKit),
+    new SolanaVoltrGetPositionValues(solanaKit),
+    new SolanaVoltrDepositStrategy(solanaKit),
+    new SolanaVoltrWithdrawStrategy(solanaKit),
+    new SolanaGetAssetTool(solanaKit),
+    new SolanaGetAssetsByAuthorityTool(solanaKit),
+    new SolanaGetAssetsByCreatorTool(solanaKit),
+    new SolanaCrossChainSwapTool(solanaKit),
+    new SolanaAlloraGetPriceInference(solanaKit),
+    new SolanaAlloraGetAllTopics(solanaKit),
+    new SolanaAlloraGetInferenceByTopicId(solanaKit),
   ];
 }

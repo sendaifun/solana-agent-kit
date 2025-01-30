@@ -28,7 +28,9 @@ const depositIntoDriftVaultAction: Action = {
     amount: z
       .number()
       .positive()
-      .describe("The amount in tokens you'd like to deposit into the vault"),
+      .describe(
+        "The amount in tokens you'd like to deposit into the vault in normal token amounts e.g 50 SOL, 100 USDC, etc",
+      ),
   }),
   handler: async (agent, input) => {
     try {

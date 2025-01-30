@@ -41,16 +41,35 @@ const updateDriftVaultAction: Action = {
     redeemPeriod: z
       .number()
       .int()
-      .min(1, "Redeem period must be at least 1")
+      .min(1, "Redeem period must be at least 1 day")
       .optional(),
     maxTokens: z
       .number()
       .int()
-      .min(100, "Max tokens must be at least 100")
-      .optional(),
-    minDepositAmount: z.number().positive().optional(),
-    managementFee: z.number().positive().max(20).optional(),
-    profitShare: z.number().positive().max(90).optional(),
+      .min(100, "Max tokens must be at least be 100 units")
+      .optional()
+      .describe(
+        "The maximum number of tokens the vault is willing to accept and manage",
+      ),
+    minDepositAmount: z
+      .number()
+      .positive()
+      .optional()
+      .describe(
+        "The minimum amount that is allowed to be deposited into the vault in normal token amounts e.g 10 USDC",
+      ),
+    managementFee: z
+      .number()
+      .positive()
+      .max(20)
+      .optional()
+      .describe("The percentage fee the vault takes for asset management"),
+    profitShare: z
+      .number()
+      .positive()
+      .max(90)
+      .optional()
+      .describe("Profit share in percentage e.g 2 === 2%"),
     handleRate: z.number().optional(),
     permissioned: z
       .boolean()
