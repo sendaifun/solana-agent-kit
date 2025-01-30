@@ -7,7 +7,7 @@ import { TransactionMessage } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
 
 function startProxy() {
-    const rpcUrl = process.env.RPC_URL!;
+    const rpcUrl = process.env.RPC_URL! ?? "https://api.mainnet-beta.solana.com";
 
     // Store callback in a mutable variable
     let simulationCallback: (tx: VersionedTransaction, simulationResult: any) => Promise<any> = () => Promise.resolve();
