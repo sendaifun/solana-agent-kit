@@ -292,3 +292,11 @@ export interface AlloraGetInferenceByTopicIdResponse {
   message?: string;
   code?: string;
 }
+
+export interface SwitchboardSimulateFeedResponse {
+  status: "success" | "error";
+  feed?: string;
+  value?: number;
+  message?: string;
+  code?: string;
+}

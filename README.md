@@ -385,7 +385,7 @@ const signature = await agent.requestWithdrawalFromDriftVault(100, "41Y8C4oxk4zg
 
 ### Carry out a perpetual trade using a Drift vault
 
-Open a perpertual trade using a drift vault that is delegated to you.
+Open a perpetual trade using a drift vault that is delegated to you.
 
 ```typescript
 const signature = await agent.tradeUsingDelegatedDriftVault({
@@ -400,7 +400,7 @@ const signature = await agent.tradeUsingDelegatedDriftVault({
 
 ### Carry out a perpetual trade using your Drift account
 
-Open a perpertual trade using your drift account.
+Open a perpetual trade using your drift account.
 
 ```typescript
 const signature = await agent.tradeUsingDriftPerpAccount({
@@ -531,6 +531,16 @@ const inference = await agent.getInferenceByTopicId(42);
 console.log("Allora inference for topic 42:", inference);
 ```
 
+### Simulate a Switchboard feed
+
+Simulate a given Switchboard feed. Find or create feeds [here](https://ondemand.switchboard.xyz/solana/mainnet).
+
+```typescript
+const value = await agent.simulateSwitchboardFeed(
+      "9wcBMATS8bGLQ2UcRuYjsRAD7TPqB1CMhqfueBx78Uj2", // TRUMP/USD
+      "http://crossbar.switchboard.xyz");;
+console.log("Simulation resulted in the following value:", value);
+
 ### Cross-Chain Swap
 
 ```typescript
@@ -544,6 +554,7 @@ const signature = await agent.swap(
   toToken: "0x0000000000000000000000000000000000000000",
   dstAddr: "0xc2d3024d64f27d85e05c40056674Fd18772dd922",
 );
+
 ```
 
 ## Examples

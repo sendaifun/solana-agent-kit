@@ -47,3 +47,9 @@ export const METEORA_DLMM_PROGRAM_ID = new PublicKey(
  */
 export const MINIMUM_COMPUTE_PRICE_FOR_COMPLEX_ACTIONS =
   0.000003 * 1000000 * 1000000;
+
+/**
+ * Switchboard public crossbar instance.
+ * https://docs.switchboard.xyz/docs/switchboard/crossbar-and-task-runner
+ */
+export const SWITCHBOARD_DEFAULT_CROSSBAR = "https://crossbar.switchboard.xyz";

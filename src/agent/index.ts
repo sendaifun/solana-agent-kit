@@ -117,6 +117,7 @@ import {
   get_asset,
   get_assets_by_authority,
   get_assets_by_creator,
+  simulate_switchboard_feed,
   swap,
   getPriceInference,
   getAllTopics,
@@ -1067,5 +1068,12 @@ export class SolanaAgentKit {
   }
   async getInferenceByTopicId(topicId: number): Promise<AlloraInference> {
     return getInferenceByTopicId(this, topicId);
+  }
+
+  async simulateSwitchboardFeed(
+    feed: string,
+    crossbarUrl: string,
+  ): Promise<string> {
+    return simulate_switchboard_feed(this, feed, crossbarUrl);
   }
 }

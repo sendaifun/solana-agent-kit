@@ -64,6 +64,7 @@
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.98.0",
     "@sqds/multisig": "^2.1.3",
+    "@switchboard-xyz/common": "^2.5.15",
     "@tensor-oss/tensorswap-sdk": "^4.5.0",
     "@tiplink/api": "^0.3.1",
     "@voltr/vault-sdk": "^0.1.1",
