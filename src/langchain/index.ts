@@ -31,6 +31,7 @@ export * from "./voltr";
 export * from "./mayan";
 export * from "./allora";
 export * from "./switchboard";
+export * from "./verify";
 
 import type { SolanaAgentKit } from "../agent";
 import {
@@ -142,6 +143,7 @@ import {
   SolanaAlloraGetAllTopics,
   SolanaAlloraGetInferenceByTopicId,
   SolanaSwitchboardSimulateFeed,
+  SolanaProgramVerificationTool,
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -254,5 +256,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaAlloraGetAllTopics(solanaKit),
     new SolanaAlloraGetInferenceByTopicId(solanaKit),
     new SolanaAlloraGetPriceInference(solanaKit),
+    new SolanaProgramVerificationTool(solanaKit),
   ];
 }

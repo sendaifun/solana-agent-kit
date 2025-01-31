@@ -122,6 +122,10 @@ import {
   getPriceInference,
   getAllTopics,
   getInferenceByTopicId,
+  verifyProgram,
+  getProgramVerificationStatus,
+  VerificationResponse,
+  VerificationOptions,
 } from "../tools";
 import {
   Config,
@@ -1075,5 +1079,24 @@ export class SolanaAgentKit {
     crossbarUrl: string,
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
+  }
+
+  async verifyProgram(
+    programId: string,
+    repository: string,
+    commitHash?: string,
+    options?: VerificationOptions,
+  ): Promise<VerificationResponse> {
+    return await verifyProgram(
+      this,
+      programId,
+      repository,
+      commitHash,
+      options,
+    );
+  }
+
+  async checkVerificationStatus(programId: string) {
+    return await getProgramVerificationStatus(programId);
   }
 }

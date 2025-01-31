@@ -86,6 +86,7 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import verifyProgramAction from "./verify/verify_program";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -179,6 +180,7 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  VERIFY_PROGRAM_ACTION: verifyProgramAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
