@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { afterAll, beforeAll, test, describe } from 'vitest'
+import { afterAll, beforeAll, test, describe } from "vitest";
 
 import balanceAction from "./balance";
 import { Keypair } from "@solana/web3.js";
@@ -19,7 +19,7 @@ describe.sequential("Balance Action", () => {
     await harness.setup();
   });
 
-  test('get balance', async () => {
+  test("get balance", async () => {
     const result = await balanceAction.handler(harness.agent, {});
     if (result.balance !== 0) {
       throw new Error(

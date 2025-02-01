@@ -18,7 +18,7 @@ describe.sequential("Get TPS Action", () => {
     await harness.setup();
   });
 
-  test('get tps', async () => {
+  test("get tps", async () => {
     const result = await getTPSAction.handler(harness.agent, {});
     if (result.tps < 100) {
       throw new Error("TPS was expected to be defined, but was " + result.tps);
