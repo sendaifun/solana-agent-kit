@@ -5,8 +5,9 @@ import { createSolanaProxy } from "./solanaProxyServer";
 import bs58 from "bs58";
 import { TransactionMessage } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
+import { execSync } from 'child_process';
 
-function startProxy() {
+async function startProxy() {
     const rpcUrl = process.env.RPC_URL! ?? "https://api.mainnet-beta.solana.com";
 
     // Store callback in a mutable variable
@@ -14,26 +15,50 @@ function startProxy() {
 
     let transactionRewriteCallback: (tx: VersionedTransaction) => Promise<VersionedTransaction> = (tx) => Promise.resolve(tx);
 
-    const proxyServer = createSolanaProxy(rpcUrl, 3000, async (tx, simulationResult) => {
-        return simulationCallback(tx, simulationResult);
-    }, async (tx) => {
-        return transactionRewriteCallback(tx);
-    });
-
-
-    // Return callback setter along with agent and server
-    return {
-        proxyServer,
-        setSimulationCallback: (newCallback: typeof simulationCallback) => {
-            simulationCallback = newCallback;
-        },
-        setTransactionRewriteCallback: (newCallback: typeof transactionRewriteCallback) => {
-            transactionRewriteCallback = newCallback;
+    const isPortUsed = (port: number) => {
+        try {
+            execSync(`lsof -i:${port}`, { stdio: 'ignore' });
+            return true;
+        } catch (e) {
+            return false;
         }
     };
+
+    // Find first available port between 3000-4000
+    let port = 3000;
+
+    // This port deciding process is only needed when running tests in parallel (disabled by default)
+    while (port < 4000) {
+        // Attempt to break race conditions
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 100));
+
+        if (!isPortUsed(port)) {
+            const proxyServer = createSolanaProxy(rpcUrl, port, async (tx, simulationResult) => {
+                return simulationCallback(tx, simulationResult);
+            }, async (tx) => {
+                return transactionRewriteCallback(tx);
+            })
+
+            return {
+                port,
+                proxyServer,
+                setSimulationCallback: (newCallback: typeof simulationCallback) => {
+                    simulationCallback = newCallback;
+                },
+                setTransactionRewriteCallback: (newCallback: typeof transactionRewriteCallback) => {
+                    transactionRewriteCallback = newCallback;
+                }
+            }
+        }
+        port++;
+    }
+    if (port >= 4000) {
+        throw new Error('No available ports found between 3000-4000');
+    }
+    return null;
 }
 
-// raj.sol
+// raj.sol - can be any wallet with enough SOL to sponsor the transaction in simulation
 const MAINNET_SOL_SPONSOR_KEY = "E645TckHQnDcavVv92Etc6xSWQaq8zzPtPRGBheviRAk";
 
 export class TestHarness {
@@ -42,7 +67,6 @@ export class TestHarness {
     private transactionRewriteCallback: (tx: VersionedTransaction) => Promise<VersionedTransaction> = (tx) => Promise.resolve(tx);
 
     public agent: SolanaAgentKit;
-    public shouldFail = false;
 
     public sponsorFundInSimulation: { lamports: number, sponsorKey?: string, toKey: string } | null = null;
 
@@ -51,18 +75,34 @@ export class TestHarness {
     }: {
         privateKey?: Uint8Array;
     }) {
-        const { proxyServer, setSimulationCallback, setTransactionRewriteCallback } = startProxy();
 
         this.agent = new SolanaAgentKit(privateKey ?
             bs58.encode(privateKey)
             :
             process.env.SOLANA_PRIVATE_KEY ?? bs58.encode(Keypair.generate().secretKey),
-            "http://localhost:3000",
+            // Default, will be overridden by setup()
+            `http://localhost:3000`,
+            {
+                OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+            }
+        );
+    }
+
+    async setup() {
+        const proxyServerInfo = await startProxy();
+        if (!proxyServerInfo) {
+            throw new Error('No available ports found between 3000-4000');
+        }
+        const { proxyServer, port, setSimulationCallback, setTransactionRewriteCallback } = proxyServerInfo;
+
+        this.agent = new SolanaAgentKit(bs58.encode(this.agent.wallet.secretKey),
+            `http://localhost:${port}`,
             {
                 OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
             }
         );
         this.proxyServer = proxyServer;
+
         setSimulationCallback(this.handleSimulation.bind(this));
         setTransactionRewriteCallback(this.handleTransactionRewrite.bind(this));
     }
@@ -71,7 +111,6 @@ export class TestHarness {
         if (simulationResult.value.err) {
             console.error("Transaction simulation failed:", simulationResult.value.err);
             console.error(simulationResult.value);
-            this.shouldFail = true;
         }
         return this.simulationCallback(tx, simulationResult);
     }
@@ -96,17 +135,6 @@ export class TestHarness {
         return this.transactionRewriteCallback(tx);
     }
 
-    async runTest(name: string, testFn: (agent: SolanaAgentKit) => Promise<void>) {
-        console.log(`\n=== Running test: ${name} ===`);
-        try {
-            await testFn(this.agent);
-            console.log(`✅ ${name} - Success`);
-        } catch (e) {
-            console.error(`❌ ${name} - Failed:`, e);
-            this.shouldFail = true;
-        }
-    }
-
     setSimulationCallback(cb: typeof this.simulationCallback) {
         this.simulationCallback = cb;
     }
@@ -116,6 +144,6 @@ export class TestHarness {
     }
 
     cleanup() {
-        this.proxyServer.close();
+        this.proxyServer?.close();
     }
 }

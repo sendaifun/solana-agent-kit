@@ -9,7 +9,7 @@
     "docs": "typedoc src --out docs",
     "test": "tsx test/index.ts",
     "test:vercel-ai": "tsx test/agent_sdks/vercel_ai.ts",
-    "test:actions": "./scripts/run-tests.sh",
+    "test:all": "vitest --run",
     "generate": "tsx src/utils/keypair.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -35,7 +35,7 @@
     "@ai-sdk/openai": "^1.0.11",
     "@alloralabs/allora-sdk": "^0.1.0",
     "@bonfida/spl-name-service": "^3.0.7",
-    "@cks-systems/manifest-sdk": "0.1.59",
+    "@cks-systems/manifest-sdk": "0.1.78",
     "@coral-xyz/anchor": "0.29",
     "@drift-labs/sdk": "2.108.0-beta.4",
     "@drift-labs/vaults-sdk": "^0.3.2",
@@ -98,7 +98,8 @@
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.4"
   },
   "packageManager": "pnpm@9.15.3"
 }

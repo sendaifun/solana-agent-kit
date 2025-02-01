@@ -4,36 +4,39 @@ import transferAction from "./transfer";
 
 import { TestHarness } from "../../../test/utils/testHarness";
 import { Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { describe, beforeAll, afterAll, test } from "vitest";
+import { expect } from "chai";
 
 dotenv.config();
 
-async function testTransfer(harness: TestHarness) {
-  await harness.runTest("Transfer", async (agent) => {
+describe.sequential("Transfer Action", () => {
+  let harness: TestHarness;
+
+  beforeAll(async () => {
+    harness = new TestHarness({
+      privateKey: Keypair.generate().secretKey,
+    });
+
+    await harness.setup();
+  });
+
+  test("transfer sol test", async () => {
     const toKey = Keypair.generate().publicKey.toBase58();
+
     harness.sponsorFundInSimulation = {
       lamports: LAMPORTS_PER_SOL,
       toKey: harness.agent.wallet_address.toBase58(),
     };
-    const result = await transferAction.handler(agent, {
+
+    const result = await transferAction.handler(harness.agent, {
       to: toKey,
       amount: 1,
     });
-    if (result.status !== "success") {
-      throw new Error("Transfer failed");
-    }
-  });
-}
 
-async function runTests() {
-  const harness = new TestHarness({
-    privateKey: Keypair.generate().secretKey,
+    expect(result.status).to.equal("success");
   });
-  try {
-    await testTransfer(harness);
-  } finally {
-    harness.cleanup();
-    process.exit(harness.shouldFail ? 1 : 0);
-  }
-}
 
-runTests();
+  afterAll(async () => {
+    await harness.cleanup();
+  });
+});

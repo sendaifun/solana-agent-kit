@@ -1,33 +1,34 @@
 import dotenv from "dotenv";
+import { afterAll, beforeAll, test, describe } from 'vitest'
 
 import balanceAction from "./balance";
+import { Keypair } from "@solana/web3.js";
 
 import { TestHarness } from "../../../test/utils/testHarness";
-import { Keypair } from "@solana/web3.js";
 
 dotenv.config();
 
-async function testBalance(harness: TestHarness) {
-  await harness.runTest("Get balance", async (agent) => {
-    const result = await balanceAction.handler(agent, {});
+let harness: TestHarness;
+
+describe.sequential("Balance Action", () => {
+  beforeAll(async () => {
+    harness = new TestHarness({
+      privateKey: Keypair.generate().secretKey,
+    });
+
+    await harness.setup();
+  });
+
+  test('get balance', async () => {
+    const result = await balanceAction.handler(harness.agent, {});
     if (result.balance !== 0) {
       throw new Error(
         "Balance was expected to be 0, but was " + result.balance,
       );
     }
   });
-}
 
-async function runTests() {
-  const harness = new TestHarness({
-    privateKey: Keypair.generate().secretKey,
+  afterAll(async () => {
+    await harness.cleanup();
   });
-  try {
-    await testBalance(harness);
-  } finally {
-    harness.cleanup();
-    process.exit(harness.shouldFail ? 1 : 0);
-  }
-}
-
-runTests();
+});
