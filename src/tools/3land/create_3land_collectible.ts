@@ -14,11 +14,13 @@ import {
 export async function createCollection(
   optionsWithBase58: StoreInitOptions,
   collectionOpts: CreateCollectionOptions,
+  priorityFeeParam?: number,
 ) {
   try {
     const collection = await createCollectionImp(
       optionsWithBase58,
       collectionOpts,
+      priorityFeeParam,
     );
     return collection;
   } catch (error: any) {
@@ -37,7 +39,9 @@ export async function createSingle(
   optionsWithBase58: StoreInitOptions,
   collectionAccount: string,
   createItemOptions: CreateSingleOptions,
-  isMainnet: boolean,
+  isMainnet: boolean = false,
+  withPool: boolean = false,
+  priorityFeeParam?: number,
 ) {
   try {
     const landStore = isMainnet
@@ -49,21 +53,12 @@ export async function createSingle(
       landStore,
       collectionAccount,
       createItemOptions,
+      true, //isAI
+      withPool,
+      priorityFeeParam,
     );
     return singleEditionTx;
   } catch (error: any) {
     throw new Error(`Single edition creation failed: ${error.message}`);
   }
 }
-
-/**
- * Buy a single edition on 3Land
- * @param
- * @returns
- */
-// export async function buySingle() {
-//   try {
-//   } catch (error: any) {
-//     throw new Error(`Buying single edition failed: ${error.message}`);
-//   }
-// }

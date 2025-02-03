@@ -1,12 +1,21 @@
 import { PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
+import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 
 export interface Config {
   OPENAI_API_KEY?: string;
+  PERPLEXITY_API_KEY?: string;
   JUPITER_REFERRAL_ACCOUNT?: string;
   JUPITER_FEE_BPS?: number;
   FLASH_PRIVILEGE?: string;
+  FLEXLEND_API_KEY?: string;
+  HELIUS_API_KEY?: string;
+  PRIORITY_LEVEL?: string; // medium, high, or veryHigh
+  ETHEREUM_PRIVATE_KEY?: string;
+  ALLORA_API_KEY?: string;
+  ALLORA_API_URL?: string;
+  ALLORA_NETWORK?: string;
 }
 
 export interface Creator {
@@ -236,4 +245,58 @@ export interface FlashTradeParams {
 export interface FlashCloseTradeParams {
   token: string;
   side: "long" | "short";
+}
+
+export interface HeliusWebhookResponse {
+  webhookURL: string;
+  webhookID: string;
+}
+export interface HeliusWebhookIdResponse {
+  wallet: string;
+  webhookURL: string;
+  transactionTypes: string[];
+  accountAddresses: string[];
+  webhookType: string;
+}
+
+export interface PriorityFeeResponse {
+  jsonrpc: string;
+  id: string;
+  method: string;
+  params: Array<{
+    transaction: string;
+    options: { priorityLevel: string };
+  }>;
+}
+
+export interface AlloraPriceInferenceResponse {
+  status: "success" | "error";
+  tokenSymbol?: string;
+  timeframe?: string;
+  priceInference?: string;
+  message?: string;
+  code?: string;
+}
+
+export interface AlloraGetAllTopicsResponse {
+  status: "success" | "error";
+  topics?: AlloraTopic[];
+  message?: string;
+  code?: string;
+}
+
+export interface AlloraGetInferenceByTopicIdResponse {
+  status: "success" | "error";
+  topicId?: number;
+  inference?: AlloraInference;
+  message?: string;
+  code?: string;
+}
+
+export interface SwitchboardSimulateFeedResponse {
+  status: "success" | "error";
+  feed?: string;
+  value?: number;
+  message?: string;
+  code?: string;
 }

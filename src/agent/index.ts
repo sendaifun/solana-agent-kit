@@ -2,8 +2,12 @@ import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
+import {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+  StoreInitOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 import { DEFAULT_OPTIONS } from "../constants";
-import { Config, TokenCheck } from "../types";
 import {
   deploy_collection,
   deploy_token,
@@ -14,6 +18,8 @@ import {
   getPrimaryDomain,
   launchPumpFunToken,
   lendAsset,
+  luloLend,
+  luloWithdraw,
   mintCollectionNFT,
   openbookCreateMarket,
   manifestCreateMarket,
@@ -63,8 +69,63 @@ import {
   fetchPythPriceFeedID,
   flashOpenTrade,
   flashCloseTrade,
-} from "../tools/";
+  createMeteoraDynamicAMMPool,
+  createMeteoraDlmmPool,
+  createCollection,
+  createSingle,
+  multisig_transfer_from_treasury,
+  create_squads_multisig,
+  multisig_create_proposal,
+  multisig_deposit_to_treasury,
+  multisig_reject_proposal,
+  multisig_approve_proposal,
+  multisig_execute_proposal,
+  parseTransaction,
+  sendTransactionWithPriorityFee,
+  getAssetsByOwner,
+  getHeliusWebhook,
+  create_HeliusWebhook,
+  deleteHeliusWebhook,
+  createDriftUserAccount,
+  createVault,
+  depositIntoVault,
+  depositToDriftUserAccount,
+  getVaultAddress,
+  doesUserHaveDriftAccount,
+  driftUserAccountInfo,
+  requestWithdrawalFromVault,
+  tradeDriftVault,
+  driftPerpTrade,
+  updateVault,
+  getVaultInfo,
+  withdrawFromDriftUserAccount,
+  withdrawFromDriftVault,
+  updateVaultDelegate,
+  get_token_balance,
+  getAvailableDriftSpotMarkets,
+  getAvailableDriftPerpMarkets,
+  stakeToDriftInsuranceFund,
+  requestUnstakeFromDriftInsuranceFund,
+  unstakeFromDriftInsuranceFund,
+  swapSpotToken,
+  calculatePerpMarketFundingRate,
+  getEntryQuoteOfPerpTrade,
+  getLendingAndBorrowAPY,
+  voltrGetPositionValues,
+  voltrDepositStrategy,
+  voltrWithdrawStrategy,
+  get_asset,
+  get_assets_by_authority,
+  get_assets_by_creator,
+  simulate_switchboard_feed,
+  swap,
+  getPriceInference,
+  getAllTopics,
+  getInferenceByTopicId,
+} from "../tools";
 import {
+  Config,
+  TokenCheck,
   CollectionDeployment,
   CollectionOptions,
   GibworkCreateTaskReponse,
@@ -75,6 +136,8 @@ import {
   OrderParams,
   FlashTradeParams,
   FlashCloseTradeParams,
+  HeliusWebhookIdResponse,
+  HeliusWebhookResponse,
 } from "../types";
 import {
   createCollection,
@@ -96,6 +159,14 @@ import { monitorVotingOutcomes } from "../tools/realm/monitor_voting_outcomes";
 import { trackVotingPower } from "../tools/realm/track_voting_power";
 import { ProgramAccount, Proposal } from "@solana/spl-governance";
 import { castProposalVote, manageVoteDelegation } from "../tools/realm";
+import {
+  DasApiAsset,
+  DasApiAssetList,
+  GetAssetsByAuthorityRpcInput,
+  GetAssetsByCreatorRpcInput,
+  SearchAssetsRpcInput,
+} from "@metaplex-foundation/digital-asset-standard-api";
+import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -169,6 +240,19 @@ export class SolanaAgentKit {
 
   async getBalance(token_address?: PublicKey): Promise<number> {
     return get_balance(this, token_address);
+  }
+
+  async getTokenBalances(wallet_address?: PublicKey): Promise<{
+    sol: number;
+    tokens: Array<{
+      tokenAddress: string;
+      name: string;
+      symbol: string;
+      balance: number;
+      decimals: number;
+    }>;
+  }> {
+    return get_token_balance(this, wallet_address);
   }
 
   async getBalanceOther(
@@ -279,6 +363,14 @@ export class SolanaAgentKit {
     return lendAsset(this, amount);
   }
 
+  async luloLend(mintAddress: string, amount: number): Promise<string> {
+    return luloLend(this, mintAddress, amount);
+  }
+
+  async luloWithdraw(mintAddress: string, amount: number): Promise<string> {
+    return luloWithdraw(this, mintAddress, amount);
+  }
+
   async getTPS(): Promise<number> {
     return getTPS(this);
   }
@@ -340,6 +432,57 @@ export class SolanaAgentKit {
       recipients.map((recipient) => new PublicKey(recipient)),
       priorityFeeInLamports,
       shouldLog,
+    );
+  }
+
+  async meteoraCreateDynamicPool(
+    tokenAMint: PublicKey,
+    tokenBMint: PublicKey,
+    tokenAAmount: BN,
+    tokenBAmount: BN,
+    tradeFeeNumerator: number,
+    activationPoint: BN | null,
+    hasAlphaVault: boolean,
+    activationType: number,
+  ): Promise<string> {
+    return createMeteoraDynamicAMMPool(
+      this,
+      tokenAMint,
+      tokenBMint,
+      tokenAAmount,
+      tokenBAmount,
+      {
+        tradeFeeNumerator,
+        activationPoint,
+        hasAlphaVault,
+        activationType,
+        padding: new Array(90).fill(0),
+      },
+    );
+  }
+
+  async meteoraCreateDlmmPool(
+    tokenAMint: PublicKey,
+    tokenBMint: PublicKey,
+    binStep: number,
+    initialPrice: number,
+    priceRoundingUp: boolean,
+    feeBps: number,
+    activationType: number,
+    hasAlphaVault: boolean,
+    activationPoint: BN | undefined,
+  ): Promise<string> {
+    return createMeteoraDlmmPool(
+      this,
+      binStep,
+      tokenAMint,
+      tokenBMint,
+      initialPrice,
+      priceRoundingUp,
+      feeBps,
+      activationType,
+      hasAlphaVault,
+      activationPoint,
     );
   }
 
@@ -591,28 +734,74 @@ export class SolanaAgentKit {
   async flashCloseTrade(params: FlashCloseTradeParams): Promise<string> {
     return flashCloseTrade(this, params);
   }
+  async heliusParseTransactions(transactionId: string): Promise<any> {
+    return parseTransaction(this, transactionId);
+  }
+  async getAllAssetsbyOwner(owner: PublicKey, limit: number): Promise<any> {
+    return getAssetsByOwner(this, owner, limit);
+  }
 
   async create3LandCollection(
-    optionsWithBase58: StoreInitOptions,
     collectionOpts: CreateCollectionOptions,
+    isDevnet: boolean = false,
+    priorityFeeParam?: number,
   ): Promise<string> {
-    const tx = await createCollection(optionsWithBase58, collectionOpts);
+    const optionsWithBase58: StoreInitOptions = {
+      privateKey: this.wallet.secretKey,
+    };
+    if (isDevnet) {
+      optionsWithBase58.isMainnet = false;
+    } else {
+      optionsWithBase58.isMainnet = true;
+    }
+
+    const tx = await createCollection(
+      optionsWithBase58,
+      collectionOpts,
+      priorityFeeParam,
+    );
     return `Transaction: ${tx}`;
   }
 
   async create3LandNft(
-    optionsWithBase58: StoreInitOptions,
     collectionAccount: string,
     createItemOptions: CreateSingleOptions,
-    isMainnet: boolean,
+    isDevnet: boolean = false,
+    withPool: boolean = false,
+    priorityFeeParam?: number,
   ): Promise<string> {
+    const optionsWithBase58: StoreInitOptions = {
+      privateKey: this.wallet.secretKey,
+    };
+    if (isDevnet) {
+      optionsWithBase58.isMainnet = false;
+    } else {
+      optionsWithBase58.isMainnet = true;
+    }
+
     const tx = await createSingle(
       optionsWithBase58,
       collectionAccount,
       createItemOptions,
-      isMainnet,
+      !isDevnet,
+      withPool,
+      priorityFeeParam,
     );
     return `Transaction: ${tx}`;
+  }
+  async sendTranctionWithPriority(
+    priorityLevel: string,
+    amount: number,
+    to: PublicKey,
+    splmintAddress?: PublicKey,
+  ): Promise<{ transactionId: string; fee: number }> {
+    return sendTransactionWithPriorityFee(
+      this,
+      priorityLevel,
+      amount,
+      to,
+      splmintAddress,
+    );
   }
 
   async createSquadsMultisig(creator: PublicKey): Promise<string> {
@@ -624,7 +813,7 @@ export class SolanaAgentKit {
     vaultIndex: number = 0,
     mint?: PublicKey,
   ): Promise<string> {
-    return deposit_to_multisig(this, amount, vaultIndex, mint);
+    return multisig_deposit_to_treasury(this, amount, vaultIndex, mint);
   }
 
   async transferFromMultisig(
@@ -633,31 +822,279 @@ export class SolanaAgentKit {
     vaultIndex: number = 0,
     mint?: PublicKey,
   ): Promise<string> {
-    return transfer_from_multisig(this, amount, to, vaultIndex, mint);
+    return multisig_transfer_from_treasury(this, amount, to, vaultIndex, mint);
   }
 
   async createMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return create_proposal(this, transactionIndex);
+    return multisig_create_proposal(this, transactionIndex);
   }
 
   async approveMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return approve_proposal(this, transactionIndex);
+    return multisig_approve_proposal(this, transactionIndex);
   }
 
   async rejectMultisigProposal(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return reject_proposal(this, transactionIndex);
+    return multisig_reject_proposal(this, transactionIndex);
   }
 
   async executeMultisigTransaction(
     transactionIndex?: number | bigint,
   ): Promise<string> {
-    return execute_transaction(this, transactionIndex);
+    return multisig_execute_proposal(this, transactionIndex);
+  }
+  async CreateWebhook(
+    accountAddresses: string[],
+    webhookURL: string,
+  ): Promise<HeliusWebhookResponse> {
+    return create_HeliusWebhook(this, accountAddresses, webhookURL);
+  }
+  async getWebhook(id: string): Promise<HeliusWebhookIdResponse> {
+    return getHeliusWebhook(this, id);
+  }
+  async deleteWebhook(webhookID: string): Promise<any> {
+    return deleteHeliusWebhook(this, webhookID);
+  }
+
+  async createDriftUserAccount(depositAmount: number, depositSymbol: string) {
+    return await createDriftUserAccount(this, depositAmount, depositSymbol);
+  }
+
+  async createDriftVault(params: {
+    name: string;
+    marketName: `${string}-${string}`;
+    redeemPeriod: number;
+    maxTokens: number;
+    minDepositAmount: number;
+    managementFee: number;
+    profitShare: number;
+    hurdleRate?: number;
+    permissioned?: boolean;
+  }) {
+    return await createVault(this, params);
+  }
+
+  async depositIntoDriftVault(amount: number, vault: string) {
+    return await depositIntoVault(this, amount, vault);
+  }
+  async depositToDriftUserAccount(
+    amount: number,
+    symbol: string,
+    isRepayment?: boolean,
+  ) {
+    return await depositToDriftUserAccount(this, amount, symbol, isRepayment);
+  }
+  async deriveDriftVaultAddress(name: string) {
+    return await getVaultAddress(this, name);
+  }
+  async doesUserHaveDriftAccount() {
+    return await doesUserHaveDriftAccount(this);
+  }
+  async driftUserAccountInfo() {
+    return await driftUserAccountInfo(this);
+  }
+  async requestWithdrawalFromDriftVault(amount: number, vault: string) {
+    return await requestWithdrawalFromVault(this, amount, vault);
+  }
+  async tradeUsingDelegatedDriftVault(
+    vault: string,
+    amount: number,
+    symbol: string,
+    action: "long" | "short",
+    type: "market" | "limit",
+    price?: number,
+  ) {
+    return await tradeDriftVault(
+      this,
+      vault,
+      amount,
+      symbol,
+      action,
+      type,
+      price,
+    );
+  }
+  async tradeUsingDriftPerpAccount(
+    amount: number,
+    symbol: string,
+    action: "long" | "short",
+    type: "market" | "limit",
+    price?: number,
+  ) {
+    return await driftPerpTrade(this, { action, amount, symbol, type, price });
+  }
+  async updateDriftVault(
+    vaultAddress: string,
+    params: {
+      name: string;
+      marketName: `${string}-${string}`;
+      redeemPeriod: number;
+      maxTokens: number;
+      minDepositAmount: number;
+      managementFee: number;
+      profitShare: number;
+      hurdleRate?: number;
+      permissioned?: boolean;
+    },
+  ) {
+    return await updateVault(this, vaultAddress, params);
+  }
+  async getDriftVaultInfo(vaultName: string) {
+    return await getVaultInfo(this, vaultName);
+  }
+  async withdrawFromDriftAccount(
+    amount: number,
+    symbol: string,
+    isBorrow?: boolean,
+  ) {
+    return await withdrawFromDriftUserAccount(this, amount, symbol, isBorrow);
+  }
+  async withdrawFromDriftVault(vault: string) {
+    return await withdrawFromDriftVault(this, vault);
+  }
+  async updateDriftVaultDelegate(vaultAddress: string, delegate: string) {
+    return await updateVaultDelegate(this, vaultAddress, delegate);
+  }
+
+  getAvailableDriftMarkets(type?: "spot" | "perp") {
+    switch (type) {
+      case "spot":
+        return getAvailableDriftSpotMarkets();
+      case "perp":
+        return getAvailableDriftPerpMarkets();
+      default:
+        return {
+          spot: getAvailableDriftSpotMarkets(),
+          perp: getAvailableDriftPerpMarkets(),
+        };
+    }
+  }
+  async stakeToDriftInsuranceFund(amount: number, symbol: string) {
+    return await stakeToDriftInsuranceFund(this, amount, symbol);
+  }
+  async requestUnstakeFromDriftInsuranceFund(amount: number, symbol: string) {
+    return await requestUnstakeFromDriftInsuranceFund(this, amount, symbol);
+  }
+  async unstakeFromDriftInsuranceFund(symbol: string) {
+    return await unstakeFromDriftInsuranceFund(this, symbol);
+  }
+  async driftSpotTokenSwap(
+    params: {
+      fromSymbol: string;
+      toSymbol: string;
+      slippage?: number;
+    } & (
+      | {
+          toAmount: number;
+        }
+      | { fromAmount: number }
+    ),
+  ) {
+    return await swapSpotToken(this, {
+      fromSymbol: params.fromSymbol,
+      toSymbol: params.toSymbol,
+      // @ts-expect-error - fromAmount and toAmount are mutually exclusive
+      fromAmount: params.fromAmount,
+      // @ts-expect-error - fromAmount and toAmount are mutually exclusive
+      toAmount: params.toAmount,
+      slippage: params.slippage,
+    });
+  }
+  async getPerpMarketFundingRate(
+    symbol: `${string}-PERP`,
+    period: "year" | "hour" = "year",
+  ) {
+    return calculatePerpMarketFundingRate(this, symbol, period);
+  }
+  async getEntryQuoteOfPerpTrade(
+    amount: number,
+    symbol: `${string}-PERP`,
+    action: "short" | "long",
+  ) {
+    return getEntryQuoteOfPerpTrade(symbol, amount, action);
+  }
+  async getLendAndBorrowAPY(symbol: string) {
+    return getLendingAndBorrowAPY(this, symbol);
+  }
+
+  async voltrDepositStrategy(
+    depositAmount: BN,
+    vault: PublicKey,
+    strategy: PublicKey,
+  ): Promise<string> {
+    return voltrDepositStrategy(this, depositAmount, vault, strategy);
+  }
+
+  async voltrWithdrawStrategy(
+    withdrawAmount: BN,
+    vault: PublicKey,
+    strategy: PublicKey,
+  ): Promise<string> {
+    return voltrWithdrawStrategy(this, withdrawAmount, vault, strategy);
+  }
+
+  async voltrGetPositionValues(vault: PublicKey): Promise<string> {
+    return voltrGetPositionValues(this, vault);
+  }
+
+  async getAsset(assetId: string): Promise<DasApiAsset> {
+    return get_asset(this, assetId);
+  }
+  async getAssetsByAuthority(
+    params: GetAssetsByAuthorityRpcInput,
+  ): Promise<DasApiAssetList> {
+    return get_assets_by_authority(this, params);
+  }
+  async getAssetsByCreator(
+    params: GetAssetsByCreatorRpcInput,
+  ): Promise<DasApiAssetList> {
+    return get_assets_by_creator(this, params);
+  }
+
+  async swap(
+    amount: string,
+    fromChain: string,
+    fromToken: string,
+    toChain: string,
+    toToken: string,
+    dstAddr: string,
+    slippageBps?: number,
+  ): Promise<string> {
+    return swap(
+      this,
+      amount,
+      fromChain,
+      fromToken,
+      toChain,
+      toToken,
+      dstAddr,
+      slippageBps,
+    );
+  }
+
+  async getPriceInference(
+    tokenSymbol: string,
+    timeframe: string,
+  ): Promise<string> {
+    return getPriceInference(this, tokenSymbol, timeframe);
+  }
+  async getAllTopics(): Promise<AlloraTopic[]> {
+    return getAllTopics(this);
+  }
+  async getInferenceByTopicId(topicId: number): Promise<AlloraInference> {
+    return getInferenceByTopicId(this, topicId);
+  }
+
+  async simulateSwitchboardFeed(
+    feed: string,
+    crossbarUrl: string,
+  ): Promise<string> {
+    return simulate_switchboard_feed(this, feed, crossbarUrl);
   }
 
   async castProposalVote(

@@ -7,7 +7,7 @@ This agent showcases an ai guided market maker on Manifest, Solana's CLOB DEX. T
 
 - **Automated Quoting**: The agent automatically refreshes quotes on an interval.
 - **Reducing Complexity**: Designed to abstract away parameters for setting up market making.
-- **Random Model**: The market making introduces randomness to prevent front running or other negative botting behavoirs.
+- **Random Model**: The market making introduces randomness to prevent front running or other negative botting behaviors.
 
 
 ## Example
