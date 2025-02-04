@@ -64,7 +64,7 @@ export async function deploy_token(
       );
     }
 
-    builder.sendAndConfirm(umi, { confirm: { commitment: "finalized" } });
+    await builder.sendAndConfirm(umi, { confirm: { commitment: "processed" } });
 
     return {
       mint: toWeb3JsPublicKey(mint.publicKey),

@@ -14,6 +14,7 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "tool-summary": "tsx src/utils/analyzeTools.ts",
+    "tool-summary:langchain": "tsx src/utils/analyzeTools.ts --langchain",
     "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts"
   },
   "engines": {
@@ -80,6 +81,7 @@
     "form-data": "^4.0.1",
     "langchain": "^0.3.8",
     "openai": "^4.77.0",
+    "tiktoken": "^1.0.18",
     "typedoc": "^0.27.6",
     "zod": "^3.24.1"
   },
