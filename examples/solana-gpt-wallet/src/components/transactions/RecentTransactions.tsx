@@ -26,14 +26,15 @@ export const RecentTransactions = ({
                                    }: TransactionsProps) => {
     // Helper function to get explorer URL
     const getExplorerUrl = (path: string) => {
-        return `https://solscan.io${path}?cluster=devnet`;
+        return `https://solscan.io${path}?cluster=mainnet`;
     };
 
     // Format timestamp
-    const formatDate = (timestamp: number) => {
-        if (!timestamp) return 'Pending';
+    const formatDate = (timestamp?: number) => {
+        if (timestamp === undefined) return 'Pending';
         return new Date(timestamp * 1000).toLocaleString();
     };
+
 
     // Format address
     const formatAddress = (address: string) => {

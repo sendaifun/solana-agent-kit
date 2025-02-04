@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 
 interface WalletStore {
     balance: number;

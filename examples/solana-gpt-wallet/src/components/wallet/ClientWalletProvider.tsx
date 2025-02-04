@@ -7,15 +7,29 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { clusterApiUrl } from '@solana/web3.js';
+import { Connection } from '@solana/web3.js';
 
 interface Props {
     children: ReactNode;
 }
 
 export const ClientWalletProvider: FC<Props> = ({ children }) => {
-    const network = WalletAdapterNetwork.Devnet;
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+    // You can switch between 'mainnet-beta' and 'devnet'
+    const network = process.env.NEXT_PUBLIC_NETWORK === 'devnet'
+        ? WalletAdapterNetwork.Devnet
+        : WalletAdapterNetwork.Mainnet;
+
+    const endpoint = process.env.NEXT_PUBLIC_SOLANA_RPC_URL!;
+
+    // Custom connection configuration
+    const connection = useMemo(
+        () => new Connection(endpoint, {
+            commitment: 'confirmed',
+            confirmTransactionInitialTimeout: 60000,
+            disableRetryOnRateLimit: false,
+        }),
+        [endpoint]
+    );
 
     const wallets = useMemo(
         () => [
@@ -23,13 +37,15 @@ export const ClientWalletProvider: FC<Props> = ({ children }) => {
             new SolflareWalletAdapter(),
             new TorusWalletAdapter(),
         ],
-        []
+        [network]
     );
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
+        <ConnectionProvider endpoint={endpoint} config={{ commitment: 'confirmed' }}>
             <WalletProvider wallets={wallets} autoConnect>
-                <WalletModalProvider>{children}</WalletModalProvider>
+                <WalletModalProvider>
+                    {children}
+                </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>
     );

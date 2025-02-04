@@ -9,14 +9,14 @@ interface TransactionConfirmationProps {
     onCancel: () => void;
 }
 
-export const TransactionConfirmation = ({
-                                            amount,
-                                            toAddress,
-                                            onConfirm,
-                                            onCancel
-                                        }: TransactionConfirmationProps) => {
+const TransactionConfirmation: React.FC<TransactionConfirmationProps> = ({
+                                                                             amount,
+                                                                             toAddress,
+                                                                             onConfirm,
+                                                                             onCancel
+                                                                         }) => {
     return (
-        <div className="mt-4 p-4 rounded-lg bg-white/5 border border-yellow-500/50">
+        <div className="mt-4 p-4 rounded-lg bg-black/40 border border-yellow-500/50">
             <div className="flex items-start gap-3">
                 <AlertCircle className="w-5 h-5 text-yellow-500 mt-0.5" />
                 <div className="space-y-2 flex-1">
@@ -50,3 +50,5 @@ export const TransactionConfirmation = ({
         </div>
     );
 };
+
+export default TransactionConfirmation;
