@@ -56,7 +56,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Pyth Price feeds for fetching Asset Prices
   - Register/resolve Alldomains
   - Perpetuals Trading with Adrena Protocol
-  - Drift Vaults, Perps, Lending and Borrowing
+  <!-- - Drift Vaults, Perps, Lending and Borrowing -->
 
 - **Solana Blinks**
    - Lending by Lulo (Best APR for USDC)
@@ -309,7 +309,7 @@ const signature = await agent.closePerpTradeLong({
 const { signature } = await agent.closeEmptyTokenAccounts();
 ```
 
-### Create a Drift account
+<!-- ### Create a Drift account
 
 Create a drift account with an initial token deposit.
 
@@ -468,7 +468,7 @@ Update the address a drift vault is delegated to.
 
 ```typescript
 const signature = await agent.updateDriftVaultDelegate("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU", "new-address")
-```
+``` -->
 
 ### Get Voltr Vault Position Values
 
