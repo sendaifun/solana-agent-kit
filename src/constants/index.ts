@@ -12,6 +12,7 @@ export const TOKENS = {
   bSOL: new PublicKey("bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1"),
   mSOL: new PublicKey("mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So"),
   BONK: new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
+  wSOL: new PublicKey("So11111111111111111111111111111111111111112"),
 } as const;
 
 /**
@@ -47,3 +48,8 @@ export const METEORA_DLMM_PROGRAM_ID = new PublicKey(
  */
 export const MINIMUM_COMPUTE_PRICE_FOR_COMPLEX_ACTIONS =
   0.000003 * 1000000 * 1000000;
+
+// fluxbeam fee account
+export const FEE_ACCOUNT = new PublicKey(
+  "FLUXR4McuD2iXyP3wpP4XTjSWmB86ppMiyoA52UA9bKb",
+);

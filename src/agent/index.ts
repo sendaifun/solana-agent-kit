@@ -122,6 +122,8 @@ import {
   getPriceInference,
   getAllTopics,
   getInferenceByTopicId,
+  fluxbeamWrapSOL,
+  fluxbeamUnwrapSOL,
 } from "../tools";
 import {
   Config,
@@ -1069,5 +1071,12 @@ export class SolanaAgentKit {
   }
   async getInferenceByTopicId(topicId: number): Promise<AlloraInference> {
     return getInferenceByTopicId(this, topicId);
+  }
+  async fluxbeamWrapSOL(amount: number): Promise<string> {
+    return fluxbeamWrapSOL(this, amount);
+  }
+
+  async fluxbeamUnwrapSOL(amount: number): Promise<string> {
+    return fluxbeamUnwrapSOL(this, amount);
   }
 }

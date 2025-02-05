@@ -81,6 +81,8 @@ import getInfoAction from "./agent/get_info";
 import getPriceInferenceAction from "./allora/getPriceInference";
 import getAllTopicsAction from "./allora/getAllTopics";
 import getInferenceByTopicIdAction from "./allora/getInferenceByTopicId";
+import fluxbeamUnwrapSolAction from "./fluxbeam/fluxbeamUnwrapSolAction";
+import fluxbeamWrapSolAction from "./fluxbeam/fluxbeamWrapSolAction";
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -167,6 +169,8 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  FLUXBEAM_UNWRAP_SOL_ACTION: fluxbeamUnwrapSolAction,
+  FLUXBEAM_WRAP_SOL_ACTION: fluxbeamWrapSolAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
