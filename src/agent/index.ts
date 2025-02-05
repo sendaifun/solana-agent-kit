@@ -86,31 +86,31 @@ import {
   getHeliusWebhook,
   create_HeliusWebhook,
   deleteHeliusWebhook,
-  createDriftUserAccount,
-  createVault,
-  depositIntoVault,
-  depositToDriftUserAccount,
-  getVaultAddress,
-  doesUserHaveDriftAccount,
-  driftUserAccountInfo,
-  requestWithdrawalFromVault,
-  tradeDriftVault,
-  driftPerpTrade,
-  updateVault,
-  getVaultInfo,
-  withdrawFromDriftUserAccount,
-  withdrawFromDriftVault,
-  updateVaultDelegate,
+  // createDriftUserAccount,
+  // createVault,
+  // depositIntoVault,
+  // depositToDriftUserAccount,
+  // getVaultAddress,
+  // doesUserHaveDriftAccount,
+  // driftUserAccountInfo,
+  // requestWithdrawalFromVault,
+  // tradeDriftVault,
+  // driftPerpTrade,
+  // updateVault,
+  // getVaultInfo,
+  // withdrawFromDriftUserAccount,
+  // withdrawFromDriftVault,
+  // updateVaultDelegate,
+  // getAvailableDriftSpotMarkets,
+  // getAvailableDriftPerpMarkets,
+  // stakeToDriftInsuranceFund,
+  // requestUnstakeFromDriftInsuranceFund,
+  // unstakeFromDriftInsuranceFund,
+  // swapSpotToken,
+  // calculatePerpMarketFundingRate,
+  // getEntryQuoteOfPerpTrade,
+  // getLendingAndBorrowAPY,
   get_token_balance,
-  getAvailableDriftSpotMarkets,
-  getAvailableDriftPerpMarkets,
-  stakeToDriftInsuranceFund,
-  requestUnstakeFromDriftInsuranceFund,
-  unstakeFromDriftInsuranceFund,
-  swapSpotToken,
-  calculatePerpMarketFundingRate,
-  getEntryQuoteOfPerpTrade,
-  getLendingAndBorrowAPY,
   voltrGetPositionValues,
   voltrDepositStrategy,
   voltrWithdrawStrategy,
@@ -841,166 +841,166 @@ export class SolanaAgentKit {
     return deleteHeliusWebhook(this, webhookID);
   }
 
-  async createDriftUserAccount(depositAmount: number, depositSymbol: string) {
-    return await createDriftUserAccount(this, depositAmount, depositSymbol);
-  }
+  // async createDriftUserAccount(depositAmount: number, depositSymbol: string) {
+  //   return await createDriftUserAccount(this, depositAmount, depositSymbol);
+  // }
 
-  async createDriftVault(params: {
-    name: string;
-    marketName: `${string}-${string}`;
-    redeemPeriod: number;
-    maxTokens: number;
-    minDepositAmount: number;
-    managementFee: number;
-    profitShare: number;
-    hurdleRate?: number;
-    permissioned?: boolean;
-  }) {
-    return await createVault(this, params);
-  }
+  // async createDriftVault(params: {
+  //   name: string;
+  //   marketName: `${string}-${string}`;
+  //   redeemPeriod: number;
+  //   maxTokens: number;
+  //   minDepositAmount: number;
+  //   managementFee: number;
+  //   profitShare: number;
+  //   hurdleRate?: number;
+  //   permissioned?: boolean;
+  // }) {
+  //   return await createVault(this, params);
+  // }
 
-  async depositIntoDriftVault(amount: number, vault: string) {
-    return await depositIntoVault(this, amount, vault);
-  }
-  async depositToDriftUserAccount(
-    amount: number,
-    symbol: string,
-    isRepayment?: boolean,
-  ) {
-    return await depositToDriftUserAccount(this, amount, symbol, isRepayment);
-  }
-  async deriveDriftVaultAddress(name: string) {
-    return await getVaultAddress(this, name);
-  }
-  async doesUserHaveDriftAccount() {
-    return await doesUserHaveDriftAccount(this);
-  }
-  async driftUserAccountInfo() {
-    return await driftUserAccountInfo(this);
-  }
-  async requestWithdrawalFromDriftVault(amount: number, vault: string) {
-    return await requestWithdrawalFromVault(this, amount, vault);
-  }
-  async tradeUsingDelegatedDriftVault(
-    vault: string,
-    amount: number,
-    symbol: string,
-    action: "long" | "short",
-    type: "market" | "limit",
-    price?: number,
-  ) {
-    return await tradeDriftVault(
-      this,
-      vault,
-      amount,
-      symbol,
-      action,
-      type,
-      price,
-    );
-  }
-  async tradeUsingDriftPerpAccount(
-    amount: number,
-    symbol: string,
-    action: "long" | "short",
-    type: "market" | "limit",
-    price?: number,
-  ) {
-    return await driftPerpTrade(this, { action, amount, symbol, type, price });
-  }
-  async updateDriftVault(
-    vaultAddress: string,
-    params: {
-      name: string;
-      marketName: `${string}-${string}`;
-      redeemPeriod: number;
-      maxTokens: number;
-      minDepositAmount: number;
-      managementFee: number;
-      profitShare: number;
-      hurdleRate?: number;
-      permissioned?: boolean;
-    },
-  ) {
-    return await updateVault(this, vaultAddress, params);
-  }
-  async getDriftVaultInfo(vaultName: string) {
-    return await getVaultInfo(this, vaultName);
-  }
-  async withdrawFromDriftAccount(
-    amount: number,
-    symbol: string,
-    isBorrow?: boolean,
-  ) {
-    return await withdrawFromDriftUserAccount(this, amount, symbol, isBorrow);
-  }
-  async withdrawFromDriftVault(vault: string) {
-    return await withdrawFromDriftVault(this, vault);
-  }
-  async updateDriftVaultDelegate(vaultAddress: string, delegate: string) {
-    return await updateVaultDelegate(this, vaultAddress, delegate);
-  }
+  // async depositIntoDriftVault(amount: number, vault: string) {
+  //   return await depositIntoVault(this, amount, vault);
+  // }
+  // async depositToDriftUserAccount(
+  //   amount: number,
+  //   symbol: string,
+  //   isRepayment?: boolean,
+  // ) {
+  //   return await depositToDriftUserAccount(this, amount, symbol, isRepayment);
+  // }
+  // async deriveDriftVaultAddress(name: string) {
+  //   return await getVaultAddress(this, name);
+  // }
+  // async doesUserHaveDriftAccount() {
+  //   return await doesUserHaveDriftAccount(this);
+  // }
+  // async driftUserAccountInfo() {
+  //   return await driftUserAccountInfo(this);
+  // }
+  // async requestWithdrawalFromDriftVault(amount: number, vault: string) {
+  //   return await requestWithdrawalFromVault(this, amount, vault);
+  // }
+  // async tradeUsingDelegatedDriftVault(
+  //   vault: string,
+  //   amount: number,
+  //   symbol: string,
+  //   action: "long" | "short",
+  //   type: "market" | "limit",
+  //   price?: number,
+  // ) {
+  //   return await tradeDriftVault(
+  //     this,
+  //     vault,
+  //     amount,
+  //     symbol,
+  //     action,
+  //     type,
+  //     price,
+  //   );
+  // }
+  // async tradeUsingDriftPerpAccount(
+  //   amount: number,
+  //   symbol: string,
+  //   action: "long" | "short",
+  //   type: "market" | "limit",
+  //   price?: number,
+  // ) {
+  //   return await driftPerpTrade(this, { action, amount, symbol, type, price });
+  // }
+  // async updateDriftVault(
+  //   vaultAddress: string,
+  //   params: {
+  //     name: string;
+  //     marketName: `${string}-${string}`;
+  //     redeemPeriod: number;
+  //     maxTokens: number;
+  //     minDepositAmount: number;
+  //     managementFee: number;
+  //     profitShare: number;
+  //     hurdleRate?: number;
+  //     permissioned?: boolean;
+  //   },
+  // ) {
+  //   return await updateVault(this, vaultAddress, params);
+  // }
+  // async getDriftVaultInfo(vaultName: string) {
+  //   return await getVaultInfo(this, vaultName);
+  // }
+  // async withdrawFromDriftAccount(
+  //   amount: number,
+  //   symbol: string,
+  //   isBorrow?: boolean,
+  // ) {
+  //   return await withdrawFromDriftUserAccount(this, amount, symbol, isBorrow);
+  // }
+  // async withdrawFromDriftVault(vault: string) {
+  //   return await withdrawFromDriftVault(this, vault);
+  // }
+  // async updateDriftVaultDelegate(vaultAddress: string, delegate: string) {
+  //   return await updateVaultDelegate(this, vaultAddress, delegate);
+  // }
 
-  getAvailableDriftMarkets(type?: "spot" | "perp") {
-    switch (type) {
-      case "spot":
-        return getAvailableDriftSpotMarkets();
-      case "perp":
-        return getAvailableDriftPerpMarkets();
-      default:
-        return {
-          spot: getAvailableDriftSpotMarkets(),
-          perp: getAvailableDriftPerpMarkets(),
-        };
-    }
-  }
-  async stakeToDriftInsuranceFund(amount: number, symbol: string) {
-    return await stakeToDriftInsuranceFund(this, amount, symbol);
-  }
-  async requestUnstakeFromDriftInsuranceFund(amount: number, symbol: string) {
-    return await requestUnstakeFromDriftInsuranceFund(this, amount, symbol);
-  }
-  async unstakeFromDriftInsuranceFund(symbol: string) {
-    return await unstakeFromDriftInsuranceFund(this, symbol);
-  }
-  async driftSpotTokenSwap(
-    params: {
-      fromSymbol: string;
-      toSymbol: string;
-      slippage?: number;
-    } & (
-      | {
-          toAmount: number;
-        }
-      | { fromAmount: number }
-    ),
-  ) {
-    return await swapSpotToken(this, {
-      fromSymbol: params.fromSymbol,
-      toSymbol: params.toSymbol,
-      // @ts-expect-error - fromAmount and toAmount are mutually exclusive
-      fromAmount: params.fromAmount,
-      // @ts-expect-error - fromAmount and toAmount are mutually exclusive
-      toAmount: params.toAmount,
-      slippage: params.slippage,
-    });
-  }
-  async getPerpMarketFundingRate(
-    symbol: `${string}-PERP`,
-    period: "year" | "hour" = "year",
-  ) {
-    return calculatePerpMarketFundingRate(this, symbol, period);
-  }
-  async getEntryQuoteOfPerpTrade(
-    amount: number,
-    symbol: `${string}-PERP`,
-    action: "short" | "long",
-  ) {
-    return getEntryQuoteOfPerpTrade(symbol, amount, action);
-  }
-  async getLendAndBorrowAPY(symbol: string) {
-    return getLendingAndBorrowAPY(this, symbol);
-  }
+  // getAvailableDriftMarkets(type?: "spot" | "perp") {
+  //   switch (type) {
+  //     case "spot":
+  //       return getAvailableDriftSpotMarkets();
+  //     case "perp":
+  //       return getAvailableDriftPerpMarkets();
+  //     default:
+  //       return {
+  //         spot: getAvailableDriftSpotMarkets(),
+  //         perp: getAvailableDriftPerpMarkets(),
+  //       };
+  //   }
+  // }
+  // async stakeToDriftInsuranceFund(amount: number, symbol: string) {
+  //   return await stakeToDriftInsuranceFund(this, amount, symbol);
+  // }
+  // async requestUnstakeFromDriftInsuranceFund(amount: number, symbol: string) {
+  //   return await requestUnstakeFromDriftInsuranceFund(this, amount, symbol);
+  // }
+  // async unstakeFromDriftInsuranceFund(symbol: string) {
+  //   return await unstakeFromDriftInsuranceFund(this, symbol);
+  // }
+  // async driftSpotTokenSwap(
+  //   params: {
+  //     fromSymbol: string;
+  //     toSymbol: string;
+  //     slippage?: number;
+  //   } & (
+  //     | {
+  //         toAmount: number;
+  //       }
+  //     | { fromAmount: number }
+  //   ),
+  // ) {
+  //   return await swapSpotToken(this, {
+  //     fromSymbol: params.fromSymbol,
+  //     toSymbol: params.toSymbol,
+  //     // @ts-expect-error - fromAmount and toAmount are mutually exclusive
+  //     fromAmount: params.fromAmount,
+  //     // @ts-expect-error - fromAmount and toAmount are mutually exclusive
+  //     toAmount: params.toAmount,
+  //     slippage: params.slippage,
+  //   });
+  // }
+  // async getPerpMarketFundingRate(
+  //   symbol: `${string}-PERP`,
+  //   period: "year" | "hour" = "year",
+  // ) {
+  //   return calculatePerpMarketFundingRate(this, symbol, period);
+  // }
+  // async getEntryQuoteOfPerpTrade(
+  //   amount: number,
+  //   symbol: `${string}-PERP`,
+  //   action: "short" | "long",
+  // ) {
+  //   return getEntryQuoteOfPerpTrade(symbol, amount, action);
+  // }
+  // async getLendAndBorrowAPY(symbol: string) {
+  //   return getLendingAndBorrowAPY(this, symbol);
+  // }
 
   async voltrDepositStrategy(
     depositAmount: BN,
