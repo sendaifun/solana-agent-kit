@@ -122,6 +122,10 @@ import {
   getPriceInference,
   getAllTopics,
   getInferenceByTopicId,
+  getSupportedChains,
+  createBridgeOrder,
+  checkTransactionStatus,
+  executeBridgeOrder,
   closeAccounts,
   burnTokens,
   mergeTokens,
@@ -146,6 +150,10 @@ import {
   FlashCloseTradeParams,
   HeliusWebhookIdResponse,
   HeliusWebhookResponse,
+  BridgeOrderInput,
+  SupportedChainsResponse,
+  BridgeOrderResponse,
+  BridgeOrderStatusResponse
 } from "../types";
 import {
   DasApiAsset,
@@ -1106,5 +1114,21 @@ export class SolanaAgentKit {
     crossbarUrl: string,
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
+  }
+
+  async getBridgeSupportedChains(): Promise<SupportedChainsResponse> {
+    return getSupportedChains();
+  }
+
+  async createBridgeOrder(orderInput: BridgeOrderInput): Promise<BridgeOrderResponse> {
+    return createBridgeOrder(orderInput);
+  }
+
+  async checkBridgeStatus(txHashOrOrderId: string): Promise<BridgeOrderStatusResponse[]> {
+    return checkTransactionStatus(this, txHashOrOrderId);
+  }
+
+  async bridge(orderData: string): Promise<string> {
+    return executeBridgeOrder(this, orderData);
   }
 }

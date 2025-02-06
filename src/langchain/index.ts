@@ -32,6 +32,7 @@ export * from "./mayan";
 export * from "./allora";
 export * from "./solutiofi";
 export * from "./switchboard";
+export * from "./debridge";
 
 import type { SolanaAgentKit } from "../agent";
 import {

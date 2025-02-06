@@ -90,6 +90,11 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import getSupportedChainsAction from "./debridge/getSupportedChains";
+import getTokensInfoAction from "./debridge/getTokensInfo";
+import createBridgeOrderAction from "./debridge/createBridgeOrder";
+import executeBridgeOrderAction from "./debridge/executeBridgeOrder";
+import checkTransactionStatusAction from "./debridge/checkTransactionStatus";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -183,6 +188,11 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  GET_SUPPORTED_CHAINS_ACTION: getSupportedChainsAction,
+  GET_TOKENS_INFO_ACTION: getTokensInfoAction,
+  CREATE_BRIDGE_ORDER_ACTION: createBridgeOrderAction,
+  CHECK_BRIDGE_TRANSACTION_STATUS_ACTION: checkTransactionStatusAction,
+  EXECUTE_BRIDGE_ORDER_ACTION: executeBridgeOrderAction,
   SOLUTIOFI_CLOSE_ACCOUNTS_ACTION: closeAccountsAction,
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
