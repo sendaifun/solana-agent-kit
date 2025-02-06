@@ -33,6 +33,7 @@ import launchPumpfunTokenAction from "./pumpfun/launchPumpfunToken";
 import getWalletAddressAction from "./agent/getWalletAddress";
 import flashOpenTradeAction from "./flash/flashOpenTrade";
 import flashCloseTradeAction from "./flash/flashCloseTrade";
+import fluxbeamCreatePoolAction from "./fluxbeam/createPool";
 import createMultisigAction from "./squads/createMultisig";
 import approveMultisigProposalAction from "./squads/approveMultisigProposal";
 import createMultisigProposalAction from "./squads/createMultisigProposal";
@@ -135,6 +136,7 @@ export const ACTIONS = {
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  FLUXBEAM_CREATE_POOL_ACTION: fluxbeamCreatePoolAction,
   CREATE_MULTISIG_ACTION: createMultisigAction,
   DEPOSIT_TO_MULTISIG_ACTION: depositToMultisigAction,
   TRANSFER_FROM_MULTISIG_ACTION: transferFromMultisigAction,

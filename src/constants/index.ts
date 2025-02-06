@@ -53,3 +53,15 @@ export const MINIMUM_COMPUTE_PRICE_FOR_COMPLEX_ACTIONS =
  * https://docs.switchboard.xyz/docs/switchboard/crossbar-and-task-runner
  */
 export const SWITCHBOARD_DEFAULT_CROSSBAR = "https://crossbar.switchboard.xyz";
+/**
+ * Fluxbeam constants
+ */
+// fluxbeam fee account
+export const FEE_ACCOUNT = new PublicKey(
+  "FLUXR4McuD2iXyP3wpP4XTjSWmB86ppMiyoA52UA9bKb",
+);
+
+export const FLUXBEAM_BASE_URI = "https://api.fluxbeam.xyz/v1";
+export const FLUXBEAM_SWAP_PROGRAM_ID = new PublicKey(
+  "FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X",
+);

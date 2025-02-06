@@ -19,7 +19,6 @@ export class SolanaBalanceOtherTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const { walletAddress, tokenAddress } = JSON.parse(input);
-
       const tokenPubKey = tokenAddress
         ? new PublicKey(tokenAddress)
         : undefined;
