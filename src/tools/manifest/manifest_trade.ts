@@ -79,7 +79,7 @@ export async function limitOrder(
     };
 
     const depositPlaceOrderIx: TransactionInstruction[] =
-      await mfxClient.placeOrderWithRequiredDepositIx(
+      await mfxClient.placeOrderWithRequiredDepositIxs(
         agent.wallet.publicKey,
         orderParams,
       );
