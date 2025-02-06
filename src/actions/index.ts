@@ -33,6 +33,10 @@ import launchPumpfunTokenAction from "./pumpfun/launchPumpfunToken";
 import getWalletAddressAction from "./agent/getWalletAddress";
 import flashOpenTradeAction from "./flash/flashOpenTrade";
 import flashCloseTradeAction from "./flash/flashCloseTrade";
+import manageVoteDelegationAction from "./realm/manageVotingDelegation";
+import monitorVotingOutcomesAction from "./realm/manageVotingOutcomes";
+import trackVotingPowerAction from "./realm/trackVotingPower";
+import castGovernanceVoteAction from "./realm/castGovernanceVoteAction";
 import createMultisigAction from "./squads/createMultisig";
 import approveMultisigProposalAction from "./squads/approveMultisigProposal";
 import createMultisigProposalAction from "./squads/createMultisigProposal";
@@ -135,6 +139,10 @@ export const ACTIONS = {
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  MANAGE_VOTING_DELEGATION: manageVoteDelegationAction,
+  MANAGE_VOTING_OUTCOMES: monitorVotingOutcomesAction,
+  TRACK_VOTING_POWER: trackVotingPowerAction,
+  CAST_VOTE_ACTION: castGovernanceVoteAction,
   CREATE_MULTISIG_ACTION: createMultisigAction,
   DEPOSIT_TO_MULTISIG_ACTION: depositToMultisigAction,
   TRANSFER_FROM_MULTISIG_ACTION: transferFromMultisigAction,

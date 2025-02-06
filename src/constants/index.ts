@@ -36,6 +36,13 @@ export const JUP_API = "https://quote-api.jup.ag/v6";
 export const JUP_REFERRAL_ADDRESS =
   "REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3";
 
+
+/**
+ * Governance Program Address
+ */
+
+export const GOVERNANCE_PROGRAM_ADDRESS =
+  "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw";
 export const METEORA_DYNAMIC_AMM_PROGRAM_ID = new PublicKey(
   "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
 );

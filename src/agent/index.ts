@@ -1,4 +1,4 @@
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import bs58 from "bs58";
 import Decimal from "decimal.js";
@@ -147,6 +147,26 @@ import {
   HeliusWebhookIdResponse,
   HeliusWebhookResponse,
 } from "../types";
+import {
+  createCollection,
+  createSingle,
+} from "../tools/3land/create_3land_collectible";
+import {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+  StoreInitOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { create_squads_multisig } from "../tools/squads_multisig/create_multisig";
+import { deposit_to_multisig } from "../tools/squads_multisig/deposit_to_multisig";
+import { transfer_from_multisig } from "../tools/squads_multisig/transfer_from_multisig";
+import { create_proposal } from "../tools/squads_multisig/create_proposal";
+import { approve_proposal } from "../tools/squads_multisig/approve_proposal";
+import { execute_transaction } from "../tools/squads_multisig/execute_proposal";
+import { reject_proposal } from "../tools/squads_multisig/reject_proposal";
+import { monitorVotingOutcomes } from "../tools/realm/monitor_voting_outcomes";
+import { trackVotingPower } from "../tools/realm/track_voting_power";
+import { ProgramAccount, Proposal } from "@solana/spl-governance";
+import { castProposalVote, manageVoteDelegation } from "../tools/realm";
 import {
   DasApiAsset,
   DasApiAssetList,
@@ -1106,5 +1126,33 @@ export class SolanaAgentKit {
     crossbarUrl: string,
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
+  }
+
+  async castProposalVote(
+    realmID: PublicKey,
+    proposalID: PublicKey,
+    voteType: "yes" | "no",
+  ) {
+    return castProposalVote(this, realmID, proposalID, voteType);
+  }
+
+  async monitorVotingOutcomes(
+    proposalId: PublicKey,
+  ): Promise<ProgramAccount<Proposal>> {
+    return monitorVotingOutcomes(this, proposalId);
+  }
+
+  async trackVotingPower(tokenOwnerRecordPk: PublicKey): Promise<number> {
+    return trackVotingPower(this, tokenOwnerRecordPk);
+  }
+
+  async manageVoteDelegation(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    delegate: PublicKey,
+  ): Promise<string> {
+    return manageVoteDelegation(
+      this, realm, governingTokenMint, delegate
+    );
   }
 }
