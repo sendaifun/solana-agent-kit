@@ -155,6 +155,15 @@ import {
   SearchAssetsRpcInput,
 } from "@metaplex-foundation/digital-asset-standard-api";
 import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
+import {
+  pingElfaAiApi,
+  getElfaAiApiKeyStatus,
+  getSmartMentions,
+  getTopMentionsByTicker,
+  searchMentionsByKeywords,
+  getTrendingTokens,
+  getSmartTwitterAccountStats,
+} from "../tools/elfa_ai";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1106,5 +1115,67 @@ export class SolanaAgentKit {
     crossbarUrl: string,
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
+  }
+
+  async pingElfaAiApi(): Promise<any> {
+    const response = await pingElfaAiApi(this);
+    return response;
+  }
+
+  async getElfaAiApiKeyStatus(): Promise<any> {
+    const response = await getElfaAiApiKeyStatus(this);
+    return response;
+  }
+
+  async getSmartMentions(
+    limit: number = 100,
+    offset: number = 0,
+  ): Promise<any> {
+    const response = await getSmartMentions(this, limit, offset);
+    return response;
+  }
+
+  async getTopMentionsByTicker(
+    ticker: string,
+    timeWindow: string = "1h",
+    page: number = 1,
+    pageSize: number = 10,
+    includeAccountDetails: boolean = false,
+  ): Promise<any> {
+    const response = await getTopMentionsByTicker(
+      this,
+      ticker,
+      timeWindow,
+      page,
+      pageSize,
+      includeAccountDetails,
+    );
+    return response;
+  }
+
+  async searchMentionsByKeywords(
+    keywords: string,
+    from: number,
+    to: number,
+    limit: number = 20,
+  ): Promise<any> {
+    const response = await searchMentionsByKeywords(
+      this,
+      keywords,
+      from,
+      to,
+      limit,
+    );
+    return response;
+  }
+
+  async getTrendingTokens(): Promise<any> {
+    const response = await getTrendingTokens(this);
+    return response;
+  }
+
+  async getSmartTwitterAccountStats(username: string): Promise<any> {
+    const response = await getSmartTwitterAccountStats(this, username);
+    return response;
   }
 }

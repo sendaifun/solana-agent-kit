@@ -90,6 +90,13 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import { elfaPingAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaApiKeyStatusAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaGetSmartMentionsAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaGetTopMentionsByTickerAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaSearchMentionsByKeywordsAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaTrendingTokensAction } from "./elfa_ai/elfa_ai_actions";
+import { elfaSmartTwitterAccountStats } from "./elfa_ai/elfa_ai_actions";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -183,6 +190,13 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  ELFA_PING_ACTION: elfaPingAction,
+  ELFA_API_KEY_STATUS_ACTION: elfaApiKeyStatusAction,
+  ELFA_GET_SMART_MENTIONS_ACTION: elfaGetSmartMentionsAction,
+  ELFA_GET_TOP_MENTIONS_BY_TICKER_ACTION: elfaGetTopMentionsByTickerAction,
+  ELFA_SEARCH_MENTIONS_BY_KEYWORDS_ACTION: elfaSearchMentionsByKeywordsAction,
+  ELFA_TRENDING_TOKENS_ACTION: elfaTrendingTokensAction,
+  ELFA_SMART_TWITTER_ACCOUNT_STATS_ACTION: elfaSmartTwitterAccountStats,
   SOLUTIOFI_CLOSE_ACCOUNTS_ACTION: closeAccountsAction,
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
