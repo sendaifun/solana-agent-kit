@@ -29,4 +29,5 @@ export * from "./helius";
 export * from "./voltr";
 export * from "./mayan";
 export * from "./allora";
+export * from "./solutiofi";
 export * from "./switchboard";

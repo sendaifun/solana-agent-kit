@@ -12,6 +12,7 @@ export interface Config {
   FLEXLEND_API_KEY?: string;
   HELIUS_API_KEY?: string;
   PRIORITY_LEVEL?: string; // medium, high, or veryHigh
+  SOLUTIOFI_API_KEY?: string;
   ETHEREUM_PRIVATE_KEY?: string;
   ALLORA_API_KEY?: string;
   ALLORA_API_URL?: string;

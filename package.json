@@ -64,6 +64,7 @@
     "@raydium-io/raydium-sdk-v2": "0.1.95-alpha",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.98.0",
+    "@solutiofi/sdk": "^1.0.2",
     "@sqds/multisig": "^2.1.3",
     "@switchboard-xyz/common": "^2.5.15",
     "@tensor-oss/tensorswap-sdk": "^4.5.0",
