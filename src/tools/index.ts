@@ -33,3 +33,4 @@ export * from "./allora";
 export * from "./solutiofi";
 export * from "./switchboard";
 export * from "./fluxbeam";
+export * from "./orbofi";

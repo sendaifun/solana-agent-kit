@@ -135,6 +135,7 @@ import {
   TargetTokenStruct,
   InputAssetStruct,
   fluxBeamCreatePool,
+  fetchOrbofiPersonality
 } from "../tools";
 import {
   Config,
@@ -1157,5 +1158,9 @@ export class SolanaAgentKit {
       token_b,
       token_b_amount,
     );
+  }
+
+  async fetchOrbofiPersonalityPrompt(celebrity_name: string) {
+    return fetchOrbofiPersonality(celebrity_name);
   }
 }

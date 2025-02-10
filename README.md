@@ -610,6 +610,15 @@ Note: When bridging between chains:
 - From Solana: Use EVM addresses for recipients and ERC-20 format for tokens
 - Always verify addresses and amounts before executing bridge transactions
 
+### Search 2 million+ celebrities/character System Prompts via Orbofi Database. 
+
+Find one of to 2 million + celebrity/character system prompts by searching any name
+
+```typescript
+const result = await agent.fetchOrbofiPersonalityPrompt("Satoshi Nakamoto"); 
+console.log("Resulting system prompt:", result);
+```
+
 ## Examples
 
 ### LangGraph Multi-Agent System

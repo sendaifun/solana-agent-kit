@@ -34,6 +34,7 @@ export * from "./solutiofi";
 export * from "./switchboard";
 export * from "./debridge";
 export * from "./fluxbeam";
+export * from "./orbofi";
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
@@ -149,6 +150,7 @@ import {
   SolanaSpreadTokenTool,
   SolanaSwitchboardSimulateFeed,
   SolanaFluxbeamCreatePoolTool,
+  SolanaOrbofiPersonalityFinder
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -266,5 +268,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaSpreadTokenTool(solanaKit),
     new SolanaAlloraGetPriceInference(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
+    new SolanaOrbofiPersonalityFinder(solanaKit)
   ];
 }

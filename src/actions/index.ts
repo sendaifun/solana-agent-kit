@@ -96,6 +96,7 @@ import getDebridgeTokensInfoAction from "./debridge/getTokensInfo";
 import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
 import executeDebridgeBridgeOrderAction from "./debridge/executeBridgeOrder";
 import checkDebridgeTransactionStatusAction from "./debridge/checkTransactionStatus";
+import getPersonalitySystemPromptAction from "./orbofi/fetchOrbofiPersonality";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -200,6 +201,7 @@ export const ACTIONS = {
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
   SOLUTIOFI_SPREAD_TOKEN_ACTION: spreadTokenAction,
+  GET_PERSONALITY_SYSTEM_PROMPT: getPersonalitySystemPromptAction
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
