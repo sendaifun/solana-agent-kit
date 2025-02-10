@@ -122,14 +122,19 @@ import {
   getPriceInference,
   getAllTopics,
   getInferenceByTopicId,
+  getDebridgeSupportedChains,
+  getDebridgeTokensInfo,
+  createDebridgeBridgeOrder,
+  checkDebridgeTransactionStatus,
+  executeDebridgeBridgeOrder,
   closeAccounts,
   burnTokens,
   mergeTokens,
   spreadToken,
-  AssetType,
   PriorityFee,
   TargetTokenStruct,
   InputAssetStruct,
+  fluxBeamCreatePool,
 } from "../tools";
 import {
   Config,
@@ -146,13 +151,17 @@ import {
   FlashCloseTradeParams,
   HeliusWebhookIdResponse,
   HeliusWebhookResponse,
+  deBridgeOrderInput,
+  deBridgeSupportedChainsResponse,
+  deBridgeOrderResponse,
+  deBridgeOrderStatusResponse,
+  deBridgeTokensInfoResponse,
 } from "../types";
 import {
   DasApiAsset,
   DasApiAssetList,
   GetAssetsByAuthorityRpcInput,
   GetAssetsByCreatorRpcInput,
-  SearchAssetsRpcInput,
 } from "@metaplex-foundation/digital-asset-standard-api";
 import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 
@@ -1106,5 +1115,47 @@ export class SolanaAgentKit {
     crossbarUrl: string,
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
+  }
+
+  async getDebridgeSupportedChains(): Promise<deBridgeSupportedChainsResponse> {
+    return getDebridgeSupportedChains();
+  }
+
+  async getDebridgeTokensInfo(
+    chainId: string,
+    search?: string,
+  ): Promise<deBridgeTokensInfoResponse> {
+    return getDebridgeTokensInfo({ chainId, search });
+  }
+
+  async createDebridgeOrder(
+    orderInput: deBridgeOrderInput,
+  ): Promise<deBridgeOrderResponse> {
+    return createDebridgeBridgeOrder(orderInput);
+  }
+
+  async executeDebridgeOrder(transactionData: string): Promise<string> {
+    return executeDebridgeBridgeOrder(this, transactionData);
+  }
+
+  async checkDebridgeTransactionStatus(
+    txHashOrOrderId: string,
+  ): Promise<deBridgeOrderStatusResponse[]> {
+    return checkDebridgeTransactionStatus(this, txHashOrOrderId);
+  }
+
+  async fluxbeamCreatePool(
+    token_a: PublicKey,
+    token_a_amount: number,
+    token_b: PublicKey,
+    token_b_amount: number,
+  ): Promise<string> {
+    return fluxBeamCreatePool(
+      this,
+      token_a,
+      token_a_amount,
+      token_b,
+      token_b_amount,
+    );
   }
 }

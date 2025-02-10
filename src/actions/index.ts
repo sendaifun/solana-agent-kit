@@ -33,6 +33,7 @@ import launchPumpfunTokenAction from "./pumpfun/launchPumpfunToken";
 import getWalletAddressAction from "./agent/getWalletAddress";
 import flashOpenTradeAction from "./flash/flashOpenTrade";
 import flashCloseTradeAction from "./flash/flashCloseTrade";
+import fluxbeamCreatePoolAction from "./fluxbeam/createPool";
 import createMultisigAction from "./squads/createMultisig";
 import approveMultisigProposalAction from "./squads/approveMultisigProposal";
 import createMultisigProposalAction from "./squads/createMultisigProposal";
@@ -90,6 +91,11 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import getDebridgeSupportedChainsAction from "./debridge/getSupportedChains";
+import getDebridgeTokensInfoAction from "./debridge/getTokensInfo";
+import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
+import executeDebridgeBridgeOrderAction from "./debridge/executeBridgeOrder";
+import checkDebridgeTransactionStatusAction from "./debridge/checkTransactionStatus";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -135,6 +141,7 @@ export const ACTIONS = {
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  FLUXBEAM_CREATE_POOL_ACTION: fluxbeamCreatePoolAction,
   CREATE_MULTISIG_ACTION: createMultisigAction,
   DEPOSIT_TO_MULTISIG_ACTION: depositToMultisigAction,
   TRANSFER_FROM_MULTISIG_ACTION: transferFromMultisigAction,
@@ -183,6 +190,12 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  DEBRIDGE_GET_SUPPORTED_CHAINS_ACTION: getDebridgeSupportedChainsAction,
+  DEBRIDGE_GET_TOKENS_INFO_ACTION: getDebridgeTokensInfoAction,
+  DEBRIDGE_CREATE_BRIDGE_ORDER_ACTION: createDebridgeBridgeOrderAction,
+  DEBRIDGE_CHECK_TRANSACTION_STATUS_ACTION:
+    checkDebridgeTransactionStatusAction,
+  DEBRIDGE_EXECUTE_BRIDGE_ORDER_ACTION: executeDebridgeBridgeOrderAction,
   SOLUTIOFI_CLOSE_ACCOUNTS_ACTION: closeAccountsAction,
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
