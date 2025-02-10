@@ -1,4 +1,4 @@
-<div align="center">
+<div align="up">
 
 # Solana Agent Kit
 
