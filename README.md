@@ -57,6 +57,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Register/resolve Alldomains
   - Perpetuals Trading with Adrena Protocol
   - Drift Vaults, Perps, Lending and Borrowing
+  - Cross-chain bridging via deBridge DLN
 
 - **Solana Blinks**
    - Lending by Lulo (Best APR for USDC)
@@ -556,6 +557,58 @@ const signature = await agent.swap(
 );
 
 ```
+
+### Cross-Chain Bridge via deBridge
+
+The Solana Agent Kit supports cross-chain token transfers using deBridge's DLN protocol. Here's how to use it:
+
+1. Check supported chains:
+```typescript
+const chains = await agent.getDebridgeSupportedChains();
+console.log("Available chains:", chains);
+// Example output: { chains: [{ chainId: "1", chainName: "Ethereum" }, { chainId: "7565164", chainName: "Solana" }] }
+```
+
+2. Get available tokens (optional):
+```typescript
+const tokens = await agent.getDebridgeTokensInfo("1", "USDC"); // Search for USDC on Ethereum
+console.log("Available tokens:", tokens);
+// Shows tokens matching 'USDC' on the specified chain
+```
+
+3. Create bridge order (SOL -> ETH):
+```typescript
+const orderInput = {
+  srcChainId: "7565164", // Solana
+  srcChainTokenIn: "11111111111111111111111111111111", // Native SOL
+  srcChainTokenInAmount: "1000000000", // 1 SOL (9 decimals)
+  dstChainId: "1", // Ethereum
+  dstChainTokenOut: "0x0000000000000000000000000000000000000000", // ETH
+  dstChainTokenOutRecipient: "0x23C279e58ddF1018C3B9D0C224534fA2a83fb1d2" // ETH recipient
+};
+
+const order = await agent.createDebridgeOrder(orderInput);
+console.log("Order created:", order);
+// Contains transaction data and estimated amounts
+```
+
+4. Execute the bridge order:
+```typescript
+const signature = await agent.executeDebridgeOrder(order.tx.data);
+console.log("Bridge transaction sent:", signature);
+```
+
+5. Check bridge status:
+```typescript
+const status = await agent.checkDebridgeTransactionStatus(signature);
+console.log("Bridge status:", status);
+// Shows current status: Created, Fulfilled, etc.
+```
+
+Note: When bridging between chains:
+- To Solana: Use base58 addresses for recipients and token mints
+- From Solana: Use EVM addresses for recipients and ERC-20 format for tokens
+- Always verify addresses and amounts before executing bridge transactions
 
 ## Examples
 

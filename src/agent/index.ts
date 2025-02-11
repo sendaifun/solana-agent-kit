@@ -122,6 +122,11 @@ import {
   getPriceInference,
   getAllTopics,
   getInferenceByTopicId,
+  getDebridgeSupportedChains,
+  getDebridgeTokensInfo,
+  createDebridgeBridgeOrder,
+  checkDebridgeTransactionStatus,
+  executeDebridgeBridgeOrder,
   closeAccounts,
   burnTokens,
   mergeTokens,
@@ -146,6 +151,11 @@ import {
   FlashCloseTradeParams,
   HeliusWebhookIdResponse,
   HeliusWebhookResponse,
+  deBridgeOrderInput,
+  deBridgeSupportedChainsResponse,
+  deBridgeOrderResponse,
+  deBridgeOrderStatusResponse,
+  deBridgeTokensInfoResponse,
 } from "../types";
 import {
   DasApiAsset,
@@ -1106,6 +1116,34 @@ export class SolanaAgentKit {
   ): Promise<string> {
     return simulate_switchboard_feed(this, feed, crossbarUrl);
   }
+
+  async getDebridgeSupportedChains(): Promise<deBridgeSupportedChainsResponse> {
+    return getDebridgeSupportedChains();
+  }
+
+  async getDebridgeTokensInfo(
+    chainId: string,
+    search?: string,
+  ): Promise<deBridgeTokensInfoResponse> {
+    return getDebridgeTokensInfo({ chainId, search });
+  }
+
+  async createDebridgeOrder(
+    orderInput: deBridgeOrderInput,
+  ): Promise<deBridgeOrderResponse> {
+    return createDebridgeBridgeOrder(orderInput);
+  }
+
+  async executeDebridgeOrder(transactionData: string): Promise<string> {
+    return executeDebridgeBridgeOrder(this, transactionData);
+  }
+
+  async checkDebridgeTransactionStatus(
+    txHashOrOrderId: string,
+  ): Promise<deBridgeOrderStatusResponse[]> {
+    return checkDebridgeTransactionStatus(this, txHashOrOrderId);
+  }
+
   async fluxbeamCreatePool(
     token_a: PublicKey,
     token_a_amount: number,
