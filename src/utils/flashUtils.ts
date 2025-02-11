@@ -84,7 +84,7 @@ export const fetchOraclePrice = async (
       throw new Error(`No price feed received for ${symbol}`);
     }
 
-    const hemrmesPriceUdpate = await hermesClient.getLatestPriceUpdates(
+    const hemrmesPriceUpdate = await hermesClient.getLatestPriceUpdates(
       [priceFeedId],
       {
         encoding: "hex",
@@ -92,11 +92,11 @@ export const fetchOraclePrice = async (
       },
     );
 
-    if (!hemrmesPriceUdpate.parsed) {
+    if (!hemrmesPriceUpdate.parsed) {
       throw new Error(`No price feed received for ${symbol}`);
     }
-    const hermesEma = hemrmesPriceUdpate.parsed[0].ema_price;
-    const hermesPrice = hemrmesPriceUdpate.parsed[0].price;
+    const hermesEma = hemrmesPriceUpdate.parsed[0].ema_price;
+    const hermesPrice = hemrmesPriceUpdate.parsed[0].price;
 
     const hermesPriceOracle = new OraclePrice({
       price: new BN(hermesPrice.price),
