@@ -117,6 +117,7 @@ module.exports = {
     'no-return-assign': 'off',
     'no-case-declarations': 'off',
     'global-require': 'off',
-    'security/detect-non-literal-require': 'off'
+    'security/detect-non-literal-require': 'off',
+    'global-require': 'off',
   },
 };

@@ -1,0 +1,214 @@
+---
+title: 'deBridge Integration'
+description: 'Learn how to use cross-chain bridging functionality with deBridge protocol'
+---
+
+Solana Agent Kit provides comprehensive integration with deBridge's DLN protocol for cross-chain token transfers. The integration supports creating, executing, and monitoring bridge transactions across multiple blockchain networks.
+
+## Key Features
+
+- Cross-chain token transfers
+- Transaction status monitoring
+- Support for multiple blockchain networks
+- Quote generation for bridge transactions
+- Token information retrieval
+- LangChain tool integration
+
+## Basic Usage
+
+### Creating a Bridge Order
+
+```typescript
+const orderInput = {
+  srcChainId: "1", // Ethereum
+  srcChainTokenIn: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC on Ethereum
+  srcChainTokenInAmount: "1000000", // 1 USDC (6 decimals)
+  dstChainId: "7565164", // Solana
+  dstChainTokenOut: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC on Solana
+  dstChainTokenOutRecipient: "Abws588GagNKeMViBPE2e1WjQ2jViDyw81ZRq8oMSx75",
+  senderAddress: "Abws588GagNKeMViBPE2e1WjQ2jViDyw81ZRq8oMSx75",
+  slippage: 0.5 // 0.5% slippage tolerance
+};
+
+const order = await agent.createDebridgeOrder(orderInput);
+```
+
+### Executing a Bridge Order
+
+```typescript
+const signature = await agent.executeDebridgeBridgeOrder(order.tx.data);
+```
+
+### Checking Bridge Status
+
+```typescript
+const status = await agent.checkDebridgeTransactionStatus(signature);
+```
+
+### Getting Supported Chains
+
+```typescript
+const chains = await agent.getDebridgeSupportedChains();
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides LangChain tools for automated bridge operations:
+
+### Create Bridge Order Tool
+
+```typescript
+import { CreateDebridgeOrderTool } from 'solana-agent-kit';
+
+const createOrderTool = new CreateDebridgeOrderTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  srcChainId: "1",
+  srcChainTokenIn: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  srcChainTokenInAmount: "1000000",
+  dstChainId: "7565164",
+  dstChainTokenOut: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  dstChainTokenOutRecipient: "Abws588GagNKeMViBPE2e1WjQ2jViDyw81ZRq8oMSx75",
+  senderAddress: "Abws588GagNKeMViBPE2e1WjQ2jViDyw81ZRq8oMSx75"
+});
+```
+
+### Execute Bridge Order Tool
+
+```typescript
+import { ExecuteDebridgeOrderTool } from 'solana-agent-kit';
+
+const executeOrderTool = new ExecuteDebridgeOrderTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  transactionData: "0x23b872dd..." // Hex-encoded transaction data from create_bridge_order
+});
+```
+
+### Check Bridge Status Tool
+
+```typescript
+import { CheckDebridgeStatusTool } from 'solana-agent-kit';
+
+const checkStatusTool = new CheckDebridgeStatusTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  txHashOrOrderId: "3Dq8kH5oeN..." // Transaction hash or order ID
+});
+```
+
+### Get Supported Chains Tool
+
+```typescript
+import { GetDebridgeSupportedChainsTool } from 'solana-agent-kit';
+
+const getSupportedChainsTool = new GetDebridgeSupportedChainsTool(agent);
+// No input required
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Creating Orders
+```text
+"Bridge 1000 USDC from Ethereum to Solana"
+"Transfer 0.5 ETH from Ethereum to BSC"
+"Send 100 USDT from Solana to Polygon"
+```
+
+### Checking Status
+```text
+"Check the status of my bridge transaction 0x1234..."
+"What's the status of my recent bridge order?"
+```
+
+### Chain Information
+```text
+"Which chains are supported for bridging?"
+"Show me the available networks for cross-chain transfers"
+```
+
+## Important Parameters
+
+### Bridge Order Parameters
+
+Required Parameters:
+- `srcChainId`: Source chain ID (e.g., "1" for Ethereum)
+- `srcChainTokenIn`: Token address on source chain
+- `srcChainTokenInAmount`: Amount to bridge (in smallest units)
+- `dstChainId`: Destination chain ID
+- `dstChainTokenOut`: Token address on destination chain
+- `dstChainTokenOutRecipient`: Recipient address
+- `senderAddress`: Sender's address
+
+Optional Parameters:
+- `slippage`: Slippage tolerance in percentage
+- `referralCode`: Referral code for the transaction
+- `affiliateFeePercent`: Affiliate fee percentage
+- `prependOperatingExpenses`: Include operating expenses in calculation
+
+## Error Handling
+
+```typescript
+try {
+  const order = await agent.createDebridgeOrder(orderInput);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("slippage")) {
+    // Handle price impact too high
+  }
+}
+```
+
+## Technical Details
+
+### Chain IDs
+```typescript
+const CHAIN_IDS = {
+  ETHEREUM: "1",
+  BSC: "56",
+  POLYGON: "137",
+  SOLANA: "7565164"
+};
+```
+
+### Transaction Status
+```typescript
+type TransactionStatus = {
+  orderId: string;
+  status: "pending" | "completed" | "failed";
+  orderLink: string; // Link to deBridge explorer
+};
+```
+
+### API Endpoints
+```typescript
+const DEBRIDGE_API = "https://api.debridge.finance/v1";
+```
+
+## Best Practices
+
+1. **Slippage Protection**
+   - Always set a reasonable slippage tolerance
+   - Default is 0.5% if not specified
+   - Consider market volatility when setting slippage
+
+2. **Transaction Monitoring**
+   - Always monitor transaction status after creation
+   - Use order links for detailed tracking
+   - Keep track of order IDs for future reference
+
+3. **Error Recovery**
+   - Handle network-specific errors appropriately
+   - Implement retry logic for failed transactions
+   - Store transaction details for manual resolution if needed
+
+4. **Token Addresses**
+   - Use checksummed addresses for EVM chains
+   - Use base58 encoded addresses for Solana
+   - Verify token decimals before setting amounts

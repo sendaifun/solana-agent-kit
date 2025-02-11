@@ -27,9 +27,45 @@ export const DEFAULT_OPTIONS = {
   LEVERAGE_BPS: 50000, // 10000 = x1, 50000 = x5, 100000 = x10, 1000000 = x100
 } as const;
 
+export const METEORA_DYNAMIC_FEE_DENOMINATOR = 100000;
+
 /**
  * Jupiter API URL
  */
 export const JUP_API = "https://quote-api.jup.ag/v6";
 export const JUP_REFERRAL_ADDRESS =
   "REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3";
+
+export const METEORA_DYNAMIC_AMM_PROGRAM_ID = new PublicKey(
+  "Eo7WjKq67rjJQSZxS6z3YkapzY3eMj6Xy8X5EQVn5UaB",
+);
+export const METEORA_DLMM_PROGRAM_ID = new PublicKey(
+  "LbVRzDTvBDEcrthxfZ4RL6yiq3uZw8bS6MwtdY6UhFQ",
+);
+/**
+ * Minimum compute price required to carry out complex transactions on the Drift protocol
+ */
+export const MINIMUM_COMPUTE_PRICE_FOR_COMPLEX_ACTIONS =
+  0.000003 * 1000000 * 1000000;
+
+/**
+ * Debridge API URL
+ */
+export const DEBRIDGE_API = "https://dln.debridge.finance/v1.0";
+/**
+ * Switchboard public crossbar instance.
+ * https://docs.switchboard.xyz/docs/switchboard/crossbar-and-task-runner
+ */
+export const SWITCHBOARD_DEFAULT_CROSSBAR = "https://crossbar.switchboard.xyz";
+/**
+ * Fluxbeam constants
+ */
+// fluxbeam fee account
+export const FEE_ACCOUNT = new PublicKey(
+  "FLUXR4McuD2iXyP3wpP4XTjSWmB86ppMiyoA52UA9bKb",
+);
+
+export const FLUXBEAM_BASE_URI = "https://api.fluxbeam.xyz/v1";
+export const FLUXBEAM_SWAP_PROGRAM_ID = new PublicKey(
+  "FLUXubRmkEi2q6K3Y9kBPg9248ggaZVsoSFhtJHSrm1X",
+);

@@ -1,0 +1,250 @@
+---
+title: 'Mayan Cross-Chain Swap Integration'
+description: 'Learn how to perform cross-chain token swaps using Mayan Finance'
+---
+
+Solana Agent Kit provides integration with Mayan Finance for cross-chain token swaps. The integration supports swapping tokens between different blockchain networks, including Solana and EVM-based chains.
+
+## Key Features
+
+- Cross-chain token swaps
+- Support for multiple chains (Solana, Ethereum, etc.)
+- Token symbol and address support
+- Automatic quote fetching
+- Configurable slippage
+- ERC20 Permit support
+- Jito MEV protection for Solana
+- LangChain tool integration
+
+## Basic Usage
+
+### Performing a Cross-Chain Swap
+
+```typescript
+const url = await agent.swap(
+  "0.1",                // amount
+  "solana",            // fromChain
+  "SOL",               // fromToken
+  "ethereum",          // toChain
+  "USDC",              // toToken
+  "0x1234...",         // destination address
+  10                   // slippage in basis points (optional)
+);
+```
+
+## Input Parameters
+
+### Swap Parameters
+
+```typescript
+interface SwapParams {
+  amount: string;           // Amount to swap
+  fromChain: string;        // Source chain (e.g., "solana", "ethereum")
+  fromToken: string;        // Source token (symbol or address)
+  toChain: string;          // Destination chain
+  toToken: string;          // Destination token (symbol or address)
+  dstAddr: string;         // Destination address
+  slippageBps?: number;    // Optional slippage in basis points
+}
+```
+
+## Token Input Formats
+
+Tokens can be specified in multiple formats:
+
+1. By Symbol:
+```typescript
+fromToken: "SOL"
+fromToken: "ETH"
+fromToken: "USDC"
+```
+
+2. By Address:
+```typescript
+// Solana addresses (base58)
+fromToken: "So11111111111111111111111111111111111111112"  // SOL
+fromToken: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"  // USDC
+
+// EVM addresses (hex)
+toToken: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"  // USDC on Ethereum
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides a LangChain tool for cross-chain swaps:
+
+### Cross-Chain Swap Tool
+
+```typescript
+import { SolanaCrossChainSwapTool } from 'solana-agent-kit';
+
+const crossChainSwapTool = new SolanaCrossChainSwapTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  amount: "0.1",
+  fromChain: "solana",
+  fromToken: "SOL",
+  toChain: "ethereum",
+  toToken: "USDC",
+  dstAddr: "0x1234...",
+  slippageBps: 10
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Swap executed successfully",
+  url: "https://explorer.mayan.finance/swap/..."
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Cross-Chain Swaps
+```text
+"Swap 0.1 SOL to USDC on Ethereum"
+"Transfer 100 USDC from Solana to Ethereum"
+"Exchange SOL to ETH with 1% slippage"
+```
+
+## Advanced Features
+
+### ERC20 Permit Support
+
+The integration automatically handles ERC20 permits for supported tokens:
+
+```typescript
+// Permit parameters are automatically generated and handled
+interface Erc20Permit {
+  value: bigint;
+  deadline: number;
+  v: number;
+  r: string;
+  s: string;
+}
+```
+
+### Jito MEV Protection
+
+For Solana transactions, Jito MEV protection is automatically applied:
+
+```typescript
+interface JitoOptions {
+  tipLamports: number;
+  jitoAccount: string;
+  jitoSendUrl: string;
+  signAllTransactions: Function;
+}
+```
+
+## Error Handling
+
+```typescript
+try {
+  const url = await agent.swap(
+    amount,
+    fromChain,
+    fromToken,
+    toChain,
+    toToken,
+    dstAddr
+  );
+} catch (error) {
+  if (error.message.includes("Couldn't find token")) {
+    // Handle invalid token symbol
+  } else if (error.message.includes("no quote available")) {
+    // Handle no available route
+  }
+}
+```
+
+## Important Notes
+
+1. **Token Resolution**
+   - Tokens can be specified by symbol or address
+   - Symbols are automatically resolved to addresses
+   - Case-insensitive symbol matching
+
+2. **Slippage Protection**
+   - Default "auto" slippage for optimal execution
+   - Can be specified in basis points (e.g., 10 = 0.1%)
+   - Recommended to use higher slippage for volatile tokens
+
+3. **Chain Support**
+   - Solana <-> EVM cross-chain swaps
+   - Multiple EVM chains supported
+   - Automatic chain ID resolution
+
+4. **Transaction Confirmation**
+   - Solana transactions wait for confirmation
+   - EVM transactions return hash immediately
+   - Explorer URL provided for tracking
+
+## Best Practices
+
+1. **Token Addresses**
+   ```typescript
+   // Prefer addresses over symbols for precision
+   await agent.swap(
+     "0.1",
+     "solana",
+     "So11111111111111111111111111111111111111112",  // SOL address
+     "ethereum",
+     "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",  // USDC address
+     dstAddr
+   );
+   ```
+
+2. **Error Recovery**
+   ```typescript
+   try {
+     const url = await agent.swap(...);
+     // Wait for explorer API confirmation
+     await new Promise(resolve => setTimeout(resolve, 3000));
+     const status = await fetch(`${url}/status`);
+   } catch (error) {
+     // Implement retry logic
+   }
+   ```
+
+3. **Slippage Management**
+   ```typescript
+   // Use higher slippage for volatile tokens
+   const volatileTokenSlippage = 100; // 1%
+   const stableTokenSlippage = 10;   // 0.1%
+   ```
+
+## Technical Details
+
+### Constants
+```typescript
+const EXPLORERS = {
+  MAYAN: "https://explorer.mayan.finance/swap"
+};
+
+const CHAIN_IDS = {
+  ETHEREUM: "1",
+  SOLANA: "solana"
+};
+```
+
+### Configuration
+
+```typescript
+// Required for EVM chain swaps
+const config = {
+  ETHEREUM_PRIVATE_KEY: string;  // EVM wallet private key
+};
+```
+
+### API Endpoints
+```typescript
+const API = {
+  QUOTE: "https://sia.mayan.finance/v4/quote",
+  JITO: "https://price-api.mayan.finance/jito-tips/suggest",
+  EXPLORER: "https://explorer-api.mayan.finance/v3/swap/trx"
+};
+```

@@ -28,7 +28,7 @@ The project includes a test script located at `test/index.ts`. To execute the te
 
 1. **Launch the Agent**
    ```bash
-   pnpm start
+   pnpm test:vercel-ai
    ```
 
 2. **Select Your Mode**

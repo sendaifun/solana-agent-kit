@@ -118,21 +118,21 @@ const tools = createSolanaTools(agent);
 ### Deploy a Token
 
 ```typescript
-import { deploy_token } from "solana-agent-kit";
-
-const result = await deploy_token(
-  agent,
+const result = await agent.deployToken(
+  "my ai token", // name
+  "uri", // uri
+  "token", // symbol
   9, // decimals
   1000000 // initial supply
 );
+
+console.log("Token Mint Address:", result.mint.toString());
 ```
 
 ### Create NFT Collection
 
 ```typescript
-import { deploy_collection } from "solana-agent-kit";
-
-const collection = await deploy_collection(agent, {
+const collection = await agent.deployCollection({
   name: "My NFT Collection",
   uri: "https://arweave.net/metadata.json",
   royaltyBasisPoints: 500, // 5%
@@ -148,19 +148,27 @@ const collection = await deploy_collection(agent, {
 ### Send Compressed Airdrop
 
 ```typescript
-import { sendCompressedAirdrop } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await sendCompressedAirdrop(
-  agent,
-  new PublicKey("token-mint-address"),
-  42, // amount per recipient
-  [
-    new PublicKey("recipient-1"),
-    // ... more recipients
-  ],
-  30_000 // priority fee
-);
+(async () => {
+  console.log(
+    "~Airdrop cost estimate:",
+    getAirdropCostEstimate(
+      1000, // recipients
+      30_000 // priority fee in lamports
+    )
+  );
+
+  const signature = await agent.sendCompressedAirdrop(
+    new PublicKey("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"), // mint
+    42, // amount per recipient
+    [
+      new PublicKey("1nc1nerator11111111111111111111111111111111"),
+      // ... add more recipients
+    ],
+    30_000 // priority fee in lamports
+  );
+})();
 ```
 
 # Next Steps

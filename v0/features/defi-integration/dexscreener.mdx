@@ -1,0 +1,192 @@
+---
+title: 'DexScreener Integration'
+description: 'Learn how to use DexScreener and Jupiter token lookup functionality'
+---
+
+Solana Agent Kit provides integration with DexScreener and Jupiter for comprehensive token data lookup. The integration supports looking up tokens by their ticker symbols or addresses, providing detailed token information including market data.
+
+## Key Features
+
+- Token lookup by ticker symbol
+- Token lookup by address
+- Integration with Jupiter token list
+- DexScreener market data
+- LangChain tool integration
+- Support for Solana tokens
+
+## Basic Usage
+
+### Get Token Data by Address
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+// Lookup token by its mint address
+const mint = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"); // USDC
+const tokenData = await agent.getTokenDataByAddress(mint);
+```
+
+### Get Token Data by Ticker
+
+```typescript
+// Lookup token by its ticker symbol
+const tokenData = await agent.getTokenDataByTicker("USDC");
+```
+
+### Get Token Address from Ticker
+
+```typescript
+// Get the token's Solana address using DexScreener
+const address = await agent.getTokenAddressFromTicker("USDC");
+```
+
+## Response Types
+
+### Jupiter Token Data
+
+```typescript
+interface JupiterTokenData {
+  address: string;          // Token mint address
+  chainId: number;         // Solana chain ID
+  decimals: number;        // Token decimals
+  name: string;            // Token name
+  symbol: string;          // Token symbol
+  logoURI?: string;        // Token logo URL
+  tags?: string[];         // Token tags
+  extensions?: {
+    coingeckoId?: string;  // CoinGecko ID
+    website?: string;      // Project website
+    twitter?: string;      // Twitter handle
+  };
+}
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides a LangChain tool for token lookups:
+
+### Token Data by Ticker Tool
+
+```typescript
+import { SolanaTokenDataByTickerTool } from 'solana-agent-kit';
+
+const tokenDataTool = new SolanaTokenDataByTickerTool(agent);
+
+// Tool input: ticker symbol as string
+const input = "USDC";
+
+// Tool returns JSON response:
+{
+  status: "success",
+  tokenData: JupiterTokenData
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Token Lookups
+```text
+"Get token data for USDC"
+"Look up information about the SOL token"
+"Find the token address for BONK"
+```
+
+## Error Handling
+
+```typescript
+try {
+  const tokenData = await agent.getTokenDataByTicker("USDC");
+} catch (error) {
+  if (error.message.includes("Token address not found")) {
+    // Handle unknown token
+  } else if (error.message.includes("Error fetching token data")) {
+    // Handle API errors
+  }
+}
+```
+
+## API Details
+
+### Jupiter Token API
+- Base URL: `https://tokens.jup.ag/token/`
+- Returns detailed token information from Jupiter's token list
+- Requires valid Solana public key as input
+
+### DexScreener API
+- Base URL: `https://api.dexscreener.com/latest/dex/`
+- Provides market data and token addresses
+- Supports searching by token symbol
+- Returns multiple pairs sorted by FDV (Fully Diluted Valuation)
+
+## Best Practices
+
+1. **Token Address Validation**
+   - Always validate mint addresses before lookup
+   - Use PublicKey class for address handling
+   - Handle invalid addresses gracefully
+
+2. **Ticker Symbol Search**
+   - Use uppercase symbols for consistency
+   - Handle case-insensitive matching
+   - Consider multiple token matches
+
+3. **Error Recovery**
+   - Implement retry logic for API failures
+   - Provide meaningful error messages
+   - Cache frequently accessed token data
+
+4. **Market Data**
+   - Sort pairs by FDV for most relevant results
+   - Filter for Solana pairs only
+   - Verify token symbol matches
+
+## Implementation Notes
+
+1. **DexScreener Integration**
+   - Filters for Solana pairs only
+   - Sorts by Fully Diluted Valuation (FDV)
+   - Returns highest FDV pair's token address
+
+2. **Jupiter Integration**
+   - Uses official Jupiter token list
+   - Provides comprehensive token metadata
+   - Includes social and project information
+
+3. **Tool Configuration**
+   - No API key required
+   - Public endpoints with rate limiting
+   - Consider implementing caching for performance
+
+## Common Use Cases
+
+1. **Token Discovery**
+   ```typescript
+   // Find token address by ticker
+   const address = await getTokenAddressFromTicker("USDC");
+   if (address) {
+     // Get detailed token information
+     const data = await getTokenDataByAddress(new PublicKey(address));
+   }
+   ```
+
+2. **Token Validation**
+   ```typescript
+   try {
+     const tokenData = await getTokenDataByTicker("USDC");
+     const isValid = tokenData && tokenData.address;
+   } catch (error) {
+     // Handle invalid token
+   }
+   ```
+
+3. **Market Analysis**
+   ```typescript
+   // Get token data including market pairs
+   const address = await getTokenAddressFromTicker("SOL");
+   if (address) {
+     // Analyze token pairs and market data
+     const pairs = await getDexScreenerPairs(address);
+   }
+   ```

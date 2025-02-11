@@ -24,8 +24,8 @@ const updateDriftVaultDelegateAction: Action = {
     ],
   ],
   schema: z.object({
-    vaultAddress: z.string(),
-    newDelegate: z.string(),
+    vaultAddress: z.string().describe("vault's address"),
+    newDelegate: z.string().describe("new address to delegate the vault to"),
   }),
   handler: async (agent, input) => {
     try {

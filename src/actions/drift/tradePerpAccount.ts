@@ -46,14 +46,27 @@ export const tradeDriftPerpAccountAction: Action = {
     ],
   ],
   schema: z.object({
-    amount: z.number().positive(),
+    amount: z
+      .number()
+      .positive()
+      .describe(
+        "The amount of the token to trade in normal token amounts e.g 50 SOL, 100 USDC",
+      ),
     symbol: z
       .string()
       .toUpperCase()
       .describe("Symbol of the token to open a position on "),
-    action: z.enum(["long", "short"]),
-    type: z.enum(["market", "limit"]),
-    price: z.number().positive().optional(),
+    action: z
+      .enum(["long", "short"])
+      .describe(
+        "The action you would like to carry out whether it be a long or a short",
+      ),
+    type: z
+      .enum(["market", "limit"])
+      .describe(
+        "The type of trade you would like to open, market or limit order",
+      ),
+    price: z.number().positive().optional().describe("USD price of the token"),
   }),
   handler: async (agent, input) => {
     try {

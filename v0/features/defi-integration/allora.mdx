@@ -1,0 +1,189 @@
+---
+title: 'Allora Integration'
+description: 'Learn how to use Allora price inference and topic functionality'
+---
+
+
+Solana Agent Kit provides comprehensive integration with Allora's API for accessing price inferences and topics. The integration supports both mainnet and testnet environments with configurable API settings.
+
+## Key Features
+
+- Price inference for multiple tokens and timeframes
+- Topic management and retrieval
+- Inference data by topic ID
+- LangChain tool integration
+- Configurable network environment
+
+## Configuration
+
+The Allora integration uses the following configuration parameters:
+
+```typescript
+const config: AlloraAPIClientConfig = {
+  apiKey: string,         // Your Allora API key
+  chainSlug: ChainSlug,  // MAINNET or TESTNET
+  baseAPIUrl: string     // Optional custom API URL
+};
+```
+
+## Basic Usage
+
+### Getting All Topics
+
+```typescript
+const topics = await agent.getAllTopics();
+```
+
+### Getting Inference by Topic ID
+
+```typescript
+const inference = await agent.getInferenceByTopicId(topicId);
+```
+
+### Getting Price Inference
+
+```typescript
+const priceInference = await agent.getPriceInference(
+  tokenSymbol,  // e.g., "BTC"
+  timeframe     // e.g., "5m"
+);
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides LangChain tools for automated Allora data retrieval:
+
+### Get All Topics Tool
+
+```typescript
+import { SolanaAlloraGetAllTopics } from 'solana-agent-kit';
+
+const getAllTopicsTool = new SolanaAlloraGetAllTopics(agent);
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Topics fetched successfully",
+  topics: AlloraTopic[]
+}
+```
+
+### Get Inference by Topic ID Tool
+
+```typescript
+import { SolanaAlloraGetInferenceByTopicId } from 'solana-agent-kit';
+
+const getInferenceByTopicIdTool = new SolanaAlloraGetInferenceByTopicId(agent);
+
+// Tool input: topic ID as string
+const input = "42";
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Inference fetched successfully",
+  topicId: number,
+  inference: AlloraInference
+}
+```
+
+### Get Price Inference Tool
+
+```typescript
+import { SolanaAlloraGetPriceInference } from 'solana-agent-kit';
+
+const getPriceInferenceTool = new SolanaAlloraGetPriceInference(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  tokenSymbol: "BTC",
+  timeframe: "5m"
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Price inference fetched successfully",
+  tokenSymbol: string,
+  timeframe: string,
+  priceInference: string
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Getting Topics
+```text
+"Get all available Allora topics"
+"List the current topics from Allora"
+```
+
+### Getting Inferences
+```text
+"Get the inference for topic ID 42"
+"What's the current inference for BTC with 5-minute timeframe"
+```
+
+## Important Notes
+
+1. **API Key Configuration**
+   - Default API key provided but recommended to use your own
+   - Can be configured via ALLORA_API_KEY environment variable
+
+2. **Network Environment**
+   - Supports both mainnet and testnet
+   - Configured via ALLORA_NETWORK environment variable
+   - Defaults to testnet if not specified
+
+3. **API Response Handling**
+   - All methods return structured responses
+   - Error handling included for network and API issues
+   - Status and message fields in all responses
+
+## Error Handling
+
+```typescript
+try {
+  await agent.getAllTopics();
+} catch (error) {
+  if (error.message.includes("API key invalid")) {
+    // Handle authentication error
+  } else if (error.message.includes("network error")) {
+    // Handle connection issues
+  }
+}
+```
+
+## Technical Details
+
+### Available Timeframes
+```typescript
+enum PriceInferenceTimeframe {
+  FIVE_MIN = "5m",
+  FIFTEEN_MIN = "15m",
+  THIRTY_MIN = "30m",
+  ONE_HOUR = "1h",
+  FOUR_HOUR = "4h",
+  ONE_DAY = "1d"
+}
+```
+
+### Supported Token Types
+```typescript
+enum PriceInferenceToken {
+  BTC = "BTC",
+  ETH = "ETH",
+  SOL = "SOL"
+  // Additional tokens based on API support
+}
+```
+
+### Default Values
+```typescript
+const DEFAULT_CONFIG = {
+  ALLORA_API_KEY: "UP-d33e797de5134909854be2b7",
+  ALLORA_NETWORK: "testnet"
+};
+```

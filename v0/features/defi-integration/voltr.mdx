@@ -1,0 +1,259 @@
+---
+title: 'Voltr Vault Integration'
+description: 'Learn how to interact with Voltr vaults for deposits, withdrawals, and position management'
+---
+
+Solana Agent Kit provides comprehensive integration with Voltr vaults for managing deposits, withdrawals, and viewing position values. The integration supports both Token Program and Token-2022 assets.
+
+## Key Features
+
+- Strategy deposits
+- Strategy withdrawals
+- Position value tracking
+- Token-2022 support
+- Remaining accounts handling
+- LangChain tool integration
+
+## Basic Usage
+
+### Getting Position Values
+
+```typescript
+const values = await agent.voltrGetPositionValues(
+  new PublicKey("vault_address")
+);
+```
+
+### Depositing into a Strategy
+
+```typescript
+const signature = await agent.voltrDepositStrategy(
+  new BN("1000000"),  // Amount in base units
+  new PublicKey("vault_address"),
+  new PublicKey("strategy_address")
+);
+```
+
+### Withdrawing from a Strategy
+
+```typescript
+const signature = await agent.voltrWithdrawStrategy(
+  new BN("1000000"),  // Amount in base units
+  new PublicKey("vault_address"),
+  new PublicKey("strategy_address")
+);
+```
+
+## Input Parameters
+
+### Strategy Operation Parameters
+
+```typescript
+interface StrategyParams {
+  depositAmount?: BN;      // Amount to deposit
+  withdrawAmount?: BN;     // Amount to withdraw
+  vault: PublicKey;        // Vault address
+  strategy: PublicKey;     // Strategy address
+}
+```
+
+### Remaining Accounts Structure
+
+```typescript
+interface RemainingAccount {
+  pubkey: string;         // Account public key
+  isSigner: boolean;      // Is signer flag
+  isWritable: boolean;    // Is writable flag
+}
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides several LangChain tools for Voltr operations:
+
+### Get Position Values Tool
+
+```typescript
+import { SolanaVoltrGetPositionValues } from 'solana-agent-kit';
+
+const getPositionTool = new SolanaVoltrGetPositionValues(agent);
+
+// Tool input: vault address as string
+const input = "vault_address";
+
+// Tool returns JSON string with position values
+```
+
+### Deposit Strategy Tool
+
+```typescript
+import { SolanaVoltrDepositStrategy } from 'solana-agent-kit';
+
+const depositTool = new SolanaVoltrDepositStrategy(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  depositAmount: "1000000",
+  vault: "vault_address",
+  strategy: "strategy_address"
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Deposited 1000000 into strategy successfully",
+  transaction: "transaction_signature"
+}
+```
+
+### Withdraw Strategy Tool
+
+```typescript
+import { SolanaVoltrWithdrawStrategy } from 'solana-agent-kit';
+
+const withdrawTool = new SolanaVoltrWithdrawStrategy(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  withdrawAmount: "1000000",
+  vault: "vault_address",
+  strategy: "strategy_address"
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Withdrew 1000000 from strategy successfully",
+  transaction: "transaction_signature"
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Position Management
+```text
+"Get current position values for vault [address]"
+"Deposit 1000 USDC into strategy [address]"
+"Withdraw 500 SOL from vault strategy"
+```
+
+## Important Notes
+
+1. **Token Programs**
+   - Supports both Token Program and Token-2022
+   - Automatically detects token program type
+   - Validates program compatibility
+
+2. **Amount Handling**
+   - All amounts must be in base units (lamports)
+   - Use BN.js for precise number handling
+   - Consider token decimals when calculating amounts
+
+3. **Remaining Accounts**
+   - Fetched automatically from Voltr API
+   - Required for strategy operations
+   - Includes instruction discriminators
+
+## Best Practices
+
+1. **Error Handling**
+   ```typescript
+   try {
+     const signature = await agent.voltrDepositStrategy(
+       amount,
+       vault,
+       strategy
+     );
+   } catch (error) {
+     if (error.message.includes("Invalid asset")) {
+       // Handle invalid token program
+     } else if (error.message.includes("insufficient")) {
+       // Handle insufficient funds
+     }
+   }
+   ```
+
+2. **Amount Calculation**
+   ```typescript
+   // Convert from human readable to base units
+   function toBaseUnits(amount: number, decimals: number): BN {
+     return new BN(amount * Math.pow(10, decimals));
+   }
+   ```
+
+3. **Transaction Monitoring**
+   ```typescript
+   // Monitor transaction status
+   const signature = await agent.voltrDepositStrategy(...);
+   await agent.connection.confirmTransaction(signature);
+   ```
+
+## Technical Details
+
+### Constants
+```typescript
+const TOKEN_PROGRAMS = {
+  LEGACY: TOKEN_PROGRAM_ID,
+  TOKEN_2022: TOKEN_2022_PROGRAM_ID
+};
+```
+
+### Voltr Client Configuration
+```typescript
+const client = new VoltrClient(connection, wallet);
+```
+
+### API Endpoints
+```typescript
+const VOLTR_API = {
+  REMAINING_ACCOUNTS: "https://voltr.xyz/api/remaining-accounts"
+};
+```
+
+### Transaction Options
+```typescript
+const TX_OPTIONS = {
+  skipPreflight: false,
+  preflightCommitment: "confirmed"
+};
+```
+
+## Implementation Examples
+
+1. **Full Deposit Flow**
+   ```typescript
+   // 1. Get vault account
+   const vaultAccount = await client.fetchVaultAccount(vault);
+   
+   // 2. Verify token program
+   const assetTokenProgram = await getTokenProgram(vaultAccount.asset.mint);
+   
+   // 3. Get remaining accounts
+   const { remainingAccounts } = await fetchRemainingAccounts(vault, strategy);
+   
+   // 4. Create and send transaction
+   const ix = await client.createDepositStrategyIx({...});
+   const signature = await sendAndConfirmTransaction(tx, [wallet]);
+   ```
+
+2. **Position Value Check**
+   ```typescript
+   // Get position and total values
+   const values = await client.getPositionAndTotalValuesForVault(vault);
+   console.log(`Total Value: ${values.totalValue}`);
+   values.positions.forEach(pos => {
+     console.log(`Strategy ${pos.strategy}: ${pos.value}`);
+   });
+   ```
+
+3. **Withdrawal with Amount Validation**
+   ```typescript
+   // Check available balance before withdrawal
+   const position = await client.getPositionValue(vault, strategy);
+   if (withdrawAmount.gt(position)) {
+     throw new Error("Insufficient balance in strategy");
+   }
+   const signature = await agent.voltrWithdrawStrategy(...);
+   ```

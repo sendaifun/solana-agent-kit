@@ -56,6 +56,7 @@ async function initializeAgent() {
       {
         OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
         HELIUS_API_KEY: process.env.HELIUS_API_KEY!,
+        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY!,
       },
     );
 

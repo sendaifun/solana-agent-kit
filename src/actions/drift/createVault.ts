@@ -53,9 +53,14 @@ const createDriftVaultAction: Action = {
       .int()
       .min(100, "Max tokens must be at least 100")
       .describe(
-        "The maximum amount of tokens the vault will be accomodating. For example some vaults have a cap at 10 million USDC",
+        "The maximum amount of tokens the vault will be accomodating. For example some vaults have a cap at 10 million USDC. This amount should be normal token amounts e.g 50 SOL, 100 USDC, etc",
       ),
-    minDepositAmount: z.number().positive().describe("Minimum deposit amount"),
+    minDepositAmount: z
+      .number()
+      .positive()
+      .describe(
+        "Minimum deposit amount in normal token values e.g 50 SOL, 100 USDC, etc",
+      ),
     managementFee: z
       .number()
       .positive()

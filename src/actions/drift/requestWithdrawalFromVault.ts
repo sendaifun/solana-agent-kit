@@ -29,7 +29,9 @@ const requestWithdrawalFromVaultAction: Action = {
     amount: z
       .number()
       .positive()
-      .describe("Amount of shares you would like to withdraw from the vault"),
+      .describe(
+        "Amount of shares you would like to withdraw from the vault in normal token amounts e.g 50 SOL, 100 USDC, etc",
+      ),
   }),
   handler: async (agent: SolanaAgentKit, input) => {
     try {
