@@ -91,6 +91,11 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import removeLiquidityFromMeteoraDLMMPositionOrClosePositionAction from "./meteora/removeLiquidityFromDLMMPositionOrClosePosition";
+import createMeteoraDLMMPoolAction from "./meteora/createMeteoraDLMMPool";
+import getMeteoraDLMMPositionByUserAction from "./meteora/getMeteoraDLMMPositionByUser";
+import createMeteoraDLMMPositionAction from "./meteora/createMeteoraDLMMPosition";
+import createDynamicMeteoraAMMPoolAction from "./meteora/createMeteoraDynamicAMMPool";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -189,6 +194,12 @@ export const ACTIONS = {
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
   SOLUTIOFI_SPREAD_TOKEN_ACTION: spreadTokenAction,
+  REMOVE_LIQUIDITY_FROM_DLMM_POSITION_OR_CLOSE_POSITION_ACTION:
+    removeLiquidityFromMeteoraDLMMPositionOrClosePositionAction,
+  CREATE_METEORA_DLMM_POOL_ACTION: createMeteoraDLMMPoolAction,
+  GET_METEORA_DLMM_POSITION_BY_USER_ACTION: getMeteoraDLMMPositionByUserAction,
+  CREATE_METEORA_DLMM_POSITION_ACTION: createMeteoraDLMMPositionAction,
+  CREATE_DYNAMIC_METEORA_AMM_POOL_ACTION: createDynamicMeteoraAMMPoolAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
