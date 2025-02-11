@@ -32,8 +32,10 @@ export * from "./mayan";
 export * from "./allora";
 export * from "./solutiofi";
 export * from "./switchboard";
+export * from "./elfa_ai";
 export * from "./debridge";
 export * from "./fluxbeam";
+
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
@@ -148,6 +150,13 @@ import {
   SolanaMergeTokensTool,
   SolanaSpreadTokenTool,
   SolanaSwitchboardSimulateFeed,
+  ElfaPingTool,
+  ElfaApiKeyStatusTool,
+  ElfaGetMentionsTool,
+  ElfaTrendingTokensTool,
+  ElfaSearchMentionsTool,
+  ElfaGetTopMentionsTool,
+  ElfaAccountSmartStatsTool,
   SolanaFluxbeamCreatePoolTool,
 } from "./index";
 
@@ -265,6 +274,13 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaMergeTokensTool(solanaKit),
     new SolanaSpreadTokenTool(solanaKit),
     new SolanaAlloraGetPriceInference(solanaKit),
+    new ElfaPingTool(solanaKit),
+    new ElfaApiKeyStatusTool(solanaKit),
+    new ElfaGetMentionsTool(solanaKit),
+    new ElfaTrendingTokensTool(solanaKit),
+    new ElfaSearchMentionsTool(solanaKit),
+    new ElfaGetTopMentionsTool(solanaKit),
+    new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
   ];
 }
