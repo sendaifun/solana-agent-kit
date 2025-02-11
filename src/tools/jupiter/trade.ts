@@ -22,6 +22,7 @@ export async function trade(
   outputMint: PublicKey,
   inputAmount: number,
   inputMint: PublicKey = TOKENS.USDC,
+  // @deprecated use dynamicSlippage instead
   slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
 ): Promise<string> {
   try {
@@ -42,9 +43,11 @@ export async function trade(
           `inputMint=${isNativeSol ? TOKENS.SOL.toString() : inputMint.toString()}` +
           `&outputMint=${outputMint.toString()}` +
           `&amount=${scaledAmount}` +
-          `&slippageBps=${slippageBps}` +
-          `&onlyDirectRoutes=true` +
-          `&maxAccounts=20` +
+          `&dynamicSlippage=true` +
+          `&minimizeSlippage=false` +
+          `&onlyDirectRoutes=false` +
+          `&maxAccounts=64` +
+          `&swapMode=ExactIn` +
           `${agent.config.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config.JUPITER_FEE_BPS}` : ""}`,
       )
     ).json();
@@ -73,7 +76,14 @@ export async function trade(
           userPublicKey: agent.wallet_address.toString(),
           wrapAndUnwrapSol: true,
           dynamicComputeUnitLimit: true,
-          prioritizationFeeLamports: "auto",
+          dynamicSlippage: true,
+          prioritizationFeeLamports: {
+            priorityLevelWithMaxLamports: {
+              maxLamports: 10000000,
+              global: false,
+              priorityLevel: agent.config.PRIORITY_LEVEL || "medium",
+            },
+          },
           feeAccount: feeAccount ? feeAccount.toString() : null,
         }),
       })

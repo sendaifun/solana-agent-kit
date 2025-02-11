@@ -14,6 +14,8 @@ import stakeWithJupAction from "./jupiter/stakeWithJup";
 import stakeWithSolayerAction from "./solayer/stakeWithSolayer";
 import registerDomainAction from "./sns/registerDomain";
 import lendAssetAction from "./lulo/lendAsset";
+import luloLendAction from "./lulo/luloLend";
+import luloWithdrawAction from "./lulo/luloWithdraw";
 import createGibworkTaskAction from "./gibwork/createGibworkTask";
 import resolveSolDomainAction from "./sns/resolveSolDomain";
 import pythFetchPriceAction from "./pyth/pythFetchPrice";
@@ -31,6 +33,7 @@ import launchPumpfunTokenAction from "./pumpfun/launchPumpfunToken";
 import getWalletAddressAction from "./agent/getWalletAddress";
 import flashOpenTradeAction from "./flash/flashOpenTrade";
 import flashCloseTradeAction from "./flash/flashCloseTrade";
+import fluxbeamCreatePoolAction from "./fluxbeam/createPool";
 import createMultisigAction from "./squads/createMultisig";
 import approveMultisigProposalAction from "./squads/approveMultisigProposal";
 import createMultisigProposalAction from "./squads/createMultisigProposal";
@@ -59,8 +62,43 @@ import withdrawFromDriftAccountAction from "./drift/withdrawFromDriftAccount";
 import driftUserAccountInfoAction from "./drift/driftUserAccountInfo";
 import deriveDriftVaultAddressAction from "./drift/deriveVaultAddress";
 import updateDriftVaultDelegateAction from "./drift/updateDriftVaultDelegate";
+import availableDriftMarketsAction from "./drift/availableMarkets";
+import stakeToDriftInsuranceFundAction from "./drift/stakeToDriftInsuranceFund";
+import requestUnstakeFromDriftInsuranceFundAction from "./drift/requestUnstakeFromDriftInsuranceFund";
+import unstakeFromDriftInsuranceFundAction from "./drift/unstakeFromDriftInsuranceFund";
+import driftSpotTokenSwapAction from "./drift/swapSpotToken";
+import perpMarktetFundingRateAction from "./drift/perpMarketFundingRate";
+import entryQuoteOfPerpTradeAction from "./drift/entryQuoteOfPerpTrade";
+import lendAndBorrowAPYAction from "./drift/getLendAndBorrowAPY";
+import getVoltrPositionValuesAction from "./voltr/getPositionValues";
+import depositVoltrStrategyAction from "./voltr/depositStrategy";
+import withdrawVoltrStrategyAction from "./voltr/withdrawStrategy";
+import getAssetAction from "./metaplex/getAsset";
+import getAssetsByAuthorityAction from "./metaplex/getAssetsByAuthority";
+import getAssetsByCreatorAction from "./metaplex/getAssetsByCreator";
+import getInfoAction from "./agent/get_info";
+import switchboardSimulateFeedAction from "./switchboard/simulate_feed";
+import swapAction from "./mayan/swap";
+import getPriceInferenceAction from "./allora/getPriceInference";
+import getAllTopicsAction from "./allora/getAllTopics";
+import getInferenceByTopicIdAction from "./allora/getInferenceByTopicId";
+import closeAccountsAction from "./solutiofi/closeAccounts";
+import burnTokensAction from "./solutiofi/burnTokens";
+import mergeTokensAction from "./solutiofi/mergeTokens";
+import spreadTokenAction from "./solutiofi/spreadToken";
+import closeOrcaPositionAction from "./orca/closeOrcaPosition";
+import createOrcaCLMMAction from "./orca/createOrcaCLMM";
+import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
+import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
+import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import getDebridgeSupportedChainsAction from "./debridge/getSupportedChains";
+import getDebridgeTokensInfoAction from "./debridge/getTokensInfo";
+import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
+import executeDebridgeBridgeOrderAction from "./debridge/executeBridgeOrder";
+import checkDebridgeTransactionStatusAction from "./debridge/checkTransactionStatus";
 
 export const ACTIONS = {
+  GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
   TOKEN_BALANCES_ACTION: tokenBalancesAction,
   DEPLOY_TOKEN_ACTION: deployTokenAction,
@@ -78,6 +116,8 @@ export const ACTIONS = {
   STAKE_WITH_SOLAYER_ACTION: stakeWithSolayerAction,
   REGISTER_DOMAIN_ACTION: registerDomainAction,
   LEND_ASSET_ACTION: lendAssetAction,
+  LULO_LEND_ACTION: luloLendAction,
+  LULO_WITHDRAW_ACTION: luloWithdrawAction,
   CREATE_GIBWORK_TASK_ACTION: createGibworkTaskAction,
   RESOLVE_SOL_DOMAIN_ACTION: resolveSolDomainAction,
   PYTH_FETCH_PRICE_ACTION: pythFetchPriceAction,
@@ -92,9 +132,16 @@ export const ACTIONS = {
   RAYDIUM_CREATE_AMM_V4_ACTION: raydiumCreateAmmV4Action,
   CREATE_ORCA_SINGLE_SIDED_WHIRLPOOL_ACTION:
     createOrcaSingleSidedWhirlpoolAction,
+  CLOSE_ORCA_POSITION_ACTION: closeOrcaPositionAction,
+  CREATE_ORCA_CLMM_ACTION: createOrcaCLMMAction,
+  FETCH_ORCA_POSITIONS_ACTION: fetchOrcaPositionsAction,
+  OPEN_ORCA_CENTERED_POSITION_WITH_LIQUIDITY_ACTION:
+    openOrcaCenteredPositionWithLiquidityAction,
+  OPEN_ORCA_SINGLE_SIDED_POSITION_ACTION: openOrcaSingleSidedPositionAction,
   LAUNCH_PUMPFUN_TOKEN_ACTION: launchPumpfunTokenAction,
   FLASH_OPEN_TRADE_ACTION: flashOpenTradeAction,
   FLASH_CLOSE_TRADE_ACTION: flashCloseTradeAction,
+  FLUXBEAM_CREATE_POOL_ACTION: fluxbeamCreatePoolAction,
   CREATE_MULTISIG_ACTION: createMultisigAction,
   DEPOSIT_TO_MULTISIG_ACTION: depositToMultisigAction,
   TRANSFER_FROM_MULTISIG_ACTION: transferFromMultisigAction,
@@ -123,6 +170,36 @@ export const ACTIONS = {
   DRIFT_USER_ACCOUNT_INFO_ACTION: driftUserAccountInfoAction,
   DERIVE_DRIFT_VAULT_ADDRESS_ACTION: deriveDriftVaultAddressAction,
   UPDATE_DRIFT_VAULT_DELEGATE_ACTION: updateDriftVaultDelegateAction,
+  AVAILABLE_DRIFT_MARKETS_ACTION: availableDriftMarketsAction,
+  STAKE_TO_DRIFT_INSURANCE_FUND_ACTION: stakeToDriftInsuranceFundAction,
+  REQUEST_UNSTAKE_FROM_DRIFT_INSURANCE_FUND_ACTION:
+    requestUnstakeFromDriftInsuranceFundAction,
+  UNSTAKE_FROM_DRIFT_INSURANCE_FUND_ACTION: unstakeFromDriftInsuranceFundAction,
+  DRIFT_SPOT_TOKEN_SWAP_ACTION: driftSpotTokenSwapAction,
+  DRIFT_PERP_MARKET_FUNDING_RATE_ACTION: perpMarktetFundingRateAction,
+  DRIFT_GET_ENTRY_QUOTE_OF_PERP_TRADE_ACTION: entryQuoteOfPerpTradeAction,
+  DRIFT_GET_LEND_AND_BORROW_APY_ACTION: lendAndBorrowAPYAction,
+  GET_VOLTR_POSITION_VALUES_ACTION: getVoltrPositionValuesAction,
+  DEPOSIT_VOLTR_STRATEGY_ACTION: depositVoltrStrategyAction,
+  WITHDRAW_VOLTR_STRATEGY_ACTION: withdrawVoltrStrategyAction,
+  GET_ASSET_ACTION: getAssetAction,
+  GET_ASSETS_BY_AUTHORITY_ACTION: getAssetsByAuthorityAction,
+  SWITCHBOARD_FEED_ACTION: switchboardSimulateFeedAction,
+  GET_ASSETS_BY_CREATOR_ACTION: getAssetsByCreatorAction,
+  SWAP_ACTION: swapAction,
+  GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
+  GET_ALL_TOPICS_ACTION: getAllTopicsAction,
+  GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  DEBRIDGE_GET_SUPPORTED_CHAINS_ACTION: getDebridgeSupportedChainsAction,
+  DEBRIDGE_GET_TOKENS_INFO_ACTION: getDebridgeTokensInfoAction,
+  DEBRIDGE_CREATE_BRIDGE_ORDER_ACTION: createDebridgeBridgeOrderAction,
+  DEBRIDGE_CHECK_TRANSACTION_STATUS_ACTION:
+    checkDebridgeTransactionStatusAction,
+  DEBRIDGE_EXECUTE_BRIDGE_ORDER_ACTION: executeDebridgeBridgeOrderAction,
+  SOLUTIOFI_CLOSE_ACCOUNTS_ACTION: closeAccountsAction,
+  SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
+  SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
+  SOLUTIOFI_SPREAD_TOKEN_ACTION: spreadTokenAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

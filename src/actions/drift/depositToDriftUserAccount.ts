@@ -34,7 +34,7 @@ const depositToDriftUserAccountAction: Action = {
       .number()
       .positive()
       .describe(
-        "The amount in tokens you'd like to deposit into your drift user account",
+        "The amount in tokens you'd like to deposit into your drift user account in normal token amounts e.g 50 SOL, 100 USDC, etc",
       ),
     symbol: z
       .string()

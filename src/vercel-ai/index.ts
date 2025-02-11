@@ -14,7 +14,15 @@ export function createSolanaTools(
     tools[key] = tool({
       // @ts-expect-error Value matches type however TS still shows error
       id: action.name,
-      description: action.description,
+      description: `
+      ${action.description}
+
+      Similes: ${action.similes.map(
+        (simile) => `
+        ${simile}
+      `,
+      )}
+      `.slice(0, 1023),
       parameters: action.schema,
       execute: async (params) =>
         await executeAction(action, solanaAgentKit, params),

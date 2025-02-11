@@ -25,7 +25,7 @@ const withdrawFromVaultAction: Action = {
     ],
   ],
   schema: z.object({
-    vaultAddress: z.string(),
+    vaultAddress: z.string().describe("Vault's address"),
   }),
   handler: async (agent: SolanaAgentKit, input) => {
     try {

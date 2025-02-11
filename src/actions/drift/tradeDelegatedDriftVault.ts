@@ -64,11 +64,20 @@ const tradeDelegatedDriftVaultAction: Action = {
   ],
   schema: z.object({
     vaultAddress: z.string().describe("Address of the Drift vault to trade in"),
-    amount: z.number().positive().describe("Amount to trade"),
+    amount: z
+      .number()
+      .positive()
+      .describe(
+        "Amount to trade in normal token amounts e.g 50 SOL, 100 USDC, etc",
+      ),
     symbol: z.string().describe("Symbol of the token to trade"),
     action: z.enum(["long", "short"]).describe("Trade action - long or short"),
     type: z.enum(["market", "limit"]).describe("Trade type - market or limit"),
-    price: z.number().positive().optional().describe("Price for limit order"),
+    price: z
+      .number()
+      .positive()
+      .optional()
+      .describe("USD price for limit order"),
   }),
   handler: async (agent: SolanaAgentKit, input) => {
     try {

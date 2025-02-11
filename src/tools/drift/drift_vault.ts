@@ -37,14 +37,18 @@ export function getMarketIndexAndType(name: `${string}-${string}`) {
   if (type === "PERP") {
     const token = MainnetPerpMarkets.find((v) => v.baseAssetSymbol === symbol);
     if (!token) {
-      throw new Error("Drift doesn't have that market");
+      throw new Error(
+        `Drift doesn't have that market. Here's a list of available perp markets: ${MainnetPerpMarkets.map((v) => v.baseAssetSymbol).join(", ")}`,
+      );
     }
     return { marketIndex: token.marketIndex, marketType: MarketType.PERP };
   }
 
   const token = MainnetSpotMarkets.find((v) => v.symbol === symbol);
   if (!token) {
-    throw new Error("Drift doesn't have that market");
+    throw new Error(
+      `Drift doesn't have that market. Here's a list of available spot markets: ${MainnetSpotMarkets.map((v) => v.symbol).join(", ")}`,
+    );
   }
   return { marketIndex: token.marketIndex, marketType: MarketType.SPOT };
 }
@@ -134,22 +138,22 @@ export async function createVault(
     const { vaultClient, driftClient, cleanUp } = await initClients(agent);
     const marketIndexAndType = getMarketIndexAndType(params.marketName);
 
-    if (!marketIndexAndType) {
-      throw new Error("Invalid market name");
-    }
-
     const spotMarket = driftClient.getSpotMarketAccount(
       marketIndexAndType.marketIndex,
     );
 
     if (!spotMarket) {
-      throw new Error("Market not found");
+      throw new Error(
+        `Market not found. Here's a list of available spot markets: ${MainnetSpotMarkets.map((v) => `${v.symbol}-SPOT`).join(", ")}`,
+      );
     }
 
     const spotPrecision = TEN.pow(new BN(spotMarket.decimals));
 
     if (marketIndexAndType.marketType === MarketType.PERP) {
-      throw new Error("Only SPOT market names are supported");
+      throw new Error(
+        `Only SPOT market names are supported. Such as ${MainnetSpotMarkets.map((v) => `${v.symbol}-SPOT`).join(", ")}`,
+      );
     }
 
     const tx = await vaultClient.initializeVault({
@@ -239,7 +243,9 @@ export async function updateVault(
     );
 
     if (!spotMarket) {
-      throw new Error("Market not found");
+      throw new Error(
+        "Market not found. This vault's market is no longer supported",
+      );
     }
 
     const spotPrecision = TEN.pow(new BN(spotMarket.decimals));
@@ -370,7 +376,9 @@ export async function depositIntoVault(
     );
 
     if (!spotMarket) {
-      throw new Error("Market not found");
+      throw new Error(
+        "Market not found. This vaults market is no longer supported",
+      );
     }
 
     const spotPrecision = TEN.pow(new BN(spotMarket.decimals));
@@ -544,7 +552,7 @@ export async function tradeDriftVault(
 
     if (!isOwned) {
       throw new Error(
-        "This vault is owned by someone else, so you can't trade with it",
+        "This vault is owned/delegated to someone else, you can't trade with it",
       );
     }
 

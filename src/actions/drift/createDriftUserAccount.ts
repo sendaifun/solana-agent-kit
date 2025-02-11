@@ -27,7 +27,12 @@ const createDriftUserAccountAction: Action = {
     ],
   ],
   schema: z.object({
-    amount: z.number().positive().describe("Amount of the token to deposit"),
+    amount: z
+      .number()
+      .positive()
+      .describe(
+        "Amount of the token to deposit. In normal token amounts e.g 50 SOL, 100 USDC, etc",
+      ),
     symbol: z.string().describe("Symbol of the token to deposit"),
   }),
   handler: async (agent, input) => {
