@@ -91,6 +91,7 @@ import createOrcaCLMMAction from "./orca/createOrcaCLMM";
 import fetchOrcaPositionsAction from "./orca/fetchOrcaPositions";
 import openOrcaCenteredPositionWithLiquidityAction from "./orca/openOrcaCenteredPositionWithLiquidity";
 import openOrcaSingleSidedPositionAction from "./orca/openOrcaSingleSidedPosition";
+import verifyProgramAction from "./verify/verify_program";
 import getDebridgeSupportedChainsAction from "./debridge/getSupportedChains";
 import getDebridgeTokensInfoAction from "./debridge/getTokensInfo";
 import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
@@ -190,6 +191,7 @@ export const ACTIONS = {
   GET_PRICE_INFERENCE_ACTION: getPriceInferenceAction,
   GET_ALL_TOPICS_ACTION: getAllTopicsAction,
   GET_INFERENCE_BY_TOPIC_ID_ACTION: getInferenceByTopicIdAction,
+  VERIFY_PROGRAM_ACTION: verifyProgramAction,
   DEBRIDGE_GET_SUPPORTED_CHAINS_ACTION: getDebridgeSupportedChainsAction,
   DEBRIDGE_GET_TOKENS_INFO_ACTION: getDebridgeTokensInfoAction,
   DEBRIDGE_CREATE_BRIDGE_ORDER_ACTION: createDebridgeBridgeOrderAction,

@@ -32,8 +32,10 @@ export * from "./mayan";
 export * from "./allora";
 export * from "./solutiofi";
 export * from "./switchboard";
+export * from "./verify";
 export * from "./debridge";
 export * from "./fluxbeam";
+
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
@@ -148,6 +150,7 @@ import {
   SolanaMergeTokensTool,
   SolanaSpreadTokenTool,
   SolanaSwitchboardSimulateFeed,
+  SolanaProgramVerificationTool,
   SolanaFluxbeamCreatePoolTool,
 } from "./index";
 
@@ -265,6 +268,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaMergeTokensTool(solanaKit),
     new SolanaSpreadTokenTool(solanaKit),
     new SolanaAlloraGetPriceInference(solanaKit),
+    new SolanaProgramVerificationTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
   ];
 }
