@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 0%;
+        --foreground: 210 40% 98%;
+        --card: 0 0% 0%;
+        --card-foreground: 210 40% 98%;
+        --popover: 0 0% 0%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 190 100% 50%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 190 100% 50%;
+        --accent-foreground: 210 40% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 190 100% 50%;
+        --radius: 0.5rem;
+    }
+}
+
+@layer utilities {
+    .neon-glow {
+        box-shadow: 0 0 10px theme('colors.cyan.500'),
+        0 0 20px theme('colors.cyan.500');
+    }
+
+    .neon-text {
+        text-shadow: 0 0 10px theme('colors.cyan.500');
+    }
+}
+
+@layer components {
+    .main-gradient {
+        @apply bg-gradient-to-b from-black via-gray-900 to-black;
+    }
+
+    .glass-card {
+        @apply backdrop-blur-xl bg-black/40 border border-gray-800/50 shadow-2xl;
+    }
+
+    .action-button {
+        @apply bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20
+        transition-all duration-200 ease-in-out;
+    }
+
+    .balance-section {
+        @apply bg-black/20 backdrop-blur-md border border-gray-800/40 rounded-lg p-4;
+    }
+
+    .wallet-card {
+        @apply bg-gradient-to-r from-gray-900/80 to-black border-gray-800/50;
+    }
+
+    .status-success {
+        @apply text-cyan-400;
+    }
+
+    .status-pending {
+        @apply text-yellow-400;
+    }
+
+    .status-error {
+        @apply text-red-400;
+    }
+}
+
+/* Animation utilities */
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s linear infinite;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-black/20;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-cyan-500/20 rounded-full hover:bg-cyan-500/40;
+}
