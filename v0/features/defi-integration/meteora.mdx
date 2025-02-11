@@ -1,0 +1,251 @@
+---
+title: 'Meteora Pool Creation'
+description: 'Learn how to create DLMM and Dynamic AMM pools with Meteora'
+---
+
+Solana Agent Kit provides integration with Meteora for creating two types of liquidity pools:
+1. DLMM (Dynamic Liquidity Market Maker) Pools
+2. Dynamic AMM (Automated Market Maker) Pools
+
+## Key Features
+
+- DLMM pool creation with configurable bin steps
+- Dynamic AMM pool creation with constant product formula
+- Customizable trading fees
+- Delayed activation support
+- Alpha vault integration
+- Price rounding options
+- LangChain tool integration
+
+## Pool Types
+
+### DLMM Pools
+
+DLMM pools use a bin-based liquidity provision system with configurable price ranges.
+
+```typescript
+const signature = await agent.meteoraCreateDlmmPool(
+  tokenAMint,      // Token A mint address
+  tokenBMint,      // Token B mint address
+  20,              // Bin step
+  0.25,            // Initial price (tokenA/tokenB)
+  true,            // Price rounding up
+  20,              // Fee in basis points (0.2%)
+  1,               // Activation type (timestamp)
+  false,           // Alpha vault support
+  undefined        // Activation point
+);
+```
+
+### Dynamic AMM Pools
+
+Dynamic AMM pools use a constant product formula with initial liquidity.
+
+```typescript
+const signature = await agent.meteoraCreateDynamicPool(
+  tokenAMint,           // Token A mint address
+  tokenBMint,           // Token B mint address
+  tokenAAmount,         // Token A amount
+  tokenBAmount,         // Token B amount
+  2500,                 // Trade fee numerator (2.5%)
+  activationPoint,      // Optional activation point
+  false,                // Alpha vault support
+  1                     // Activation type (timestamp)
+);
+```
+
+## Configuration Options
+
+### DLMM Pool Parameters
+
+```typescript
+interface DLMMPoolParams {
+  tokenAMint: PublicKey;        // Token A mint address
+  tokenBMint: PublicKey;        // Token B mint address
+  binStep: number;              // Pool bin step
+  initialPrice: number;         // Initial price ratio
+  feeBps: number;              // Trading fee in basis points
+  priceRoundingUp?: boolean;    // Price rounding direction
+  activationType?: number;      // 0 for slot, 1 for timestamp
+  activationPoint?: number;     // Activation point
+  hasAlphaVault?: boolean;     // Alpha vault support
+}
+```
+
+### Dynamic Pool Parameters
+
+```typescript
+interface DynamicPoolParams {
+  tokenAMint: PublicKey;        // Token A mint address
+  tokenBMint: PublicKey;        // Token B mint address
+  tokenAAmount: number;         // Token A initial amount
+  tokenBAmount: number;         // Token B initial amount
+  tradeFeeNumerator: number;    // Trade fee numerator
+  activationType?: number;      // 0 for slot, 1 for timestamp
+  activationPoint?: number;     // Activation point
+  hasAlphaVault?: boolean;     // Alpha vault support
+}
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides LangChain tools for both pool types:
+
+### DLMM Pool Creation Tool
+
+```typescript
+import { SolanaMeteoraCreateDlmmPool } from 'solana-agent-kit';
+
+const createDlmmPoolTool = new SolanaMeteoraCreateDlmmPool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  tokenAMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  tokenBMint: "So11111111111111111111111111111111111111112",
+  binStep: 20,
+  initialPrice: 0.25,
+  feeBps: 20,
+  priceRoundingUp: true,
+  activationType: 1,
+  hasAlphaVault: false
+});
+```
+
+### Dynamic Pool Creation Tool
+
+```typescript
+import { SolanaMeteoraCreateDynamicPool } from 'solana-agent-kit';
+
+const createDynamicPoolTool = new SolanaMeteoraCreateDynamicPool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  tokenAMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  tokenBMint: "So11111111111111111111111111111111111111112",
+  tokenAAmount: 1000,
+  tokenBAmount: 250,
+  tradeFeeNumerator: 2500,
+  activationType: 1,
+  hasAlphaVault: false
+});
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### DLMM Pool Creation
+```text
+"Create a DLMM pool for SOL/USDC with 0.2% fee"
+"Setup a DLMM pool with 20 bin step and initial price of 0.25"
+```
+
+### Dynamic Pool Creation
+```text
+"Create a Dynamic pool with 1000 USDC and 4 SOL"
+"Setup a Dynamic AMM pool with 2.5% trading fee"
+```
+
+## Important Notes
+
+1. **Bin Steps (DLMM)**
+   - Lower bin steps mean tighter price ranges
+   - Common values: 10, 20, 50
+   - Affects price precision and liquidity distribution
+
+2. **Price Configuration**
+   - Initial price is in token A / token B ratio
+   - Price rounding affects bin placement
+   - Consider market prices when setting initial price
+
+3. **Fee Structure**
+   - DLMM: fees in basis points (1 bp = 0.01%)
+   - Dynamic: fee numerator with 100000 denominator
+   - Consider market standards when setting fees
+
+4. **Activation Types**
+   ```typescript
+   enum ActivationType {
+     Slot = 0,
+     Timestamp = 1
+   }
+   ```
+
+## Best Practices
+
+1. **Token Decimals**
+   ```typescript
+   // Always fetch and account for token decimals
+   const tokenAInfo = await getMint(connection, tokenAMint);
+   const tokenBInfo = await getMint(connection, tokenBMint);
+   const decimalsA = tokenAInfo.decimals;
+   const decimalsB = tokenBInfo.decimals;
+   ```
+
+2. **Price Calculation**
+   ```typescript
+   // Calculate price per lamport for DLMM
+   const pricePerLamport = DLMM.getPricePerLamport(
+     decimalsA,
+     decimalsB,
+     initialPrice
+   );
+   ```
+
+3. **Amount Conversion**
+   ```typescript
+   // Convert human amounts to lamports
+   const amountLamports = new BN(
+     new Decimal(amount)
+       .mul(10 ** decimals)
+       .toString()
+   );
+   ```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.meteoraCreateDlmmPool(...);
+} catch (error) {
+  if (error.message.includes("invalid mint")) {
+    // Handle invalid token addresses
+  } else if (error.message.includes("insufficient balance")) {
+    // Handle insufficient funds
+  }
+}
+```
+
+## Technical Details
+
+### Constants
+```typescript
+const DECIMALS = {
+  USDC: 6,
+  SOL: 9
+};
+
+const COMMON_BIN_STEPS = {
+  TIGHT: 10,
+  NORMAL: 20,
+  WIDE: 50
+};
+```
+
+### Fee Calculations
+```typescript
+const BPS_DENOMINATOR = 10000;          // For DLMM
+const FEE_DENOMINATOR = 100000;         // For Dynamic AMM
+
+// Example: 0.2% fee in DLMM
+const feeBps = 20;  // 20/10000 = 0.2%
+
+// Example: 2.5% fee in Dynamic AMM
+const feeNumerator = 2500;  // 2500/100000 = 2.5%
+```
+
+### SDK Dependencies
+```typescript
+import DLMM from "@meteora-ag/dlmm";
+import AmmImpl from "@mercurial-finance/dynamic-amm-sdk";
+```

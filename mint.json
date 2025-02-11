@@ -88,7 +88,16 @@
             "v0/features/defi-integration/alldomains",
             "v0/features/defi-integration/adrena",
             "v0/features/defi-integration/flashtrade",
-            "v0/features/defi-integration/drift"
+            "v0/features/defi-integration/drift",
+            "v0/features/defi-integration/voltr",
+            "v0/features/defi-integration/dexscreener",
+            "v0/features/defi-integration/solutiofi",
+            "v0/features/defi-integration/meteora",
+            "v0/features/defi-integration/mayan",
+            "v0/features/defi-integration/fluxbeam",
+            "v0/features/defi-integration/debridge",
+            "v0/features/defi-integration/allora",
+            "v0/features/defi-integration/switchboard"
           ]
         },
         {

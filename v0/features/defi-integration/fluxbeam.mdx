@@ -1,0 +1,202 @@
+
+---
+title: 'FluxBeam Integration'
+description: 'Learn how to create and manage liquidity pools with FluxBeam'
+---
+
+Solana Agent Kit provides integration with FluxBeam for creating and managing liquidity pools. The integration supports creating new pools with any pair of tokens, including native SOL and SPL tokens.
+
+## Key Features
+
+- Create new liquidity pools
+- Support for native SOL and SPL tokens
+- Automatic decimal handling
+- LangChain tool integration
+- Built-in slippage protection
+
+## Basic Usage
+
+### Creating a New Pool
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+const signature = await agent.fluxbeamCreatePool(
+  new PublicKey("So11111111111111111111111111111111111111112"), // SOL
+  1.5, // 1.5 SOL
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+  10, // 10 USDC
+);
+```
+
+## Input Parameters
+
+### Pool Creation Parameters
+
+```typescript
+interface CreatePoolParams {
+  token_a: PublicKey;      // First token mint address
+  token_a_amount: number;   // Amount of first token
+  token_b: PublicKey;      // Second token mint address
+  token_b_amount: number;   // Amount of second token
+}
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides a LangChain tool for pool creation:
+
+### Create Pool Tool
+
+```typescript
+import { SolanaFluxbeamCreatePoolTool } from 'solana-agent-kit';
+
+const createPoolTool = new SolanaFluxbeamCreatePoolTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  token_a: "So11111111111111111111111111111111111111112",
+  token_a_amount: 1.5,
+  token_b: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  token_b_amount: 10
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  message: "Token pool created successfully",
+  transaction: "signature...",
+  token_a: "token_a_address",
+  token_a_amount: 1.5,
+  token_b: "token_b_address",
+  token_b_amount: 10
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Creating Pools
+```text
+"Create a new pool with 1.5 SOL and 10 USDC"
+"Setup a liquidity pool using 100 USDC and 5 SOL"
+"Create a new FluxBeam pool for SOL/USDC pair"
+```
+
+## Error Handling
+
+```typescript
+try {
+  const signature = await agent.fluxbeamCreatePool(
+    tokenA,
+    amountA,
+    tokenB,
+    amountB
+  );
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message.includes("invalid mint")) {
+    // Handle invalid token address
+  }
+}
+```
+
+## API Details
+
+### FluxBeam API
+- Base URL: `FLUXBEAM_BASE_URI`
+- Endpoint: `/token_pools`
+- Method: POST
+- Required fields: payer, token_a, token_b, token_a_amount, token_b_amount
+
+## Best Practices
+
+1. **Token Amount Handling**
+   - Input amounts in human-readable format (e.g., 1.5 SOL, not 1500000000 lamports)
+   - The integration automatically handles decimal conversion
+   - Always verify token decimals before submission
+
+2. **Token Address Validation**
+   - Use PublicKey class for token addresses
+   - Verify token existence before pool creation
+   - Handle native SOL cases appropriately
+
+3. **Transaction Signing**
+   - Transactions are automatically signed by the agent
+   - Uses VersionedTransaction for compatibility
+   - Includes retry logic for better reliability
+
+4. **Error Recovery**
+   - Implement proper error handling
+   - Check for sufficient balances
+   - Verify token approvals
+
+## Implementation Notes
+
+1. **Decimal Handling**
+   ```typescript
+   // Example of how decimals are handled internally
+   const scaledAmount = amount * Math.pow(10, decimals);
+   ```
+
+2. **Native SOL Support**
+   ```typescript
+   const isNativeSol = token.equals(TOKENS.SOL);
+   const decimals = isNativeSol ? 9 : await getTokenDecimals(agent, token);
+   ```
+
+3. **Transaction Processing**
+   ```typescript
+   // Transaction is created, signed, and sent
+   const transaction = VersionedTransaction.deserialize(TransactionBuf);
+   transaction.sign([agent.wallet]);
+   const signature = await agent.connection.sendRawTransaction(
+     transaction.serialize(),
+     {
+       maxRetries: 3,
+       skipPreflight: true,
+     }
+   );
+   ```
+
+## Common Use Cases
+
+1. **Creating a SOL/USDC Pool**
+   ```typescript
+   const signature = await agent.fluxbeamCreatePool(
+     TOKENS.SOL,
+     1.5,    // 1.5 SOL
+     TOKENS.USDC,
+     10      // 10 USDC
+   );
+   ```
+
+2. **Creating a Custom Token Pool**
+   ```typescript
+   const signature = await agent.fluxbeamCreatePool(
+     new PublicKey("custom_token_a"),
+     100,
+     new PublicKey("custom_token_b"),
+     200
+   );
+   ```
+
+## Technical Details
+
+### Constants
+```typescript
+const TOKENS = {
+  SOL: new PublicKey("So11111111111111111111111111111111111111112"),
+  USDC: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+};
+```
+
+### Configuration Options
+```typescript
+const TX_OPTIONS = {
+  maxRetries: 3,
+  skipPreflight: true
+};
+```

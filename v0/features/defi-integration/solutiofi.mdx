@@ -1,0 +1,288 @@
+---
+title: 'SolutioFi Token Management'
+description: 'Learn how to manage tokens using SolutioFi protocol integration'
+---
+
+Solana Agent Kit provides comprehensive integration with SolutioFi protocol for token management operations, including burning tokens, closing accounts, merging multiple tokens, and spreading tokens across different assets.
+
+## Key Features
+
+- Token burning
+- Account closure
+- Token merging
+- Token spreading
+- Priority fee management
+- Transaction batching
+- LangChain tool integration
+
+## Basic Usage
+
+### Burning Tokens
+
+```typescript
+const signatures = await agent.burnTokens([
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",  // USDC
+  "So11111111111111111111111111111111111111112"    // SOL
+]);
+```
+
+### Closing Accounts
+
+```typescript
+const signatures = await agent.closeAccounts([
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",  // USDC
+  "So11111111111111111111111111111111111111112"    // SOL
+]);
+```
+
+### Merging Tokens
+
+```typescript
+const signatures = await agent.mergeTokens(
+  [
+    {
+      mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      inputAmount: "100",
+      slippage: "1",
+      onlyDirectRoutes: true
+    }
+  ],
+  "So11111111111111111111111111111111111111112",
+  "normal"
+);
+```
+
+### Spreading Tokens
+
+```typescript
+const signatures = await agent.spreadToken(
+  {
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    inputAmount: "1000",
+    slippage: "1",
+    onlyDirectRoutes: true
+  },
+  [
+    {
+      mint: "So11111111111111111111111111111111111111112",
+      percentage: 50
+    },
+    {
+      mint: "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+      percentage: 50
+    }
+  ],
+  "normal"
+);
+```
+
+## Input Types
+
+### Input Asset Structure
+
+```typescript
+interface InputAssetStruct {
+  mint: string;           // Token mint address
+  inputAmount: string;    // Amount to process
+  slippage: string;       // Slippage tolerance
+  onlyDirectRoutes: boolean; // Use only direct routes
+}
+```
+
+### Target Token Structure
+
+```typescript
+interface TargetTokenStruct {
+  mint: string;           // Token mint address
+  percentage: number;     // Allocation percentage
+}
+```
+
+### Priority Fee Levels
+
+```typescript
+type PriorityFee = "fast" | "normal" | "slow";
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides several LangChain tools for SolutioFi operations:
+
+### Burn Tokens Tool
+
+```typescript
+import { SolanaBurnTokensTool } from 'solana-agent-kit';
+
+const burnTokensTool = new SolanaBurnTokensTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  mints: [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "So11111111111111111111111111111111111111112"
+  ]
+});
+```
+
+### Close Accounts Tool
+
+```typescript
+import { SolanaCloseAccountsTool } from 'solana-agent-kit';
+
+const closeAccountsTool = new SolanaCloseAccountsTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  mints: [
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "So11111111111111111111111111111111111111112"
+  ]
+});
+```
+
+### Merge Tokens Tool
+
+```typescript
+import { SolanaMergeTokensTool } from 'solana-agent-kit';
+
+const mergeTokensTool = new SolanaMergeTokensTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  inputAssets: [{
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    inputAmount: "100",
+    slippage: "1",
+    onlyDirectRoutes: true
+  }],
+  outputMint: "So11111111111111111111111111111111111111112",
+  priorityFee: "normal"
+});
+```
+
+### Spread Token Tool
+
+```typescript
+import { SolanaSpreadTokenTool } from 'solana-agent-kit';
+
+const spreadTokenTool = new SolanaSpreadTokenTool(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  inputAsset: {
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    inputAmount: "1000",
+    slippage: "1",
+    onlyDirectRoutes: true
+  },
+  targetTokens: [
+    {
+      mint: "So11111111111111111111111111111111111111112",
+      percentage: 50
+    },
+    {
+      mint: "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+      percentage: 50
+    }
+  ],
+  priorityFee: "normal"
+});
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Token Management
+```text
+"Burn these unused token accounts"
+"Close all empty token accounts"
+"Merge multiple USDC accounts into one"
+"Split 1000 USDC equally between SOL and mSOL"
+```
+
+## Important Notes
+
+1. **API Key Configuration**
+   - Required for all operations
+   - Set via SOLUTIOFI_API_KEY in config
+   - Client authentication required before use
+
+2. **Transaction Batching**
+   - Operations may generate multiple transactions
+   - All transactions are signed and sent sequentially
+   - Failed transactions are skipped
+
+3. **Priority Fees**
+   - Three levels available: fast, normal, slow
+   - Affects transaction processing speed
+   - Higher fees for faster processing
+
+## Best Practices
+
+1. **Error Handling**
+   ```typescript
+   try {
+     const signatures = await agent.burnTokens(mints);
+     // Check each signature for success
+   } catch (error) {
+     if (error.message.includes("API key")) {
+       // Handle authentication issues
+     } else if (error.message.includes("insufficient")) {
+       // Handle insufficient balance
+     }
+   }
+   ```
+
+2. **Transaction Management**
+   ```typescript
+   // Process multiple transactions
+   const signatures = [];
+   for (const tx of transactions) {
+     try {
+       const signature = await sendAndConfirm(tx);
+       signatures.push(signature);
+     } catch (error) {
+       continue; // Skip failed transactions
+     }
+   }
+   ```
+
+3. **Input Validation**
+   ```typescript
+   // Validate percentage allocations
+   const totalPercentage = targetTokens.reduce(
+     (sum, token) => sum + token.percentage,
+     0
+   );
+   if (totalPercentage !== 100) {
+     throw new Error("Total percentage must equal 100");
+   }
+   ```
+
+## Technical Details
+
+### Client Initialization
+```typescript
+const client = new SolutioFi({
+  apiKey: process.env.SOLUTIOFI_API_KEY
+});
+await client.authenticate();
+```
+
+### Transaction Options
+```typescript
+const TX_OPTIONS = {
+  skipPreflight: false,
+  preflightCommitment: "processed"
+};
+```
+
+### Common Token Addresses
+```typescript
+const TOKENS = {
+  SOL: "So11111111111111111111111111111111111111112",
+  USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  mSOL: "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So"
+};
+```

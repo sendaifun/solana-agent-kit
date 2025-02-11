@@ -1,0 +1,209 @@
+---
+title: 'Switchboard Feed Simulation'
+description: 'Learn how to simulate Switchboard oracle price feeds'
+---
+
+Solana Agent Kit provides integration with Switchboard for simulating oracle price feeds. This integration allows you to fetch simulated price data for any Switchboard feed on mainnet.
+
+## Key Features
+
+- Price feed simulation
+- Customizable Crossbar endpoint
+- Mainnet feed support
+- LangChain tool integration
+- Error handling and validation
+
+## Basic Usage
+
+### Simulating a Price Feed
+
+```typescript
+const result = await agent.simulateSwitchboardFeed(
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",  // Feed public key
+  "https://crossbar.switchboard.xyz"                 // Optional Crossbar URL
+);
+```
+
+## Input Parameters
+
+### Feed Simulation Parameters
+
+```typescript
+interface SimulateFeedParams {
+  feed: string;           // Feed public key (hash)
+  crossbarUrl?: string;   // Optional Crossbar URL
+}
+```
+
+### Response Type
+
+```typescript
+interface SwitchboardSimulateFeedResponse {
+  status: "success" | "error";
+  feed?: string;          // Feed public key
+  value?: number;         // Simulated feed value
+  message?: string;       // Error message if status is "error"
+  code?: string;          // Error code if status is "error"
+}
+```
+
+## LangChain Integration
+
+Solana Agent Kit provides a LangChain tool for feed simulation:
+
+### Simulate Feed Tool
+
+```typescript
+import { SolanaSwitchboardSimulateFeed } from 'solana-agent-kit';
+
+const simulateFeedTool = new SolanaSwitchboardSimulateFeed(agent);
+
+// Tool input format (JSON string):
+const input = JSON.stringify({
+  feed: "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  crossbarUrl: "https://crossbar.switchboard.xyz"  // Optional
+});
+
+// Tool returns JSON response:
+{
+  status: "success",
+  feed: "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  value: 1234567
+}
+```
+
+## Example Prompts
+
+For LangChain AI tools, here are example prompts:
+
+### Feed Simulation
+```text
+"Simulate the SOL/USD price feed"
+"Get the current BTC price from Switchboard"
+"Check the ETH/USD oracle feed"
+```
+
+## Important Notes
+
+1. **Feed Public Keys**
+   - Must be valid Switchboard feed addresses
+   - Only mainnet feeds are supported
+   - Feed hash must be base58 encoded
+
+2. **Crossbar Configuration**
+   - Default URL: https://crossbar.switchboard.xyz
+   - Custom URLs must be valid Crossbar instances
+   - SSL validation is enabled by default
+
+3. **Response Handling**
+   - Values are returned as integers
+   - Empty results indicate invalid feed hash
+   - Network errors are propagated
+
+## Best Practices
+
+1. **Error Handling**
+   ```typescript
+   try {
+     const result = await agent.simulateSwitchboardFeed(feed);
+     if (!result) {
+       // Handle empty result
+     }
+   } catch (error) {
+     if (error.message.includes("feed hash")) {
+       // Handle invalid feed address
+     } else if (error.message.includes("network")) {
+       // Handle connection issues
+     }
+   }
+   ```
+
+2. **Feed Validation**
+   ```typescript
+   function isValidFeedAddress(feed: string): boolean {
+     try {
+       return feed.length === 44 || feed.length === 43;
+     } catch {
+       return false;
+     }
+   }
+   ```
+
+3. **Response Processing**
+   ```typescript
+   // Convert response to number
+   const value = Number.parseInt(result);
+   if (isNaN(value)) {
+     throw new Error("Invalid feed response");
+   }
+   ```
+
+## Technical Details
+
+### Constants
+```typescript
+const SWITCHBOARD_DEFAULT_CROSSBAR = "https://crossbar.switchboard.xyz";
+```
+
+### CrossbarClient Configuration
+```typescript
+const crossbar = new CrossbarClient(crossbarUrl, true);  // SSL enabled
+```
+
+### Common Feed Addresses
+```typescript
+const FEEDS = {
+  SOL_USD: "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  BTC_USD: "8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee",
+  ETH_USD: "HNStfhaLnqwF2ZtJUizaA9uHqgE6QK6tZkoySdJ5XoZF"
+};
+```
+
+### Network Configuration
+```typescript
+const NETWORK_CONFIG = {
+  CHAIN: "mainnet",
+  MAX_RETRIES: 3,
+  TIMEOUT: 5000
+};
+```
+
+## Error Messages
+
+Common error messages and their meanings:
+
+```typescript
+const ERROR_MESSAGES = {
+  INVALID_FEED: "Did you provide the right mainnet feed hash?",
+  EMPTY_RESULT: "No results returned from simulation",
+  NETWORK_ERROR: "Failed to connect to Crossbar service"
+};
+```
+
+## Examples
+
+1. **Basic Feed Simulation**
+   ```typescript
+   const value = await agent.simulateSwitchboardFeed(
+     FEEDS.SOL_USD
+   );
+   console.log(`Current SOL price: $${value}`);
+   ```
+
+2. **Custom Crossbar Instance**
+   ```typescript
+   const value = await agent.simulateSwitchboardFeed(
+     FEEDS.BTC_USD,
+     "https://my-crossbar.example.com"
+   );
+   ```
+
+3. **Error Handling**
+   ```typescript
+   try {
+     const value = await agent.simulateSwitchboardFeed(feed);
+     console.log(`Feed value: ${value}`);
+   } catch (error) {
+     console.error(`Simulation failed: ${error.message}`);
+   }
+   ```
