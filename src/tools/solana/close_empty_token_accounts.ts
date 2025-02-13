@@ -57,10 +57,10 @@ export async function closeEmptyTokenAccounts(
 }
 
 /**
- * creates the close instuctions of a spl token account
+ * creates the close instructions of a spl token account
  * @param agnet SolanaAgentKit instance
  * @param token_program Token Program Id
- * @returns close instuction array
+ * @returns close instruction array
  */
 
 async function create_close_instruction(
