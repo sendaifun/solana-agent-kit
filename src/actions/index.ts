@@ -1,5 +1,6 @@
 import tokenBalancesAction from "./tokenBalances";
 import deployTokenAction from "./metaplex/deployToken";
+import deployToken2022Action from "./metaplex/deployToken2022";
 import balanceAction from "./solana/balance";
 import transferAction from "./solana/transfer";
 import deployCollectionAction from "./metaplex/deployCollection";
@@ -102,6 +103,7 @@ export const ACTIONS = {
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
   TOKEN_BALANCES_ACTION: tokenBalancesAction,
   DEPLOY_TOKEN_ACTION: deployTokenAction,
+  DEPLOY_TOKEN_2022_ACTION: deployToken2022Action,
   BALANCE_ACTION: balanceAction,
   TRANSFER_ACTION: transferAction,
   DEPLOY_COLLECTION_ACTION: deployCollectionAction,
