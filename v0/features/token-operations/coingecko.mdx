@@ -1,0 +1,243 @@
+---
+title: 'CoinGecko Market Data Integration'
+description: 'Learn how to fetch market data, token information, and trends using CoinGecko'
+---
+
+# CoinGecko Market Data Integration
+
+Solana Agent Kit provides comprehensive integration with CoinGecko's API for accessing market data, token information, and trending metrics. The integration supports both Pro and Demo API keys with fallback functionality.
+
+## Key Features
+
+- Token price data
+- Token information
+- Latest pools tracking
+- Trending pools analysis
+- Top gainers identification
+- Trending tokens discovery
+- Support for both Pro and Demo API
+- Configurable time ranges
+
+## Basic Usage
+
+### Getting Token Price Data
+
+```typescript
+const priceData = await agent.getTokenPriceData([
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",  // USDC
+  "So11111111111111111111111111111111111111112"    // SOL
+]);
+```
+
+### Getting Token Information
+
+```typescript
+const tokenInfo = await agent.getTokenInfo(
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"  // USDC
+);
+```
+
+### Getting Latest Pools
+
+```typescript
+const latestPools = await agent.getLatestPools();
+```
+
+### Getting Trending Pools
+
+```typescript
+const trendingPools = await agent.getTrendingPools("24h");
+```
+
+### Getting Top Gainers
+
+```typescript
+const topGainers = await agent.getTopGainers("24h", "all");
+```
+
+### Getting Trending Tokens
+
+```typescript
+const trendingTokens = await agent.getTrendingTokens();
+```
+
+## Configuration
+
+### API Key Setup
+
+```typescript
+interface CoinGeckoConfig {
+  COINGECKO_PRO_API_KEY?: string;    // Pro API key
+  COINGECKO_DEMO_API_KEY?: string;    // Demo API key
+}
+```
+
+### Time Range Options
+
+```typescript
+type DurationOptions = "5m" | "1h" | "6h" | "24h";  // For trending pools
+type GainerDuration = "1h" | "24h" | "7d" | "14d" | "30d" | "60d" | "1y";
+type TopCoinsLimit = 300 | 500 | 1000 | "all";
+```
+
+## API Response Types
+
+### Token Price Data
+
+```typescript
+interface TokenPriceData {
+  [tokenAddress: string]: {
+    usd: number;
+    usd_market_cap: number;
+    usd_24h_vol: number;
+    usd_24h_change: number;
+    last_updated_at: number;
+  }
+}
+```
+
+### Pool Data
+
+```typescript
+interface PoolData {
+  pool_address: string;
+  base_token: {
+    address: string;
+    symbol: string;
+    name: string;
+  };
+  quote_token: {
+    address: string;
+    symbol: string;
+    name: string;
+  };
+  volume_24h: number;
+  liquidity_usd: number;
+  created_at: string;
+}
+```
+
+## Important Notes
+
+1. **API Key Requirements**
+   - Pro API key required for advanced endpoints
+   - Demo API key supports basic endpoints
+   - Some endpoints work without any key
+
+2. **Rate Limits**
+   - Pro API: Higher rate limits
+   - Demo API: Limited requests per minute
+   - Public API: Lowest rate limits
+
+3. **Data Freshness**
+   - Price data updated every minute
+   - Pool data updated every 5 minutes
+   - Trending data updated every hour
+
+## Best Practices
+
+1. **API Key Management**
+   ```typescript
+   // Check for API key availability
+   if (!agent.config.COINGECKO_PRO_API_KEY) {
+     // Fallback to demo key if available
+     if (agent.config.COINGECKO_DEMO_API_KEY) {
+       // Use demo endpoints
+     }
+   }
+   ```
+
+2. **Error Handling**
+   ```typescript
+   try {
+     const data = await agent.getTokenPriceData(tokens);
+   } catch (error) {
+     if (error.message.includes("API key")) {
+       // Handle authentication issues
+     } else if (error.message.includes("rate limit")) {
+       // Handle rate limiting
+     }
+   }
+   ```
+
+3. **Batch Processing**
+   ```typescript
+   // Process tokens in batches to avoid URL length limits
+   const batchSize = 100;
+   const batches = chunk(tokenAddresses, batchSize);
+   const results = await Promise.all(
+     batches.map(batch => agent.getTokenPriceData(batch))
+   );
+   ```
+
+## Technical Details
+
+### API Endpoints
+
+```typescript
+const ENDPOINTS = {
+  PRO: {
+    BASE: "https://pro-api.coingecko.com/api/v3",
+    TOKEN_PRICE: "/simple/token_price/solana",
+    TRENDING_POOLS: "/onchain/networks/solana/trending_pools",
+    NEW_POOLS: "/onchain/networks/solana/new_pools",
+    TOP_GAINERS: "/coins/top_gainers_losers",
+    TRENDING: "/search/trending"
+  },
+  DEMO: {
+    BASE: "https://api.coingecko.com/api/v3",
+    // Similar endpoints without pro prefix
+  }
+};
+```
+
+### Common Parameters
+
+```typescript
+const PARAMS = {
+  VS_CURRENCY: "usd",
+  INCLUDE_FIELDS: [
+    "market_cap",
+    "24hr_vol",
+    "24hr_change",
+    "last_updated_at"
+  ]
+};
+```
+
+## Example Use Cases
+
+1. **Market Analysis**
+   ```typescript
+   // Get price data and trending info
+   const prices = await agent.getTokenPriceData(tokens);
+   const trending = await agent.getTrendingTokens();
+   const gainers = await agent.getTopGainers("24h", 300);
+   ```
+
+2. **Pool Discovery**
+   ```typescript
+   // Get new and trending pools
+   const newPools = await agent.getLatestPools();
+   const trendingPools = await agent.getTrendingPools("1h");
+   ```
+
+3. **Token Research**
+   ```typescript
+   // Get comprehensive token information
+   const tokenInfo = await agent.getTokenInfo(address);
+   const priceData = await agent.getTokenPriceData([address]);
+   ```
+
+## Error Messages
+
+Common error messages and their meanings:
+
+```typescript
+const ERROR_MESSAGES = {
+  NO_API_KEY: "No CoinGecko Pro API key provided",
+  RATE_LIMIT: "API rate limit exceeded",
+  INVALID_TOKEN: "Invalid token address",
+  NETWORK_ERROR: "Failed to fetch data from CoinGecko"
+};
+```

@@ -62,7 +62,8 @@
             "v0/features/token-operations/balance_check",
             "v0/features/token-operations/compressed_airdrop",
             "v0/features/token-operations/rugcheck_token_retrieval",
-            "v0/features/token-operations/tiplink_operations"
+            "v0/features/token-operations/tiplink_operations",
+            "v0/features/token-operations/coingecko"
           ]
         },
         {
