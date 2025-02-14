@@ -141,6 +141,21 @@ const result = await agent.deployToken(
 
 console.log("Token Mint Address:", result.mint.toString());
 ```
+
+### Deploy a New Token2022
+
+```typescript
+const result = await agent.deployToken2022(
+  "my ai token 2022", // name
+  "uri", // uri
+  "token22", // symbol
+  9, // decimals
+  1000000 // initial supply
+);
+
+console.log("Token Mint Address:", result.mint.toString());
+```
+
 ### Create NFT Collection on 3Land
 ```typescript
 const isDevnet = false; // (Optional) if not present TX takes place in Mainnet
