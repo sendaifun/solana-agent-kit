@@ -11,6 +11,7 @@ import { DEFAULT_OPTIONS } from "../constants";
 import {
   deploy_collection,
   deploy_token,
+  deploy_token2022,
   get_balance,
   get_balance_other,
   getTPS,
@@ -227,6 +228,16 @@ export class SolanaAgentKit {
     initialSupply?: number,
   ): Promise<{ mint: PublicKey }> {
     return deploy_token(this, name, uri, symbol, decimals, initialSupply);
+  }
+
+  async deployToken2022(
+    name: string,
+    uri: string,
+    symbol: string,
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    initialSupply?: number,
+  ): Promise<{ mint: PublicKey }> {
+    return deploy_token2022(this, name, uri, symbol, decimals, initialSupply);
   }
 
   async deployCollection(
