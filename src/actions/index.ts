@@ -103,6 +103,12 @@ import getDebridgeTokensInfoAction from "./debridge/getTokensInfo";
 import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
 import executeDebridgeBridgeOrderAction from "./debridge/executeBridgeOrder";
 import checkDebridgeTransactionStatusAction from "./debridge/checkTransactionStatus";
+import getCoingeckoLatestPoolsActions from "./coingecko/getCoingeckoLatestPools";
+import getCoingeckoTokenInfoAction from "./coingecko/getCoingeckoTokenInfo";
+import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPriceData";
+import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
+import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
+import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -214,6 +220,12 @@ export const ACTIONS = {
   SOLUTIOFI_BURN_TOKENS_ACTION: burnTokensAction,
   SOLUTIOFI_MERGE_TOKENS_ACTION: mergeTokensAction,
   SOLUTIOFI_SPREAD_TOKEN_ACTION: spreadTokenAction,
+  GET_COINGECKO_LATEST_POOLS_ACTION: getCoingeckoLatestPoolsActions,
+  GET_COINGECKO_TOKEN_INFO_ACTION: getCoingeckoTokenInfoAction,
+  GET_COINGECKO_TOKEN_PRICE_DATA_ACTION: getCoingeckoTokenPriceDataAction,
+  GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
+  GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
+  GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

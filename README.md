@@ -68,6 +68,14 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
 - **Non-Financial Actions**
   - Gib Work for registering bounties
 
+- **Market Data Integration**
+  - CoinGecko Pro API integration
+  - Real-time token price data
+  - Trending tokens and pools
+  - Top gainers analysis
+  - Token information lookup
+  - Latest pool tracking
+
 ## 🤖 AI Integration Features
 
 - **LangChain Integration**
@@ -610,6 +618,51 @@ Note: When bridging between chains:
 - From Solana: Use EVM addresses for recipients and ERC-20 format for tokens
 - Always verify addresses and amounts before executing bridge transactions
 
+### Get Token Price Data from CoinGecko
+
+```typescript
+const priceData = await agent.getTokenPriceData([
+  "So11111111111111111111111111111111111111112", // SOL
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"  // USDC
+]);
+console.log("Token prices:", priceData);
+```
+
+### Get Trending Tokens
+
+```typescript
+const trendingTokens = await agent.getTrendingTokens();
+console.log("Trending tokens:", trendingTokens);
+```
+
+### Get Latest Pools
+
+```typescript
+const latestPools = await agent.getLatestPools();
+console.log("Latest pools:", latestPools);
+```
+
+### Get Token Information
+
+```typescript
+const tokenInfo = await agent.getTokenInfo("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+console.log("Token info:", tokenInfo);
+```
+
+### Get Top Gainers
+
+```typescript
+const topGainers = await agent.getTopGainers("24h", "all");
+console.log("Top gainers:", topGainers);
+```
+
+### Get Trending Pools
+
+```typescript
+const trendingPools = await agent.getTrendingPools("24h");
+console.log("Trending pools:", trendingPools);
+```
+
 ## Examples
 
 ### LangGraph Multi-Agent System
@@ -639,6 +692,7 @@ The toolkit relies on several key Solana and Metaplex libraries:
 - @metaplex-foundation/umi
 - @lightprotocol/compressed-token
 - @lightprotocol/stateless.js
+- @coingecko/sdk
 
 ## Contributing
 

@@ -135,6 +135,12 @@ import {
   TargetTokenStruct,
   InputAssetStruct,
   fluxBeamCreatePool,
+  getLatestPools,
+  getTokenInfo,
+  getTokenPriceData,
+  getTopGainers,
+  getTrendingPools,
+  getTrendingTokens,
 } from "../tools";
 import {
   Config,
@@ -1228,5 +1234,32 @@ export class SolanaAgentKit {
       token_b,
       token_b_amount,
     );
+  }
+
+  async getCoingeckoLatestPools() {
+    return await getLatestPools(this);
+  }
+
+  async getTokenInfoUsingCoingecko(tokenAddress: string) {
+    return await getTokenInfo(this, tokenAddress);
+  }
+
+  async getTokenPriceDataUsingCoingecko(...tokenAddresses: string[]) {
+    return await getTokenPriceData(this, tokenAddresses);
+  }
+
+  async getTopGainersOnCoingecko(
+    duration?: "1h" | "24h" | "7d" | "14d" | "30d" | "60d" | "1y",
+    noOfCoins?: 300 | 500 | 1000 | "all",
+  ) {
+    return await getTopGainers(this, duration, noOfCoins);
+  }
+
+  async getCoingeckoTrendingPools(duration?: "5m" | "1h" | "24h" | "6h") {
+    return await getTrendingPools(this, duration);
+  }
+
+  async getTrendingTokensOnCoingecko() {
+    return await getTrendingTokens(this);
   }
 }

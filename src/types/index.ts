@@ -11,13 +11,14 @@ export interface Config {
   FLASH_PRIVILEGE?: string;
   FLEXLEND_API_KEY?: string;
   HELIUS_API_KEY?: string;
-  PRIORITY_LEVEL?: string; // medium, high, or veryHigh
+  PRIORITY_LEVEL?: "medium" | "high" | "veryHigh"; // medium, high, or veryHigh
   SOLUTIOFI_API_KEY?: string;
   ETHEREUM_PRIVATE_KEY?: string;
   ALLORA_API_KEY?: string;
   ALLORA_API_URL?: string;
   ALLORA_NETWORK?: string;
   ELFA_AI_API_KEY?: string;
+  COINGECKO_PRO_API_KEY?: string;
 }
 
 export interface Creator {
