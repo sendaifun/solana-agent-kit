@@ -6,6 +6,8 @@ node_modules
 .vscode
 
 .DS_Store
+.turbo
+.turbo/
 
 # To Keep documentation
 !api/
