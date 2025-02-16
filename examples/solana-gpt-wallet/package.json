@@ -1,0 +1,64 @@
+{
+  "name": "solana-gpt-wallet",
+  "version": "0.1.0",
+  "private": true,
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "overrides": {
+    "node-fetch": "2.6.7"
+  },
+  "dependencies": {
+    "@jup-ag/api": "^6.0.38",
+    "@project-serum/anchor": "^0.26.0",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.98.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "bs58": "^6.0.0",
+    "buffer": "^6.0.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "crypto-browserify": "^3.12.1",
+    "dotenv": "^16.4.7",
+    "lucide-react": "^0.471.1",
+    "next": "15.1.4",
+    "openai": "^4.78.1",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rpc-websockets": "^7.11.0",
+    "solana-agent-kit": "^1.4.4",
+    "stream-browserify": "^3.0.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20.17.12",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.4",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "webpack": "^5.97.1"
+  }
+}
