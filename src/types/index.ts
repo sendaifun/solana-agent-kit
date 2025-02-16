@@ -506,3 +506,10 @@ export interface Quote {
 export interface TransformedResponse {
   quote: Quote;
 }
+
+export interface SplAuthorityInput {
+  mintability?: PublicKey | undefined;
+  freezability?: PublicKey | undefined;
+  updateAuthority?: PublicKey | undefined;
+  isMutable?: boolean;
+}
