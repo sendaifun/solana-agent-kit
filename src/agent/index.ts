@@ -11,6 +11,7 @@ import { DEFAULT_OPTIONS } from "../constants";
 import {
   deploy_collection,
   deploy_token,
+  deploy_token_with_authority,
   get_balance,
   get_balance_other,
   getTPS,
@@ -162,6 +163,7 @@ import {
   deBridgeOrderResponse,
   deBridgeOrderStatusResponse,
   deBridgeTokensInfoResponse,
+  SplAuthorityInput,
 } from "../types";
 import {
   DasApiAsset,
@@ -242,6 +244,25 @@ export class SolanaAgentKit {
     initialSupply?: number,
   ): Promise<{ mint: PublicKey }> {
     return deploy_token(this, name, uri, symbol, decimals, initialSupply);
+  }
+
+  async deployTokenWithAuthority(
+    name: string,
+    uri: string,
+    symbol: string,
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    authority: SplAuthorityInput,
+    initialSupply?: number,
+  ): Promise<{ mint: PublicKey }> {
+    return deploy_token_with_authority(
+      this,
+      name,
+      uri,
+      symbol,
+      decimals,
+      authority,
+      initialSupply,
+    );
   }
 
   async deployCollection(
