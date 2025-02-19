@@ -60,10 +60,10 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Cross-chain bridging via deBridge DLN
 
 - **Solana Blinks**
-   - Lending by Lulo (Best APR for USDC)
-   - Send Arcade Games
-   - JupSOL staking
-   - Solayer SOL (sSOL)staking
+  - Lending by Lulo (Best APR for USDC)
+  - Send Arcade Games
+  - JupSOL staking
+  - Solayer SOL (sSOL)staking
 
 - **Non-Financial Actions**
   - Gib Work for registering bounties
@@ -100,8 +100,12 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Natural language processing for blockchain commands
   - Price feed integration for market analysis
   - Automated decision-making capabilities
+  - Evaluate mathematical expressions
+  - Scrape websites for data
+  - Get latest cryptocurrency or blockchain news
 
 ## 📃 Documentation
+
 You can view the full documentation of the kit at [docs.solanaagentkit.xyz](https://docs.solanaagentkit.xyz)
 
 ## 📦 Installation
@@ -141,7 +145,9 @@ const result = await agent.deployToken(
 
 console.log("Token Mint Address:", result.mint.toString());
 ```
+
 ### Create NFT Collection on 3Land
+
 ```typescript
 const isDevnet = false; // (Optional) if not present TX takes place in Mainnet
 const priorityFeeParam = 1000000; // (Optional) if not present the default priority fee will be 50000
@@ -161,7 +167,9 @@ const result = await agent.create3LandCollection(
 ```
 
 ### Create NFT on 3Land
+
 When creating an NFT using 3Land's tool, it automatically goes for sale on 3.land website
+
 ```typescript
 const isDevnet = true; // (Optional) if not present TX takes place in Mainnet
 const withPool = true; // (Optional) only present if NFT will be created with a Liquidity Pool for a specific SPL token
@@ -190,7 +198,6 @@ const result = await agent.create3LandNft(
 );
 
 ```
-
 
 ### Create NFT Collection
 
@@ -571,6 +578,7 @@ const signature = await agent.swap(
 The Solana Agent Kit supports cross-chain token transfers using deBridge's DLN protocol. Here's how to use it:
 
 1. Check supported chains:
+
 ```typescript
 const chains = await agent.getDebridgeSupportedChains();
 console.log("Available chains:", chains);
@@ -578,6 +586,7 @@ console.log("Available chains:", chains);
 ```
 
 2. Get available tokens (optional):
+
 ```typescript
 const tokens = await agent.getDebridgeTokensInfo("1", "USDC"); // Search for USDC on Ethereum
 console.log("Available tokens:", tokens);
@@ -585,6 +594,7 @@ console.log("Available tokens:", tokens);
 ```
 
 3. Create bridge order (SOL -> ETH):
+
 ```typescript
 const orderInput = {
   srcChainId: "7565164", // Solana
@@ -601,12 +611,14 @@ console.log("Order created:", order);
 ```
 
 4. Execute the bridge order:
+
 ```typescript
 const signature = await agent.executeDebridgeOrder(order.tx.data);
 console.log("Bridge transaction sent:", signature);
 ```
 
 5. Check bridge status:
+
 ```typescript
 const status = await agent.checkDebridgeTransactionStatus(signature);
 console.log("Bridge status:", status);
@@ -614,6 +626,7 @@ console.log("Bridge status:", status);
 ```
 
 Note: When bridging between chains:
+
 - To Solana: Use base58 addresses for recipients and token mints
 - From Solana: Use EVM addresses for recipients and ERC-20 format for tokens
 - Always verify addresses and amounts before executing bridge transactions
