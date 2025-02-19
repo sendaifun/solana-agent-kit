@@ -179,6 +179,7 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
+import { somRouter } from "../tools/stateofmika";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1266,5 +1267,20 @@ export class SolanaAgentKit {
 
   async getTrendingTokensOnCoingecko() {
     return await getTrendingTokens(this);
+  }
+
+  async scrapeWebsiteUsingSOM(query: string) {
+    const response = await somRouter(this, query);
+    return response;
+  }
+
+  async evaluateMathExpressionUsingSOM(query: string) {
+    const response = await somRouter(this, query);
+    return response;
+  }
+
+  async getCryptoNewsUsingSom(query: string) {
+    const response = await somRouter(this, query);
+    return response;
   }
 }

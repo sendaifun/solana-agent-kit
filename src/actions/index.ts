@@ -109,6 +109,9 @@ import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPrice
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
 import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
+import scrapeWebsiteAction from "./stateofmika/scrapeWebsite";
+import evaluateMathAction from "./stateofmika/evaluateMath";
+import getCryptoNewsAction from "./stateofmika/getCryptoNews";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -226,6 +229,9 @@ export const ACTIONS = {
   GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
   GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
   GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
+  SCRAPE_WEBSITE_ACTION: scrapeWebsiteAction,
+  EVALUATE_MATH_ACTION: evaluateMathAction,
+  GET_CRYPTO_NEWS_ACTION: getCryptoNewsAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

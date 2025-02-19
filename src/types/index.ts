@@ -20,6 +20,7 @@ export interface Config {
   ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
+  SOM_API_KEY?: string;
 }
 
 export interface Creator {
