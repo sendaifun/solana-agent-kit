@@ -203,15 +203,15 @@ export async function getNftTradingAccountInfo(
   poolConfig: PoolConfig,
   collateralCustodySymbol: string,
 ): Promise<TradingAccountResult> {
-  const getNFTReferralAccountPK = (publicKey: PublicKey) => {
+  const getNftReferralAccountPk = (publicKey: PublicKey) => {
     return PublicKey.findProgramAddressSync(
       [Buffer.from("referral"), publicKey.toBuffer()],
       PROGRAM_ID,
     )[0];
   };
-  const nftReferralAccountPK = getNFTReferralAccountPK(userPublicKey);
+  const nftReferralAccountPk = getNftReferralAccountPk(userPublicKey);
   const nftReferralAccountInfo =
-    await perpClient.provider.connection.getAccountInfo(nftReferralAccountPK);
+    await perpClient.provider.connection.getAccountInfo(nftReferralAccountPk);
 
   let nftTradingAccountPk: PublicKey | null = null;
   let nftOwnerRebateTokenAccountPk: PublicKey | null = null;
@@ -254,7 +254,7 @@ export async function getNftTradingAccountInfo(
   }
 
   return {
-    nftReferralAccountPK,
+    nftReferralAccountPK: nftReferralAccountPk,
     nftTradingAccountPk,
     nftOwnerRebateTokenAccountPk,
   };
@@ -286,7 +286,7 @@ export function createPerpClient(
   );
 }
 
-export function get_flash_privilege(agent: SolanaAgentKit): Privilege {
+export function getFlashPrivilege(agent: SolanaAgentKit): Privilege {
   const FLASH_PRIVILEGE = agent.config.FLASH_PRIVILEGE || "None";
 
   switch (FLASH_PRIVILEGE.toLowerCase()) {
