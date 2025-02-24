@@ -1,0 +1,30 @@
+/* Wallet connection transitions */
+.wallet-connecting {
+    animation: fade-in-up 0.3s ease-out;
+}
+
+.wallet-connected {
+    animation: slide-in-right 0.3s ease-out;
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

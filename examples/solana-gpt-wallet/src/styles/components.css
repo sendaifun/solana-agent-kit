@@ -1,0 +1,75 @@
+/* Custom Card styles */
+.wallet-card {
+    @apply bg-gradient-to-br from-purple-500/10 to-blue-500/10 backdrop-blur-sm;
+}
+
+/* Token amount input */
+.token-amount-input {
+    @apply text-4xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 w-full text-center;
+}
+
+/* Token selector */
+.token-selector {
+    @apply flex items-center gap-2 p-2 rounded-lg hover:bg-accent cursor-pointer transition-colors;
+}
+
+/* Transaction history */
+.transaction-item {
+    @apply flex items-center justify-between p-3 hover:bg-accent/50 rounded-lg transition-colors;
+}
+
+.transaction-type-send {
+    @apply text-red-500;
+}
+
+.transaction-type-receive {
+    @apply text-green-500;
+}
+
+.transaction-type-swap {
+    @apply text-blue-500;
+}
+
+/* Swap interface */
+.swap-arrow {
+    @apply w-8 h-8 p-1.5 rounded-full bg-accent hover:bg-accent/80 cursor-pointer transition-colors;
+}
+
+.token-balance {
+    @apply text-sm text-muted-foreground;
+}
+
+/* Price impact warning */
+.price-impact-low {
+    @apply text-green-500;
+}
+
+.price-impact-medium {
+    @apply text-yellow-500;
+}
+
+.price-impact-high {
+    @apply text-red-500;
+}
+
+/* Natural language input */
+.gpt-input {
+    @apply w-full p-3 rounded-lg bg-accent/50 border-none focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all;
+}
+
+.gpt-suggestion {
+    @apply text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors;
+}
+
+/* Loading animations */
+.loading-dots:after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+}

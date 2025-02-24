@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .wallet-state-container {
+        @apply p-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2;
+    }
+
+    .wallet-status {
+        @apply w-2 h-2 rounded-full;
+    }
+
+    .wallet-status-connected {
+        @apply bg-green-500;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+    }
+
+    .wallet-status-connecting {
+        @apply bg-yellow-500 animate-pulse;
+    }
+}
