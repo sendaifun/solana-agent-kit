@@ -1,6 +1,6 @@
 {
   "name": "solana-agent-kit",
-  "version": "1.4.6",
+  "version": "1.4.8",
   "description": "connect any ai agents to solana protocols",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,6 +9,7 @@
     "docs": "typedoc src --out docs",
     "test": "tsx test/index.ts",
     "test:vercel-ai": "tsx test/agent_sdks/vercel_ai.ts",
+    "test:mcp": "tsx test/mcp.ts",
     "generate": "tsx src/utils/keypair.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -58,6 +59,7 @@
     "@metaplex-foundation/umi-web3js-adapters": "^0.9.2",
     "@meteora-ag/alpha-vault": "^1.1.7",
     "@meteora-ag/dlmm": "^1.3.0",
+    "@modelcontextprotocol/sdk": "^1.5.0",
     "@onsol/tldparser": "^0.6.7",
     "@openzeppelin/contracts": "^5.2.0",
     "@orca-so/common-sdk": "0.6.4",

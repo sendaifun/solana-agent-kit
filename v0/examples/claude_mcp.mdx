@@ -1,0 +1,302 @@
+# Claude Desktop Integration Guide
+
+This guide explains how to integrate Solana Agent Kit with Claude Desktop using the Model Context Protocol (MCP).
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Setup Instructions](#setup-instructions)
+- [Project Structure](#project-structure)
+- [Implementation Guide](#implementation-guide)
+- [Usage Examples](#usage-examples)
+- [Troubleshooting](#troubleshooting)
+
+## Overview
+
+The integration allows Claude Desktop to interact with Solana blockchain through a standardized MCP server implementation. This enables automated execution of Solana transactions and queries directly from conversations with Claude.
+
+### Key Features
+
+- Direct integration with Claude Desktop
+- Standardized MCP protocol implementation
+- Secure handling of private keys and sensitive data
+- Support for all Solana Agent Kit operations
+- Real-time blockchain interaction
+
+## Setup Instructions
+
+### Prerequisites
+
+```bash
+# Required software
+- Node.js v16+
+- pnpm (or yarn/npm)
+- Claude Desktop
+- Solana wallet
+- Solana RPC URL
+```
+
+### Installation
+
+1. Create a new project:
+```bash
+mkdir solana-agent-kit-mcp
+cd solana-agent-kit-mcp
+pnpm init
+```
+
+2. Install dependencies:
+```bash
+pnpm add @sendaifun/solana-agent-kit @modelcontextprotocol/sdk 
+pnpm add -D typescript @types/node
+```
+
+3. Configure TypeScript:
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Environment Configuration
+
+1. Create `.env` file:
+```env
+SOLANA_PRIVATE_KEY=your_private_key_here
+RPC_URL=your_solana_rpc_url_here
+```
+
+2. Configure Claude Desktop:
+
+MacOS:
+```bash
+code ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+Windows:
+```bash
+code %AppData%\Claude\claude_desktop_config.json
+```
+
+Add MCP server configuration:
+```json
+{
+  "mcpServers": {
+    "agent-kit": {
+      "command": "node",
+      "env": {
+        "RPC_URL": "your_solana_rpc_url_here",
+        "SOLANA_PRIVATE_KEY": "your_private_key_here"
+      },
+      "args": ["/absolute/path/to/your/dist/index.js"]
+    }
+  }
+}
+```
+
+## Project Structure
+
+```
+solana-agent-kit-mcp/
+├── src/
+│   ├── index.ts        # Main MCP server implementation
+│   ├── handlers/       # Protocol-specific handlers
+│   │   ├── jupiter.ts
+│   │   ├── meteora.ts
+│   │   └── manifest.ts
+│   └── utils/          # Utility functions
+├── package.json
+├── tsconfig.json
+└── .env
+```
+
+## Implementation Guide
+
+### Basic MCP Server Implementation
+
+```typescript
+// src/index.ts
+import { MCPServer } from '@modelcontextprotocol/sdk';
+import { SolanaAgentKit } from '@sendaifun/solana-agent-kit';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+async function main() {
+  // Initialize Solana Agent Kit
+  const agent = new SolanaAgentKit({
+    privateKey: process.env.SOLANA_PRIVATE_KEY!,
+    rpcUrl: process.env.RPC_URL!
+  });
+
+  // Create MCP server
+  const server = new MCPServer();
+
+  // Register handlers
+  server.registerFunction('jupiterSwap', async (params) => {
+    const { inputMint, outputMint, amount } = params;
+    return await agent.jupiterSwap(inputMint, outputMint, amount);
+  });
+
+  // Start server
+  await server.start();
+}
+
+main().catch(console.error);
+```
+
+### Protocol Handler Example
+
+```typescript
+// src/handlers/jupiter.ts
+import { SolanaAgentKit } from '@sendaifun/solana-agent-kit';
+
+export async function handleJupiterSwap(
+  agent: SolanaAgentKit,
+  params: any
+) {
+  const { inputMint, outputMint, amount } = params;
+  
+  try {
+    const txid = await agent.jupiterSwap(
+      inputMint,
+      outputMint,
+      amount
+    );
+    
+    return {
+      success: true,
+      transaction: txid
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+```
+
+## Usage Examples
+
+### Simple Swap Example
+
+```typescript
+// Register Jupiter swap handler
+server.registerFunction('jupiterSwap', async (params) => {
+  return await handleJupiterSwap(agent, params);
+});
+
+// Example Claude prompt:
+"Swap 1 SOL for USDC using Jupiter"
+```
+
+### Complex Operation Example
+
+```typescript
+// Register position management handler
+server.registerFunction('manifestTrade', async (params) => {
+  const { side, quantity, price, marketId } = params;
+  return await agent.manifestLimitOrder(marketId, quantity, side, price);
+});
+
+// Example Claude prompt:
+"Create a limit order to buy 5 SOL at $20 using Manifest"
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. Connection Issues
+```typescript
+// Add error handling for RPC connection
+try {
+  await agent.connection.getLatestBlockhash();
+} catch (error) {
+  console.error('RPC connection failed:', error);
+  process.exit(1);
+}
+```
+
+2. Configuration Issues
+```typescript
+// Validate environment variables
+if (!process.env.SOLANA_PRIVATE_KEY) {
+  throw new Error('SOLANA_PRIVATE_KEY not found in environment');
+}
+```
+
+3. Transaction Failures
+```typescript
+// Add transaction retry logic
+async function sendWithRetry(tx: Transaction, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await agent.sendTransaction(tx);
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+}
+```
+
+### Best Practices
+
+1. **Error Handling**
+   - Implement comprehensive error handling
+   - Provide clear error messages
+   - Log errors for debugging
+
+2. **Configuration Management**
+   - Use environment variables for sensitive data
+   - Validate configuration at startup
+   - Document all required settings
+
+3. **Transaction Management**
+   - Implement retry logic for failed transactions
+   - Monitor transaction status
+   - Handle network congestion
+
+4. **Security**
+   - Never log private keys
+   - Validate input parameters
+   - Implement rate limiting
+
+## Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Test specific handler
+pnpm test handlers/jupiter.test.ts
+
+# Test with coverage
+pnpm test --coverage
+```
+
+## Deployment
+
+1. Build the project:
+```bash
+pnpm build
+```
+
+2. Verify the build:
+```bash
+node dist/index.js
+```
+
+3. Update Claude Desktop configuration to point to the built file.
+
+4. Restart Claude Desktop to apply changes.

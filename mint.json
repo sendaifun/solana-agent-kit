@@ -38,7 +38,8 @@
         "v0/examples/persistent_agent",
         "v0/examples/langgraph",
         "v0/examples/market_maker",
-        "v0/examples/discord_agent"
+        "v0/examples/discord_agent",
+        "v0/examples/claude_mcp"
       ]
     },
     {
