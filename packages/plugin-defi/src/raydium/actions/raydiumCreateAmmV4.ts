@@ -1,4 +1,4 @@
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
@@ -58,7 +58,7 @@ const raydiumCreateAmmV4Action: Action = {
       .positive()
       .describe("Unix timestamp when trading should start"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const marketId = new PublicKey(input.marketId);
       const baseAmount = new BN(input.baseAmount);
@@ -75,7 +75,7 @@ const raydiumCreateAmmV4Action: Action = {
 
       return {
         status: "success",
-        signature: txId,
+        transactoin: txId,
         message: "Successfully created Raydium AMM V4 pool",
       };
     } catch (error: any) {

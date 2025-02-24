@@ -95,26 +95,74 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
 ## 📃 Documentation
 You can view the full documentation of the kit at [docs.solanaagentkit.xyz](https://docs.solanaagentkit.xyz)
 
-## 📦 Installation
+## 📦 Core Installation
 
 ```bash
 npm install solana-agent-kit
 ```
 
+## 📦 Plugin Installation
+
+You can choose to install any of the plugins listed below or you could choose to install all of them to experience the full power of the Solana Agent Kit.
+
+1. Token plugin (`@solana-agent-kit/plugin-token`): Token operations for SPL tokens such as transferring assets, swapping, bridging, and rug checking.
+2. NFT plugin (`@solana-agent-kit/plugin-nft`): NFT operations for Metaplex NFTs such as minting, listing, and metadata management.
+3. DeFi plugin (`@solana-agent-kit/plugin-defi`): DeFi operations for Solana protocols such as staking, lending, borrowing, and spot and perpetual trading.
+4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, coingecko token information, and domain registration.
+5. Blinks plugin (`@solana-agent-kit/plugin-blinks`): Blinks operations for Solana protocols such as arcade games and more soon to come.
+
+```bash
+npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
+```
+
 ## Quick Start
 
 ```typescript
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import { SolanaAgentKit, createVercelAITools } from "solana-agent-kit";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+import NFTPlugin from "@solana-agent-kit/plugin-nft";
+import DefiPlugin from "@solana-agent-kit/plugin-defi";
+import MiscPlugin from "@solana-agent-kit/plugin-misc";
+import BlinksPlugin from "@solana-agent-kit/plugin-blinks";
+
+const keyPair = Keypair.fromSecretKey(bs58.decode("YOUR_SECRET_KEY"))
 
 // Initialize with private key and optional RPC URL
 const agent = new SolanaAgentKit(
-  "your-wallet-private-key-as-base58",
-  "https://api.mainnet-beta.solana.com",
-  "your-openai-api-key"
-);
+  {
+    publicKey: keyPair.publicKey,
+    sendTransaction: async (tx) => {
+      const connection = new Connection(process.env.RPC_URL as string);
+      if (tx instanceof VersionedTransaction) tx.sign([keyPair]);
+      else tx.sign(keyPair);
+      return await connection.sendRawTransaction(tx.serialize());
+    },
+    signTransaction: async (tx) => {
+      if (tx instanceof VersionedTransaction) tx.sign([keyPair]);
+      else tx.sign(keyPair);
+      return tx;
+    },
+    signAllTransactions: async (txs) => {
+      txs.forEach((tx) => {
+        if (tx instanceof VersionedTransaction) tx.sign([keyPair]);
+        else tx.sign(keyPair);
+      });
+      return txs;
+    },
+  },
+  "YOUR_RPC_URL",
+  {
+    OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
+  }
+) // Add the plugins you would like to use
+  .use(TokenPlugin)
+  .use(NFTPlugin)
+  .use(DefiPlugin)
+  .use(MiscPlugin)
+  .use(BlinksPlugin);
 
 // Create LangChain tools
-const tools = createSolanaTools(agent);
+const tools = createVercelAITools(agent, agent.actions);
 ```
 
 ## Usage Examples
@@ -122,7 +170,8 @@ const tools = createSolanaTools(agent);
 ### Deploy a New Token
 
 ```typescript
-const result = await agent.deployToken(
+const result = await agent.methods.deployToken(
+  agent,
   "my ai token", // name
   "uri", // uri
   "token", // symbol
@@ -143,9 +192,9 @@ const isDevnet = true; // (Optional) if not present TX takes place in Mainnet
     mainImageUrl: ""
   };
 
-const result = await agent.create3LandCollection(
-      collectionOpts,
-      isDevnet, // (Optional) if not present TX takes place in Mainnet
+const result = await agent.methods.create3LandCollection(
+      {},
+      collectionOpts, // (Optional) if not present TX takes place in Mainnet
     );
 ```
 
@@ -169,7 +218,8 @@ const createItemOptions: CreateSingleOptions = {
   poolName: "", // Only present if "withPool" is true
   mainImageUrl: "",
 };
-const result = await agent.create3LandNft(
+const result = await agent.methods.create3LandSingle(
+  {},
   collectionAccount,
   createItemOptions,
   isDevnet, // (Optional) if not present TX takes place in Mainnet
@@ -182,7 +232,7 @@ const result = await agent.create3LandNft(
 ### Create NFT Collection
 
 ```typescript
-const collection = await agent.deployCollection({
+const collection = await agent.methods.deployCollection(agent, {
   name: "My NFT Collection",
   uri: "https://arweave.net/metadata.json",
   royaltyBasisPoints: 500, // 5%
@@ -200,7 +250,8 @@ const collection = await agent.deployCollection({
 ```typescript
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await agent.trade(
+const signature = await agent.methods.trade(
+  agent,
   new PublicKey("target-token-mint"),
   100, // amount
   new PublicKey("source-token-mint"),
@@ -213,7 +264,8 @@ const signature = await agent.trade(
 ```typescript
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await agent.lendAssets(
+const signature = await agent.methods.lendAssets(
+  agent,
   100 // amount of USDC to lend
 );
 ```
@@ -221,7 +273,8 @@ const signature = await agent.lendAssets(
 ### Stake SOL
 
 ```typescript
-const signature = await agent.stake(
+const signature = await agent.methods.stakeWithJup(
+  agent,
   1 // amount in SOL to stake
 );
 ```
@@ -229,7 +282,8 @@ const signature = await agent.stake(
 ### Stake SOL on Solayer
 
 ```typescript
-const signature = await agent.restake(
+const signature = await agent.methods.stakeWithSolayer(
+  agent,
   1 // amount in SOL to stake
 );
 
@@ -249,9 +303,11 @@ import { PublicKey } from "@solana/web3.js";
     )
   );
 
-  const signature = await agent.sendCompressedAirdrop(
+  const signature = await agent.methods.sendCompressedAirdrop(
+    agent,
     new PublicKey("JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"), // mint
     42, // amount per recipient
+    9,
     [
       new PublicKey("1nc1nerator11111111111111111111111111111111"),
       // ... add more recipients
@@ -265,9 +321,9 @@ import { PublicKey } from "@solana/web3.js";
 
 ```typescript
 
-const priceFeedID = await agent.getPythPriceFeedID("SOL");
+const priceFeedID = await agent.methods.fetchPythPriceFeedID("SOL");
 
-const price = await agent.getPythPrice(priceFeedID);
+const price = await agent.methods.fetchPythPrice(priceFeedID);
 
 console.log("Price of SOL/USD:", price);
 ```
@@ -277,7 +333,8 @@ console.log("Price of SOL/USD:", price);
 ```typescript
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await agent.openPerpTradeLong({
+const signature = await agent.methods.openPerpTradeLong({
+  agent: agent,
   price: 300, // $300 SOL Max price
   collateralAmount: 10, // 10 jitoSOL in
   collateralMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
@@ -292,7 +349,8 @@ const signature = await agent.openPerpTradeLong({
 ```typescript
 import { PublicKey } from "@solana/web3.js";
 
-const signature = await agent.closePerpTradeLong({
+const signature = await agent.methods.closePerpTradeLong({
+  agent: agent,
   price: 200, // $200 SOL price
   tradeMint: new PublicKey("J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"), // jitoSOL
 });
@@ -302,7 +360,7 @@ const signature = await agent.closePerpTradeLong({
 
 ``` typescript
 
-const { signature } = await agent.closeEmptyTokenAccounts();
+const { signature } = await agent.methods.closeEmptyTokenAccounts(agent);
 ```
 
 ### Create a Drift account
@@ -310,7 +368,13 @@ const { signature } = await agent.closeEmptyTokenAccounts();
 Create a drift account with an initial token deposit.
 
 ```typescript
-const result = await agent.createDriftUserAccount()
+const result = await agent.methods.createDriftUserAccount(
+  agent,
+  // amount of token to deposit
+  100,
+  // token symbol to deposit
+  "USDC"
+)
 ```
 
 ### Create a Drift Vault
@@ -318,7 +382,7 @@ const result = await agent.createDriftUserAccount()
 Create a drift vault.
 
 ```typescript
-const signature = await agent.createDriftVault({
+const signature = await agent.methods.createDriftVault(agent, {
   name: "my-drift-vault",
   marketName: "USDC-SPOT",
   redeemPeriod: 1, // in days
@@ -336,7 +400,7 @@ const signature = await agent.createDriftVault({
 Deposit tokens into a drift vault.
 
 ```typescript
-const signature = await agent.depositIntoDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+const signature = await agent.methods.depositIntoDriftVault(agent, 100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
 ```
 
 ### Deposit into your Drift account
@@ -344,7 +408,7 @@ const signature = await agent.depositIntoDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35
 Deposit tokens into your drift account.
 
 ```typescript
-const {txSig} = await agent.depositToDriftUserAccount(100, "USDC")
+const {txSig} = await agent.methods.depositToDriftUserAccount(agent, 100, "USDC")
 ```
 
 ### Derive a Drift Vault address
@@ -352,7 +416,7 @@ const {txSig} = await agent.depositToDriftUserAccount(100, "USDC")
 Derive a drift vault address.
 
 ```typescript
-const vaultPublicKey = await agent.deriveDriftVaultAddress("my-drift-vault")
+const vaultPublicKey = await agent.methods.deriveDriftVaultAddress(agent, "my-drift-vault")
 ```
 
 ### Do you have a Drift account
@@ -360,7 +424,7 @@ const vaultPublicKey = await agent.deriveDriftVaultAddress("my-drift-vault")
 Check if agent has a drift account.
 
 ```typescript
-const {hasAccount, account} = await agent.doesUserHaveDriftAccount()
+const {hasAccount, account} = await agent.methods.doesUserHaveDriftAccount(agent)
 ```
 
 ### Get Drift account information
@@ -368,7 +432,7 @@ const {hasAccount, account} = await agent.doesUserHaveDriftAccount()
 Get drift account information.
 
 ```typescript
-const accountInfo = await agent.driftUserAccountInfo()
+const accountInfo = await agent.methods.driftUserAccountInfo(agent)
 ```
 
 ### Request withdrawal from Drift vault
@@ -376,7 +440,7 @@ const accountInfo = await agent.driftUserAccountInfo()
 Request withdrawal from drift vault.
 
 ```typescript
-const signature = await agent.requestWithdrawalFromDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+const signature = await agent.methods.requestWithdrawalFromDriftVault(agent, 100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
 ```
 
 ### Carry out a perpetual trade using a Drift vault
@@ -384,7 +448,7 @@ const signature = await agent.requestWithdrawalFromDriftVault(100, "41Y8C4oxk4zg
 Open a perpertual trade using a drift vault that is delegated to you.
 
 ```typescript
-const signature = await agent.tradeUsingDelegatedDriftVault({
+const signature = await agent.methods.tradeUsingDelegatedDriftVault(agent, {
   vault: "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU",
   amount: 500,
   symbol: "SOL",
@@ -399,7 +463,7 @@ const signature = await agent.tradeUsingDelegatedDriftVault({
 Open a perpertual trade using your drift account.
 
 ```typescript
-const signature = await agent.tradeUsingDriftPerpAccount({
+const signature = await agent.methods.driftPerpTrade(agent, {
   amount: 500,
   symbol: "SOL",
   action: "long",
@@ -413,7 +477,7 @@ const signature = await agent.tradeUsingDriftPerpAccount({
 Update drift vault parameters.
 
 ```typescript
-const signature = await agent.updateDriftVault({
+const signature = await agent.methods.updateDriftVault(agent, {
   name: "my-drift-vault",
   marketName: "USDC-SPOT",
   redeemPeriod: 1, // in days
@@ -431,7 +495,7 @@ const signature = await agent.updateDriftVault({
 Withdraw tokens from your drift account.
 
 ```typescript
-const {txSig} = await agent.withdrawFromDriftAccount(100, "USDC")
+const {txSig} = await agent.methods.withdrawFromDriftUserAccount(agent, 100, "USDC")
 ```
 
 ### Borrow from Drift
@@ -439,7 +503,7 @@ const {txSig} = await agent.withdrawFromDriftAccount(100, "USDC")
 Borrow tokens from drift.
 
 ```typescript
-const {txSig} = await agent.withdrawFromDriftAccount(1, "SOL", true)
+const {txSig} = await agent.methods.withdrawFromDriftUserAccount(agent, 1, "SOL", true)
 ```
 
 ### Repay Drift loan
@@ -447,7 +511,7 @@ const {txSig} = await agent.withdrawFromDriftAccount(1, "SOL", true)
 Repay a loan from drift.
 
 ```typescript
-const {txSig} = await agent.depositToDriftUserAccount(1, "SOL", true)
+const {txSig} = await agent.methods.depositToDriftUserAccount(agent, 1, "SOL", true)
 ```
 
 ### Withdraw from Drift vault
@@ -455,7 +519,7 @@ const {txSig} = await agent.depositToDriftUserAccount(1, "SOL", true)
 Withdraw tokens from a drift vault after the redemption period has elapsed.
 
 ```typescript
-const signature = await agent.withdrawFromDriftVault( "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+const signature = await agent.methods.withdrawFromDriftVault(agent,  "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
 ```
 
 ### Update the address a Drift vault is delegated to
@@ -463,7 +527,7 @@ const signature = await agent.withdrawFromDriftVault( "41Y8C4oxk4zgJT1KXyQr35UhZ
 Update the address a drift vault is delegated to.
 
 ```typescript
-const signature = await agent.updateDriftVaultDelegate("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU", "new-address")
+const signature = await agent.methods.updateDriftVaultDelegate(agent, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU", "new-address")
 ```
 
 ### Get Voltr Vault Position Values
@@ -471,7 +535,7 @@ const signature = await agent.updateDriftVaultDelegate("41Y8C4oxk4zgJT1KXyQr35Uh
 Get the current position values and total value of assets in a Voltr vault.
 
 ```typescript
-const values = await agent.voltrGetPositionValues("7opUkqYtxmQRriZvwZkPcg6LqmGjAh1RSEsVrdsGDx5K")
+const values = await agent.methods.voltrGetPositionValues(agent, "7opUkqYtxmQRriZvwZkPcg6LqmGjAh1RSEsVrdsGDx5K")
 ```
 
 ### Deposit into Voltr Strategy
@@ -479,7 +543,8 @@ const values = await agent.voltrGetPositionValues("7opUkqYtxmQRriZvwZkPcg6LqmGjA
 Deposit assets into a specific strategy within a Voltr vault.
 
 ```typescript
-const signature = await agent.voltrDepositStrategy(
+const signature = await agent.methods.voltrDepositStrategy(
+  agent,
   new BN("1000000000"), // amount in base units (e.g., 1 USDC = 1000000)
   "7opUkqYtxmQRriZvwZkPcg6LqmGjAh1RSEsVrdsGDx5K", // vault
   "9ZQQYvr4x7AMqd6abVa1f5duGjti5wk1MHsX6hogPsLk"  // strategy
@@ -491,7 +556,8 @@ const signature = await agent.voltrDepositStrategy(
 Withdraw assets from a specific strategy within a Voltr vault.
 
 ```typescript
-const signature = await agent.voltrWithdrawStrategy(
+const signature = await agent.methods.voltrWithdrawStrategy(
+  agent,
   new BN("1000000000"), // amount in base units (e.g., 1 USDC = 1000000)
   "7opUkqYtxmQRriZvwZkPcg6LqmGjAh1RSEsVrdsGDx5K", // vault
   "9ZQQYvr4x7AMqd6abVa1f5duGjti5wk1MHsX6hogPsLk"  // strategy
@@ -501,7 +567,7 @@ const signature = await agent.voltrWithdrawStrategy(
 ### Get a Solana asset by its ID
 
 ```typescript
-const asset = await agent.getAsset("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+const asset = await agent.methods.getAsset(agent, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
 ```
 
 ## Examples

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { getVaultAddress } from "../tools";
 
 const deriveDriftVaultAddressAction: Action = {
@@ -31,7 +31,7 @@ const deriveDriftVaultAddressAction: Action = {
       return {
         status: "success",
         message: "Vault address derived successfully",
-        address,
+        address: address.toBase58(),
       };
     } catch (e) {
       return {

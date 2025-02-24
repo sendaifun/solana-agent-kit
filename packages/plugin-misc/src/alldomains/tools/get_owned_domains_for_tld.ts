@@ -13,7 +13,7 @@ export async function getOwnedDomainsForTLD(
   try {
     const domains = await new TldParser(
       agent.connection,
-    ).getParsedAllUserDomainsFromTld(agent.wallet_address, tld);
+    ).getParsedAllUserDomainsFromTld(agent.wallet.publicKey, tld);
     return domains.map((domain) => domain.domain);
   } catch (error: any) {
     throw new Error(`Failed to fetch domains for TLD: ${error.message}`);

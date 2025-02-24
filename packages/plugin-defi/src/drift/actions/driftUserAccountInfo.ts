@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { driftUserAccountInfo } from "../tools";
 
 const driftUserAccountInfoAction: Action = {

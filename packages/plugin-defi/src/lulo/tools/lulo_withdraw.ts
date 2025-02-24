@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Withdraw tokens for yields using Lulo
@@ -12,7 +12,7 @@ export async function luloWithdraw(
   agent: SolanaAgentKit,
   mintAddress: string,
   amount: number,
-): Promise<string> {
+) {
   try {
     if (!agent.config.FLEXLEND_API_KEY) {
       throw new Error("Lulo API key not found in agent configuration");
@@ -48,23 +48,7 @@ export async function luloWithdraw(
     const { blockhash } = await agent.connection.getLatestBlockhash();
     luloTxn.message.recentBlockhash = blockhash;
 
-    // Sign and send transaction
-    luloTxn.sign([agent.wallet]);
-
-    const signature = await agent.connection.sendTransaction(luloTxn, {
-      preflightCommitment: "confirmed",
-      maxRetries: 3,
-    });
-
-    // Wait for confirmation using the latest strategy
-    const latestBlockhash = await agent.connection.getLatestBlockhash();
-    await agent.connection.confirmTransaction({
-      signature,
-      blockhash: latestBlockhash.blockhash,
-      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-    });
-
-    return signature;
+    return signOrSendTX(agent, luloTxn);
   } catch (error: any) {
     throw new Error(`Lending failed: ${error.message}`);
   }

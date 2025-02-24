@@ -15,6 +15,9 @@ import {
   cancelNFTListingAction,
 } from "./tensor/actions/tensorTrade";
 
+// Import 3Land actions
+import create3LandCollectibleAction from "./3land/actions/create3LandCollectibleAction";
+
 // Import Metaplex tools
 import {
   deploy_collection,
@@ -70,9 +73,12 @@ const NFTPlugin = {
     mintNFTAction,
     searchAssetsAction,
 
-    // Tensor actions
+    // // Tensor actions
     listNFTForSaleAction,
     cancelNFTListingAction,
+
+    // 3Land actions
+    create3LandCollectibleAction,
   ],
 
   // Initialize function

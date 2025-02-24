@@ -11,7 +11,7 @@ const closeEmptyTokenAccountsAction: Action = {
     "close SPL token accounts",
     "clean wallet",
   ],
-  description: `Close empty SPL Token accounts associated with your wallet to reclaim rent. 
+  description: `Close empty SPL Token accounts associated with your wallet to reclaim rent.
  This action will close both regular SPL Token accounts and Token-2022 accounts that have zero balance. `,
   examples: [
     [
@@ -54,7 +54,7 @@ const closeEmptyTokenAccountsAction: Action = {
 
       return {
         status: "success",
-        signature: result.signature,
+        transaction: result.signature ?? result.signedTransaction,
         accountsClosed: result.size,
         message: `Successfully closed ${result.size} empty token accounts`,
       };

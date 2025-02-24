@@ -58,7 +58,7 @@ const depositVoltrStrategyAction: Action = {
       const vault = new PublicKey(input.vault);
       const strategy = new PublicKey(input.strategy);
 
-      const signature = await voltrDepositStrategy(
+      const transaction = await voltrDepositStrategy(
         agent,
         depositAmount,
         vault,
@@ -69,7 +69,7 @@ const depositVoltrStrategyAction: Action = {
         status: "success",
         vault: vault.toBase58(),
         strategy: strategy.toBase58(),
-        signature,
+        transaction,
         message: `Successfully deposited ${input.depositAmount} into strategy`,
       };
     } catch (error: any) {

@@ -1,6 +1,6 @@
 import { registerDomainNameV2 } from "@bonfida/spl-name-service";
 import { Transaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { TOKENS } from "./utils/constant";
 
@@ -15,7 +15,7 @@ export async function registerDomain(
   agent: SolanaAgentKit,
   name: string,
   spaceKB: number = 1,
-): Promise<string> {
+) {
   try {
     // Validate space size
     if (spaceKB > 10) {
@@ -25,8 +25,8 @@ export async function registerDomain(
     // Convert KB to bytes
     const space = spaceKB * 1_000;
 
-    const buyerTokenAccount = await getAssociatedTokenAddressSync(
-      agent.wallet_address,
+    const buyerTokenAccount = getAssociatedTokenAddressSync(
+      agent.wallet.publicKey,
       TOKENS.USDC,
     );
 
@@ -35,7 +35,7 @@ export async function registerDomain(
       agent.connection,
       name,
       space,
-      agent.wallet_address,
+      agent.wallet.publicKey,
       buyerTokenAccount,
     );
 
@@ -44,14 +44,10 @@ export async function registerDomain(
     transaction.recentBlockhash = (
       await agent.connection.getLatestBlockhash()
     ).blockhash;
-    transaction.feePayer = agent.wallet_address;
+    transaction.feePayer = agent.wallet.publicKey;
 
-    // Sign and send transaction
-    const signature = await agent.connection.sendTransaction(transaction, [
-      agent.wallet,
-    ]);
-
-    return signature;
+    // Sign or send transaction
+    return await signOrSendTX(agent, transaction);
   } catch (error: any) {
     throw new Error(`Domain registration failed: ${error.message}`);
   }

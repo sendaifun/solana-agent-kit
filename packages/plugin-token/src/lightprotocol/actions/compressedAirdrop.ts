@@ -88,7 +88,7 @@ const compressedAirdropAction: Action = {
       return {
         status: "success",
         message: `Airdropped ${amount} tokens to ${recipients.length} recipients.`,
-        transactionHashes: txs,
+        transactions: txs,
       };
     } catch (error: any) {
       return {

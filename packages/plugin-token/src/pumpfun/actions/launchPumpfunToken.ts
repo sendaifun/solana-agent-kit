@@ -91,6 +91,7 @@ const launchPumpfunTokenAction: Action = {
         signature: result.signature,
         mint: result.mint,
         metadataUri: result.metadataUri,
+        transaction: result.signedTransaction ?? result.signature,
         message: "Successfully launched token on Pump.fun",
       };
     } catch (error: any) {

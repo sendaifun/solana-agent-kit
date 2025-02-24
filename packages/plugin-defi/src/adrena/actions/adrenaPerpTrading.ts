@@ -71,7 +71,7 @@ const openPerpTradeLongAction: Action = {
 
       return {
         status: "success",
-        signature: tx,
+        transaction: tx,
         message: `Successfully opened ${input.leverage / 1000}x long position with ${input.collateralAmount} collateral`,
       };
     } catch (error: any) {

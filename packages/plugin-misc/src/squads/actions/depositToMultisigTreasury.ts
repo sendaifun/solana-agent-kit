@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { multisig_deposit_to_treasury } from "../tools";
 
@@ -32,7 +31,7 @@ const depositToMultisigAction: Action = {
   schema: z.object({
     amount: z.number().min(0, "Amount must be greater than 0"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const multisig = await multisig_deposit_to_treasury(
       agent,
       input.amount as number,
@@ -41,7 +40,7 @@ const depositToMultisigAction: Action = {
     return {
       status: "success",
       message: "Funds deposited to 2-by-2 multisig account successfully",
-      signature: multisig,
+      transaction: multisig,
     };
   },
 };

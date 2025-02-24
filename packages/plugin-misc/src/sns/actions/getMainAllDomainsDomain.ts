@@ -1,6 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getMainAllDomainsDomain } from "../tools";
 
@@ -36,7 +35,7 @@ const getMainAllDomainsDomainAction: Action = {
       .min(1)
       .describe("The wallet address to get the main domain for"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const mainDomain = await getMainAllDomainsDomain(
         agent,

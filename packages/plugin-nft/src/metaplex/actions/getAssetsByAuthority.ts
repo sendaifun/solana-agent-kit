@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { get_assets_by_authority } from "../tools";
 
@@ -87,7 +86,7 @@ const getAssetsByAuthorityAction: Action = {
     after: z.string().optional(),
   }),
   handler: async (
-    agent: SolanaAgentKit,
+    agent,
     input: z.infer<typeof getAssetsByAuthorityAction.schema>,
   ) => {
     const result = await get_assets_by_authority(agent, input);

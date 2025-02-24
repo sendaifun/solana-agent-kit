@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { updateVault } from "../tools";
 
 const updateDriftVaultAction: Action = {
@@ -75,7 +75,7 @@ const updateDriftVaultAction: Action = {
       .optional()
       .describe("Should the vault have a whitelist of not"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const tx = await updateVault(agent, input.vaultAddress, {
         hurdleRate: input.hurdleRate,

@@ -1,24 +1,28 @@
 {
-    "name": "integration-test",
-    "version": "1.0.0",
-    "description": "Integration tests for all Solana Agent Kit packages",
-    "main": "index.ts",
-    "type": "module",
-    "scripts": {
-      "test": "tsx index.ts",
-      "dev": "tsx watch index.ts"
-    },
-    "dependencies": {
-      "solana-agent-kit": "workspace:*",
-      "@solana-agent-kit/plugin-token": "workspace:*",
-      "@solana-agent-kit/plugin-nft": "workspace:*",
-      "@solana-agent-kit/plugin-defi": "workspace:*",
-      "@solana-agent-kit/plugin-misc": "workspace:*",
-      "@solana-agent-kit/plugin-blinks": "workspace:*",
-      "dotenv": "^16.4.7"
-    },
-    "devDependencies": {
-      "tsx": "^4.19.2",
-      "typescript": "^5.0.0"
-    }
+  "name": "integration-test",
+  "version": "1.0.0",
+  "description": "Integration tests for all Solana Agent Kit packages",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "tsx index.ts",
+    "dev": "tsx watch index.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.1.13",
+    "@solana-agent-kit/plugin-blinks": "workspace:*",
+    "@solana-agent-kit/plugin-defi": "workspace:*",
+    "@solana-agent-kit/plugin-misc": "workspace:*",
+    "@solana-agent-kit/plugin-nft": "workspace:*",
+    "@solana-agent-kit/plugin-token": "workspace:*",
+    "@solana/web3.js": "^1.98.0",
+    "ai": "^4.1.5",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "solana-agent-kit": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.0"
   }
+}

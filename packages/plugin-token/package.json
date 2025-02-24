@@ -31,6 +31,7 @@
     "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
     "@openzeppelin/contracts": "^5.2.0",
     "@solana/spl-token": "^0.4.9",
+    "@solutiofi/sdk": "^1.0.2",
     "@types/bn.js": "^5.1.6",
     "bn.js": "^5.2.1",
     "ethers": "^6.13.5",

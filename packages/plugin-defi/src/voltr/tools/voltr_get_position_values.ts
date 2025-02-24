@@ -12,7 +12,7 @@ export async function voltrGetPositionValues(
   agent: SolanaAgentKit,
   vault: PublicKey,
 ): Promise<string> {
-  const vc = new VoltrClient(agent.connection, agent.wallet);
+  const vc = new VoltrClient(agent.connection);
   const positionAndTotalValues =
     await vc.getPositionAndTotalValuesForVault(vault);
 

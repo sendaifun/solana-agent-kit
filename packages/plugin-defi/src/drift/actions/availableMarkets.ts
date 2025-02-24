@@ -1,5 +1,5 @@
 import { MainnetSpotMarkets } from "@drift-labs/sdk";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { z } from "zod";
 import {
   getAvailableDriftPerpMarkets,

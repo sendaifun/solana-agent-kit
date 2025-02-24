@@ -39,7 +39,7 @@ const stakeWithJupAction: Action = {
       const res = await stakeWithJup(agent, amount);
       return {
         status: "success",
-        res,
+        transaction: res,
         message: `Successfully staked ${amount} SOL for jupSOL`,
       };
     } catch (error: any) {

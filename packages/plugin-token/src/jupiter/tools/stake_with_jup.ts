@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Stake SOL with Jup validator
@@ -7,10 +7,7 @@ import { SolanaAgentKit } from "solana-agent-kit";
  * @param amount Amount of SOL to stake
  * @returns Transaction signature
  */
-export async function stakeWithJup(
-  agent: SolanaAgentKit,
-  amount: number,
-): Promise<string> {
+export async function stakeWithJup(agent: SolanaAgentKit, amount: number) {
   try {
     const res = await fetch(
       `https://worker.jup.ag/blinks/swap/So11111111111111111111111111111111111111112/jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v/${amount}`,
@@ -34,21 +31,8 @@ export async function stakeWithJup(
     const { blockhash } = await agent.connection.getLatestBlockhash();
     txn.message.recentBlockhash = blockhash;
 
-    // Sign and send transaction
-    txn.sign([agent.wallet]);
-    const signature = await agent.connection.sendTransaction(txn, {
-      preflightCommitment: "confirmed",
-      maxRetries: 3,
-    });
-
-    const latestBlockhash = await agent.connection.getLatestBlockhash();
-    await agent.connection.confirmTransaction({
-      signature,
-      blockhash: latestBlockhash.blockhash,
-      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-    });
-
-    return signature;
+    // Sign or send transaction
+    return await signOrSendTX(agent, txn);
   } catch (error: any) {
     console.error(error);
     throw new Error(`jupSOL staking failed: ${error.message}`);

@@ -80,7 +80,8 @@ const searchAssetsAction: Action = {
     creator: z.string().optional(),
     creatorVerified: z.boolean().optional(),
     authority: z.string().optional(),
-    grouping: z.tuple([z.string(), z.string()]).optional(),
+    // NOTE: this breaks the schema for some reason
+    // grouping: z.tuple([z.string(), z.string()]).optional(),
     delegate: z.string().optional(),
     frozen: z.boolean().optional(),
     supply: z.number().optional(),

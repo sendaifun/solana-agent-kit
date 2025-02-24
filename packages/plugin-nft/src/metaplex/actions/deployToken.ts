@@ -1,7 +1,7 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { deploy_token } from "../tools";
+import { Transaction, VersionedTransaction } from "@solana/web3.js";
 
 const deployTokenAction: Action = {
   name: "DEPLOY_TOKEN",
@@ -55,7 +55,7 @@ const deployTokenAction: Action = {
     decimals: z.number().optional(),
     initialSupply: z.number().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const result = await deploy_token(
         agent,
@@ -66,8 +66,19 @@ const deployTokenAction: Action = {
         input.initialSupply,
       );
 
+      if (
+        result instanceof Transaction ||
+        result instanceof VersionedTransaction
+      ) {
+        return {
+          status: "success",
+          message: "Transaction generated successfully",
+          transaction: result,
+        };
+      }
+
       return {
-        mint: result.mint.toString(),
+        mint: result.mint.toBase58(),
         status: "success",
         message: "Token deployed successfully",
       };

@@ -1,7 +1,8 @@
 import { SolanaAgentKit } from "./agent";
 import { createSolanaTools as createVercelAITools } from "./vercel-ai";
+import { createMcpServer, startMcpServer } from "./utils/mcp";
 
-export { SolanaAgentKit, createVercelAITools };
+export { SolanaAgentKit, createVercelAITools, createMcpServer, startMcpServer };
 
 // Optional: Export types that users might need
 export * from "./types";

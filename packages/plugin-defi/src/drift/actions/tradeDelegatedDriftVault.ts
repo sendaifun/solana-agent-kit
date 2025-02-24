@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { tradeDriftVault } from "../tools";
 
 const tradeDelegatedDriftVaultAction: Action = {
@@ -78,7 +78,7 @@ const tradeDelegatedDriftVaultAction: Action = {
       .optional()
       .describe("USD price for limit order"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const params = {
         vaultAddress: input.vaultAddress as string,

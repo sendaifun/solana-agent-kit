@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getAllDomainsTLDs } from "../tools";
 
@@ -30,7 +29,7 @@ const getAllDomainsTLDsAction: Action = {
     ],
   ],
   schema: z.object({}),
-  handler: async (agent: SolanaAgentKit) => {
+  handler: async (agent) => {
     try {
       // Get all domain TLDs
       const tlds = await getAllDomainsTLDs(agent);

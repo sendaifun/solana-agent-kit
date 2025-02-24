@@ -1,15 +1,14 @@
-import { SolanaAgentKit } from "solana-agent-kit";
-import { PublicKey } from "@solana/web3.js";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
+import { generateSigner } from "@metaplex-foundation/umi";
 import {
   createFungible,
   mintV1,
   TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
-  fromWeb3JsKeypair,
   fromWeb3JsPublicKey,
+  toWeb3JsLegacyTransaction,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
 import { mplToolbox } from "@metaplex-foundation/mpl-toolbox";
@@ -31,11 +30,11 @@ export async function deploy_token(
   symbol: string,
   decimals: number = 9,
   initialSupply?: number,
-): Promise<{ mint: PublicKey }> {
+) {
   try {
     // Create UMI instance from agent
     const umi = createUmi(agent.connection.rpcEndpoint).use(mplToolbox());
-    umi.use(keypairIdentity(fromWeb3JsKeypair(agent.wallet)));
+    // umi.use(keypairIdentity(fromWeb3JsKeypair(agent.wallet)));
 
     // Create new token mint
     const mint = generateSigner(umi);
@@ -58,14 +57,23 @@ export async function deploy_token(
         mintV1(umi, {
           mint: mint.publicKey,
           tokenStandard: TokenStandard.Fungible,
-          tokenOwner: fromWeb3JsPublicKey(agent.wallet_address),
+          tokenOwner: fromWeb3JsPublicKey(agent.wallet.publicKey),
           amount: initialSupply * Math.pow(10, decimals),
         }),
       );
     }
 
-    builder.sendAndConfirm(umi, { confirm: { commitment: "finalized" } });
+    const tx = toWeb3JsLegacyTransaction(builder.build(umi));
+    tx.feePayer = agent.wallet.publicKey;
 
+    if (agent.config.signOnly) {
+      return await agent.wallet.signTransaction(tx);
+    }
+
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    tx.recentBlockhash = blockhash;
+
+    await signOrSendTX(agent, tx);
     return {
       mint: toWeb3JsPublicKey(mint.publicKey),
     };

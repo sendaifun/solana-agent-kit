@@ -103,7 +103,7 @@ const createMeteoraDynamicAMMPoolAction: Action = {
         : null;
       const hasAlphaVault = input.hasAlphaVault ?? false;
 
-      const txId = await createMeteoraDynamicAMMPool(
+      const transaction = await createMeteoraDynamicAMMPool(
         agent,
         tokenAMint,
         tokenBMint,
@@ -121,7 +121,7 @@ const createMeteoraDynamicAMMPoolAction: Action = {
       return {
         status: "success",
         message: "Meteora Dynamic pool created successfully.",
-        transaction: txId,
+        transaction,
       };
     } catch (error: any) {
       return {

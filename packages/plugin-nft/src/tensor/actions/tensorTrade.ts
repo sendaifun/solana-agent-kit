@@ -97,7 +97,7 @@ const cancelNFTListingAction: Action = {
 
       return {
         status: "success",
-        signature: tx,
+        transaction: tx,
         message: "Successfully cancelled NFT listing",
       };
     } catch (error: any) {

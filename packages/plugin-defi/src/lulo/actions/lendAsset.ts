@@ -39,7 +39,7 @@ const lendAssetAction: Action = {
 
       return {
         status: "success",
-        signature: response,
+        transaction: response,
         message: `Successfully lent ${amount} USDC`,
       };
     } catch (error: any) {

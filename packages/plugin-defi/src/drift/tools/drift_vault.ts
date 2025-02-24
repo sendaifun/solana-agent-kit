@@ -289,6 +289,13 @@ export async function updateVault(
   }
 }
 
+export const deriveDriftVaultAddress = async (
+  agent: SolanaAgentKit,
+  name: string,
+) => {
+  return await getVaultAddress(agent, name);
+};
+
 export const validateAndEncodeAddress = (input: string, programId: string) => {
   try {
     return new PublicKey(input);

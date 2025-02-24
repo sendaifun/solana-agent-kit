@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { Action, SolanaAgentKit } from "solana-agent-kit";
+import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { openbookCreateMarket } from "../tools";
 
@@ -47,14 +47,14 @@ const createOpenbookMarketAction: Action = {
       .default(0.01)
       .describe("The minimum price increment (tick size)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const baseMint = new PublicKey(input.baseMint);
       const quoteMint = new PublicKey(input.quoteMint);
       const lotSize = input.lotSize || 1;
       const tickSize = input.tickSize || 0.01;
 
-      const signatures = await openbookCreateMarket(
+      const transactions = await openbookCreateMarket(
         agent,
         baseMint,
         quoteMint,
@@ -64,7 +64,7 @@ const createOpenbookMarketAction: Action = {
 
       return {
         status: "success",
-        signatures,
+        transactions,
         message: "Successfully created Openbook market",
       };
     } catch (error: any) {

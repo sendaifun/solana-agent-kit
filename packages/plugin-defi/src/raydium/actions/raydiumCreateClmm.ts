@@ -1,4 +1,4 @@
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
@@ -44,7 +44,7 @@ const raydiumCreateClmmAction: Action = {
       .number()
       .describe("Start time in seconds (UNIX timestamp or zero)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const { mint1, mint2, configId, initialPrice, startTime } = input;
 

@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import * as multisig from "@sqds/multisig";
 const { Multisig } = multisig.accounts;
 
@@ -7,17 +7,15 @@ const { Multisig } = multisig.accounts;
  *
  * @param {SolanaAgentKit} agent - The Solana agent kit instance containing the wallet and connection.
  * @param {number | bigint} [transactionIndex] - Optional transaction index to execute. If not provided, the current transaction index from the multisig account will be used.
- * @returns {Promise<string>} - A promise that resolves to the transaction signature string.
  * @throws {Error} - Throws an error if the transaction execution fails.
  */
 export async function multisig_execute_proposal(
   agent: SolanaAgentKit,
   transactionIndex?: number | bigint,
-): Promise<string> {
+) {
   try {
-    const createKey = agent.wallet;
     const [multisigPda] = multisig.getMultisigPda({
-      createKey: createKey.publicKey,
+      createKey: agent.wallet.publicKey,
     });
     const multisigInfo = await Multisig.fromAccountAddress(
       agent.connection,
@@ -37,12 +35,10 @@ export async function multisig_execute_proposal(
       transactionIndex,
       member: agent.wallet.publicKey,
     });
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    multisigTx.message.recentBlockhash = blockhash;
 
-    multisigTx.sign([agent.wallet]);
-    const tx = await agent.connection.sendRawTransaction(
-      multisigTx.serialize(),
-    );
-    return tx;
+    return await signOrSendTX(agent, multisigTx);
   } catch (error: any) {
     throw new Error(`Transfer failed: ${error}`);
   }
