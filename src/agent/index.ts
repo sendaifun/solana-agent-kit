@@ -7,6 +7,12 @@ import {
   CreateSingleOptions,
   StoreInitOptions,
 } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
+import { SplGovernance } from "governance-idl-sdk";
+import type {
+  TokenOwnerRecord,
+  VoteRecord,
+  RealmV2 as Realm,
+} from "governance-idl-sdk";
 import { DEFAULT_OPTIONS } from "../constants";
 import {
   deploy_collection,
@@ -162,8 +168,11 @@ import {
   deBridgeOrderResponse,
   deBridgeOrderStatusResponse,
   deBridgeTokensInfoResponse,
-  SplAuthorityInput,
+  VoteConfig,
+  ProposalConfig, 
+  RealmConfig
 } from "../types";
+
 import {
   DasApiAsset,
   DasApiAssetList,
@@ -181,6 +190,31 @@ import {
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
 
+import {
+  createNewRealm,
+  createNewProposal,
+  castVoteOnProposal,
+  getRealmInfo,
+  getTokenOwnerRecord,
+  getVoterHistory,
+} from "../actions/governance/governance";
+
+import {
+  GovernanceMonitor,
+  MembershipChangeCallback,
+  VotingPowerChangeCallback,
+} from "../actions/governance/monitor";
+import {
+  configureCouncilSettings,
+  addCouncilMember,
+  removeCouncilMember,
+  updateCouncilMemberWeight,
+  CouncilConfig,
+  CouncilMemberConfig,
+} from "../actions/governance/council";
+
+
+
 /**
  * Main class for interacting with Solana blockchain
  * Provides a unified interface for token operations, NFT management, trading and more
@@ -192,10 +226,29 @@ import {
  * @property {Config} config - Configuration object
  */
 export class SolanaAgentKit {
+  // createRealm(arg0: { name: string; communityMint: PublicKey; minCommunityTokensToCreateGovernance: number; councilMint: PublicKey | undefined; }) {
+  //     throw new Error("Method not implemented.");
+  // }
+  // createProposal(arg0: PublicKey, arg1: ProposalConfig) {
+  //     throw new Error("Method not implemented.");
+  // }
+  // castVote(args: VoteConfig) {
+  //     throw new Error("Method not implemented.");
+  // }
+  // getRealm(arg0: PublicKey) {
+  //     throw new Error("Method not implemented.");
+  // }
+  // getTokenOwnerRecord(arg0: PublicKey, arg1: PublicKey, arg2: PublicKey) {
+  //     throw new Error("Method not implemented.");
+  // }
+  // getVoterHistory(arg0: PublicKey) {
+  //     throw new Error("Method not implemented.");
+  // }
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
   public config: Config;
+  governanceMonitors: any;
 
   /**
    * @deprecated Using openai_api_key directly in constructor is deprecated.
@@ -240,18 +293,9 @@ export class SolanaAgentKit {
     uri: string,
     symbol: string,
     decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
-    authority: SplAuthorityInput,
     initialSupply?: number,
   ): Promise<{ mint: PublicKey }> {
-    return deploy_token(
-      this,
-      name,
-      uri,
-      symbol,
-      decimals,
-      authority,
-      initialSupply,
-    );
+    return deploy_token(this, name, uri, symbol, decimals, initialSupply);
   }
 
   async deployCollection(
@@ -670,6 +714,8 @@ export class SolanaAgentKit {
     );
   }
 
+  
+
   async manifestCreateMarket(
     baseMint: PublicKey,
     quoteMint: PublicKey,
@@ -784,6 +830,118 @@ export class SolanaAgentKit {
     );
     return `Transaction: ${tx}`;
   }
+
+
+  async createRealm(config: RealmConfig): Promise<PublicKey> {
+    return createNewRealm(this, config);
+  }
+
+  async createProposal(
+    realm: PublicKey,
+    config: ProposalConfig,
+  ): Promise<PublicKey> {
+    return createNewProposal(this, realm, config);
+  }
+  async castVote(config: VoteConfig): Promise<string> {
+    return castVoteOnProposal(this, config);
+  }
+  async getRealm(realm: PublicKey): Promise<Realm | null> {
+    return getRealmInfo(this, realm);
+  }
+  async getTokenOwnerRecord(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    governingTokenOwner: PublicKey,
+  ): Promise<TokenOwnerRecord | undefined> {
+    return getTokenOwnerRecord(
+      this,
+      realm,
+      governingTokenMint,
+      governingTokenOwner,
+    );
+  }
+  async getVoterHistory(voter: PublicKey): Promise<VoteRecord[]> {
+    return getVoterHistory(this, voter);
+  }
+
+  async monitorRealmMembership(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    callback: MembershipChangeCallback,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    let monitor = this.governanceMonitors.get(key);
+
+    if (!monitor) {
+      monitor = new GovernanceMonitor(this, realm, governingTokenMint);
+      this.governanceMonitors.set(key, monitor);
+    }
+
+    await monitor.monitorMembershipChanges(callback);
+  }
+
+  async monitorVotingPower(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+    callback: VotingPowerChangeCallback,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    let monitor = this.governanceMonitors.get(key);
+
+    if (!monitor) {
+      monitor = new GovernanceMonitor(this, realm, governingTokenMint);
+      this.governanceMonitors.set(key, monitor);
+    }
+
+    await monitor.monitorVotingPowerChanges(callback);
+  }
+
+  async stopMonitoring(
+    realm: PublicKey,
+    governingTokenMint: PublicKey,
+  ): Promise<void> {
+    const key = `${realm.toBase58()}-${governingTokenMint.toBase58()}`;
+    const monitor = this.governanceMonitors.get(key);
+
+    if (monitor) {
+      await monitor.stopMonitoring();
+      this.governanceMonitors.delete(key);
+    }
+  }
+
+  async configureCouncil(
+    realm: PublicKey,
+    config: CouncilConfig,
+  ): Promise<string> {
+    return configureCouncilSettings(this, realm, config);
+  }
+
+  async addCouncilMember(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    memberConfig: CouncilMemberConfig,
+  ): Promise<string> {
+    return addCouncilMember(this, realm, councilMint, memberConfig);
+  }
+
+  async removeCouncilMember(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    member: PublicKey,
+  ): Promise<string> {
+    return removeCouncilMember(this, realm, councilMint, member);
+  }
+
+  async updateCouncilMemberWeight(
+    realm: PublicKey,
+    councilMint: PublicKey,
+    memberConfig: CouncilMemberConfig,
+  ): Promise<string> {
+    return updateCouncilMemberWeight(this, realm, councilMint, memberConfig);
+  }
+
+  
+  
 
   async create3LandNft(
     collectionAccount: string,

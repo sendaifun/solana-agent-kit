@@ -160,6 +160,13 @@ import {
   SolanaFluxbeamCreatePoolTool,
 } from "./index";
 
+import {
+  SolanaCreateRealmTool,
+  SolanaCreateProposalTool,
+  SolanaCastVoteTool,
+  SolanaGetRealmInfoTool, 
+} from "../tools/governance/governance"
+
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaGetInfoTool(solanaKit),
@@ -282,5 +289,10 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new ElfaGetTopMentionsTool(solanaKit),
     new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
+    new SolanaCreateRealmTool(solanaKit),
+    new SolanaCreateProposalTool(solanaKit),
+    new SolanaCastVoteTool(solanaKit),
+    new SolanaGetRealmInfoTool(solanaKit),
+    new SolanaApproveProposal2by2Multisig(solanaKit),
   ];
 }
