@@ -102,7 +102,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Automated decision-making capabilities
 
 ## 📃 Documentation
-You can view the full documentation of the kit at [docs.sendai.fun](https://docs.sendai.fun/v0/introduction)
+You can view the full documentation of the kit in our [GitHub repository](https://github.com/sendaifun/solana-agent-kit/tree/main/docs)
 
 ## 📦 Installation
 
