@@ -3,7 +3,7 @@ import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
 import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 import { Vote, VoteChoice } from "governance-idl-sdk";
-
+ 
 
 export interface Config {
   OPENAI_API_KEY?: string;
@@ -508,6 +508,14 @@ export interface Quote {
 export interface TransformedResponse {
   quote: Quote;
 }
+
+export interface SplAuthorityInput {
+  mintAuthority?: PublicKey | undefined | null;
+  freezeAuthority?: PublicKey | undefined | null;
+  updateAuthority?: PublicKey | undefined;
+  isMutable?: boolean;
+}
+
 
 export { Vote, VoteChoice };
 

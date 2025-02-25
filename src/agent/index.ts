@@ -168,11 +168,11 @@ import {
   deBridgeOrderResponse,
   deBridgeOrderStatusResponse,
   deBridgeTokensInfoResponse,
+  SplAuthorityInput,
   VoteConfig,
   ProposalConfig, 
-  RealmConfig
+  RealmConfig,
 } from "../types";
-
 import {
   DasApiAsset,
   DasApiAssetList,
@@ -213,8 +213,6 @@ import {
   CouncilMemberConfig,
 } from "../actions/governance/council";
 
-
-
 /**
  * Main class for interacting with Solana blockchain
  * Provides a unified interface for token operations, NFT management, trading and more
@@ -226,24 +224,6 @@ import {
  * @property {Config} config - Configuration object
  */
 export class SolanaAgentKit {
-  // createRealm(arg0: { name: string; communityMint: PublicKey; minCommunityTokensToCreateGovernance: number; councilMint: PublicKey | undefined; }) {
-  //     throw new Error("Method not implemented.");
-  // }
-  // createProposal(arg0: PublicKey, arg1: ProposalConfig) {
-  //     throw new Error("Method not implemented.");
-  // }
-  // castVote(args: VoteConfig) {
-  //     throw new Error("Method not implemented.");
-  // }
-  // getRealm(arg0: PublicKey) {
-  //     throw new Error("Method not implemented.");
-  // }
-  // getTokenOwnerRecord(arg0: PublicKey, arg1: PublicKey, arg2: PublicKey) {
-  //     throw new Error("Method not implemented.");
-  // }
-  // getVoterHistory(arg0: PublicKey) {
-  //     throw new Error("Method not implemented.");
-  // }
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
@@ -283,6 +263,8 @@ export class SolanaAgentKit {
     }
   }
 
+  
+
   // Tool methods
   async requestFaucetFunds() {
     return request_faucet_funds(this);
@@ -293,9 +275,18 @@ export class SolanaAgentKit {
     uri: string,
     symbol: string,
     decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    authority: SplAuthorityInput,
     initialSupply?: number,
   ): Promise<{ mint: PublicKey }> {
-    return deploy_token(this, name, uri, symbol, decimals, initialSupply);
+    return deploy_token(
+      this,
+      name,
+      uri,
+      symbol,
+      decimals,
+      authority,
+      initialSupply,
+    );
   }
 
   async deployCollection(
@@ -714,8 +705,6 @@ export class SolanaAgentKit {
     );
   }
 
-  
-
   async manifestCreateMarket(
     baseMint: PublicKey,
     quoteMint: PublicKey,
@@ -832,6 +821,7 @@ export class SolanaAgentKit {
   }
 
 
+  
   async createRealm(config: RealmConfig): Promise<PublicKey> {
     return createNewRealm(this, config);
   }
