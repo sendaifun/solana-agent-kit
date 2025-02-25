@@ -54,7 +54,7 @@ Unsure where to start? You can help out by:
 - Improving documentation.
 - Adding tests.
 
-Check out the [Good First Issues](https://github.com/sendaifun/solana-agent-kit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get started!
+Check the [Good First Issues](https://github.com/sendaifun/solana-agent-kit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get started!
 
 ### Pull Requests
 

@@ -102,7 +102,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Automated decision-making capabilities
 
 ## 📃 Documentation
-You can view the full documentation of the kit at [docs.solanaagentkit.xyz](https://docs.solanaagentkit.xyz)
+You can view the full documentation of the kit at [docs.sendai.fun](https://docs.sendai.fun/v0/introduction)
 
 ## 📦 Installation
 
@@ -136,6 +136,12 @@ const result = await agent.deployToken(
   "uri", // uri
   "token", // symbol
   9, // decimals
+  {
+    mintAuthority: null, // by default, deployer account
+    freezeAuthority: null, // by default, deployer account
+    updateAuthority: undefined, // by default, deployer account
+    isMutable: false // by default, true
+  },
   1000000 // initial supply
 );
 
