@@ -326,7 +326,7 @@ const { signature } = await agent.closeEmptyTokenAccounts();
 
 ### Create a Drift account
 
-Create a drift account with an initial token deposit.
+Create a Drift account with an initial token deposit.
 
 ```typescript
 const result = await agent.createDriftUserAccount()
@@ -334,11 +334,11 @@ const result = await agent.createDriftUserAccount()
 
 ### Create a Drift Vault
 
-Create a drift vault.
+Create a Drift vault.
 
 ```typescript
 const signature = await agent.createDriftVault({
-  name: "my-drift-vault",
+  name: "my-Drift-vault",
   marketName: "USDC-SPOT",
   redeemPeriod: 1, // in days
   maxTokens: 100000, // in token units e.g 100000 USDC
@@ -352,7 +352,7 @@ const signature = await agent.createDriftVault({
 
 ### Deposit into a Drift Vault
 
-Deposit tokens into a drift vault.
+Deposit tokens into a Drift vault.
 
 ```typescript
 const signature = await agent.depositIntoDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
@@ -360,7 +360,7 @@ const signature = await agent.depositIntoDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35
 
 ### Deposit into your Drift account
 
-Deposit tokens into your drift account.
+Deposit tokens into your Drift account.
 
 ```typescript
 const {txSig} = await agent.depositToDriftUserAccount(100, "USDC")
@@ -368,15 +368,15 @@ const {txSig} = await agent.depositToDriftUserAccount(100, "USDC")
 
 ### Derive a Drift Vault address
 
-Derive a drift vault address.
+Derive a Drift vault address.
 
 ```typescript
-const vaultPublicKey = await agent.deriveDriftVaultAddress("my-drift-vault")
+const vaultPublicKey = await agent.deriveDriftVaultAddress("my-Drift-vault")
 ```
 
 ### Do you have a Drift account
 
-Check if agent has a drift account.
+Check if an agent has a Drift account.
 
 ```typescript
 const {hasAccount, account} = await agent.doesUserHaveDriftAccount()
@@ -384,15 +384,15 @@ const {hasAccount, account} = await agent.doesUserHaveDriftAccount()
 
 ### Get Drift account information
 
-Get drift account information.
+Get Drift account information.
 
 ```typescript
-const accountInfo = await agent.driftUserAccountInfo()
+const accountInfo = await agent.DriftUserAccountInfo()
 ```
 
 ### Request withdrawal from Drift vault
 
-Request withdrawal from drift vault.
+Request withdrawal from Drift vault.
 
 ```typescript
 const signature = await agent.requestWithdrawalFromDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
@@ -400,7 +400,7 @@ const signature = await agent.requestWithdrawalFromDriftVault(100, "41Y8C4oxk4zg
 
 ### Carry out a perpetual trade using a Drift vault
 
-Open a perpetual trade using a drift vault that is delegated to you.
+Open a perpetual trade using a Drift vault that is delegated to you.
 
 ```typescript
 const signature = await agent.tradeUsingDelegatedDriftVault({
@@ -415,7 +415,7 @@ const signature = await agent.tradeUsingDelegatedDriftVault({
 
 ### Carry out a perpetual trade using your Drift account
 
-Open a perpetual trade using your drift account.
+Open a perpetual trade using your Drift account.
 
 ```typescript
 const signature = await agent.tradeUsingDriftPerpAccount({
@@ -429,11 +429,11 @@ const signature = await agent.tradeUsingDriftPerpAccount({
 
 ### Update Drift vault parameters
 
-Update drift vault parameters.
+Update Drift vault parameters.
 
 ```typescript
 const signature = await agent.updateDriftVault({
-  name: "my-drift-vault",
+  name: "my-Drift-vault",
   marketName: "USDC-SPOT",
   redeemPeriod: 1, // in days
   maxTokens: 100000, // in token units e.g 100000 USDC
@@ -447,7 +447,7 @@ const signature = await agent.updateDriftVault({
 
 ### Withdraw from Drift account
 
-Withdraw tokens from your drift account.
+Withdraw tokens from your Drift account.
 
 ```typescript
 const {txSig} = await agent.withdrawFromDriftAccount(100, "USDC")
@@ -455,7 +455,7 @@ const {txSig} = await agent.withdrawFromDriftAccount(100, "USDC")
 
 ### Borrow from Drift
 
-Borrow tokens from drift.
+Borrow tokens from Drift.
 
 ```typescript
 const {txSig} = await agent.withdrawFromDriftAccount(1, "SOL", true)
@@ -463,7 +463,7 @@ const {txSig} = await agent.withdrawFromDriftAccount(1, "SOL", true)
 
 ### Repay Drift loan
 
-Repay a loan from drift.
+Repay a loan from Drift.
 
 ```typescript
 const {txSig} = await agent.depositToDriftUserAccount(1, "SOL", true)
@@ -471,7 +471,7 @@ const {txSig} = await agent.depositToDriftUserAccount(1, "SOL", true)
 
 ### Withdraw from Drift vault
 
-Withdraw tokens from a drift vault after the redemption period has elapsed.
+Withdraw tokens from a Drift vault after the redemption period has elapsed.
 
 ```typescript
 const signature = await agent.withdrawFromDriftVault( "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
@@ -479,7 +479,7 @@ const signature = await agent.withdrawFromDriftVault( "41Y8C4oxk4zgJT1KXyQr35UhZ
 
 ### Update the address a Drift vault is delegated to
 
-Update the address a drift vault is delegated to.
+Update the address a Drift vault is delegated to.
 
 ```typescript
 const signature = await agent.updateDriftVaultDelegate("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU", "new-address")
@@ -539,7 +539,7 @@ const topics = await agent.getAllTopics();
 console.log("Allora topics:", topics);
 ```
 
-### Get an inference for an specific topic from Allora
+### Get an inference for a specific topic from Allora
 
 ```typescript
 const inference = await agent.getInferenceByTopicId(42);
@@ -703,7 +703,7 @@ The toolkit relies on several key Solana and Metaplex libraries:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
 
 ## Contributors
 
@@ -723,7 +723,7 @@ Apache-2 License
 
 If you wanna give back any tokens or donations to the OSS community -- The Public Solana Agent Kit Treasury Address:
 
-Solana Network : EKHTbXpsm6YDgJzMkFxNU1LNXeWcUW7Ezf8mjUNQQ4Pa
+Solana Network: EKHTbXpsm6YDgJzMkFxNU1LNXeWcUW7Ezf8mjUNQQ4Pa
 
 ## Security
 
