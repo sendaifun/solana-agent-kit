@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { create_squads_multisig } from "../tools";
 import { PublicKey } from "@solana/web3.js";
@@ -15,7 +14,7 @@ const createMultisigAction: Action = {
     "create 2-of-2 multisig account on Solana",
   ],
   description: `Create a 2-of-2 multisig account on Solana using Squads with the user and the agent, where both approvals will be required to run the transactions.
-  
+
   Note: For one AI agent, only one 2-by-2 multisig can be created as it is pair-wise.`,
   examples: [
     [
@@ -35,7 +34,7 @@ const createMultisigAction: Action = {
   schema: z.object({
     creator: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const multisig = await create_squads_multisig(
       agent,
       new PublicKey(input.creator as string),
@@ -44,7 +43,7 @@ const createMultisigAction: Action = {
     return {
       status: "success",
       message: "2-by-2 multisig account created successfully",
-      signature: multisig,
+      transaction: multisig,
     };
   },
 };

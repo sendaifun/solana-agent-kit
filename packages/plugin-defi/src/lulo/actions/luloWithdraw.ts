@@ -46,7 +46,7 @@ const luloWithdrawAction: Action = {
 
       return {
         status: "success",
-        signature: response,
+        transaction: response,
         message: `Successfully withdraw ${amount} of token ${mintAddress}`,
       };
     } catch (error: any) {

@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Stake SOL with Solayer
@@ -7,10 +7,7 @@ import type { SolanaAgentKit } from "solana-agent-kit";
  * @param amount Amount of SOL to stake
  * @returns Transaction signature
  */
-export async function stakeWithSolayer(
-  agent: SolanaAgentKit,
-  amount: number,
-): Promise<string> {
+export async function stakeWithSolayer(agent: SolanaAgentKit, amount: number) {
   try {
     const response = await fetch(
       `https://app.solayer.org/api/action/restake/ssol?amount=${amount}`,
@@ -41,22 +38,7 @@ export async function stakeWithSolayer(
     const { blockhash } = await agent.connection.getLatestBlockhash();
     txn.message.recentBlockhash = blockhash;
 
-    // Sign and send transaction
-    txn.sign([agent.wallet]);
-    const signature = await agent.connection.sendTransaction(txn, {
-      preflightCommitment: "confirmed",
-      maxRetries: 3,
-    });
-
-    // Wait for confirmation
-    const latestBlockhash = await agent.connection.getLatestBlockhash();
-    await agent.connection.confirmTransaction({
-      signature,
-      blockhash: latestBlockhash.blockhash,
-      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-    });
-
-    return signature;
+    return await signOrSendTX(agent, txn);
   } catch (error: any) {
     console.error(error);
     throw new Error(`Solayer sSOL staking failed: ${error.message}`);

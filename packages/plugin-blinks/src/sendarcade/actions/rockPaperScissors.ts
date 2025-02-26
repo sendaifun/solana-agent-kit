@@ -68,7 +68,7 @@ const rockPaperScissorAction: Action = {
       // Otherwise return win result
       return {
         status: "success",
-        message: result,
+        transaction: result,
       };
     } catch (error: any) {
       return {

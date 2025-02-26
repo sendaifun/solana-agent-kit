@@ -19,6 +19,7 @@
     "@sqds/multisig": "^2.1.3",
     "@switchboard-xyz/common": "^2.5.17",
     "@tiplink/api": "^0.3.1",
+    "axios": "^1.7.9",
     "bs58": "^6.0.0",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"

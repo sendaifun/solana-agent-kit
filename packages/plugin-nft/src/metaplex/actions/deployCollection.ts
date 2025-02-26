@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { deploy_collection } from "../tools";
 
@@ -57,7 +56,7 @@ const deployCollectionAction: Action = {
     uri: z.string().url("URI must be a valid URL"),
     royaltyBasisPoints: z.number().min(0).max(10000).optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const options: CollectionOptions = {
       name: input.name,
       uri: input.uri,
@@ -69,7 +68,8 @@ const deployCollectionAction: Action = {
     return {
       status: "success",
       message: "Collection deployed successfully",
-      collectionAddress: result.collectionAddress.toString(),
+      collectionAddress: result.collectionAddress.toBase58(),
+      transaction: result.signedTransaction ?? result.signature,
       name: input.name,
     };
   },

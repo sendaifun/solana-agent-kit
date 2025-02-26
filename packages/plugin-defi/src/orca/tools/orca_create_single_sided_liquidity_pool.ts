@@ -37,7 +37,7 @@ import {
   TOKEN_2022_PROGRAM_ID,
 } from "@solana/spl-token";
 import { sendTx } from "solana-agent-kit";
-import { Wallet } from "./utils/keypair";
+
 /**
  * Maps fee tier bps to their corresponding tick spacing values in the Orca Whirlpool protocol.
  *
@@ -123,10 +123,13 @@ export async function orcaCreateSingleSidedLiquidityPool(
     } else {
       throw new Error("Unsupported network");
     }
-    const wallet = new Wallet(agent.wallet);
     const ctx = WhirlpoolContext.from(
       agent.connection,
-      wallet,
+      {
+        publicKey: agent.wallet.publicKey,
+        signAllTransactions: agent.wallet.signAllTransactions,
+        signTransaction: agent.wallet.signTransaction,
+      },
       ORCA_WHIRLPOOL_PROGRAM_ID,
     );
     const fetcher = ctx.fetcher;
@@ -201,7 +204,7 @@ export async function orcaCreateSingleSidedLiquidityPool(
       tokenVaultBKeypair,
       feeTierKey,
       tickSpacing: tickSpacing,
-      funder: wallet.publicKey,
+      funder: agent.wallet.publicKey,
     };
     const initPoolIx = !TokenExtensionUtil.isV2IxRequiredPool(tokenExtensionCtx)
       ? WhirlpoolIx.initializePoolIx(ctx.program, baseParamsPool)
@@ -233,7 +236,7 @@ export async function orcaCreateSingleSidedLiquidityPool(
         startTick: initialTickArrayStartTick,
         tickArrayPda: initialTickArrayPda,
         whirlpool: whirlpoolPda.publicKey,
-        funder: wallet.publicKey,
+        funder: agent.wallet.publicKey,
       }),
     );
 
@@ -295,13 +298,13 @@ export async function orcaCreateSingleSidedLiquidityPool(
     );
     const positionTokenAccountAddress = getAssociatedTokenAddressSync(
       positionMintPubkey,
-      wallet.publicKey,
+      agent.wallet.publicKey,
       ctx.accountResolverOpts.allowPDAOwnerAddress,
       TOKEN_2022_PROGRAM_ID,
     );
     const params = {
-      funder: wallet.publicKey,
-      owner: wallet.publicKey,
+      funder: agent.wallet.publicKey,
+      owner: agent.wallet.publicKey,
       positionPda,
       positionTokenAccount: positionTokenAccountAddress,
       whirlpool: whirlpoolPda.publicKey,
@@ -319,13 +322,13 @@ export async function orcaCreateSingleSidedLiquidityPool(
 
     const [ataA, ataB] = await resolveOrCreateATAs(
       ctx.connection,
-      wallet.publicKey,
+      agent.wallet.publicKey,
       [
         { tokenMint: mintA, wrappedSolAmountIn: tokenMaxA },
         { tokenMint: mintB, wrappedSolAmountIn: tokenMaxB },
       ],
       () => ctx.fetcher.getAccountRentExempt(),
-      wallet.publicKey,
+      agent.wallet.publicKey,
       undefined,
       ctx.accountResolverOpts.allowPDAOwnerAddress,
       "ata",
@@ -361,7 +364,7 @@ export async function orcaCreateSingleSidedLiquidityPool(
             startTick: tickArrayUpperStartIndex,
             tickArrayPda: tickArrayUpperPda,
             whirlpool: whirlpoolPda.publicKey,
-            funder: wallet.publicKey,
+            funder: agent.wallet.publicKey,
           }),
         );
       } else {
@@ -370,7 +373,7 @@ export async function orcaCreateSingleSidedLiquidityPool(
             startTick: tickArrayLowerStartIndex,
             tickArrayPda: tickArrayLowerPda,
             whirlpool: whirlpoolPda.publicKey,
-            funder: wallet.publicKey,
+            funder: agent.wallet.publicKey,
           }),
         );
       }
@@ -381,7 +384,7 @@ export async function orcaCreateSingleSidedLiquidityPool(
       tokenMaxA,
       tokenMaxB,
       whirlpool: whirlpoolPda.publicKey,
-      positionAuthority: wallet.publicKey,
+      positionAuthority: agent.wallet.publicKey,
       position: positionPda.publicKey,
       positionTokenAccount: positionTokenAccountAddress,
       tokenOwnerAccountA,

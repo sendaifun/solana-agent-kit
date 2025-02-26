@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { registerDomain } from "../tools";
 
@@ -39,7 +38,7 @@ const registerDomainAction: Action = {
       .default(1)
       .describe("Space allocation in KB (max 10KB)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const name = input.name as string;
       const spaceKB = (input.spaceKB as number) || 1;

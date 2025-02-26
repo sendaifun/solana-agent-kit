@@ -46,7 +46,7 @@ const luloLendAction: Action = {
 
       return {
         status: "success",
-        signature: response,
+        transaction: response,
         message: `Successfully lend ${amount} of token ${mintAddress}`,
       };
     } catch (error: any) {

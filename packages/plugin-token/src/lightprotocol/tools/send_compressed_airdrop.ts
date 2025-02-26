@@ -3,26 +3,28 @@ import {
   ComputeBudgetProgram,
   Keypair,
   PublicKey,
+  Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import {
   buildAndSignTx,
+  buildTx,
   calculateComputeUnitPrice,
-  createRpc,
   Rpc,
   sendAndConfirmTx,
   sleep,
 } from "@lightprotocol/stateless.js";
+import { CompressedTokenProgram } from "@lightprotocol/compressed-token";
 import {
-  CompressedTokenProgram,
-  createTokenPool,
-} from "@lightprotocol/compressed-token";
-import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
+} from "@solana/spl-token";
 
 // arbitrary
 const MAX_AIRDROP_RECIPIENTS = 1000;
-const MAX_CONCURRENT_TXS = 30;
+// const MAX_CONCURRENT_TXS = 30;
 
 /**
  * Estimate the cost of an airdrop in lamports.
@@ -53,7 +55,6 @@ export const getAirdropCostEstimate = (
  * @param decimals          Decimals of the token
  * @param recipients        Recipient wallet addresses (no ATAs)
  * @param priorityFeeInLamports   Priority fee in lamports
- * @param shouldLog         Whether to log progress to stdout. Defaults to false.
  */
 export async function sendCompressedAirdrop(
   agent: SolanaAgentKit,
@@ -62,8 +63,9 @@ export async function sendCompressedAirdrop(
   decimals: number,
   recipients: PublicKey[],
   priorityFeeInLamports: number,
-  shouldLog: boolean = false,
-): Promise<string[]> {
+) {
+  const setupTransaction = new Transaction();
+
   if (recipients.length > MAX_AIRDROP_RECIPIENTS) {
     throw new Error(
       `Max airdrop can be ${MAX_AIRDROP_RECIPIENTS} recipients at a time. For more scale, use open source ZK Compression airdrop tools such as https://github.com/helius-labs/airship.`,
@@ -81,25 +83,29 @@ export async function sendCompressedAirdrop(
   }
 
   try {
-    await getOrCreateAssociatedTokenAccount(
-      agent.connection,
-      agent.wallet,
+    await getAssociatedTokenAddress(mintAddress, agent.wallet.publicKey);
+  } catch (error) {
+    const associatedToken = getAssociatedTokenAddressSync(
       mintAddress,
       agent.wallet.publicKey,
     );
-  } catch (error) {
-    console.error(error);
-    throw new Error(
-      "Source token account not found and failed to create it. Please add funds to your wallet and try again.",
+    setupTransaction.add(
+      createAssociatedTokenAccountInstruction(
+        agent.wallet.publicKey,
+        associatedToken,
+        agent.wallet.publicKey,
+        mintAddress,
+      ),
     );
   }
 
   try {
-    await createTokenPool(
-      agent.connection as unknown as Rpc,
-      agent.wallet,
-      mintAddress,
-    );
+    const createTokenPoolInstruction =
+      await CompressedTokenProgram.createTokenPool({
+        mint: mintAddress,
+        feePayer: agent.wallet.publicKey,
+      });
+    setupTransaction.add(createTokenPoolInstruction);
   } catch (error: any) {
     if (error.message.includes("already in use")) {
       // skip
@@ -114,7 +120,7 @@ export async function sendCompressedAirdrop(
     mintAddress,
     recipients,
     priorityFeeInLamports,
-    shouldLog,
+    setupTransaction,
   );
 }
 
@@ -124,15 +130,21 @@ async function processAll(
   mint: PublicKey,
   recipients: PublicKey[],
   priorityFeeInLamports: number,
-  shouldLog: boolean,
-): Promise<string[]> {
+  setupTransaction: Transaction,
+) {
   const mintAddress = mint;
-  const payer = agent.wallet;
+  const transaction = Transaction.from(setupTransaction.serialize());
 
-  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-    agent.connection,
-    agent.wallet,
-    mintAddress,
+  // modify compute units and price
+  transaction.add(
+    ComputeBudgetProgram.setComputeUnitLimit({ units: 500_000 }),
+    ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: calculateComputeUnitPrice(priorityFeeInLamports, 500_000),
+    }),
+  );
+
+  const sourceTokenAccount = getAssociatedTokenAddressSync(
+    mint,
     agent.wallet.publicKey,
   );
 
@@ -155,18 +167,8 @@ async function processAll(
     batches.push(recipients.slice(i, i + maxRecipientsPerInstruction * maxIxs));
   }
 
-  const instructionSets = await Promise.all(
+  const compressInstructionSet = await Promise.all(
     batches.map(async (recipientBatch) => {
-      const instructions: TransactionInstruction[] = [
-        ComputeBudgetProgram.setComputeUnitLimit({ units: 500_000 }),
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: calculateComputeUnitPrice(
-            priorityFeeInLamports,
-            500_000,
-          ),
-        }),
-      ];
-
       const compressIxPromises = [];
       for (
         let i = 0;
@@ -176,9 +178,9 @@ async function processAll(
         const batch = recipientBatch.slice(i, i + maxRecipientsPerInstruction);
         compressIxPromises.push(
           CompressedTokenProgram.compress({
-            payer: payer.publicKey,
-            owner: payer.publicKey,
-            source: sourceTokenAccount.address,
+            payer: agent.wallet.publicKey,
+            owner: agent.wallet.publicKey,
+            source: sourceTokenAccount,
             toAddress: batch,
             amount: batch.map(() => amount),
             mint: mintAddress,
@@ -187,72 +189,21 @@ async function processAll(
       }
 
       const compressIxs = await Promise.all(compressIxPromises);
-      return [...instructions, ...compressIxs];
+      return compressIxs;
     }),
   );
 
-  const url = agent.connection.rpcEndpoint;
-  const rpc = createRpc(url, url, url);
+  transaction.add(...compressInstructionSet.flat());
 
-  const results = [];
-  let confirmedCount = 0;
-  const totalBatches = instructionSets.length;
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  const tx = buildTx(
+    transaction.instructions,
+    agent.wallet.publicKey,
+    blockhash,
+    [lookupTableAccount],
+  );
 
-  const renderProgressBar = (current: number, total: number) => {
-    const percentage = Math.floor((current / total) * 100);
-    const filled = Math.floor((percentage / 100) * 20);
-    const empty = 20 - filled;
-    const bar = "█".repeat(filled) + "░".repeat(empty);
-    return `Airdropped to ${Math.min(current * 15, recipients.length)}/${
-      recipients.length
-    } recipients [${bar}] ${percentage}%`;
-  };
-
-  const log = (message: string) => {
-    if (shouldLog && typeof process !== "undefined" && process.stdout) {
-      process.stdout.write(message);
-    }
-  };
-
-  for (let i = 0; i < instructionSets.length; i += MAX_CONCURRENT_TXS) {
-    const batchPromises = instructionSets
-      .slice(i, i + MAX_CONCURRENT_TXS)
-      .map((instructions, idx) =>
-        sendTransactionWithRetry(
-          rpc,
-          instructions,
-          payer,
-          lookupTableAccount,
-          i + idx,
-        ).then((signature) => {
-          confirmedCount++;
-          log("\r" + renderProgressBar(confirmedCount, totalBatches));
-          return signature;
-        }),
-      );
-
-    const batchResults = await Promise.allSettled(batchPromises);
-    results.push(...batchResults);
-  }
-
-  log("\n");
-
-  const failures = results
-    .filter((r) => r.status === "rejected")
-    .map((r, idx) => ({
-      index: idx,
-      error: (r as PromiseRejectedResult).reason,
-    }));
-
-  if (failures.length > 0) {
-    throw new Error(
-      `Failed to process ${failures.length} batches: ${failures
-        .map((f) => f.error)
-        .join(", ")}`,
-    );
-  }
-
-  return results.map((r) => (r as PromiseFulfilledResult<string>).value);
+  return await signOrSendTX(agent, tx);
 }
 
 async function sendTransactionWithRetry(

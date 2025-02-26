@@ -1,5 +1,5 @@
-import { sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { Transaction } from "@solana/web3.js";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 
 export async function rock_paper_scissor(
   agent: SolanaAgentKit,
@@ -22,18 +22,17 @@ export async function rock_paper_scissor(
 
     const data = await res.json();
     if (data.transaction) {
+      const { blockhash } = await agent.connection.getLatestBlockhash();
       const txn = Transaction.from(Buffer.from(data.transaction, "base64"));
-      txn.sign(agent.wallet);
-      txn.recentBlockhash = (
-        await agent.connection.getLatestBlockhash()
-      ).blockhash;
-      const sig = await sendAndConfirmTransaction(
-        agent.connection,
-        txn,
-        [agent.wallet],
-        { commitment: "confirmed" },
-      );
+      txn.recentBlockhash = blockhash;
+
+      if (agent.config.signOnly) {
+        return signOrSendTX(agent, txn);
+      }
+
+      const sig = (await signOrSendTX(agent, txn)) as string;
       const href = data.links?.next?.href;
+
       return await outcome(agent, sig, href);
     } else {
       return "failed";
@@ -43,6 +42,7 @@ export async function rock_paper_scissor(
     throw new Error(`RPS game failed: ${error.message}`);
   }
 }
+
 async function outcome(
   agent: SolanaAgentKit,
   sig: string,
@@ -75,6 +75,7 @@ async function outcome(
     throw new Error(`RPS outcome failed: ${error.message}`);
   }
 }
+
 async function won(agent: SolanaAgentKit, href: string): Promise<string> {
   try {
     const res = await fetch(
@@ -93,8 +94,10 @@ async function won(agent: SolanaAgentKit, href: string): Promise<string> {
     const data: any = await res.json();
     if (data.transaction) {
       const txn = Transaction.from(Buffer.from(data.transaction, "base64"));
-      txn.partialSign(agent.wallet);
-      await agent.connection.sendRawTransaction(txn.serialize(), {
+      const { blockhash } = await agent.connection.getLatestBlockhash();
+      txn.recentBlockhash = blockhash;
+      const signedTxn = await agent.wallet.signTransaction(txn);
+      await agent.connection.sendRawTransaction(signedTxn.serialize(), {
         preflightCommitment: "confirmed",
       });
     } else {
@@ -107,6 +110,7 @@ async function won(agent: SolanaAgentKit, href: string): Promise<string> {
     throw new Error(`RPS outcome failed: ${error.message}`);
   }
 }
+
 async function postWin(agent: SolanaAgentKit, href: string): Promise<string> {
   try {
     const res = await fetch(

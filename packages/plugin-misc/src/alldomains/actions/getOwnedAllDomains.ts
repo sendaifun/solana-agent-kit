@@ -1,6 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getOwnedAllDomains } from "../tools";
 
@@ -38,7 +37,7 @@ const getOwnedAllDomainsAction: Action = {
       .min(1)
       .describe("The wallet address to get owned domains for"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const address = new PublicKey(input.address);
 

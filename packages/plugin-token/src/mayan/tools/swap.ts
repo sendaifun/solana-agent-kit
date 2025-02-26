@@ -97,37 +97,15 @@ async function swapSolana(
     tipLamports: jitoTip,
     jitoAccount: jitoConfig.jitoAccount,
     jitoSendUrl: jitoConfig.sendBundleUrl,
-    signAllTransactions: async <T extends Transaction | VersionedTransaction>(
-      trxs: T[],
-    ): Promise<T[]> => {
-      for (let i = 0; i < trxs.length; i++) {
-        if ("version" in trxs[i]) {
-          (trxs[i] as VersionedTransaction).sign([agent.wallet]);
-        } else {
-          (trxs[i] as Transaction).partialSign(agent.wallet);
-        }
-      }
-      return trxs;
-    },
-  };
-
-  const signer = async <T extends Transaction | VersionedTransaction>(
-    trx: T,
-  ): Promise<T> => {
-    if ("version" in trx) {
-      (trx as VersionedTransaction).sign([agent.wallet]);
-    } else {
-      (trx as Transaction).partialSign(agent.wallet);
-    }
-    return trx;
+    signAllTransactions: agent.wallet.signAllTransactions,
   };
 
   const swapRes = await swapFromSolana(
     quote,
-    agent.wallet.publicKey.toString(),
+    agent.wallet.publicKey.toBase58(),
     dstAddr,
     null,
-    signer,
+    agent.wallet.signTransaction,
     agent.connection,
     [],
     { skipPreflight: true },

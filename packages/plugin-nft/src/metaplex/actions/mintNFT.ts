@@ -1,6 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { mintCollectionNFT } from "../tools";
 
@@ -63,7 +62,7 @@ const mintNFTAction: Action = {
     uri: z.string().url("URI must be a valid URL"),
     recipient: z.string().min(32, "Invalid recipient address"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const result = await mintCollectionNFT(
       agent,
       new PublicKey(input.collectionMint),
@@ -82,6 +81,7 @@ const mintNFTAction: Action = {
         name: input.name,
         uri: input.uri,
       },
+      transaction: result.signature ?? result.signedTransaction,
       recipient: input.recipient || result.mint.toString(),
     };
   },

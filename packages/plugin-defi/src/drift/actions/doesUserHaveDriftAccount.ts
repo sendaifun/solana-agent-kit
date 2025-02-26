@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { doesUserHaveDriftAccount } from "../tools";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 
 export const doesUserHaveDriftAccountAction: Action = {
   name: "DOES_USER_HAVE_DRIFT_ACCOUNT",
@@ -38,7 +38,7 @@ export const doesUserHaveDriftAccountAction: Action = {
       return {
         status: "success",
         message: "Nice! You have a Drift account",
-        account: res.account,
+        account: res.account.toBase58(),
       };
     } catch (e) {
       return {

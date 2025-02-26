@@ -5,7 +5,6 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import type { SolanaAgentKit } from "solana-agent-kit";
-import { Wallet } from "./utils/keypair";
 import {
   ORCA_WHIRLPOOL_PROGRAM_ID,
   WhirlpoolContext,
@@ -48,10 +47,13 @@ export async function orcaClosePosition(
   positionMintAddress: PublicKey,
 ): Promise<string> {
   try {
-    const wallet = new Wallet(agent.wallet);
     const ctx = WhirlpoolContext.from(
       agent.connection,
-      wallet,
+      {
+        publicKey: agent.wallet.publicKey,
+        signAllTransactions: agent.wallet.signAllTransactions,
+        signTransaction: agent.wallet.signTransaction,
+      },
       ORCA_WHIRLPOOL_PROGRAM_ID,
     );
     const client = buildWhirlpoolClient(ctx);

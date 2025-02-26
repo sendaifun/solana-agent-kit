@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { get_asset } from "../tools";
 
@@ -35,7 +34,7 @@ const getAssetAction: Action = {
   schema: z.object({
     assetId: z.string().min(1, "Asset ID is required"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const assetId = input.assetId;
 
     const result = await get_asset(agent, assetId);

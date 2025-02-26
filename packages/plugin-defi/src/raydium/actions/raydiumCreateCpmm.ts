@@ -74,7 +74,7 @@ const raydiumCreateCpmmAction: Action = {
 
       return {
         status: "success",
-        signature: txId,
+        transaction: txId,
         message: "Successfully created Raydium CPMM pool",
       };
     } catch (error: any) {

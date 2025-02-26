@@ -4,18 +4,17 @@ import {
   TxVersion,
 } from "@raydium-io/raydium-sdk-v2";
 import { MintLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { PublicKey } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import type { PublicKey } from "@solana/web3.js";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 export async function openbookCreateMarket(
   agent: SolanaAgentKit,
   baseMint: PublicKey,
   quoteMint: PublicKey,
-  lotSize: number = 1,
-  tickSize: number = 0.01,
-): Promise<string[]> {
+  lotSize = 1,
+  tickSize = 0.01,
+) {
   const raydium = await Raydium.load({
-    owner: agent.wallet,
     connection: agent.connection,
   });
 
@@ -31,7 +30,7 @@ export async function openbookCreateMarket(
     );
   }
 
-  const { execute } = await raydium.marketV2.create({
+  const { transactions } = await raydium.marketV2.create({
     baseInfo: {
       mint: baseMint,
       decimals: MintLayout.decode(baseMintInfo.data).decimals,
@@ -47,7 +46,14 @@ export async function openbookCreateMarket(
     txVersion: TxVersion.V0,
   });
 
-  const { txIds } = await execute({ sequentially: true });
+  const txs = await Promise.all(
+    transactions.map(async (tx) => {
+      tx.message.recentBlockhash = (
+        await agent.connection.getLatestBlockhash()
+      ).blockhash;
+      return await signOrSendTX(agent, tx);
+    }),
+  );
 
-  return txIds;
+  return txs;
 }

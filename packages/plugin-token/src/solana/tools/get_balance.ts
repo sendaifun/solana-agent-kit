@@ -13,7 +13,7 @@ export async function get_balance(
 ): Promise<number> {
   if (!token_address) {
     return (
-      (await agent.connection.getBalance(agent.wallet_address)) /
+      (await agent.connection.getBalance(agent.wallet.publicKey)) /
       LAMPORTS_PER_SOL
     );
   }

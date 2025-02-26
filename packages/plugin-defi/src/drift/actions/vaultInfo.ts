@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { getVaultInfo } from "../tools";
 
 const vaultInfoAction: Action = {
@@ -34,7 +34,7 @@ const vaultInfoAction: Action = {
   schema: z.object({
     vaultNameOrAddress: z.string().describe("Name or address of the vault"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const vaultInfo = await getVaultInfo(agent, input.vaultNameOrAddress);
 

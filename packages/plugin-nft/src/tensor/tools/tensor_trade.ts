@@ -1,7 +1,7 @@
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import { TensorSwapSDK } from "@tensor-oss/tensorswap-sdk";
 import { PublicKey, Transaction } from "@solana/web3.js";
-import { AnchorProvider, Wallet } from "@coral-xyz/anchor";
+import { AnchorProvider } from "@coral-xyz/anchor";
 import { BN } from "bn.js";
 import {
   getAssociatedTokenAddress,
@@ -13,7 +13,7 @@ export async function listNFTForSale(
   agent: SolanaAgentKit,
   nftMint: PublicKey,
   price: number,
-): Promise<string> {
+) {
   try {
     if (!PublicKey.isOnCurve(nftMint)) {
       throw new Error("Invalid NFT mint address");
@@ -24,7 +24,10 @@ export async function listNFTForSale(
       throw new Error(`NFT mint ${nftMint.toString()} does not exist`);
     }
 
-    const ata = await getAssociatedTokenAddress(nftMint, agent.wallet_address);
+    const ata = await getAssociatedTokenAddress(
+      nftMint,
+      agent.wallet.publicKey,
+    );
 
     try {
       const tokenAccount = await getAccount(agent.connection, ata);
@@ -41,7 +44,11 @@ export async function listNFTForSale(
 
     const provider = new AnchorProvider(
       agent.connection,
-      new Wallet(agent.wallet),
+      {
+        publicKey: agent.wallet.publicKey,
+        signAllTransactions: agent.wallet.signAllTransactions,
+        signTransaction: agent.wallet.signTransaction,
+      },
       AnchorProvider.defaultOptions(),
     );
 
@@ -49,44 +56,46 @@ export async function listNFTForSale(
     const priceInLamports = new BN(price * 1e9);
     const nftSource = await getAssociatedTokenAddress(
       nftMint,
-      agent.wallet_address,
+      agent.wallet.publicKey,
     );
 
     const { tx } = await tensorSwapSdk.list({
       nftMint,
       nftSource,
-      owner: agent.wallet_address,
+      owner: agent.wallet.publicKey,
       price: priceInLamports,
       tokenProgram: TOKEN_PROGRAM_ID,
-      payer: agent.wallet_address,
+      payer: agent.wallet.publicKey,
     });
 
     const transaction = new Transaction();
     transaction.add(...tx.ixs);
-    return await agent.connection.sendTransaction(transaction, [
-      agent.wallet,
-      ...tx.extraSigners,
-    ]);
+
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+
+    return await signOrSendTX(agent, transaction, tx.extraSigners);
   } catch (error: any) {
     console.error("Full error details:", error);
     throw error;
   }
 }
 
-export async function cancelListing(
-  agent: SolanaAgentKit,
-  nftMint: PublicKey,
-): Promise<string> {
+export async function cancelListing(agent: SolanaAgentKit, nftMint: PublicKey) {
   const provider = new AnchorProvider(
     agent.connection,
-    new Wallet(agent.wallet),
+    {
+      publicKey: agent.wallet.publicKey,
+      signAllTransactions: agent.wallet.signAllTransactions,
+      signTransaction: agent.wallet.signTransaction,
+    },
     AnchorProvider.defaultOptions(),
   );
 
   const tensorSwapSdk = new TensorSwapSDK({ provider });
   const nftDest = await getAssociatedTokenAddress(
     nftMint,
-    agent.wallet_address,
+    agent.wallet.publicKey,
     false,
     TOKEN_PROGRAM_ID,
   );
@@ -94,16 +103,16 @@ export async function cancelListing(
   const { tx } = await tensorSwapSdk.delist({
     nftMint,
     nftDest,
-    owner: agent.wallet_address,
+    owner: agent.wallet.publicKey,
     tokenProgram: TOKEN_PROGRAM_ID,
-    payer: agent.wallet_address,
+    payer: agent.wallet.publicKey,
     authData: null,
   });
 
   const transaction = new Transaction();
   transaction.add(...tx.ixs);
-  return await agent.connection.sendTransaction(transaction, [
-    agent.wallet,
-    ...tx.extraSigners,
-  ]);
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+
+  return await signOrSendTX(agent, transaction, tx.extraSigners);
 }

@@ -39,10 +39,18 @@ export default class AdrenaClient {
     const program = new Program<Adrena>(
       ADRENA_IDL,
       AdrenaClient.programId,
-      new AnchorProvider(agent.connection, new NodeWallet(agent.wallet), {
-        commitment: "processed",
-        skipPreflight: true,
-      }),
+      new AnchorProvider(
+        agent.connection,
+        {
+          publicKey: agent.wallet.publicKey,
+          signTransaction: agent.wallet.signTransaction,
+          signAllTransactions: agent.wallet.signAllTransactions,
+        },
+        {
+          commitment: "processed",
+          skipPreflight: true,
+        },
+      ),
     );
 
     const [cortex, mainPool] = await Promise.all([

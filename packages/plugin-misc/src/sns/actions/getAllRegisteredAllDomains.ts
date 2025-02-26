@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getAllRegisteredAllDomains } from "../tools";
 
@@ -44,7 +43,7 @@ const getAllRegisteredAllDomainsAction: Action = {
       .default(0)
       .describe("Number of domains to skip"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const limit = input.limit || 100;
       const offset = input.offset || 0;

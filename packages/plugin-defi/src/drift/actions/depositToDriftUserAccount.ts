@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { SolanaAgentKit, Action } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { depositToDriftUserAccount } from "../tools";
 
 const depositToDriftUserAccountAction: Action = {
@@ -45,7 +45,7 @@ const depositToDriftUserAccountAction: Action = {
       .default(false)
       .describe("Whether or not to repay the borrowed funds in the account"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const tx = await depositToDriftUserAccount(
         agent,
@@ -57,7 +57,7 @@ const depositToDriftUserAccountAction: Action = {
       return {
         status: "success",
         message: "Funds deposited successfully",
-        signature: tx,
+        signature: tx.txSig,
       };
     } catch (e) {
       return {
