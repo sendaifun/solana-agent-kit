@@ -358,7 +358,7 @@ Deposit tokens into a drift vault.
 const signature = await agent.depositIntoDriftVault(100, "41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
 ```
 
-### Deposit into your Drift account
+### DePosit into your Drift account
 
 Deposit tokens into your drift account.
 
