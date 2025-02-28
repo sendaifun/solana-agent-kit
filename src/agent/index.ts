@@ -147,6 +147,21 @@ import {
   getTopGainers,
   getTrendingPools,
   getTrendingTokens,
+  createNewRealm,
+  createNewProposal,
+  castVoteOnProposal,
+  getRealmInfo,
+  getTokenOwnerRecord,
+  getVoterHistory,
+  GovernanceMonitor,
+  MembershipChangeCallback,
+  VotingPowerChangeCallback,
+  configureCouncilSettings,
+  addCouncilMember,
+  removeCouncilMember,
+  updateCouncilMemberWeight,
+  CouncilConfig,
+  CouncilMemberConfig,
 } from "../tools";
 import {
   Config,
@@ -190,29 +205,9 @@ import {
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
 
-import {
-  createNewRealm,
-  createNewProposal,
-  castVoteOnProposal,
-  getRealmInfo,
-  getTokenOwnerRecord,
-  getVoterHistory,
-} from "../actions/governance/governance";
 
-import {
-  GovernanceMonitor,
-  MembershipChangeCallback,
-  VotingPowerChangeCallback,
-} from "../actions/governance/monitor";
-import {
-  configureCouncilSettings,
-  addCouncilMember,
-  removeCouncilMember,
-  updateCouncilMemberWeight,
-  CouncilConfig,
-  CouncilMemberConfig,
-} from "../actions/governance/council";
-
+ 
+ 
 /**
  * Main class for interacting with Solana blockchain
  * Provides a unified interface for token operations, NFT management, trading and more
