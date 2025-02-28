@@ -32,8 +32,7 @@ const createParaPregenWalletAction: Action = {
   schema: z.object({
     email: z
       .string()
-            .describe("The email address to create the wallet for"),
-    key: z.string().describe("The key to encrypt the user share"),
+            .describe("The email address to create the wallet for")
   }),
   handler: async ( agent: SolanaAgentKit , input: Record<string, any>) => {
     try {
