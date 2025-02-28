@@ -141,6 +141,9 @@ import {
   getTopGainers,
   getTrendingPools,
   getTrendingTokens,
+  createParaPregenWallet,
+  getParaPregenWallets,
+  updateParaPregenWallet
 } from "../tools";
 import {
   Config,
@@ -1276,5 +1279,14 @@ export class SolanaAgentKit {
 
   async getTrendingTokensOnCoingecko() {
     return await getTrendingTokens(this);
+  }
+  async createParaPregenWallet(email: string) {
+    return await createParaPregenWallet(email);
+  }
+  async getParaPregenWallets(email: string) {
+    return await getParaPregenWallets(email);
+  }
+  async updateParaPregenWallet(walletId: string, email: string) {
+    return await updateParaPregenWallet(walletId, email);
   }
 }

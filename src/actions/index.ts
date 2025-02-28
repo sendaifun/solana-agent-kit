@@ -109,6 +109,9 @@ import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPrice
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
 import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
+import createParaPregenWalletAction from "./para/createParaPregenWallet";
+import getParaPregenWalletsAction from "./para/getParaPregenWallets";
+import updateParaPregenWalletAction from "./para/updateParaPregenWallet";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -226,6 +229,10 @@ export const ACTIONS = {
   GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
   GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
   GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
+  CREATE_PARA_PREGEN_WALLET_ACTION: createParaPregenWalletAction,
+  GET_PARA_PREGEN_WALLETS_ACTION: getParaPregenWalletsAction,
+  UPDATE_PARA_PREGEN_WALLET_ACTION: updateParaPregenWalletAction
+ 
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
