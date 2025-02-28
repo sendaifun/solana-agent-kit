@@ -109,6 +109,16 @@ import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPrice
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
 import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
+import castVoteAction from "./realm-governance/cast-vote";
+import getRealmInfoAction from "./realm-governance/realm-info";
+import createRealmAction from "./realm-governance/create-realm";
+import createProposalAction from "./realm-governance/create-proposal";
+import getVoterHistoryAction from "./realm-governance/voter-history";
+import getTokenOwnerRecordAction from "./realm-governance/owner-record";
+
+
+
+
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -226,6 +236,13 @@ export const ACTIONS = {
   GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
   GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
   GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
+  CAST_VOTE_ACTION: castVoteAction,
+  GET_REALM_INFO_ACTION: getRealmInfoAction,
+  CREATE_REALM_ACTION: createRealmAction,
+  CREATE_PROPOSAL_ACTION: createProposalAction,
+  GET_VOTER_HISTORY_ACTION: getVoterHistoryAction,
+  GET_TOKEN_OWNER_RECORD_ACTION: getTokenOwnerRecordAction,
+   
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

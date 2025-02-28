@@ -541,12 +541,13 @@ export interface ProposalConfig {
 
 export interface VoteConfig {
   realm: PublicKey;
-  proposal: PublicKey;
   choice: number;
   tokenAmount?: number;
   governingTokenMint: PublicKey;
   tokenOwner?: PublicKey;
   governance: PublicKey;
+  proposal: PublicKey;
+  tokenOwnerRecord: PublicKey;
 }
 
 export type VoteType = {

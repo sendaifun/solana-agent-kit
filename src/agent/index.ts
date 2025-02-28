@@ -7,7 +7,6 @@ import {
   CreateSingleOptions,
   StoreInitOptions,
 } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
-import { SplGovernance } from "governance-idl-sdk";
 import type {
   TokenOwnerRecord,
   VoteRecord,

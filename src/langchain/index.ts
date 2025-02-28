@@ -35,7 +35,8 @@ export * from "./switchboard";
 export * from "./elfa_ai";
 export * from "./debridge";
 export * from "./fluxbeam";
-export * from "./governance";
+export * from "./realm-governance";
+ 
 
 
 import type { SolanaAgentKit } from "../agent";
@@ -290,6 +291,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new ElfaGetTopMentionsTool(solanaKit),
     new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
+    new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaCreateRealmTool(solanaKit),
     new SolanaCreateProposalTool(solanaKit),
     new SolanaCastVoteTool(solanaKit),
