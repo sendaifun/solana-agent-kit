@@ -141,6 +141,16 @@ import {
   getTopGainers,
   getTrendingPools,
   getTrendingTokens,
+  ExtensionConfig,
+  revokeAuthority,
+  setAuthority,
+  claimWithheldTokens,
+  claimWithheldTokensFromMint,
+  claimWithheldTokensToMint,
+  mintToAccount,
+  submitFeeClaim,
+  updateTokenV2Metadata,
+  createV2Token,
 } from "../tools";
 import {
   Config,
@@ -179,6 +189,7 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
+import { AuthorityType } from "@solana/spl-token";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1266,5 +1277,102 @@ export class SolanaAgentKit {
 
   async getTrendingTokensOnCoingecko() {
     return await getTrendingTokens(this);
+  }
+  async submitFeeClaim(mint: PublicKey, payer?: PublicKey): Promise<string> {
+    return submitFeeClaim(this, mint, payer);
+  }
+
+  async updateTokenV2Metadata(
+    mint: PublicKey,
+    newName?: string,
+    newSymbol?: string,
+    newUri?: string,
+    newUpdateAuthority?: PublicKey,
+  ): Promise<string> {
+    return updateTokenV2Metadata(
+      this,
+      mint,
+      newName,
+      newSymbol,
+      newUri,
+      newUpdateAuthority,
+    );
+  }
+  async mintToAccount(
+    tokenMint: PublicKey,
+    amount: number,
+    owner: PublicKey,
+    v2: boolean,
+  ): Promise<string> {
+    return mintToAccount(this, tokenMint, amount, owner, v2);
+  }
+  async setAuthority(
+    mint: PublicKey,
+    authorityType: AuthorityType,
+    newAuthority: PublicKey | null,
+  ): Promise<string> {
+    return setAuthority(this, mint, authorityType, newAuthority);
+  }
+  revokeAuthority(
+    mint: PublicKey,
+    authorityType: AuthorityType,
+  ): Promise<string> {
+    return revokeAuthority(this, mint, authorityType);
+  }
+
+  async createV2Token(
+    name: string,
+    symbol: string,
+    totalSupply: bigint,
+    decimals = 9,
+    mintTotalSupply = true,
+    extensions: ExtensionConfig[],
+    owner: PublicKey,
+    mintAuthority?: PublicKey,
+    freezeAuthority?: PublicKey | null,
+    description?: string,
+    metadataUri?: string,
+    imagePath?: string,
+    imageUri?: string,
+  ): Promise<string> {
+    return createV2Token(
+      this,
+      name,
+      symbol,
+      totalSupply,
+      decimals,
+      mintTotalSupply,
+      extensions,
+      owner,
+      mintAuthority,
+      freezeAuthority,
+      description,
+      metadataUri,
+      imagePath,
+      imageUri,
+    );
+  }
+
+  async claimWithheldTokens(
+    mint: PublicKey,
+    authority: PublicKey,
+    srcAccounts: PublicKey[],
+    payer?: PublicKey,
+  ): Promise<string[]> {
+    return claimWithheldTokens(this, mint, authority, srcAccounts, payer);
+  }
+
+  async claimWithheldTokensFromMint(
+    mint: PublicKey,
+    payer?: PublicKey,
+  ): Promise<string> {
+    return claimWithheldTokensFromMint(this, mint, payer);
+  }
+
+  async claimWithheldTokensToMint(
+    mint: PublicKey,
+    srcAccounts: PublicKey[],
+  ): Promise<string[]> {
+    return claimWithheldTokensToMint(this, mint, srcAccounts);
   }
 }
