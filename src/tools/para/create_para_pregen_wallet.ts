@@ -29,15 +29,18 @@ export async function createParaPregenWallet(email: string){
     if (!wallet) {
       throw new Error("Failed to create pre-generated wallet. Check your Para configuration and try again.");
     }
-    
-   
-
+    const userShare = await para.getUserShare()
+    if (!userShare) {
+      throw new Error("Failed to get user share");
+    }
+  
 
     return{
       message: "Pre-generated wallet created successfully.",
       address: wallet.address,
         email,
-        walletId:wallet.id
+        walletId:wallet.id,
+        userShare
     };
   } catch (error: any) {
     throw new Error(`create pregen wallet failed ${error.message}`);

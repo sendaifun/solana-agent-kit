@@ -1,6 +1,5 @@
 import { Action } from "../../types/action";
 import { z } from "zod";
-import {  getParaPregenWallets } from "../../tools/para";
 import type{ SolanaAgentKit } from "../../agent";
 
 const getParaPregenWalletsAction: Action = {
@@ -36,7 +35,7 @@ const getParaPregenWalletsAction: Action = {
     try {
       
 
-      const response = await getParaPregenWallets(input.email);
+      const response = await agent.getParaPregenWallets(input.email);
 
       return {
         status: "success",

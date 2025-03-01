@@ -1,6 +1,5 @@
 import { Action } from "../../types/action";
 import { z } from "zod";
-import { updateParaPregenWallet } from "../../tools/para";
 import type { SolanaAgentKit } from "../../agent";
 const updateParaPregenWalletAction: Action = {
   name: "UPDATE_PARA_PREGEN_WALLET",
@@ -42,7 +41,7 @@ const updateParaPregenWalletAction: Action = {
       
 
       const { email,walletId } = input;
-      const response = await updateParaPregenWallet(email,walletId);
+      const response = await agent.updateParaPregenWallet(email,walletId);
 
       return {
         status: "success",
