@@ -5,7 +5,8 @@ export class SolanaUseParaPregenWalletTool extends Tool {
   name = "solana_use_para_pregen_wallet";
   description = `Use a pre-generated wallet for Para.
   Inputs ( input is a JSON string ):
-  userShare: string, eg "wadawdawdajbjvbs" (required)`;
+  userShare: string, eg "wadawdawdajbjvbs" (required)
+  `;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();

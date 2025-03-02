@@ -9,34 +9,33 @@ const useParaPregenWalletAction: Action = {
  
   ],
   description:
-    "Create a pregen wallet for Para",
+    "Use a pregen wallet created with the CREATE_PARA_PREGEN_WALLET action",
   examples: [
     [
       {
         input: {
-          email: "sdsd@gmail.com"
+          userShare: "dawdaawdaw",
         },
         output: {
           status: "success",
           message: "Pre-generated wallet used successfully.",
-          address: "0xdasdnas",
-     email:"sdsd@gmail.com"
+          address: "0xdasdnas"
         },
         explanation: "Use a pregen wallet created with the CREATE_PARA_PREGEN_WALLET action",
       },
     ],
   ],
   schema: z.object({
-    email: z
+    userShare: z
       .string()
-            .describe("The user share to use the wallet for")
+            .describe("The user share to use the wallet for"),
   }),
   handler: async ( agent: SolanaAgentKit , input: Record<string, any>) => {
     try {
       
 
-      const { email } = input;
-      const response = await agent.useParaPregenWallet(email);
+      const { userShare } = input;
+      const response = await agent.useParaPregenWallet(userShare);
 
       return {
         status: "success",

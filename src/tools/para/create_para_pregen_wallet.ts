@@ -1,8 +1,8 @@
 import { Para as ParaServer, Environment, WalletType } from "@getpara/server-sdk";
-import type{ SolanaAgentKit } from "../../index";
 
 
-export async function createParaPregenWallet(agent: SolanaAgentKit,email: string){
+
+export async function createParaPregenWallet(email: string){
   try {
    
     if (!email) {
@@ -33,10 +33,7 @@ export async function createParaPregenWallet(agent: SolanaAgentKit,email: string
     if (!userShare) {
       throw new Error("Failed to get user share");
     }
-  if (!(agent as any).userShareMap) {
-    (agent as any).userShareMap = new Map();
-  }
-  (agent as any).userShareMap.set(email, userShare);
+
 
     return{
       message: "Pre-generated wallet created successfully.",

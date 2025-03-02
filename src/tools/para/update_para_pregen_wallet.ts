@@ -1,4 +1,4 @@
-import { Para as ParaServer, Environment, WalletType } from "@getpara/server-sdk";
+import { Para as ParaServer, Environment } from "@getpara/server-sdk";
 
 
 export async function updateParaPregenWallet(email: string,walletId:string){
@@ -19,16 +19,13 @@ export async function updateParaPregenWallet(email: string,walletId:string){
     if (walletExists) {
       throw new Error("A pre-generated wallet already exists for this user. Consider using that wallet or choose a different email.");
     }
-
+  
      await para.updatePregenWalletIdentifier({
       walletId: walletId,
       newPregenIdentifier: email,
       newPregenIdentifierType: "EMAIL",
     });
-  
-
-  
-   
+      
 
 
     return{

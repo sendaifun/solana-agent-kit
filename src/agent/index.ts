@@ -1284,7 +1284,7 @@ export class SolanaAgentKit {
     return await getTrendingTokens(this);
   }
   async createParaPregenWallet(email: string) {
-    return await createParaPregenWallet(this,email);
+    return await createParaPregenWallet(email);
   }
   async getParaPregenWallets(email: string) {
     return await getParaPregenWallets(email);

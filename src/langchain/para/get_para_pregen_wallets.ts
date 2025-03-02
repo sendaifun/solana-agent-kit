@@ -13,8 +13,8 @@ export class SolanaGetParaPregenWalletsTool extends Tool {
 
   protected async _call(input: string): Promise<string> {
     try {
-      
-      const response = await this.solanaKit.getParaPregenWallets(input);
+      const inputFormat = JSON.parse(input);
+      const response = await this.solanaKit.getParaPregenWallets(inputFormat.email);
 
       return JSON.stringify({
         status: "success",

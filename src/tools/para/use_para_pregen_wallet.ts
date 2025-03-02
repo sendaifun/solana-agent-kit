@@ -16,11 +16,11 @@ class ParaSolanaWeb3SignerAdapter extends ParaSolanaWeb3Signer {
   }
 }
 
-export async function useParaPregenWallet( agent: SolanaAgentKit,email: string){
+export async function useParaPregenWallet( agent: SolanaAgentKit,userShare: string){
   try {
    
-    if (!email) {
-        throw new Error("Provide `email` in the request body to create a pre-generated wallet.");
+    if (!userShare) {
+        throw new Error("Provide `userShare` in the request body to create a pre-generated wallet.");
     }
 
     const PARA_API_KEY = process.env.PARA_API_KEY;
@@ -30,15 +30,12 @@ export async function useParaPregenWallet( agent: SolanaAgentKit,email: string){
 
     const para = new ParaServer(Environment.BETA, PARA_API_KEY);
     
-    const userShare = (agent as any).userShareMap.get(email);
-    if (!userShare) {
-        throw new Error("User share not found for the provided email.");
-    }
+    
     await para.setUserShare(userShare);
    
     // Create the Para Solana Signer with our adapter
     const solanaSigner = new ParaSolanaWeb3SignerAdapter(para, agent.connection);
-    
+   
     // Convert address to PublicKey and set wallet properties
     agent.wallet_address = solanaSigner.publicKey;
     agent.wallet = solanaSigner as unknown as Keypair;
@@ -70,7 +67,8 @@ export async function useParaPregenWallet( agent: SolanaAgentKit,email: string){
     return {
       message: "Pre-generated wallet used successfully.",
       address: solanaSigner.address,
-      email: email
+   
+      
     };
   } catch (error: any) {
     throw new Error(`use pregen wallet failed ${error.message}`);

@@ -5,7 +5,7 @@ export class SolanaClaimParaPregenWalletTool extends Tool {
   name = "solana_claim_para_pregen_wallet";
   description = `Claim a pre-generated wallet for Para.
   Inputs ( input is a JSON string ):
-  userShare: string, eg "wadawdawdajbjvbs" (required)`;
+  email: string, eg "wadawdawdajbjvbs" (required)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
@@ -14,7 +14,7 @@ export class SolanaClaimParaPregenWalletTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const inputFormat = JSON.parse(input);
-      const response = await this.solanaKit.claimParaPregenWallet(inputFormat.userShare);
+      const response = await this.solanaKit.claimParaPregenWallet(inputFormat.email);
 
       return JSON.stringify({
         status: "success",

@@ -1,5 +1,5 @@
 import { Para as ParaServer, Environment } from "@getpara/server-sdk";
-import type { WalletEntity } from "@getpara/server-sdk";
+
 
 
 export async function getParaPregenWallets(email:string) {
