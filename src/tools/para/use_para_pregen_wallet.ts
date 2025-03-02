@@ -1,7 +1,7 @@
 import { Para as ParaServer , Environment } from "@getpara/server-sdk";
 import { ParaSolanaWeb3Signer } from "@getpara/solana-web3.js-v1-integration";
-import { SolanaAgentKit } from "../../index";
-import { Keypair, PublicKey, Connection, Transaction, VersionedTransaction, SendOptions, Signer } from "@solana/web3.js";
+import type{ SolanaAgentKit } from "../../index";
+import { Keypair, PublicKey, Transaction, VersionedTransaction, SendOptions, Signer } from "@solana/web3.js";
 
 // Create a wrapper class that extends ParaSolanaWeb3Signer and implements necessary properties
 class ParaSolanaWeb3SignerAdapter extends ParaSolanaWeb3Signer {
@@ -16,11 +16,11 @@ class ParaSolanaWeb3SignerAdapter extends ParaSolanaWeb3Signer {
   }
 }
 
-export async function useParaPregenWallet( agent: SolanaAgentKit,userShare: string){
+export async function useParaPregenWallet( agent: SolanaAgentKit,email: string){
   try {
    
-    if (!userShare) {
-        throw new Error("Provide `userShare` in the request body to create a pre-generated wallet.");
+    if (!email) {
+        throw new Error("Provide `email` in the request body to create a pre-generated wallet.");
     }
 
     const PARA_API_KEY = process.env.PARA_API_KEY;
@@ -30,8 +30,12 @@ export async function useParaPregenWallet( agent: SolanaAgentKit,userShare: stri
 
     const para = new ParaServer(Environment.BETA, PARA_API_KEY);
     
+    const userShare = (agent as any).userShareMap.get(email);
+    if (!userShare) {
+        throw new Error("User share not found for the provided email.");
+    }
     await para.setUserShare(userShare);
-    
+   
     // Create the Para Solana Signer with our adapter
     const solanaSigner = new ParaSolanaWeb3SignerAdapter(para, agent.connection);
     
@@ -66,6 +70,7 @@ export async function useParaPregenWallet( agent: SolanaAgentKit,userShare: stri
     return {
       message: "Pre-generated wallet used successfully.",
       address: solanaSigner.address,
+      email: email
     };
   } catch (error: any) {
     throw new Error(`use pregen wallet failed ${error.message}`);

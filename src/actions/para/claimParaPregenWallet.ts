@@ -2,14 +2,14 @@ import { Action } from "../../types/action";
 import { z } from "zod";
 import type { SolanaAgentKit } from "../../agent";
 
-const useParaPregenWalletAction: Action = {
-  name: "USE_PARA_PREGEN_WALLET",
+const claimParaPregenWalletAction: Action = {
+  name: "CLAIM_PARA_PREGEN_WALLET",
   similes: [
-    "use para pregen wallet"
+    "claim para pregen wallet"
  
   ],
   description:
-    "Create a pregen wallet for Para",
+    "Claim a pregen wallet for Para",
   examples: [
     [
       {
@@ -18,25 +18,25 @@ const useParaPregenWalletAction: Action = {
         },
         output: {
           status: "success",
-          message: "Pre-generated wallet used successfully.",
-          address: "0xdasdnas",
-     email:"sdsd@gmail.com"
+          message: "Pre-generated wallet claimed successfully.",
+          recoverySecret: "0xdasdnas",  
+          email: "sdsd@gmail.com"
         },
-        explanation: "Use a pregen wallet created with the CREATE_PARA_PREGEN_WALLET action",
+        explanation: "Claim a pregen wallet created with the CREATE_PARA_PREGEN_WALLET action",
       },
     ],
   ],
   schema: z.object({
     email: z
       .string()
-            .describe("The user share to use the wallet for")
+            .describe("The email address to claim the wallet for")
   }),
   handler: async ( agent: SolanaAgentKit , input: Record<string, any>) => {
     try {
       
 
       const { email } = input;
-      const response = await agent.useParaPregenWallet(email);
+      const response = await agent.claimParaPregenWallet(email);
 
       return {
         status: "success",
@@ -53,4 +53,4 @@ const useParaPregenWalletAction: Action = {
   },
 };
 
-export default useParaPregenWalletAction;
+export default claimParaPregenWalletAction;

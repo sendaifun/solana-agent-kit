@@ -143,7 +143,10 @@ import {
   getTrendingTokens,
   createParaPregenWallet,
   getParaPregenWallets,
-  updateParaPregenWallet
+  updateParaPregenWallet,
+  useParaPregenWallet,
+  deactivateParaPregenWallet,
+  claimParaPregenWallet
 } from "../tools";
 import {
   Config,
@@ -1281,12 +1284,21 @@ export class SolanaAgentKit {
     return await getTrendingTokens(this);
   }
   async createParaPregenWallet(email: string) {
-    return await createParaPregenWallet(email);
+    return await createParaPregenWallet(this,email);
   }
   async getParaPregenWallets(email: string) {
     return await getParaPregenWallets(email);
   }
   async updateParaPregenWallet(walletId: string, email: string) {
     return await updateParaPregenWallet(walletId, email);
+  }
+  async useParaPregenWallet(userShare: string) {
+    return await useParaPregenWallet(this, userShare);
+  }
+  async deactivateParaPregenWallet() {
+    return await deactivateParaPregenWallet(this);
+  }
+  async claimParaPregenWallet(userShare: string) {
+    return await claimParaPregenWallet(this,userShare);
   }
 }
