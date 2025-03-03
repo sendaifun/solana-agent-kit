@@ -117,9 +117,6 @@ import getVoterHistoryAction from "./realm-governance/voter-history";
 import getTokenOwnerRecordAction from "./realm-governance/owner-record";
 
 
-
-
-
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
