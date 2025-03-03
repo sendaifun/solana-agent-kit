@@ -1,9 +1,9 @@
 import { SolanaAgentKit } from "../../agent";
 import BN from "bn.js";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
 import DLMM, { ActivationType } from "@meteora-ag/dlmm";
 import { getMint } from "@solana/spl-token";
-import { sendTx } from "../../utils/send_tx";
+import { getComputeBudgetInstructions } from "../../utils/send_tx";
 
 /**
  * Create Meteora DLMM pool
@@ -46,6 +46,37 @@ export async function createMeteoraDlmmPool(
     !priceRoundingUp,
   );
 
+  const allPresetParams = await DLMM.getAllPresetParameters(agent.connection);
+
+  const feeBpsToBinStep: Map<number, Array<number>> = new Map<
+    number,
+    Array<number>
+  >();
+
+  allPresetParams.forEach((preset) => {
+    const feeInfo = DLMM.calculateFeeInfo(
+      preset.account.baseFactor,
+      preset.account.binStep,
+    );
+
+    const baseFee = feeInfo.baseFeeRatePercentage.toNumber();
+
+    const binSteps = feeBpsToBinStep.get(baseFee) || [];
+
+    binSteps.push(preset.account.binStep);
+    feeBpsToBinStep.set(baseFee, binSteps);
+  });
+
+  const validBinSteps = feeBpsToBinStep.get(feeBps / 100) || [];
+
+  if (!validBinSteps.includes(binStep)) {
+    throw new Error(
+      `Invalid bin step for fee ${feeBps / 100} BPS, valid bin steps are: ${validBinSteps.join(
+        ", ",
+      )}`,
+    );
+  }
+
   const initPoolTx = await DLMM.createCustomizablePermissionlessLbPair(
     agent.connection,
     new BN(binStep),
@@ -62,9 +93,22 @@ export async function createMeteoraDlmmPool(
     },
   );
 
-  const initPoolTxHash = await sendTx(agent, initPoolTx.instructions, [
-    agent.wallet,
-  ]);
+  const computeBudgetIX = await getComputeBudgetInstructions(
+    agent,
+    initPoolTx.instructions,
+    "max",
+  );
+  initPoolTx.instructions.push(
+    computeBudgetIX.computeBudgetLimitInstruction,
+    computeBudgetIX.computeBudgetPriorityFeeInstructions,
+  );
+  initPoolTx.recentBlockhash = computeBudgetIX.blockhash;
+
+  const initPoolTxHash = await sendAndConfirmTransaction(
+    agent.connection,
+    initPoolTx,
+    [agent.wallet],
+  );
 
   return initPoolTxHash;
 }
