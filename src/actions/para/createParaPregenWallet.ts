@@ -6,49 +6,41 @@ const createParaPregenWalletAction: Action = {
   similes: [
     "create para pregen wallet",
     "generate para pregen wallet",
-    "make para pregen wallet"
- 
+    "make para pregen wallet",
   ],
-  description:
-    "Create a pregen wallet for Para",
+  description: "Create a pregen wallet for Para",
   examples: [
     [
       {
         input: {
-          email: "test@test.com"
+          email: "test@test.com",
         },
         output: {
           status: "success",
           message: "Pre-generated wallet created successfully.",
           address: "0xdasdnas",
-        walletId:"1234567890",
-        userShare:"sdfsdfsdfsd"
+          walletId: "1234567890",
+          userShare: "sdfsdfsdfsd",
         },
         explanation: "Create a pregen wallet for Para",
       },
     ],
   ],
   schema: z.object({
-    email: z
-      .string()
-            .describe("The email address to create the wallet for")
+    email: z.string().describe("The email address to create the wallet for"),
   }),
-  handler: async ( agent: SolanaAgentKit , input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
-      
-
       const { email } = input;
       const response = await agent.createParaPregenWallet(email);
 
       return {
         status: "success",
-       ...response
+        ...response,
       };
     } catch (error: any) {
-   
-
       return {
-              status: "error",
+        status: "error",
         message: error.message,
       };
     }

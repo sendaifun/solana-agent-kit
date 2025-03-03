@@ -1,26 +1,26 @@
 import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../../agent";
 
-export class SolanaDeactivateParaPregenWalletTool extends Tool {
-  name = "solana_deactivate_para_pregen_wallet";
-  description = `Deactivate a pre-generated wallet for Para.`;
+export class SolanaSwitchParaToMainWalletTool extends Tool {
+  name = "solana_switch_para_to_main_wallet";
+  description = `Switch a pre-generated wallet for Para to the main wallet.`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
   }
 
   protected async _call(): Promise<string> {
-    try { 
-      const response = await this.solanaKit.deactivateParaPregenWallet();
+    try {
+      const response = await this.solanaKit.switchParaToMainWallet();
 
       return JSON.stringify({
         status: "success",
-        ...response
+        ...response,
       });
     } catch (error: any) {
       return JSON.stringify({
         status: "error",
-        message: error.message
+        message: error.message,
       });
     }
   }

@@ -145,7 +145,7 @@ import {
   getParaPregenWallets,
   updateParaPregenWallet,
   useParaPregenWallet,
-  deactivateParaPregenWallet,
+  switchParaToMainWallet,
 } from "../tools";
 import {
   Config,
@@ -1294,8 +1294,7 @@ export class SolanaAgentKit {
   async useParaPregenWallet(userShare: string) {
     return await useParaPregenWallet(this, userShare);
   }
-  async deactivateParaPregenWallet() {
-    return await deactivateParaPregenWallet(this);
+  async switchParaToMainWallet() {
+    return await switchParaToMainWallet(this);
   }
-
 }

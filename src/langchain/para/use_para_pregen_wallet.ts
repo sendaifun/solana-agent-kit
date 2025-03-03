@@ -15,16 +15,18 @@ export class SolanaUseParaPregenWalletTool extends Tool {
   protected async _call(input: string): Promise<string> {
     try {
       const inputFormat = JSON.parse(input);
-      const response = await this.solanaKit.useParaPregenWallet(inputFormat.userShare);
+      const response = await this.solanaKit.useParaPregenWallet(
+        inputFormat.userShare,
+      );
 
       return JSON.stringify({
         status: "success",
-        ...response
+        ...response,
       });
     } catch (error: any) {
       return JSON.stringify({
         status: "error",
-        message: error.message
+        message: error.message,
       });
     }
   }

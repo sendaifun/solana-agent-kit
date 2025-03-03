@@ -77,7 +77,7 @@ export async function deploy_token(
     }
 
     // Set default token authority
-    let defaultAuthority: SplAuthorityInput = {
+    const defaultAuthority: SplAuthorityInput = {
       mintAuthority: agent.wallet_address,
       freezeAuthority: agent.wallet_address,
       updateAuthority: agent.wallet_address,

@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 // Define the raw shape type that MCP tools expect
@@ -14,8 +13,7 @@ function isZodOptional(schema: z.ZodTypeAny): schema is z.ZodOptional<any> {
 function isZodObject(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
   // Check both instanceof and the typeName property
   return (
-    schema instanceof z.ZodObject ||
-    (schema?._def?.typeName === 'ZodObject')
+    schema instanceof z.ZodObject || schema?._def?.typeName === "ZodObject"
   );
 }
 
@@ -25,7 +23,10 @@ function isZodObject(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
  * @returns A flattened schema shape compatible with MCP tools
  * @throws Error if the schema is not an object type
  */
-export function zodToMCPShape(schema: z.ZodTypeAny): { result: MCPSchemaShape, keys: string[] } {
+export function zodToMCPShape(schema: z.ZodTypeAny): {
+  result: MCPSchemaShape;
+  keys: string[];
+} {
   if (!isZodObject(schema)) {
     throw new Error("MCP tools require an object schema at the top level");
   }
@@ -39,6 +40,6 @@ export function zodToMCPShape(schema: z.ZodTypeAny): { result: MCPSchemaShape, k
 
   return {
     result,
-    keys: Object.keys(result)
+    keys: Object.keys(result),
   };
 }
