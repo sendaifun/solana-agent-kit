@@ -22,6 +22,12 @@ const deployTokenAction: Action = {
           uri: "https://example.com/token.json",
           symbol: "MTK",
           decimals: 9,
+          authority: {
+            mintAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            freezeAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            updateAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            isMutable: true,
+          },
           initialSupply: 1000000,
         },
         output: {
@@ -38,6 +44,12 @@ const deployTokenAction: Action = {
           name: "Basic Token",
           uri: "https://example.com/basic.json",
           symbol: "BASIC",
+          authority: {
+            mintAuthority: undefined,
+            freezeAuthority: undefined,
+            updateAuthority: undefined,
+            isMutable: true,
+          },
         },
         output: {
           mint: "8nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkM",
@@ -53,6 +65,12 @@ const deployTokenAction: Action = {
     uri: z.string().url("URI must be a valid URL"),
     symbol: z.string().min(1, "Symbol is required"),
     decimals: z.number().optional(),
+    authority: z.object({
+      mintAuthority: z.string().nullable().optional(),
+      freezeAuthority: z.string().nullable().optional(),
+      updateAuthority: z.string().nullable().optional(),
+      isMutable: z.boolean().optional(),
+    }),
     initialSupply: z.number().optional(),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
@@ -63,6 +81,7 @@ const deployTokenAction: Action = {
         input.uri,
         input.symbol,
         input.decimals,
+        input.authority,
         input.initialSupply,
       );
 

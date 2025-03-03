@@ -10,6 +10,10 @@ export class SolanaDeployTokenTool extends Tool {
   uri: string, eg "https://example.com/token.json" (required)
   symbol: string, eg "MTK" (required)
   decimals?: number, eg 9 (optional, defaults to 9)
+  mintAuthority?: string or undfined or null, if its undefined, it will be set to the wallet address
+  freezeAuthority?: string or undfined or null, if its undefined, it will be set to the wallet address
+  updateAuthority?: string or undfined, if its undefined, it will be set to the wallet address
+  isMutable?: boolean or undefined
   initialSupply?: number, eg 1000000 (optional)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
@@ -25,6 +29,12 @@ export class SolanaDeployTokenTool extends Tool {
         parsedInput.uri,
         parsedInput.symbol,
         parsedInput.decimals,
+        {
+          mintAuthority: parsedInput.mintAuthority,
+          freezeAuthority: parsedInput.freezeAuthority,
+          updateAuthority: parsedInput.updateAuthority,
+          isMutable: parsedInput.isMutable,
+        },
         parsedInput.initialSupply,
       );
 
