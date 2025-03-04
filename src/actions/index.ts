@@ -112,8 +112,7 @@ import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTo
 import createParaPregenWalletAction from "./para/createParaPregenWallet";
 import getParaPregenWalletsAction from "./para/getParaPregenWallets";
 import updateParaPregenWalletAction from "./para/updateParaPregenWallet";
-import useParaPregenWalletAction from "./para/useParaPregenWallet";
-import switchParaToMainWalletAction from "./para/switchParaToMainWallet";
+
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
@@ -233,8 +232,6 @@ export const ACTIONS = {
   CREATE_PARA_PREGEN_WALLET_ACTION: createParaPregenWalletAction,
   GET_PARA_PREGEN_WALLETS_ACTION: getParaPregenWalletsAction,
   UPDATE_PARA_PREGEN_WALLET_ACTION: updateParaPregenWalletAction,
-  USE_PARA_PREGEN_WALLET_ACTION: useParaPregenWalletAction,
-  SWITCH_PARA_TO_MAIN_WALLET_ACTION: switchParaToMainWalletAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

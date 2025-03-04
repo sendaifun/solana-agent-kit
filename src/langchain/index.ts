@@ -160,9 +160,7 @@ import {
   SolanaFluxbeamCreatePoolTool,
   SolanaCreateParaPregenWalletTool,
   SolanaGetParaPregenWalletsTool,
-  SolanaSwitchParaToMainWalletTool,
   SolanaUpdateParaPregenWalletTool,
-  SolanaUseParaPregenWalletTool,
 } from "./index";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -289,8 +287,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaFluxbeamCreatePoolTool(solanaKit),
     new SolanaCreateParaPregenWalletTool(solanaKit),
     new SolanaGetParaPregenWalletsTool(solanaKit),
-    new SolanaSwitchParaToMainWalletTool(solanaKit),
+
     new SolanaUpdateParaPregenWalletTool(solanaKit),
-    new SolanaUseParaPregenWalletTool(solanaKit),
   ];
 }
