@@ -33,7 +33,7 @@ export function ChatWindow(props: {
 	const [showIntermediateSteps, setShowIntermediateSteps] = useState(false);
 	const [intermediateStepsLoading, setIntermediateStepsLoading] =
 		useState(false);
-	const intemediateStepsToggle = showIntermediateStepsToggle && (
+	const intermediateStepsToggle = showIntermediateStepsToggle && (
 		<div>
 			<input
 				type="checkbox"
@@ -196,7 +196,7 @@ export function ChatWindow(props: {
 			</div>
 
 			<form onSubmit={sendMessage} className="flex w-full flex-col">
-				<div className="flex">{intemediateStepsToggle}</div>
+				<div className="flex">{intermediateStepsToggle}</div>
 				<div className="flex w-full mt-4">
 					<input
 						className="grow mr-8 p-4 rounded"
