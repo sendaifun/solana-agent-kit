@@ -293,6 +293,5 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCreateProposalTool(solanaKit),
     new SolanaCastVoteTool(solanaKit),
     new SolanaGetRealmInfoTool(solanaKit),
-    new SolanaApproveProposal2by2Multisig(solanaKit),
   ];
 }
