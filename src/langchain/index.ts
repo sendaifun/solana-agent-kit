@@ -1,6 +1,7 @@
 export * from "./adrena";
 export * from "./alldomains";
 export * from "./dexscreener";
+export * from "./alldomains";
 export * from "./flash";
 export * from "./gibwork";
 export * from "./jupiter";
@@ -287,7 +288,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new ElfaGetTopMentionsTool(solanaKit),
     new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
-    new SolanaApproveProposal2by2Multisig(solanaKit),
     new SolanaCreateRealmTool(solanaKit),
     new SolanaCreateProposalTool(solanaKit),
     new SolanaCastVoteTool(solanaKit),
