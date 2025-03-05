@@ -96,12 +96,11 @@ ls.describe("Agent Tests", () => {
                 }
             });
 
-            // console.log("result", result);
+            ls.logOutputs(result);
 
             // First tool call should be to transfer
             const aiMessage = result.messages[1];
             const toolCall = aiMessage.tool_calls[0];
-            // console.log("toolCall", toolCall);
 
             // Store evaluation results in langsmith
             const wrappedToolEvaluator = ls.wrapEvaluator(correctToolCall);
