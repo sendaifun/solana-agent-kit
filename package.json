@@ -16,7 +16,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "tool-summary": "tsx src/utils/analyzeTools.ts",
     "tool-summary:langchain": "tsx src/utils/analyzeTools.ts --langchain",
-    "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts"
+    "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts",
+    "eval": "vitest run --config ls.vitest.config.ts"
   },
   "repository": {
     "type": "git",
@@ -92,6 +93,7 @@
     "flash-sdk": "^2.24.3",
     "form-data": "^4.0.1",
     "langchain": "^0.3.8",
+    "langsmith": "^0.3.7",
     "openai": "^4.77.0",
     "tiktoken": "^1.0.18",
     "typedoc": "^0.27.6",
@@ -110,7 +112,10 @@
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.5"
   },
   "packageManager": "pnpm@9.15.3"
 }
