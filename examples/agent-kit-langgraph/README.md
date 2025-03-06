@@ -8,7 +8,7 @@ This example demonstrates how to build an advanced Solana agent using LangGraph 
 
 - Multi-agent architecture using LangGraph's StateGraph
 - Specialized agents for different tasks:
-  - General purpose agent for basic queries (with optional Tavily search integration)
+  - General-purpose agent for basic queries (with optional Tavily search integration)
   - Transfer/Swap agent for transaction operations
   - Read agent for blockchain data queries
   - Manager agent for routing and orchestration
