@@ -7,7 +7,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "ignorePatterns": ["examples/**/*", "src/utils/keypair.ts", "test/**/*", "dist/**/*"],
+  "ignorePatterns": ["examples/**/*", "src/utils/keypair.ts", "test/**/*", "dist/**/*", "src/langchain/evals/**/*"],
   "rules": {
     "prettier/prettier": "error",
     "no-constant-condition": "off",
