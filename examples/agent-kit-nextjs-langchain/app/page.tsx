@@ -11,7 +11,7 @@ export default function Home() {
 					🤝
 					<span className="ml-2">
 						This template showcases a simple agent chatbot using{" "}
-						<a href="https://https://www.solanaagentkit.xyz/">SolanaAgentKit</a>
+						<a href="https://www.solanaagentkit.xyz/">SolanaAgentKit</a>
 						{", "}
 						<a href="https://js.langchain.com/" target="_blank">
 							LangChain.js

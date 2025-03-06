@@ -1,8 +1,8 @@
 import { Action } from "solana-agent-kit";
 import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { search_assets } from "../tools";
 import { publicKey } from "@metaplex-foundation/umi";
+import { search_assets } from "../tools/search_assets";
 
 const searchAssetsAction: Action = {
   name: "SEARCH_ASSETS",
@@ -80,7 +80,8 @@ const searchAssetsAction: Action = {
     creator: z.string().optional(),
     creatorVerified: z.boolean().optional(),
     authority: z.string().optional(),
-    grouping: z.tuple([z.string(), z.string()]).optional(),
+    // NOTE: this breaks the schema for some reason
+    // grouping: z.tuple([z.string(), z.string()]).optional(),
     delegate: z.string().optional(),
     frozen: z.boolean().optional(),
     supply: z.number().optional(),

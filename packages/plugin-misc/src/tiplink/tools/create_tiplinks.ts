@@ -3,7 +3,6 @@ import {
   Transaction,
   SystemProgram,
   LAMPORTS_PER_SOL,
-  sendAndConfirmTransaction,
   PublicKey,
   ComputeBudgetProgram,
 } from "@solana/web3.js";
@@ -13,7 +12,7 @@ import {
   getMint,
   createAssociatedTokenAccountInstruction,
 } from "@solana/spl-token";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 
 const MINIMUM_SOL_BALANCE = 0.003 * LAMPORTS_PER_SOL;
 
@@ -21,7 +20,7 @@ export async function create_TipLink(
   agent: SolanaAgentKit,
   amount: number,
   splmintAddress?: PublicKey,
-): Promise<{ url: string; signature: string }> {
+) {
   try {
     const tiplink = await TipLink.create();
 
@@ -29,18 +28,19 @@ export async function create_TipLink(
       const transaction = new Transaction();
       transaction.add(
         SystemProgram.transfer({
-          fromPubkey: agent.wallet_address,
+          fromPubkey: agent.wallet.publicKey,
           toPubkey: tiplink.keypair.publicKey,
           lamports: amount * LAMPORTS_PER_SOL,
         }),
       );
 
-      const signature = await sendAndConfirmTransaction(
-        agent.connection,
-        transaction,
-        [agent.wallet],
-        { commitment: "confirmed" },
-      );
+      if (agent.config.signOnly) {
+        return await agent.wallet.signTransaction(transaction);
+      }
+      const { blockhash } = await agent.connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+
+      const signature = (await signOrSendTX(agent, transaction)) as string;
 
       return {
         url: tiplink.url.toString(),
@@ -49,7 +49,7 @@ export async function create_TipLink(
     } else {
       const fromAta = await getAssociatedTokenAddress(
         splmintAddress,
-        agent.wallet_address,
+        agent.wallet.publicKey,
       );
       const toAta = await getAssociatedTokenAddress(
         splmintAddress,
@@ -69,7 +69,7 @@ export async function create_TipLink(
 
       transaction.add(
         SystemProgram.transfer({
-          fromPubkey: agent.wallet_address,
+          fromPubkey: agent.wallet.publicKey,
           toPubkey: tiplink.keypair.publicKey,
           lamports: MINIMUM_SOL_BALANCE,
         }),
@@ -77,7 +77,7 @@ export async function create_TipLink(
 
       transaction.add(
         createAssociatedTokenAccountInstruction(
-          agent.wallet_address,
+          agent.wallet.publicKey,
           toAta,
           tiplink.keypair.publicKey,
           splmintAddress,
@@ -88,17 +88,19 @@ export async function create_TipLink(
         createTransferInstruction(
           fromAta,
           toAta,
-          agent.wallet_address,
+          agent.wallet.publicKey,
           adjustedAmount,
         ),
       );
 
-      const signature = await sendAndConfirmTransaction(
-        agent.connection,
-        transaction,
-        [agent.wallet],
-        { commitment: "confirmed" },
-      );
+      if (agent.config.signOnly) {
+        return await agent.wallet.signTransaction(transaction);
+      }
+
+      const { blockhash } = await agent.connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+
+      const signature = (await signOrSendTX(agent, transaction)) as string;
 
       return {
         url: tiplink.url.toString(),

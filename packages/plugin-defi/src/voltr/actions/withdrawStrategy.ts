@@ -58,7 +58,7 @@ const withdrawVoltrStrategyAction: Action = {
       const vault = new PublicKey(input.vault);
       const strategy = new PublicKey(input.strategy);
 
-      const signature = await voltrWithdrawStrategy(
+      const transaction = await voltrWithdrawStrategy(
         agent,
         withdrawAmount,
         vault,
@@ -69,7 +69,7 @@ const withdrawVoltrStrategyAction: Action = {
         status: "success",
         vault: vault.toBase58(),
         strategy: strategy.toBase58(),
-        signature,
+        transaction,
         message: `Successfully withdrew ${input.withdrawAmount} from strategy`,
       };
     } catch (error: any) {

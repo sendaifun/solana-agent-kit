@@ -81,7 +81,7 @@ const createMeteoraDLMMPoolAction: Action = {
         : undefined;
       const hasAlphaVault = input.hasAlphaVault ?? false;
 
-      const txId = await createMeteoraDlmmPool(
+      const transaction = await createMeteoraDlmmPool(
         agent,
         binStep,
         tokenAMint,
@@ -97,7 +97,7 @@ const createMeteoraDLMMPoolAction: Action = {
       return {
         status: "success",
         message: "Meteora DLMM pool created successfully.",
-        transaction: txId,
+        transaction,
       };
     } catch (error: any) {
       return {

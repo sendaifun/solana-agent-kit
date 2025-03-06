@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { resolveSolDomain } from "../tools";
 
@@ -36,7 +35,7 @@ const resolveSolDomainAction: Action = {
       .min(1)
       .describe("The .sol domain to resolve (with or without .sol suffix)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const domain = input.domain as string;
 

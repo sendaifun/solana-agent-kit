@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { createVault } from "../tools";
 
 const createDriftVaultAction: Action = {
@@ -52,7 +52,7 @@ const createDriftVaultAction: Action = {
       .int()
       .min(100, "Max tokens must be at least 100")
       .describe(
-        "The maximum amount of tokens the vault will be accomodating. For example some vaults have a cap at 10 million USDC. This amount should be normal token amounts e.g 50 SOL, 100 USDC, etc",
+        "The maximum amount of tokens the vault will be accommodating. For example some vaults have a cap at 10 million USDC. This amount should be normal token amounts e.g 50 SOL, 100 USDC, etc",
       ),
     minDepositAmount: z
       .number()
@@ -82,7 +82,7 @@ const createDriftVaultAction: Action = {
       .optional()
       .describe("Should the vault have a whitelist of not"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const tx = await createVault(
         agent,

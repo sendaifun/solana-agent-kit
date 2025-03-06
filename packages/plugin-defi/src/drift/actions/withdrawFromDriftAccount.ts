@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { withdrawFromDriftUserAccount } from "../tools";
 
 const withdrawFromDriftAccountAction: Action = {
@@ -62,7 +62,7 @@ const withdrawFromDriftAccountAction: Action = {
       return {
         status: "success",
         message: "Funds withdrawn successfully",
-        signature: tx,
+        signature: tx.txSig,
       };
     } catch (e) {
       return {

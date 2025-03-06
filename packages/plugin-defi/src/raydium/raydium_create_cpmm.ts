@@ -7,7 +7,7 @@ import {
 import { MintLayout } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 export async function raydiumCreateCpmm(
   agent: SolanaAgentKit,
@@ -17,9 +17,8 @@ export async function raydiumCreateCpmm(
   mintAAmount: BN,
   mintBAmount: BN,
   startTime: BN,
-): Promise<string> {
+) {
   const raydium = await Raydium.load({
-    owner: agent.wallet,
     connection: agent.connection,
   });
 
@@ -56,7 +55,7 @@ export async function raydiumCreateCpmm(
     extensions: {},
   };
 
-  const { execute } = await raydium.cpmm.createPool({
+  const { transaction } = await raydium.cpmm.createPool({
     programId: CREATE_CPMM_POOL_PROGRAM,
     poolFeeAccount: CREATE_CPMM_POOL_FEE_ACC,
     mintA: mintFormatInfoA,
@@ -76,8 +75,8 @@ export async function raydiumCreateCpmm(
     //   microLamports: 46591500,
     // },
   });
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  transaction.message.recentBlockhash = blockhash;
 
-  const { txId } = await execute({ sendAndConfirm: true });
-
-  return txId;
+  return signOrSendTX(agent, transaction);
 }

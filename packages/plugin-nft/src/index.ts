@@ -15,6 +15,9 @@ import {
   cancelNFTListingAction,
 } from "./tensor/actions/tensorTrade";
 
+// Import 3Land actions
+import create3LandCollectibleAction from "./3land/actions/create3LandCollectibleAction";
+
 // Import Metaplex tools
 import {
   deploy_collection,
@@ -23,7 +26,6 @@ import {
   get_assets_by_authority,
   get_assets_by_creator,
   mintCollectionNFT,
-  search_assets,
 } from "./metaplex/tools";
 
 // Import Tensor tools
@@ -34,6 +36,7 @@ import {
   createCollection,
   createSingle,
 } from "./3land/tools/create_3land_collectible";
+import { search_assets } from "./metaplex/tools/search_assets";
 
 // Define and export the plugin
 const NFTPlugin = {
@@ -70,9 +73,12 @@ const NFTPlugin = {
     mintNFTAction,
     searchAssetsAction,
 
-    // Tensor actions
+    // // Tensor actions
     listNFTForSaleAction,
     cancelNFTListingAction,
+
+    // 3Land actions
+    create3LandCollectibleAction,
   ],
 
   // Initialize function

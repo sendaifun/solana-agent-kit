@@ -9,7 +9,7 @@ import {
 import { MintLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 export async function raydiumCreateAmmV4(
   agent: SolanaAgentKit,
@@ -17,9 +17,8 @@ export async function raydiumCreateAmmV4(
   baseAmount: BN,
   quoteAmount: BN,
   startTime: BN,
-): Promise<string> {
+) {
   const raydium = await Raydium.load({
-    owner: agent.wallet,
     connection: agent.connection,
   });
 
@@ -56,7 +55,7 @@ export async function raydiumCreateAmmV4(
     );
   }
 
-  const { execute } = await raydium.liquidity.createPoolV4({
+  const { transaction } = await raydium.liquidity.createPoolV4({
     programId: AMM_V4,
     marketInfo: {
       marketId,
@@ -81,8 +80,8 @@ export async function raydiumCreateAmmV4(
     txVersion: TxVersion.V0,
     feeDestinationId: FEE_DESTINATION_ID,
   });
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  transaction.message.recentBlockhash = blockhash;
 
-  const { txId } = await execute({ sendAndConfirm: true });
-
-  return txId;
+  return await signOrSendTX(agent, transaction);
 }

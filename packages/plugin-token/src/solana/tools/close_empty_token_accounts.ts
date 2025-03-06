@@ -3,7 +3,7 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import {
   AccountLayout,
   createCloseAccountInstruction,
@@ -16,9 +16,7 @@ import {
  * @param agent SolanaAgentKit instance
  * @returns transaction signature and total number of accounts closed
  */
-export async function closeEmptyTokenAccounts(
-  agent: SolanaAgentKit,
-): Promise<{ signature: string; size: number }> {
+export async function closeEmptyTokenAccounts(agent: SolanaAgentKit) {
   try {
     const spl_token = await create_close_instruction(agent, TOKEN_PROGRAM_ID);
     const token_2022 = await create_close_instruction(
@@ -46,9 +44,20 @@ export async function closeEmptyTokenAccounts(
       };
     }
 
-    const signature = await agent.connection.sendTransaction(transaction, [
-      agent.wallet,
-    ]);
+    if (agent.config.signOnly) {
+      return {
+        signedTransaction: (await signOrSendTX(
+          agent,
+          transaction,
+        )) as Transaction,
+        size,
+      };
+    }
+
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+
+    const signature = (await signOrSendTX(agent, transaction)) as string;
 
     return { signature, size };
   } catch (error) {
@@ -57,10 +66,10 @@ export async function closeEmptyTokenAccounts(
 }
 
 /**
- * creates the close instuctions of a spl token account
+ * creates the close instructions of a spl token account
  * @param agnet SolanaAgentKit instance
  * @param token_program Token Program Id
- * @returns close instuction array
+ * @returns close instruction array
  */
 
 async function create_close_instruction(
@@ -70,7 +79,7 @@ async function create_close_instruction(
   const instructions = [];
 
   const ata_accounts = await agent.connection.getTokenAccountsByOwner(
-    agent.wallet_address,
+    agent.wallet.publicKey,
     { programId: token_program },
     "confirmed",
   );
@@ -89,8 +98,8 @@ async function create_close_instruction(
     ) {
       const closeInstruction = createCloseAccountInstruction(
         ata_accounts.value[i].pubkey,
-        agent.wallet_address,
-        agent.wallet_address,
+        agent.wallet.publicKey,
+        agent.wallet.publicKey,
         [],
         token_program,
       );

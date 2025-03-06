@@ -1,5 +1,5 @@
 import { VersionedTransaction, PublicKey } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import {
   TOKENS,
   DEFAULT_OPTIONS,
@@ -22,8 +22,9 @@ export async function trade(
   outputMint: PublicKey,
   inputAmount: number,
   inputMint: PublicKey = TOKENS.USDC,
+  // @deprecated use dynamicSlippage instead
   slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
-): Promise<string> {
+) {
   try {
     // Check if input token is native SOL
     const isNativeSol = inputMint.equals(TOKENS.SOL);
@@ -42,9 +43,11 @@ export async function trade(
           `inputMint=${isNativeSol ? TOKENS.SOL.toString() : inputMint.toString()}` +
           `&outputMint=${outputMint.toString()}` +
           `&amount=${scaledAmount}` +
-          `&slippageBps=${slippageBps}` +
-          `&onlyDirectRoutes=true` +
-          `&maxAccounts=20` +
+          `&dynamicSlippage=true` +
+          `&minimizeSlippage=false` +
+          `&onlyDirectRoutes=false` +
+          `&maxAccounts=64` +
+          `&swapMode=ExactIn` +
           `${agent.config.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config.JUPITER_FEE_BPS}` : ""}`,
       )
     ).json();
@@ -70,10 +73,17 @@ export async function trade(
         },
         body: JSON.stringify({
           quoteResponse,
-          userPublicKey: agent.wallet_address.toString(),
+          userPublicKey: agent.wallet.publicKey.toString(),
           wrapAndUnwrapSol: true,
           dynamicComputeUnitLimit: true,
-          prioritizationFeeLamports: "auto",
+          dynamicSlippage: true,
+          prioritizationFeeLamports: {
+            priorityLevelWithMaxLamports: {
+              maxLamports: 10000000,
+              global: false,
+              priorityLevel: agent.config.PRIORITY_LEVEL || "medium",
+            },
+          },
           feeAccount: feeAccount ? feeAccount.toString() : null,
         }),
       })
@@ -82,11 +92,11 @@ export async function trade(
     const swapTransactionBuf = Buffer.from(swapTransaction, "base64");
 
     const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
-    // Sign and send transaction
-    transaction.sign([agent.wallet]);
-    const signature = await agent.connection.sendTransaction(transaction);
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    transaction.message.recentBlockhash = blockhash;
 
-    return signature;
+    // Sign or send transaction
+    return await signOrSendTX(agent, transaction);
   } catch (error: any) {
     throw new Error(`Swap failed: ${error.message}`);
   }

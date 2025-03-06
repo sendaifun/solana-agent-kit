@@ -22,3 +22,10 @@ export interface MintCollectionNFTResponse {
   mint: PublicKey;
   metadata: PublicKey;
 }
+
+export interface SPLAuthorityInput {
+  mintAuthority?: PublicKey | null;
+  freezeAuthority?: PublicKey | null;
+  updateAuthority?: PublicKey | null;
+  isMutable?: boolean;
+}

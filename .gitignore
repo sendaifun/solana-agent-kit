@@ -7,5 +7,6 @@ node_modules
 
 .DS_Store
 
-.turbo
 .husky
+.turbo
+.turbo/

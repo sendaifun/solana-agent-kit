@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { multisig_transfer_from_treasury } from "../tools";
 import { PublicKey } from "@solana/web3.js";
@@ -36,7 +35,7 @@ const transferFromMultisigAction: Action = {
     amount: z.number().min(0, "Amount must be greater than 0"),
     recipient: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const multisig = await multisig_transfer_from_treasury(
       agent,
       input.amount as number,

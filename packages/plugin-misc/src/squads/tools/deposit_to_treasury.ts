@@ -1,4 +1,8 @@
-import { SolanaAgentKit } from "solana-agent-kit";
+import {
+  signOrSendTX,
+  SolanaAgentKit,
+  TransactionOrVersionedTransaction,
+} from "solana-agent-kit";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
@@ -22,15 +26,14 @@ export async function multisig_deposit_to_treasury(
   amount: number,
   vaultIndex?: number,
   mint?: PublicKey,
-): Promise<string> {
+) {
   try {
-    let tx: string;
+    let tx: string | TransactionOrVersionedTransaction;
     if (!vaultIndex) {
       vaultIndex = 0;
     }
-    const createKey = agent.wallet;
     const [multisigPda] = multisig.getMultisigPda({
-      createKey: createKey.publicKey,
+      createKey: agent.wallet.publicKey,
     });
     const [vaultPda] = multisig.getVaultPda({
       multisigPda,
@@ -41,18 +44,20 @@ export async function multisig_deposit_to_treasury(
       // Transfer native SOL
       const transaction = new Transaction().add(
         SystemProgram.transfer({
-          fromPubkey: agent.wallet_address,
+          fromPubkey: agent.wallet.publicKey,
           toPubkey: to,
           lamports: amount * LAMPORTS_PER_SOL,
         }),
       );
+      const { blockhash } = await agent.connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
 
-      tx = await agent.connection.sendTransaction(transaction, [agent.wallet]);
+      tx = await signOrSendTX(agent, transaction);
     } else {
       // Transfer SPL token
       const fromAta = await getAssociatedTokenAddress(
         mint,
-        agent.wallet_address,
+        agent.wallet.publicKey,
       );
       const transaction = new Transaction();
       const toAta = await getAssociatedTokenAddress(mint, to, true);
@@ -61,7 +66,7 @@ export async function multisig_deposit_to_treasury(
       if (!toTokenAccountInfo) {
         transaction.add(
           createAssociatedTokenAccountInstruction(
-            agent.wallet_address,
+            agent.wallet.publicKey,
             toAta,
             to,
             mint,
@@ -76,12 +81,16 @@ export async function multisig_deposit_to_treasury(
         createTransferInstruction(
           fromAta,
           toAta,
-          agent.wallet_address,
+          agent.wallet.publicKey,
           adjustedAmount,
         ),
       );
 
-      tx = await agent.connection.sendTransaction(transaction, [agent.wallet]);
+      transaction.recentBlockhash = (
+        await agent.connection.getLatestBlockhash()
+      ).blockhash;
+
+      tx = await signOrSendTX(agent, transaction);
     }
 
     return tx;

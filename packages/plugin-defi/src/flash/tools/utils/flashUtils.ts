@@ -1,6 +1,6 @@
 import { HermesClient } from "@pythnetwork/hermes-client";
 import { OraclePrice } from "flash-sdk";
-import { AnchorProvider, BN, Wallet } from "@coral-xyz/anchor";
+import { AnchorProvider, BN } from "@coral-xyz/anchor";
 import {
   PoolConfig,
   Token,
@@ -8,7 +8,7 @@ import {
   PerpetualsClient,
   Privilege,
 } from "flash-sdk";
-import { Cluster, PublicKey, Connection, Keypair } from "@solana/web3.js";
+import { Cluster, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import type { SolanaAgentKit } from "solana-agent-kit";
 
@@ -84,7 +84,7 @@ export const fetchOraclePrice = async (
       throw new Error(`No price feed received for ${symbol}`);
     }
 
-    const hemrmesPriceUdpate = await hermesClient.getLatestPriceUpdates(
+    const hemrmesPriceUpdate = await hermesClient.getLatestPriceUpdates(
       [priceFeedId],
       {
         encoding: "hex",
@@ -92,11 +92,11 @@ export const fetchOraclePrice = async (
       },
     );
 
-    if (!hemrmesPriceUdpate.parsed) {
+    if (!hemrmesPriceUpdate.parsed) {
       throw new Error(`No price feed received for ${symbol}`);
     }
-    const hermesEma = hemrmesPriceUdpate.parsed[0].ema_price;
-    const hermesPrice = hemrmesPriceUdpate.parsed[0].price;
+    const hermesEma = hemrmesPriceUpdate.parsed[0].ema_price;
+    const hermesPrice = hemrmesPriceUpdate.parsed[0].price;
 
     const hermesPriceOracle = new OraclePrice({
       price: new BN(hermesPrice.price),
@@ -266,15 +266,20 @@ export async function getNftTradingAccountInfo(
  * @param wallet Solana wallet
  * @returns PerpetualsClient instance
  */
-export function createPerpClient(
-  connection: Connection,
-  wallet: Keypair,
-): PerpetualsClient {
-  const provider = new AnchorProvider(connection, new Wallet(wallet), {
-    commitment: "confirmed",
-    preflightCommitment: "confirmed",
-    skipPreflight: true,
-  });
+export function createPerpClient(agent: SolanaAgentKit): PerpetualsClient {
+  const provider = new AnchorProvider(
+    agent.connection,
+    {
+      publicKey: agent.wallet.publicKey,
+      signAllTransactions: agent.wallet.signAllTransactions,
+      signTransaction: agent.wallet.signTransaction,
+    },
+    {
+      commitment: "confirmed",
+      preflightCommitment: "confirmed",
+      skipPreflight: true,
+    },
+  );
 
   return new PerpetualsClient(
     provider,

@@ -1,0 +1,29 @@
+name: Check LangChain Tool Names
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-langchain-tool-names:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9.4.0
+
+      - name: Install node-gyp prerequisites
+        run: sudo apt update && sudo apt install -y build-essential python3 pkg-config libudev-dev libusb-1.0-0-dev
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install -r --no-frozen-lockfile
+
+      - run: pnpm run check-tool-names:langchain

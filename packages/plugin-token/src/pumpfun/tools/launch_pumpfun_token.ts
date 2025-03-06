@@ -1,8 +1,7 @@
-// src/tools/launch_pumpfun_token.ts
 import { VersionedTransaction, Keypair } from "@solana/web3.js";
 import {
-  PumpfunLaunchResponse,
   PumpFunTokenOptions,
+  signOrSendTX,
   SolanaAgentKit,
 } from "solana-agent-kit";
 
@@ -67,7 +66,7 @@ async function createTokenTransaction(
   options?: PumpFunTokenOptions,
 ) {
   const payload = {
-    publicKey: agent.wallet_address.toBase58(),
+    publicKey: agent.wallet.publicKey.toBase58(),
     action: "create",
     tokenMetadata: {
       name: metadataResponse.metadata.name,
@@ -100,50 +99,6 @@ async function createTokenTransaction(
   return response;
 }
 
-async function signAndSendTransaction(
-  kit: SolanaAgentKit,
-  tx: VersionedTransaction,
-  mintKeypair: Keypair,
-) {
-  try {
-    // Get the latest blockhash
-    const { blockhash, lastValidBlockHeight } =
-      await kit.connection.getLatestBlockhash();
-
-    // Update transaction with latest blockhash
-    tx.message.recentBlockhash = blockhash;
-
-    // Sign the transaction
-    tx.sign([mintKeypair, kit.wallet]);
-
-    // Send and confirm transaction with options
-    const signature = await kit.connection.sendTransaction(tx, {
-      skipPreflight: false,
-      preflightCommitment: "confirmed",
-      maxRetries: 5,
-    });
-
-    // Wait for confirmation
-    const confirmation = await kit.connection.confirmTransaction({
-      signature,
-      blockhash,
-      lastValidBlockHeight,
-    });
-
-    if (confirmation.value.err) {
-      throw new Error(`Transaction failed: ${confirmation.value.err}`);
-    }
-
-    return signature;
-  } catch (error) {
-    console.error("Transaction send error:", error);
-    if (error instanceof Error && "logs" in error) {
-      console.error("Transaction logs:", error.logs);
-    }
-    throw error;
-  }
-}
-
 /**
  * Launch a token on Pump.fun
  * @param agent - SolanaAgentKit instance
@@ -161,7 +116,7 @@ export async function launchPumpFunToken(
   description: string,
   imageUrl: string,
   options?: PumpFunTokenOptions,
-): Promise<PumpfunLaunchResponse> {
+) {
   try {
     const mintKeypair = Keypair.generate();
     const metadataResponse = await uploadMetadata(
@@ -181,10 +136,20 @@ export async function launchPumpFunToken(
     const tx = VersionedTransaction.deserialize(
       new Uint8Array(transactionData),
     );
-    const signature = await signAndSendTransaction(agent, tx, mintKeypair);
+
+    if (agent.config.signOnly) {
+      return {
+        signedTransaction: await agent.wallet.signTransaction(tx),
+        mint: mintKeypair.publicKey.toBase58(),
+        metadataUri: metadataResponse.metadataUri,
+      };
+    }
+
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    tx.message.recentBlockhash = blockhash;
 
     return {
-      signature,
+      signature: (await signOrSendTX(agent, tx, [mintKeypair])) as string,
       mint: mintKeypair.publicKey.toBase58(),
       metadataUri: metadataResponse.metadataUri,
     };

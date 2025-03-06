@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { get_assets_by_creator } from "../tools";
 
@@ -89,7 +88,7 @@ const getAssetsByCreatorAction: Action = {
     after: z.string().optional(),
   }),
   handler: async (
-    agent: SolanaAgentKit,
+    agent,
     input: z.infer<typeof getAssetsByCreatorAction.schema>,
   ) => {
     const result = await get_assets_by_creator(agent, input);

@@ -1,4 +1,4 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
+import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { stakeWithSolayer } from "../tools";
 
@@ -37,14 +37,14 @@ const stakeWithSolayerAction: Action = {
   schema: z.object({
     amount: z.number().positive().describe("Amount of SOL to stake"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const amount = input.amount as number;
 
       const res = await stakeWithSolayer(agent, amount);
       return {
         status: "success",
-        res,
+        transaction: res,
         message: `Successfully staked ${amount} SOL for Solayer SOL (sSOL)`,
       };
     } catch (error: any) {

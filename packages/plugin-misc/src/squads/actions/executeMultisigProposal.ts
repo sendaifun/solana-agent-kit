@@ -1,5 +1,4 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { multisig_execute_proposal } from "../tools";
 
@@ -33,7 +32,7 @@ const executeMultisigProposalAction: Action = {
   schema: z.object({
     proposalIndex: z.number().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     const proposalIndex =
       input.proposalIndex !== undefined
         ? Number(input.proposalIndex)

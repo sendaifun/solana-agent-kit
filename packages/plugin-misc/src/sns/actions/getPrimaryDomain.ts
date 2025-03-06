@@ -1,6 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getPrimaryDomain } from "../tools";
 
@@ -34,7 +33,7 @@ const getPrimaryDomainAction: Action = {
   schema: z.object({
     account: z.string().min(1).describe("The Solana wallet address to lookup"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const account = new PublicKey(input.account);
 

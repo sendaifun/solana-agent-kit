@@ -1,17 +1,20 @@
-import { SolanaAgentKit } from "../agent";
+import type { SolanaAgentKit } from "../agent";
 import {
-  Keypair,
-  Signer,
-  TransactionInstruction,
+  type Keypair,
+  type Signer,
+  type TransactionInstruction,
   TransactionMessage,
   VersionedTransaction,
   Transaction,
 } from "@solana/web3.js";
 import { ComputeBudgetProgram } from "@solana/web3.js";
 import bs58 from "bs58";
-import { PriorityFeeResponse } from "../types/index";
+import type {
+  PriorityFeeResponse,
+  TransactionOrVersionedTransaction,
+} from "../types/index";
 
-const feeTiers = {
+export const feeTiers = {
   min: 0.01,
   mid: 0.5,
   max: 0.95,
@@ -27,20 +30,19 @@ export async function getComputeBudgetInstructions(
   instructions: TransactionInstruction[],
   feeTier: keyof typeof feeTiers,
 ): Promise<{
-  blockhash: string;
   computeBudgetLimitInstruction: TransactionInstruction;
   computeBudgetPriorityFeeInstructions: TransactionInstruction;
 }> {
   const { blockhash, lastValidBlockHeight } =
     await agent.connection.getLatestBlockhash();
   const messageV0 = new TransactionMessage({
-    payerKey: agent.wallet_address,
+    payerKey: agent.wallet.publicKey,
     recentBlockhash: blockhash,
     instructions: instructions,
   }).compileToV0Message();
   const transaction = new VersionedTransaction(messageV0);
-  const simulatedTx = agent.connection.simulateTransaction(transaction);
-  const estimatedComputeUnits = (await simulatedTx).value.unitsConsumed;
+  const simulatedTx = await agent.connection.simulateTransaction(transaction);
+  const estimatedComputeUnits = simulatedTx.value.unitsConsumed;
   const safeComputeUnits = Math.ceil(
     estimatedComputeUnits
       ? Math.max(estimatedComputeUnits + 100000, estimatedComputeUnits * 1.2)
@@ -58,13 +60,14 @@ export async function getComputeBudgetInstructions(
     const legacyTransaction = new Transaction();
     legacyTransaction.recentBlockhash = blockhash;
     legacyTransaction.lastValidBlockHeight = lastValidBlockHeight;
-    legacyTransaction.feePayer = agent.wallet_address;
+    legacyTransaction.feePayer = agent.wallet.publicKey;
 
     // Add the compute budget instruction and original instructions
     legacyTransaction.add(computeBudgetLimitInstruction, ...instructions);
 
     // Sign the transaction
-    legacyTransaction.sign(agent.wallet);
+    const signedTransaction =
+      await agent.wallet.signTransaction(legacyTransaction);
 
     // Use Helius API for priority fee calculation
     const response = await fetch(
@@ -78,7 +81,9 @@ export async function getComputeBudgetInstructions(
           method: "getPriorityFeeEstimate",
           params: [
             {
-              transaction: bs58.encode(legacyTransaction.serialize()),
+              transaction: bs58.encode(
+                signedTransaction.serialize() as Uint8Array,
+              ),
               options: {
                 priorityLevel:
                   feeTier === "min"
@@ -116,7 +121,6 @@ export async function getComputeBudgetInstructions(
     });
 
   return {
-    blockhash,
     computeBudgetLimitInstruction,
     computeBudgetPriorityFeeInstructions,
   };
@@ -132,44 +136,49 @@ export async function sendTx(
   agent: SolanaAgentKit,
   instructions: TransactionInstruction[],
   otherKeypairs?: Keypair[],
+  feeTier?: keyof typeof feeTiers,
 ) {
   const ixComputeBudget = await getComputeBudgetInstructions(
     agent,
     instructions,
-    "mid",
+    feeTier ?? "mid",
   );
   const allInstructions = [
     ixComputeBudget.computeBudgetLimitInstruction,
     ixComputeBudget.computeBudgetPriorityFeeInstructions,
     ...instructions,
   ];
+  const { blockhash } = await agent.connection.getLatestBlockhash();
   const messageV0 = new TransactionMessage({
-    payerKey: agent.wallet_address,
-    recentBlockhash: ixComputeBudget.blockhash,
+    payerKey: agent.wallet.publicKey,
+    recentBlockhash: blockhash,
     instructions: allInstructions,
   }).compileToV0Message();
   const transaction = new VersionedTransaction(messageV0);
-  transaction.sign([agent.wallet, ...(otherKeypairs ?? [])] as Signer[]);
+  transaction.sign([...(otherKeypairs ?? [])] as Signer[]);
+  const signedTransaction = await agent.wallet.signTransaction(transaction);
 
   const timeoutMs = 90000;
   const startTime = Date.now();
   while (Date.now() - startTime < timeoutMs) {
     const transactionStartTime = Date.now();
 
-    const signature = await agent.connection.sendTransaction(transaction, {
-      maxRetries: 0,
-      skipPreflight: false,
-    });
+    const signature = await agent.connection.sendTransaction(
+      signedTransaction as VersionedTransaction,
+      {
+        maxRetries: 0,
+        skipPreflight: false,
+      },
+    );
 
     const statuses = await agent.connection.getSignatureStatuses([signature]);
     if (statuses.value[0]) {
       if (!statuses.value[0].err) {
         return signature;
-      } else {
-        throw new Error(
-          `Transaction failed: ${statuses.value[0].err.toString()}`,
-        );
       }
+      throw new Error(
+        `Transaction failed: ${statuses.value[0].err.toString()}`,
+      );
     }
 
     const elapsedTime = Date.now() - transactionStartTime;

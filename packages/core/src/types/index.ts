@@ -1,24 +1,36 @@
-import { SolanaAgentKit } from "../agent";
-import { z } from "zod";
+import type { Transaction, VersionedTransaction } from "@solana/web3.js";
+import type { SolanaAgentKit } from "../agent";
+import type { z } from "zod";
 
 export interface Plugin {
   name: string;
-  methods: Record<string, () => void>;
+  methods: Record<string, any>;
   actions: Action[];
   initialize(agent: SolanaAgentKit): void;
 }
 
+export type TransactionOrVersionedTransaction =
+  | Transaction
+  | VersionedTransaction;
+
 export interface Config {
+  signOnly?: boolean;
   OPENAI_API_KEY?: string;
+  PERPLEXITY_API_KEY?: string;
   JUPITER_REFERRAL_ACCOUNT?: string;
   JUPITER_FEE_BPS?: number;
   FLASH_PRIVILEGE?: string;
   FLEXLEND_API_KEY?: string;
   HELIUS_API_KEY?: string;
+  PRIORITY_LEVEL?: "medium" | "high" | "veryHigh"; // medium, high, or veryHigh
+  SOLUTIOFI_API_KEY?: string;
+  ETHEREUM_PRIVATE_KEY?: string;
   ALLORA_API_KEY?: string;
   ALLORA_API_URL?: string;
   ALLORA_NETWORK?: string;
-  ETHEREUM_PRIVATE_KEY?: string;
+  ELFA_AI_API_KEY?: string;
+  COINGECKO_PRO_API_KEY?: string;
+  COINGECKO_DEMO_API_KEY?: string;
 }
 
 export interface PumpFunTokenOptions {

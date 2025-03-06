@@ -75,7 +75,7 @@ export async function flashOpenTrade(
       marketData.pool,
       "mainnet-beta",
     );
-    const perpClient = createPerpClient(agent.connection, agent.wallet);
+    const perpClient = createPerpClient(agent);
 
     // Calculate position parameters
     const leverageBN = new BN(leverage);
@@ -110,7 +110,7 @@ export async function flashOpenTrade(
 
     // Get NFT trading account info
     const tradingAccounts = await getNftTradingAccountInfo(
-      agent.wallet_address,
+      agent.wallet.publicKey,
       perpClient,
       poolConfig,
       collateralSymbol,

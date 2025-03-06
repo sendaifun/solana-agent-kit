@@ -59,7 +59,7 @@ export async function flashCloseTrade(
       marketData.pool,
       "mainnet-beta",
     );
-    const perpClient = createPerpClient(agent.connection, agent.wallet);
+    const perpClient = createPerpClient(agent);
 
     // Calculate price after slippage
     const slippageBpsBN = new BN(100); // 1% slippage
@@ -73,7 +73,7 @@ export async function flashCloseTrade(
 
     // Get NFT trading account info
     const tradingAccounts = await getNftTradingAccountInfo(
-      agent.wallet_address,
+      agent.wallet.publicKey,
       perpClient,
       poolConfig,
       collateralSymbol,

@@ -1,0 +1,20 @@
+{
+  "name": "orbofi-personality-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/langgraph-checkpoint-postgres": "^0.0.2",
+    "solana-agent-kit": "^1.3.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

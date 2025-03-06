@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { createDriftUserAccount } from "../tools";
 
 const createDriftUserAccountAction: Action = {
@@ -47,7 +47,7 @@ const createDriftUserAccountAction: Action = {
         status: "success",
         message:
           res.message ??
-          `User account created with ${input.amount} ${input.symobl} successfully deposited.`,
+          `User account created with ${input.amount} ${input.symbol} successfully deposited.`,
         account: res.account,
         signature: res.txSignature,
       };

@@ -23,9 +23,9 @@ export async function get_token_balance(
   }>;
 }> {
   const [lamportsBalance, tokenAccountData] = await Promise.all([
-    agent.connection.getBalance(walletAddress ?? agent.wallet_address),
+    agent.connection.getBalance(walletAddress ?? agent.wallet.publicKey),
     agent.connection.getParsedTokenAccountsByOwner(
-      walletAddress ?? agent.wallet_address,
+      walletAddress ?? agent.wallet.publicKey,
       {
         programId: TOKEN_PROGRAM_ID,
       },

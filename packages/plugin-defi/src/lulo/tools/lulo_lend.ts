@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Lend tokens for yields using Lulo
@@ -12,10 +12,10 @@ export async function luloLend(
   agent: SolanaAgentKit,
   mintAddress: string,
   amount: number,
-): Promise<string> {
+) {
   try {
     const response = await fetch(
-      `https://api.flexlend.fi/generate/account/deposit?priorityFee=50000`,
+      "https://api.flexlend.fi/generate/account/deposit?priorityFee=50000",
       {
         method: "POST",
         headers: {
@@ -43,23 +43,7 @@ export async function luloLend(
     const { blockhash } = await agent.connection.getLatestBlockhash();
     luloTxn.message.recentBlockhash = blockhash;
 
-    // Sign and send transaction
-    luloTxn.sign([agent.wallet]);
-
-    const signature = await agent.connection.sendTransaction(luloTxn, {
-      preflightCommitment: "confirmed",
-      maxRetries: 3,
-    });
-
-    // Wait for confirmation using the latest strategy
-    const latestBlockhash = await agent.connection.getLatestBlockhash();
-    await agent.connection.confirmTransaction({
-      signature,
-      blockhash: latestBlockhash.blockhash,
-      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-    });
-
-    return signature;
+    return signOrSendTX(agent, luloTxn);
   } catch (error: any) {
     throw new Error(`Lending failed: ${error.message}`);
   }

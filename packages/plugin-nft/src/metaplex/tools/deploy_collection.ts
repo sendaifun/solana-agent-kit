@@ -1,17 +1,13 @@
 import { SolanaAgentKit } from "solana-agent-kit";
-import {
-  generateSigner,
-  keypairIdentity,
-  publicKey,
-} from "@metaplex-foundation/umi";
+import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import {
   createCollection,
   mplCore,
   ruleSet,
 } from "@metaplex-foundation/mpl-core";
-import { CollectionOptions, CollectionDeployment } from "../types";
+import type { CollectionOptions } from "../types";
 import {
-  fromWeb3JsKeypair,
+  toWeb3JsLegacyTransaction,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -25,11 +21,11 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 export async function deploy_collection(
   agent: SolanaAgentKit,
   options: CollectionOptions,
-): Promise<CollectionDeployment> {
+) {
   try {
     // Initialize Umi
     const umi = createUmi(agent.connection.rpcEndpoint).use(mplCore());
-    umi.use(keypairIdentity(fromWeb3JsKeypair(agent.wallet)));
+    // umi.use(keypairIdentity(fromWeb3JsKeypair(agent.wallet)));
 
     // Generate collection signer
     const collectionSigner = generateSigner(umi);
@@ -40,13 +36,13 @@ export async function deploy_collection(
       percentage: creator.percentage,
     })) || [
       {
-        address: publicKey(agent.wallet_address.toString()),
+        address: publicKey(agent.wallet.publicKey.toString()),
         percentage: 100,
       },
     ];
 
     // Create collection
-    const tx = await createCollection(umi, {
+    const tx = createCollection(umi, {
       collection: collectionSigner,
       name: options.name,
       uri: options.uri,
@@ -58,11 +54,21 @@ export async function deploy_collection(
           ruleSet: ruleSet("None"), // Compatibility rule set
         },
       ],
-    }).sendAndConfirm(umi);
+    }).build(umi);
+
+    const compatibleTx = toWeb3JsLegacyTransaction(tx);
+    compatibleTx.feePayer = agent.wallet.publicKey;
+
+    if (agent.config.signOnly) {
+      return {
+        collectionAddress: toWeb3JsPublicKey(collectionSigner.publicKey),
+        signedTransaction: await agent.wallet.signTransaction(compatibleTx),
+      };
+    }
 
     return {
       collectionAddress: toWeb3JsPublicKey(collectionSigner.publicKey),
-      signature: tx.signature,
+      signature: await agent.wallet.sendTransaction(compatibleTx),
     };
   } catch (error: any) {
     throw new Error(`Collection deployment failed: ${error.message}`);

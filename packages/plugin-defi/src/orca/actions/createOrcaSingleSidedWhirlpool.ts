@@ -1,4 +1,4 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
+import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
 import { Decimal } from "decimal.js";
@@ -78,7 +78,7 @@ const createOrcaSingleSidedWhirlpoolAction: Action = {
       .refine((val) => val in FEE_TIERS, "Invalid fee tier")
       .describe("Fee tier percentage for the pool (e.g., 0.3 for 0.3%)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const depositTokenAmount = Number(input.depositTokenAmount);
       const depositTokenMint = new PublicKey(input.depositTokenMint);

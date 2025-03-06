@@ -13,8 +13,8 @@ const swapAction: Action = {
           amount: "0.02",
           fromChain: "solana",
           fromToken: "SOL",
-          toChain: "polygan",
-          toToken: "pol",
+          toChain: "polygon",
+          toToken: "POL",
           dstAddr: "0x0cae42c0ce52e6e64c1e384ff98e686c6ee225f0",
         },
         output: {
@@ -31,7 +31,7 @@ const swapAction: Action = {
           fromChain: "solana",
           fromToken: "sol",
           toChain: "solana",
-          toToken: "hnt",
+          toToken: "HNT",
           dstAddr: "4ZgCP2idpqrxuQNfsjakJEm9nFyZ2xnT4CrDPKPULJPk",
         },
         output: {

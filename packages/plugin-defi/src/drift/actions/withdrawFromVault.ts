@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action } from "solana-agent-kit";
 import { withdrawFromDriftVault } from "../tools";
 
 const withdrawFromVaultAction: Action = {
@@ -26,7 +26,7 @@ const withdrawFromVaultAction: Action = {
   schema: z.object({
     vaultAddress: z.string().describe("Vault's address"),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent, input) => {
     try {
       const tx = await withdrawFromDriftVault(
         agent,

@@ -1,7 +1,7 @@
 import { Action } from "solana-agent-kit";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { deploy_token } from "../tools";
+import { Transaction, VersionedTransaction } from "@solana/web3.js";
 
 const deployTokenAction: Action = {
   name: "DEPLOY_TOKEN",
@@ -22,6 +22,12 @@ const deployTokenAction: Action = {
           uri: "https://example.com/token.json",
           symbol: "MTK",
           decimals: 9,
+          authority: {
+            mintAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            freezeAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            updateAuthority: "7nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkN",
+            isMutable: true,
+          },
           initialSupply: 1000000,
         },
         output: {
@@ -38,6 +44,12 @@ const deployTokenAction: Action = {
           name: "Basic Token",
           uri: "https://example.com/basic.json",
           symbol: "BASIC",
+          authority: {
+            mintAuthority: undefined,
+            freezeAuthority: undefined,
+            updateAuthority: undefined,
+            isMutable: true,
+          },
         },
         output: {
           mint: "8nE9GvcwsqzYxmJLSrYmSB1V1YoJWVK1KWzAcWAzjXkM",
@@ -53,21 +65,41 @@ const deployTokenAction: Action = {
     uri: z.string().url("URI must be a valid URL"),
     symbol: z.string().min(1, "Symbol is required"),
     decimals: z.number().optional(),
+    authority: z
+      .object({
+        mintAuthority: z.string().nullable().optional(),
+        freezeAuthority: z.string().nullable().optional(),
+        updateAuthority: z.string().nullable().optional(),
+        isMutable: z.boolean().optional(),
+      })
+      .optional(),
     initialSupply: z.number().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent, input: Record<string, any>) => {
     try {
       const result = await deploy_token(
         agent,
         input.name,
         input.uri,
         input.symbol,
+        input.authority,
         input.decimals,
         input.initialSupply,
       );
 
+      if (
+        result instanceof Transaction ||
+        result instanceof VersionedTransaction
+      ) {
+        return {
+          status: "success",
+          message: "Transaction generated successfully",
+          transaction: result,
+        };
+      }
+
       return {
-        mint: result.mint.toString(),
+        mint: result.mint.toBase58(),
         status: "success",
         message: "Token deployed successfully",
       };

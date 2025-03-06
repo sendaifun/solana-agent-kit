@@ -6,11 +6,11 @@ Extending the **Solana Agent Kit** with custom tools allows you to add specializ
 
 1. Create a new tool file
 2. Export the new tool
-3. Add supporting functions in SolanaAgentKit
+3. Add supporting functions to SolanaAgentKit
 4. Implement the Langchain tool class
 5. Export the Langchain tool
 6. Export your protocol's langchain tools (if not already exported)
-7. Define Action class for given tool
+7. Define an Action class for given tool
 8. Export Action
 9. Use the custom tool
 
@@ -87,7 +87,7 @@ export * from "./tiplink";
 export * from "./your_protocol"; // Add your protocol here if it's not already in the list
 ```
 
-### 7. Define Action class for given tool
+### 7. Define an Action class for given tool
 
 > `src/actions/your_protocol/custom_action.ts`
 ```typescript:src/actions/your_protocol/custom_action.ts

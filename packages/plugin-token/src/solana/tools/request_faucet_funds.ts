@@ -11,7 +11,7 @@ export async function request_faucet_funds(
   agent: SolanaAgentKit,
 ): Promise<string> {
   const tx = await agent.connection.requestAirdrop(
-    agent.wallet_address,
+    agent.wallet.publicKey,
     5 * LAMPORTS_PER_SOL,
   );
 

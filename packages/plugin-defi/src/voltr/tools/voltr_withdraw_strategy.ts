@@ -1,9 +1,5 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
-import {
-  PublicKey,
-  sendAndConfirmTransaction,
-  Transaction,
-} from "@solana/web3.js";
+import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { VoltrClient } from "@voltr/vault-sdk";
@@ -21,8 +17,8 @@ export async function voltrWithdrawStrategy(
   withdrawAmount: BN,
   vault: PublicKey,
   strategy: PublicKey,
-): Promise<string> {
-  const vc = new VoltrClient(agent.connection, agent.wallet);
+) {
+  const vc = new VoltrClient(agent.connection);
   const vaultAccount = await vc.fetchVaultAccount(vault);
   const vaultAssetMint = vaultAccount.asset.mint;
   const assetTokenProgram = await agent.connection
@@ -90,11 +86,5 @@ export async function voltrWithdrawStrategy(
     },
   );
 
-  const transaction = new Transaction();
-  transaction.add(withdrawIx);
-
-  const txSig = await sendAndConfirmTransaction(agent.connection, transaction, [
-    agent.wallet,
-  ]);
-  return txSig;
+  return await signOrSendTX(agent, [withdrawIx]);
 }
