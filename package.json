@@ -18,6 +18,10 @@
     "tool-summary:langchain": "tsx src/utils/analyzeTools.ts --langchain",
     "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sendaifun/solana-agent-kit.git"
+  },
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=8.0.0"

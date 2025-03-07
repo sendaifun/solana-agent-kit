@@ -6,8 +6,10 @@ import {
   SolanaBalanceTool,
   SolanaFetchPriceTool,
 } from "solana-agent-kit/dist/langchain";
+import { readOperationsPrompt } from "../prompts/read";
 
 const readAgent = createReactAgent({
+  stateModifier: readOperationsPrompt,
   llm: gpt4o,
   tools: [new SolanaBalanceTool(agentKit), new SolanaFetchPriceTool(agentKit)],
 });

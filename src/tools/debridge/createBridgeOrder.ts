@@ -1,8 +1,6 @@
 import { DEBRIDGE_API } from "../../constants";
 import { deBridgeOrderInput, deBridgeOrderResponse } from "../../types";
 
-const REFERRAL_CODE = "21064"; // Using the default from original implementation
-
 /**
  * Create a bridge order for cross-chain token transfer
  *
@@ -34,9 +32,9 @@ export async function createDebridgeBridgeOrder(
     srcChainOrderAuthorityAddress: params.account, // Always use sender's address
     srcChainRefundAddress: params.account, // Always use sender's address
     dstChainOrderAuthorityAddress: params.dstChainTokenOutRecipient, // Always use recipient's address
-    referralCode: params.referralCode?.toString() || REFERRAL_CODE,
+    referralCode: "21064", // deBridge integration analytics
+    deBridgeApp: "SOLANA_AGENT_KIT", // deBridge integration analytics
     prependOperatingExpenses: "true", // Always true
-    // deBridgeApp: "SOLANA_AGENT_KIT",
   });
 
   const response = await fetch(

@@ -1,0 +1,311 @@
+---
+title: 'Orbofi Personality Engine Integration'
+description: 'Learn how to integrate the Orbofi Personality Engine with Solana Agent Kit'
+---
+
+Solana Agent Kit provides integration with the Orbofi Personality Engine, allowing developers to create AI-powered personalities based on celebrities, historical figures, or fictional characters. This integration enables interactive chat experiences or autonomous agent behavior.
+
+## Key Features
+
+- Personality fetching from Orbofi database
+- Interactive chat mode
+- Autonomous action mode
+- Structured personality data
+- Simple integration API
+- Error handling and validation
+
+## Setup Instructions
+
+### Prerequisites
+
+```bash
+# Required dependencies
+- @sendaifun/solana-agent-kit
+- @orbofi/personality-engine
+```
+
+### Installation
+
+```bash
+npm install @orbofi/personality-engine
+```
+
+### Configuration
+
+```typescript
+// Add to your Solana Agent Kit configuration
+const config = {
+  // ... other configuration options
+  ORBOFI_API_KEY: "your_api_key_here"
+};
+```
+
+## Basic Usage
+
+### Fetching a Personality
+
+```typescript
+// Import personality module
+import { fetchPersonality } from '@orbofi/personality-engine';
+
+// Fetch a personality by name
+const personality = await agent.fetchOrbofiPersonality('satoshi nakamoto');
+```
+
+### Using Chat Mode
+
+```typescript
+// Start interactive chat with the personality
+const chat = await agent.startOrbofiChat(personality);
+
+// Send a message and get a response
+const response = await chat.sendMessage('Tell me about yourself');
+```
+
+### Using Autonomous Mode
+
+```typescript
+// Start autonomous mode with specific goals
+const autonomous = await agent.startOrbofiAutonomousMode(personality, {
+  goal: 'Explain blockchain technology',
+  steps: 5
+});
+
+// Execute autonomous actions
+const result = await autonomous.execute();
+```
+
+## Integration Examples
+
+### Basic Personality Fetcher App
+
+```typescript
+import { SolanaAgentKit } from '@sendaifun/solana-agent-kit';
+import readline from 'readline';
+
+// Initialize Solana Agent Kit
+const agent = new SolanaAgentKit({
+  // ... configuration
+});
+
+// Create interactive CLI
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+async function main() {
+  // Prompt for personality selection
+  console.log('************');
+  console.log('Personality Selection:');
+  console.log('What is the name of the celebrity/person/character that you would like to create?');
+  console.log('************');
+  
+  rl.question('', async (name) => {
+    try {
+      // Fetch the personality
+      const personality = await agent.fetchOrbofiPersonality(name);
+      console.log(`Fetched personality: ${personality.description}`);
+      
+      // Select mode
+      console.log('\nAvailable modes:');
+      console.log('1. chat\n- Interactive chat mode');
+      console.log('2. auto\n- Autonomous action mode');
+      
+      rl.question('Choose a mode (enter number or name): ', async (mode) => {
+        if (mode === '1' || mode.toLowerCase() === 'chat') {
+          // Start chat mode
+          startChatMode(personality);
+        } else if (mode === '2' || mode.toLowerCase() === 'auto') {
+          // Start autonomous mode
+          startAutonomousMode(personality);
+        } else {
+          console.log('Invalid mode selected.');
+          rl.close();
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching personality:', error.message);
+      rl.close();
+    }
+  });
+}
+
+async function startChatMode(personality) {
+  console.log('Starting chat mode... Type \'exit\' to end.');
+  
+  const chat = await agent.startOrbofiChat(personality);
+  const promptUser = () => {
+    rl.question('Prompt: ', async (input) => {
+      if (input.toLowerCase() === 'exit') {
+        rl.close();
+        return;
+      }
+      
+      try {
+        const response = await chat.sendMessage(input);
+        console.log(response);
+        promptUser();
+      } catch (error) {
+        console.error('Error in chat:', error.message);
+        promptUser();
+      }
+    });
+  };
+  
+  promptUser();
+}
+
+async function startAutonomousMode(personality) {
+  console.log('Starting autonomous mode...');
+  
+  try {
+    const autonomous = await agent.startOrbofiAutonomousMode(personality, {
+      goal: 'Provide insights about your field of expertise',
+      steps: 3
+    });
+    
+    const result = await autonomous.execute();
+    console.log('Autonomous execution complete:');
+    console.log(result.join('\n'));
+    rl.close();
+  } catch (error) {
+    console.error('Error in autonomous mode:', error.message);
+    rl.close();
+  }
+}
+
+main();
+```
+
+## API Reference
+
+### fetchOrbofiPersonality
+
+```typescript
+/**
+ * Fetches personality data from the Orbofi database
+ * @param name Name of the celebrity/character to fetch
+ * @returns Personality object with description and properties
+ */
+async function fetchOrbofiPersonality(name: string): Promise<Personality>
+```
+
+### startOrbofiChat
+
+```typescript
+/**
+ * Starts an interactive chat session with the personality
+ * @param personality Personality object returned from fetchOrbofiPersonality
+ * @returns Chat object with methods for interaction
+ */
+async function startOrbofiChat(personality: Personality): Promise<OrbofiChat>
+```
+
+### startOrbofiAutonomousMode
+
+```typescript
+/**
+ * Starts autonomous mode with the specified personality
+ * @param personality Personality object returned from fetchOrbofiPersonality
+ * @param options Configuration options for autonomous behavior
+ * @returns Autonomous object with execution methods
+ */
+async function startOrbofiAutonomousMode(
+  personality: Personality, 
+  options: AutonomousOptions
+): Promise<OrbofiAutonomous>
+```
+
+## Data Types
+
+### Personality
+
+```typescript
+interface Personality {
+  id: string;
+  name: string;
+  description: string;
+  traits: {
+    [key: string]: number;
+  };
+  background: string;
+  capabilities: string[];
+  limitations: string[];
+}
+```
+
+### AutonomousOptions
+
+```typescript
+interface AutonomousOptions {
+  goal: string;
+  steps?: number;
+  constraints?: string[];
+  outputFormat?: 'text' | 'json';
+}
+```
+
+## Best Practices
+
+1. **Error Handling**
+   ```typescript
+   try {
+     const personality = await agent.fetchOrbofiPersonality(name);
+   } catch (error) {
+     if (error.message.includes('not found')) {
+       // Handle personality not found
+     } else if (error.message.includes('rate limit')) {
+       // Handle rate limiting
+     }
+   }
+   ```
+
+2. **Personality Validation**
+   ```typescript
+   function isValidPersonality(personality) {
+     return personality && 
+            personality.description && 
+            personality.name;
+   }
+   ```
+
+3. **Response Processing**
+   ```typescript
+   // Process chat responses
+   const response = await chat.sendMessage('Tell me about yourself');
+   const cleanResponse = response
+     .replace(/^\n+/, '')  // Remove leading newlines
+     .replace(/\n+$/, ''); // Remove trailing newlines
+   ```
+
+## Common Issues
+
+1. **Personality Not Found**
+   - Check spelling and try alternative names
+   - Some personalities may not be in the database
+
+2. **API Rate Limiting**
+   - Implement exponential backoff for retries
+   - Cache personality data when possible
+
+3. **Response Quality**
+   - Be specific with prompts for better responses
+   - Use the autonomous mode for structured outputs
+
+## Example Personalities
+
+1. **Historical Figures**
+   - Albert Einstein
+   - Cleopatra
+   - Leonardo da Vinci
+
+2. **Fictional Characters**
+   - Sherlock Holmes
+   - Wonder Woman
+   - Harry Potter
+
+3. **Tech Personalities**
+   - Satoshi Nakamoto
+   - Steve Jobs
+   - Ada Lovelace
