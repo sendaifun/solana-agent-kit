@@ -1,0 +1,17 @@
+{
+  "name": "okx-dex-starter",
+  "version": "1.0.0",
+  "description": "A starter project for using OKX DEX with Solana Agent Kit",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node okx-dex-solana.ts"
+  },
+  "dependencies": {
+    "solana-agent-kit": "^1.3.0",
+    "dotenv": "^16.4.5",
+    "@okx-dex/okx-dex-sdk": "^1.0.11"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
+}

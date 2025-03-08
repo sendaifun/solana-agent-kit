@@ -35,3 +35,4 @@ export * from "./switchboard";
 export * from "./elfa_ai";
 export * from "./fluxbeam";
 export * from "./coingecko";
+export * from "./okx-dex";

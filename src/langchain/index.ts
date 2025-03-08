@@ -35,7 +35,8 @@ export * from "./switchboard";
 export * from "./elfa_ai";
 export * from "./debridge";
 export * from "./fluxbeam";
-
+export * from "./okx-dex";
+  
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,

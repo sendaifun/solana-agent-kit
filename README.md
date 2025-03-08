@@ -669,6 +669,59 @@ const trendingPools = await agent.getTrendingPools("24h");
 console.log("Trending pools:", trendingPools);
 ```
 
+## DEX API Tools
+
+### OKX DEX Integration
+
+The toolkit provides comprehensive integration with OKX DEX for Solana. Here's how to use the DEX API tools:
+
+### Get Supported Tokens
+
+```typescript
+const tokens = await agent.getTokens();
+console.log("Supported tokens:", tokens);
+// Returns list of tokens available on OKX DEX
+```
+
+### Get DEX Quote
+
+```typescript
+const quote = await agent.getQuote(
+  "So11111111111111111111111111111111111111112", // fromTokenAddress (SOL)
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // toTokenAddress (USDC)
+  "1000000000", // amount in base units
+  "0.5" // slippage (optional, default 0.5%)
+);
+console.log("Swap quote:", quote);
+// Returns quote data with price, fees, and slippage, token symbol, decimals
+```
+
+### Execute Token Swap
+
+```typescript
+const swapResult = await agent.executeSwap({
+  fromTokenAddress: "So11111111111111111111111111111111111111112", // SOL
+  toTokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+  amount: "1000000000", // amount in base units
+  autoSlippage: true, // optional, use auto slippage
+  slippage: "0.1", // optional, custom slippage (0.1%)
+  maxAutoSlippageBps: "100" // optional, max auto slippage in basis points
+  userAddress: "signer-public-key" // optional, user wallet address
+});
+console.log("Swap executed:", swapResult);
+```
+
+### Get Chain Data
+
+Note: To use OKX DEX integration, you need to set up the following environment variables: Get OKX API keys from the [OKX Developer Portal] (https://www.okx.com/web3/build/dev-portal)
+- `OKX_API_KEY`
+- `OKX_SECRET_KEY`
+- `OKX_API_PASSPHRASE`
+- `OKX_PROJECT_ID`
+- `RPC_URL`
+- `SOLANA_PRIVATE_KEY`
+- `SOLANA_WALLET_ADDRESS`
+
 ## Examples
 
 ### LangGraph Multi-Agent System

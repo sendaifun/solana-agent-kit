@@ -109,6 +109,11 @@ import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPrice
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
 import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
+import okxDexQuoteAction from "./okx-dex/quote_action";
+import okxDexLiquidityAction from "./okx-dex/liquidity_action";
+import okxDexSwapAction from "./okx-dex/swap_action";
+import okxDexTokensAction from "./okx-dex/tokens_action";
+import okxDexChainDataAction from "./okx-dex/chain_data_action";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -226,6 +231,11 @@ export const ACTIONS = {
   GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
   GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
   GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
+  OKX_DEX_QUOTE_ACTION: okxDexQuoteAction,
+  OKX_DEX_LIQUIDITY_ACTION: okxDexLiquidityAction,
+  OKX_DEX_CHAIN_DATA_ACTION: okxDexChainDataAction,
+  OKX_DEX_SWAP_ACTION: okxDexSwapAction,
+  OKX_DEX_TOKENS_ACTION: okxDexTokensAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

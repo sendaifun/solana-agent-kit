@@ -180,6 +180,7 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
+import { getQuote as getOkxQuote, executeSwap as executeOkxSwapTool } from "../tools/okx-dex";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1276,5 +1277,51 @@ export class SolanaAgentKit {
 
   async getTrendingTokensOnCoingecko() {
     return await getTrendingTokens(this);
+  }
+
+  // OKX DEX Methods
+  /**
+   * Get quote for token swap on OKX DEX
+   * @param fromTokenAddress Source token address
+   * @param toTokenAddress Target token address 
+   * @param amount Amount to swap in base units
+   * @param slippage Slippage tolerance (optional)
+   */
+  async getOkxQuote(
+    fromTokenAddress: string,
+    toTokenAddress: string,
+    amount: string,
+    slippage: string = "0.5"
+  ) {
+    return getOkxQuote(this, fromTokenAddress, toTokenAddress, amount, slippage);
+  }
+
+  /**
+   * Execute token swap on OKX DEX
+   * @param fromTokenAddress Source token address
+   * @param toTokenAddress Target token address
+   * @param amount Amount to swap in base units
+   * @param slippage Slippage tolerance (optional)
+   * @param autoSlippage Whether to use auto slippage
+   * @param maxAutoSlippageBps Max auto slippage in basis points
+   */
+  async executeOkxSwap(
+    fromTokenAddress: string,
+    toTokenAddress: string,
+    amount: string,
+    slippage: string = "0.5",
+    autoSlippage: boolean = false,
+    maxAutoSlippageBps: string = "100",
+    userWalletAddress?: string
+  ) {
+    return executeOkxSwapTool(
+      this,
+      fromTokenAddress,
+      toTokenAddress,
+      amount,
+      slippage,
+      autoSlippage,
+      maxAutoSlippageBps,
+    );
   }
 }

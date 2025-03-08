@@ -20,6 +20,12 @@ export interface Config {
   ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
+  OKX_API_KEY?: string;
+  OKX_SECRET_KEY?: string;
+  OKX_API_PASSPHRASE?: string;
+  OKX_PROJECT_ID?: string;
+  OKX_SOLANA_PRIVATE_KEY?: string;
+  OKX_SOLANA_WALLET_ADDRESS?: string;
 }
 
 export interface Creator {
