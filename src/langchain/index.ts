@@ -36,6 +36,7 @@ export * from "./elfa_ai";
 export * from "./debridge";
 export * from "./fluxbeam";
 
+import { solana } from "@switchboard-xyz/common/lib/networks";
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
@@ -159,6 +160,15 @@ import {
   ElfaAccountSmartStatsTool,
   SolanaFluxbeamCreatePoolTool,
 } from "./index";
+import { SolanaCreateV2TokenTool } from "./token2022/create_v2_token";
+import { SolanaGetClaimWithheldTokensTool } from "./token2022/get_claim_withheld_tokens";
+import { SolanaGetClaimWithheldTokensFromMintTool } from "./token2022/get_claim_withheld_tokens_from_mint";
+import { SolanaGetClaimWithheldTokensToMintTool } from "./token2022/get_claim_withheld_tokens_to_mint";
+import { SolanaMintToAccountTool } from "./token2022/mint_token";
+import { SolanaRevokeAuthorityTool } from "./token2022/revoke_authority";
+import { SolanaSetAuthorityTool } from "./token2022/set_authority";
+import { SolanaSubmitFeeClaimTool } from "./token2022/submit_fee_claim";
+import { SolanaUpdateV2TokenMetadataTool } from "./token2022/update_tokenV2_metadata";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -282,5 +292,14 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new ElfaGetTopMentionsTool(solanaKit),
     new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
+    new SolanaCreateV2TokenTool(solanaKit),
+    new SolanaGetClaimWithheldTokensTool(solanaKit),
+    new SolanaGetClaimWithheldTokensFromMintTool(solanaKit),
+    new SolanaGetClaimWithheldTokensToMintTool(solanaKit),
+    new SolanaMintToAccountTool(solanaKit),
+    new SolanaRevokeAuthorityTool(solanaKit),
+    new SolanaSetAuthorityTool(solanaKit),
+    new SolanaSubmitFeeClaimTool(solanaKit),
+    new SolanaUpdateV2TokenMetadataTool(solanaKit),
   ];
 }

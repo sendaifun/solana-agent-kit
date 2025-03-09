@@ -1,4 +1,11 @@
 import { Connection, PublicKey } from "@solana/web3.js";
+import { SolanaAgentKit } from "../agent";
+import {
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddressSync,
+  getTokenMetadata as getSplTokenMetadata,
+} from "@solana/spl-token";
 
 export async function getTokenMetadata(
   connection: Connection,
@@ -80,4 +87,56 @@ export async function getTokenMetadata(
     sellerFeeBasisPoints,
     creators,
   };
+}
+
+export async function getTokenMintMetadata(
+  agent: SolanaAgentKit,
+  mint: PublicKey,
+  v2: boolean = true,
+) {
+  try {
+    const metadata = await getSplTokenMetadata(
+      agent.connection, // Connection instance
+      mint, // PubKey of the Mint Account
+      "confirmed", // Commitment, can use undefined to use default
+      v2 ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID,
+    );
+    if (metadata !== null) {
+      return metadata;
+    } else {
+      throw Error("Token metadata is null");
+    }
+  } catch (error: any) {
+    throw Error(`failed to get token metadata: ${error}`);
+  }
+}
+
+export async function accountExists(agent: SolanaAgentKit, account: PublicKey) {
+  const acc = await agent.connection
+    .getAccountInfo(account, "confirmed")
+    .catch((e) => {
+      throw Error(`an error occurred: ${e}`);
+    });
+  return !!acc;
+}
+
+/**
+ * Returns the token mints account for a given user
+ * @param owner
+ * @param mint
+ * @param program
+ * @param allowOwnerOffCurve
+ */
+export async function getAssociatedTokenPDA(
+  mint: PublicKey,
+  owner: PublicKey,
+  program = TOKEN_2022_PROGRAM_ID,
+  allowOwnerOffCurve = false,
+) {
+  return getAssociatedTokenAddressSync(
+    mint,
+    owner,
+    allowOwnerOffCurve,
+    program,
+  );
 }
