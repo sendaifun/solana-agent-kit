@@ -4,13 +4,19 @@ import { SolanaAgentKit } from "../../agent";
 
 export class SolanaBalanceOtherTool extends Tool {
   name = "solana_balance_other";
-  description = `Get the balance of a Solana wallet or token account which is different from the agent's wallet.
+  description = `Get the balance of ANOTHER wallet (not your own) or token account on Solana.
 
-  If no tokenAddress is provided, the SOL balance of the wallet will be returned.
+  This tool should be used when checking someone else's wallet balance or another wallet address.
+  For questions like "How much SOL does address X have?" or "What's the USDC balance of wallet Y?".
 
-  Inputs ( input is a JSON string ):
-  walletAddress: string, eg "GDEkQF7UMr7RLv1KQKMtm8E2w3iafxJLtyXu3HVQZnME" (required)
-  tokenAddress: string, eg "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (optional)`;
+  Input for checking SOL balance:
+  {"walletAddress":"GZbQmKYYzwjP3nbdqRWPLn98ipAni9w5eXMGp7bmZbGB"}
+  
+  Input for checking token balance:
+  {"walletAddress":"GZbQmKYYzwjP3nbdqRWPLn98ipAni9w5eXMGp7bmZbGB","tokenAddress":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"}
+  
+  Example: To check someone's SOL balance: {"walletAddress":"GZbQmKYYzwjP3nbdqRWPLn98ipAni9w5eXMGp7bmZbGB"}
+  Example: To check someone's USDC balance: {"walletAddress":"GZbQmKYYzwjP3nbdqRWPLn98ipAni9w5eXMGp7bmZbGB", "tokenAddress":"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"}`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();

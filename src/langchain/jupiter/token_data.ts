@@ -3,10 +3,16 @@ import { SolanaAgentKit } from "../../agent";
 
 export class SolanaTokenDataTool extends Tool {
   name = "solana_token_data";
-  description = `Get the token data for a given token mint address
-
-  Inputs: mintAddress is required.
-  mintAddress: string, eg "So11111111111111111111111111111111111111112" (required)`;
+  description = `Get information about a token using its mint address.
+  
+  Use this tool to find details about a specific token like its name, symbol, and supply.
+  
+  Input should be the token mint address as a quoted JSON string.
+  
+  Example: "So11111111111111111111111111111111111111112"
+  Example: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  
+  Do NOT pass a JSON object, just pass the address as a quoted string.`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();
