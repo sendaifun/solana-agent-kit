@@ -9,7 +9,7 @@ export class SolanaTradeTool extends Tool {
   Inputs ( input is a JSON string ):
   outputMint: string, eg "So11111111111111111111111111111111111111112" or "SENDdRQtYMWaQrBroBrJ2Q53fgVuq95CV9UPGEvpCxa" (required)
   inputAmount: number, eg 1 or 0.01 (required)
-  inputMint?: string, eg "So11111111111111111111111111111111111111112" (optional)
+  inputMint: string, eg "So11111111111111111111111111111111111111112"
   slippageBps?: number, eg 100 (optional)`;
 
   constructor(private solanaKit: SolanaAgentKit) {
