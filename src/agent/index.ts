@@ -170,6 +170,8 @@ import {
   CctpTransferInput,
   TokenTransferInput,
   CreateWrappedTokenInput,
+  CreateJupiterOrderRequest,
+  CancelJupiterOrderRequest,
 } from "../types";
 import {
   DasApiAsset,
@@ -187,7 +189,6 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
-import { Chain, TokenId } from "@wormhole-foundation/sdk/dist/cjs";
 import {
   getQuote as getOkxQuote,
   executeSwap as executeOkxSwapTool,
@@ -195,6 +196,10 @@ import {
   getChainData,
   getLiquidity,
 } from "../tools/okx-dex";
+import { createLimitOrder } from "../tools/jupiter/create_limit_order";
+import { cancelLimitOrders } from "../tools/jupiter/cancel_limit_orders";
+import { getOpenLimitOrders } from "../tools/jupiter/get_open_limit_orders";
+import { getLimitOrderHistory } from "../tools/jupiter/get_limit_order_history";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1389,5 +1394,39 @@ export class SolanaAgentKit {
    */
   async getOkxChainData() {
     return getChainData(this);
+  }
+
+  /**
+   * Create a limit order on Jupiter
+   * @param params Parameters for creating the limit order
+   * @returns Result of the limit order creation
+   */
+  async createJupiterLimitOrder(params: CreateJupiterOrderRequest) {
+    return createLimitOrder(this, params);
+  }
+
+  /**
+   * Cancel limit orders on Jupiter
+   * @param params Parameters for canceling the orders
+   * @returns Result of the order cancellation
+   */
+  async cancelJupiterLimitOrders(params: CancelJupiterOrderRequest) {
+    return cancelLimitOrders(this, params);
+  }
+
+  /**
+   * Get open limit orders on Jupiter
+   * @returns List of open limit orders
+   */
+  async getOpenJupiterLimitOrders() {
+    return getOpenLimitOrders(this);
+  }
+
+  /**
+   * Get limit order history on Jupiter
+   * @returns Limit order history
+   */
+  async getJupiterLimitOrderHistory() {
+    return getLimitOrderHistory(this);
   }
 }

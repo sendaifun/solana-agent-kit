@@ -117,6 +117,10 @@ import getWormholeSupportedChainsAction from "./wormhole/getSupportedChains";
 import cctpTransferAction from "./wormhole/cctpTransfer";
 import createWrappedTokenAction from "./wormhole/createWrappedToken";
 import tokenTransferAction from "./wormhole/tokenTransfer";
+import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
+import createLimitOrderAction from "./jupiter/createLimitOrder";
+import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
+import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -242,6 +246,10 @@ export const ACTIONS = {
   CCTP_TRANSFER_ACTION: cctpTransferAction,
   CREATE_WRAPPED_TOKEN_ACTION: createWrappedTokenAction,
   TOKEN_TRANSFER_ACTION: tokenTransferAction,
+  CREATE_LIMIT_ORDER_ACTION: createLimitOrderAction,
+  CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
+  GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
+  GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

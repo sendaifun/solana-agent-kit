@@ -165,6 +165,12 @@ import {
   CreateWrappedTokenTool,
   GetWormholeSupportedChainsTool,
 } from "./index";
+import {
+  SolanaCancelLimitOrdersTool,
+  SolanaCreateLimitOrderTool,
+  SolanaGetOpenOrdersTool,
+  SolanaGetOrderHistoryTool,
+} from "./jupiter";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -292,5 +298,9 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new TokenTransferTool(solanaKit),
     new CreateWrappedTokenTool(solanaKit),
     new GetWormholeSupportedChainsTool(solanaKit),
+    new SolanaCreateLimitOrderTool(solanaKit),
+    new SolanaCancelLimitOrdersTool(solanaKit),
+    new SolanaGetOpenOrdersTool(solanaKit),
+    new SolanaGetOrderHistoryTool(solanaKit),
   ];
 }
