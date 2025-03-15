@@ -29,7 +29,6 @@ const getAllDomainsTLDsAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent: SolanaAgentKit) => {
     try {
       // Get all domain TLDs

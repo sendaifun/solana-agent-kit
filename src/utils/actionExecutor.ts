@@ -24,7 +24,7 @@ export async function executeAction(
 ): Promise<Record<string, any>> {
   try {
     // Validate input using Zod schema
-    const validatedInput = action.schema.parse(input);
+    const validatedInput = action.schema?.parse(input) || input;
 
     // Execute the action with validated input
     const result = await action.handler(agent, validatedInput);

@@ -142,7 +142,7 @@ import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
 const agent = new SolanaAgentKit(
   "your-wallet-private-key-as-base58",
   "https://api.mainnet-beta.solana.com",
-  "your-openai-api-key"
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
 );
 
 const tools = createSolanaTools(agent);
@@ -267,7 +267,7 @@ import { SolanaAgentKit } from "solana-agent-kit";
 const agent = new SolanaAgentKit(
   "your-wallet-private-key-as-base58",
   "https://api.mainnet-beta.solana.com",
-  "your-openai-api-key"
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
 );
 
 const result = await agent.getTokenPrice("SOL");

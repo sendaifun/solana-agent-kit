@@ -411,7 +411,6 @@ const getCoingeckoTrendingTokensAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent) => {
     try {
       return {

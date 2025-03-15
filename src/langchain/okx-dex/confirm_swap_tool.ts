@@ -15,7 +15,6 @@ export function createOKXDexConfirmSwapTool(agent: SolanaAgentKit) {
   return new DynamicStructuredTool({
     name: "confirm_okx_dex_swap",
     description: "Confirms and executes a pending token swap on OKX DEX",
-    schema: z.object({}),
     func: async () => {
       try {
         if (!pendingSwap) {

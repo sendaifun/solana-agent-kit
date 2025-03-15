@@ -32,7 +32,6 @@ const okxDexTokensAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     const tokens = await getTokens(agent);
     return {

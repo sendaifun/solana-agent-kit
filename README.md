@@ -122,7 +122,7 @@ import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
 const agent = new SolanaAgentKit(
   "your-wallet-private-key-as-base58",
   "https://api.mainnet-beta.solana.com",
-  "your-openai-api-key"
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
 );
 
 // Create LangChain tools

@@ -47,7 +47,7 @@ export interface Action {
   /**
    * Zod schema for input validation
    */
-  schema: z.ZodObject<any>;
+  schema?: z.ZodObject<any>;
 
   /**
    * Function that executes the action

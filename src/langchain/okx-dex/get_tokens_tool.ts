@@ -12,7 +12,6 @@ export function createOKXDexGetTokensTool(agent: SolanaAgentKit) {
   return new DynamicStructuredTool({
     name: "get_okx_dex_tokens",
     description: "Gets a list of all tokens available on OKX DEX",
-    schema: z.object({}),
     func: async () => {
       try {
         const result = await getTokens(agent);

@@ -225,11 +225,13 @@ export class SolanaAgentKit {
     rpc_url: string,
     openai_api_key: string | null,
   );
-  constructor(private_key: string, rpc_url: string, config: Config);
+
+  constructor(private_key: string, rpc_url: string, config?: Config);
+
   constructor(
     private_key: string,
     rpc_url: string,
-    configOrKey: Config | string | null,
+    configOrKey?: Config | string | null,
   ) {
     this.connection = new Connection(
       rpc_url || "https://api.mainnet-beta.solana.com",
@@ -241,7 +243,7 @@ export class SolanaAgentKit {
     if (typeof configOrKey === "string" || configOrKey === null) {
       this.config = { OPENAI_API_KEY: configOrKey || "" };
     } else {
-      this.config = configOrKey;
+      this.config = configOrKey as Config;
     }
   }
 

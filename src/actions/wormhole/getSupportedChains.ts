@@ -93,7 +93,6 @@ export const getWormholeSupportedChainsAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent: SolanaAgentKit) => {
     const response = await agent.getWormholeSupportedChains();
     return { chains: JSON.parse(response) };

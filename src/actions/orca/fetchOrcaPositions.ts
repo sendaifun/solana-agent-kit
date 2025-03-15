@@ -31,7 +31,6 @@ const fetchOrcaPositionsAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent) => {
     try {
       const positions = JSON.parse(await orcaFetchPositions(agent));

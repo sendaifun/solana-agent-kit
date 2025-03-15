@@ -28,7 +28,6 @@ const okxDexChainDataAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     const chains = await getChainData(agent);
     return {

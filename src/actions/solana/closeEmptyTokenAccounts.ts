@@ -39,7 +39,6 @@ const closeEmptyTokenAccountsAction: Action = {
       },
     ],
   ],
-  schema: z.object({}),
   handler: async (agent: SolanaAgentKit) => {
     try {
       const result = await closeEmptyTokenAccounts(agent);

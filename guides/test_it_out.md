@@ -51,8 +51,11 @@ The project includes a test script located at `test/index.ts`. To execute the te
 ```typescript
 import { SolanaAgentKit } from "solana-agent-kit";
 
-const agent = new SolanaAgentKit("your_private_key");
-
+const agent = new SolanaAgentKit(
+  "your-wallet-private-key-as-base58",
+  "https://api.mainnet-beta.solana.com",
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
+);
 const result = await agent.deployToken(
   9, // decimals
 );
@@ -64,7 +67,11 @@ console.log("Token Mint Address:", result.mint.toString());
 ```typescript
 import { SolanaAgentKit } from "solana-agent-kit";
 
-const agent = new SolanaAgentKit("your_private_key");
+const agent = new SolanaAgentKit(
+  "your-wallet-private-key-as-base58",
+  "https://api.mainnet-beta.solana.com",
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
+);
 
 const collection = await agent.deployCollection({
   name: "My NFT Collection",
