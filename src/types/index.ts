@@ -592,3 +592,14 @@ export interface CreateWrappedTokenInput {
   tokenAddress: string;
   network?: "Mainnet" | "Testnet" | "Devnet";
 }
+
+
+export interface HeliusDisplayOptions {
+  showFungible?: boolean;
+  showUnverifiedCollections?: boolean;
+  showCollectionMetadata?: boolean;
+  showGrandTotal?: boolean;
+  showNativeBalance?: boolean;
+  showInscription?: boolean;
+  showZeroBalance?: boolean;
+}

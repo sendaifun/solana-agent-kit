@@ -1,4 +1,4 @@
-import { SolanaAgentKit } from "../../index";
+import { HeliusDisplayOptions, SolanaAgentKit } from "../../index";
 import { PublicKey } from "@solana/web3.js";
 
 /**
@@ -12,6 +12,9 @@ export async function getAssetsByOwner(
   agent: SolanaAgentKit,
   ownerPublicKey: PublicKey,
   limit: number,
+  displayOptions: HeliusDisplayOptions = {
+    showFungible: true,
+  },
 ): Promise<any> {
   try {
     const apiKey = agent.config.HELIUS_API_KEY;
@@ -32,11 +35,9 @@ export async function getAssetsByOwner(
         method: "getAssetsByOwner",
         params: {
           ownerAddress: ownerPublicKey.toString(),
-          page: 3,
-          limit: limit,
-          displayOptions: {
-            showFungible: true,
-          },
+          page: 1,
+          limit,
+          displayOptions,
         },
       }),
     });
