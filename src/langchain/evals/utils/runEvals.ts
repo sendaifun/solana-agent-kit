@@ -135,6 +135,8 @@ export async function runEvals<T>(
           compareArgs(referenceOutputs, llmAnswer) &&
           compareTools(referenceOutputs, llmAnswer);
 
+        // if (!isCorrect) console.log({ llmAnswer }, { referenceOutputs });
+
         const toolEvaluator = async (params: {
           referenceOutputs: { tool: string; response: string };
           llmAnswer: { tool: string; response: string };
