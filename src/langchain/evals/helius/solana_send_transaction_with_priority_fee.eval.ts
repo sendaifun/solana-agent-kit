@@ -1,4 +1,4 @@
-import { runEvals } from "./utils/runEvals";
+import { runEvals } from "../utils/runEvals";
 
 const SEND_TX_PRIORITY_FEE_DATASET = [
   {
