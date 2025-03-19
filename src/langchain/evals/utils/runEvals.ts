@@ -124,12 +124,14 @@ export async function runEvals<T>(
 
         const llmAnswer = {
           tool: toolCall?.name || "",
-          response: typeof llmResponse === "string" ? llmResponse : "{}",
+          response: llmResponse || "{}",
         };
 
         const isCorrect =
           compareArgs(referenceOutputs, llmAnswer) &&
           compareTools(referenceOutputs, llmAnswer);
+
+        // if (!isCorrect) console.log({ llmAnswer }, { referenceOutputs });
 
         const toolEvaluator = async (params: {
           referenceOutputs: { tool: string; response: string };
