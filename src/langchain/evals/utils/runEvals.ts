@@ -108,68 +108,63 @@ export async function runEvals<T>(
           {
             messages: [{ role: "user", content: inputs.query }],
           },
-          {
-            configurable: {
-              thread_id: inputs.query,
-            },
-          },
+        },
+      );
+
+      ls.logOutputs(result);
+
+      const aiMessage = result.messages[1];
+      const toolCall = aiMessage.tool_calls[0];
+      const llmResponse = toolCall?.args?.input;
+      if (!toolCall)
+        console.warn(
+          "No tools called. LLM response: ",
+          result.messages[1].content,
         );
-
-        ls.logOutputs(result);
-
-        const aiMessage = result.messages[1];
-        const toolCall = aiMessage.tool_calls[0];
-        const llmResponse = toolCall?.args?.input;
-        if (!toolCall)
-          console.warn(
-            "No tools called. LLM response: ",
-            result.messages[1].content,
-          );
 
         const llmAnswer: { tool: string; response: string } = {
           tool: toolCall?.name || ("" as String),
           response: typeof llmResponse === "string" ? llmResponse : "{}",
         };
 
-        const isCorrect =
-          compareArgs(referenceOutputs, llmAnswer) &&
-          compareTools(referenceOutputs, llmAnswer);
+      const isCorrect =
+        compareArgs(referenceOutputs, llmAnswer) &&
+        compareTools(referenceOutputs, llmAnswer);
 
-        // if (!isCorrect) console.log({ llmAnswer }, { referenceOutputs });
+      // if (!isCorrect) console.log({ llmAnswer }, { referenceOutputs });
 
-        const toolEvaluator = async (params: {
-          referenceOutputs: { tool: string; response: string };
-          llmAnswer: { tool: string; response: string };
-        }) => {
-          return {
-            key: "correct_tool",
-            score: compareArgs(params.referenceOutputs, params.llmAnswer),
-          };
+      const toolEvaluator = async (params: {
+        referenceOutputs: { tool: string; response: string };
+        llmAnswer: { tool: string; response: string };
+      }) => {
+        return {
+          key: "correct_tool",
+          score: compareArgs(params.referenceOutputs, params.llmAnswer),
         };
-        const argsEvaluator = async (params: {
-          referenceOutputs: { tool: string; response: string };
-          llmAnswer: { tool: string; response: string };
-        }) => {
-          return {
-            key: "correct_args",
-            score: compareArgs(params.referenceOutputs, params.llmAnswer),
-          };
+      };
+      const argsEvaluator = async (params: {
+        referenceOutputs: { tool: string; response: string };
+        llmAnswer: { tool: string; response: string };
+      }) => {
+        return {
+          key: "correct_args",
+          score: compareArgs(params.referenceOutputs, params.llmAnswer),
         };
+      };
 
-        const wrappedToolEvaluator = ls.wrapEvaluator(toolEvaluator);
-        await wrappedToolEvaluator({
-          referenceOutputs,
-          llmAnswer,
-        });
+      const wrappedToolEvaluator = ls.wrapEvaluator(toolEvaluator);
+      await wrappedToolEvaluator({
+        referenceOutputs,
+        llmAnswer,
+      });
 
-        const wrappedArgsEvaluator = ls.wrapEvaluator(argsEvaluator);
-        await wrappedArgsEvaluator({
-          referenceOutputs,
-          llmAnswer,
-        });
+      const wrappedArgsEvaluator = ls.wrapEvaluator(argsEvaluator);
+      await wrappedArgsEvaluator({
+        referenceOutputs,
+        llmAnswer,
+      });
 
-        expect(isCorrect).toBe(true);
-      },
-    );
+      expect(isCorrect).toBe(true);
+    });
   });
 }

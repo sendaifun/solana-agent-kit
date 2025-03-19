@@ -1,0 +1,426 @@
+**Describe the bug**
+
+I added Langsmith evals for all Langchain tools in: https://github.com/sendaifun/solana-agent-kit/pull/331
+
+Most of the evals currently fail. So the agent either does not call the tool when needed or calls it with the wrong arguments.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Checkout `more-agent-evals`
+2. Add langsmith api key and projectId
+3. 'pnpm eval'
+
+**Expected behavior**
+Most of the evals for the tools should fail
+
+**Screenshots**
+
+<img width="1024" alt="Image" src="https://github.com/user-attachments/assets/bdeab712-28f6-46a1-bcf0-c8321fb2decb" />
+
+**Additional context**
+Here are all the tools and their eval results:
+```
+### manifest/solana_batch_order.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### voltr/solana_voltr_withdraw_strategy.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### mayan/solana_cross_chain_swap.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### metaplex/solana_mint_nft.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### adrena/solana_open_perp_trade.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### debridge/solana_debridge_create_bridge_order.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### orca/solana_orca_open_centered_position_with_liquidity.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### jupiter/token_swap.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+- prompt, item 2: 🟢 **Passed**
+
+### lightprotocol/solana_compressed_airdrop.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🔴 **Failed**
+
+### solana/transfer.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+- prompt, item 2: 🔴 **Failed**
+- prompt, item 3: 🟢 **Passed**
+
+### solutiofi/solana_solutiofi_spread_token.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_create_drift_vault.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🔴 **Failed**
+
+### solutiofi/solana_solutiofi_merge_tokens.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### 3land/solana_3land_create_single.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### meteora/meteora_create_dynamic_pool.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### metaplex/solana_deploy_token.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### helius/solana_send_transaction_with_priority_fee.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### adrena/solana_close_perp_trade.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### meteora/meteora_create_dlmm_pool.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### orca/orca_open_single_sided_position.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### tensor/solana_list_nft_for_sale.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### orca/orca_create_single_sided_liquidity_pool.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### debridge/solana_debridge_check_bridge_status.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### squads/transfer_from_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_deposit_into_drift_vault.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### helius/solana_get_all_assets_by_owner.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### raydium/raydium_create_clmm.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_trade_drift_perp_account.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_drift_spot_token_swap.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### solana/balance_other.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### raydium/raydium_create_cpmm.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### flash/solana_flash_open_trade.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_deposit_to_drift_user_account.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_drift_perp_market_funding_rate.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### elfa/elfa_get_top_mentions.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### openbook/solana_openbook_create_market.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_withdraw_from_drift_account.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### gibwork/create_gibwork_task.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### orca/orca_create_clmm.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### jupiter/token_data.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### debridge/solana_debridge_execute_bridge_order.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### sendarcade/rock_paper_scissors.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### tiplink/solana_tiplink.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🔴 **Failed**
+
+### voltr/solana_voltr_deposit_strategy.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### 3land/solana_3land_create_collection.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### pumpfun/pumpfun_token_launch.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### agent/get_info.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🟢 **Passed**
+
+### squads/deposit_to_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### solutiofi/close_solutiofi_accounts.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### agent/create_image.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### squads/create_proposal_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### squads/approve_proposal_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### helius/solana_helius_create_webhook.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### squads/reject_proposal_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### squads/execute_proposal_2by2_multisig.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_drift_vault_info.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### jupiter/stake.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🟢 **Passed**
+- prompt, item 2: 🔴 **Failed**
+
+### metaplex/solana_deploy_collection.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### helius/solana_helius_parse_transaction.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### fluxbeam/fluxbeam_create_pool.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### raydium/raydium_create_amm_v4.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### elfa/elfa_search_mentions_by_keywords.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### alldomains/solana_resolve_all_domains.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🔴 **Failed**
+
+### manifest/solana_manifest_create_market.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### pyth/solana_pyth_fetch_price.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### dexscreener/solana_token_data_by_ticker.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🟢 **Passed**
+
+### alldomains/solana_get_owned_tld_domains.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### drift/solana_request_unstake_from_drift_insurance_fund.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### orca/orca_close_position.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### solana/solana_restake.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### drift/solana_drift_entry_quote_of_perp_trade.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### solana/balance.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🔴 **Failed**
+
+### agent/wallet_address.eval.ts
+- prompt, item 0: 🟢 **Passed**
+- prompt, item 1: 🟢 **Passed**
+
+### lulo/solana_lulo_withdraw.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### switchboard/solana_switchboard_simulate_feed.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### solana/request_funds.eval.ts
+- prompt, item 0: 🔴 **Failed**
+- prompt, item 1: 🟢 **Passed**
+
+### voltr/solana_voltr_get_position_values.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### lulo/solana_lulo_lend.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### manifest/solana_cancel_all_orders.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### allora/solana_allora_get_price_inference.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### squads/create_2by2_multisig.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### helius/solana_delete_helius_webhook.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### jupiter/fetch_price.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### manifest/solana_withdraw_all.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### helius/solana_get_helius_webhook.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_stake_to_drift_insurance_fund.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### alldomains/solana_get_owned_domains.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_create_drift_user_account.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### sns/solana_get_main_domain.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_unstake_from_drift_insurance_fund.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### metaplex/solana_get_assets_by_creator.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### allora/solana_allora_get_inference_by_topic_id.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### sns/solana_register_domain.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### tensor/solana_cancel_nft_listing.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### elfa/elfa_get_smart_mentions.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### rugcheck/solana_fetch_token_report_summary.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### drift/solana_drift_lend_and_borrow_apy.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### sns/solana_get_domain.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### flash/solana_flash_close_trade.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### drift/solana_does_user_have_drift_account.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### elfa/elfa_account_smart_stats.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### debridge/get_supported_chains.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### solana/close_empty_accounts.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### drift/solana_drift_user_account_info.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### allora/solana_allora_get_all_topics.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### sns/solana_resolve_domain.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### orca/solana_orca_fetch_positions.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### elfa/elfa_trending_tokens.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### metaplex/solana_get_asset.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+### lulo/solana_lend_asset.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### elfa/elfa_ping.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### elfa/elfa_api_key_status.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### solana/get_tps.eval.ts
+- prompt, item 0: 🟢 **Passed**
+
+### alldomains/solana_get_all_tlds.eval.ts
+- prompt, item 0: 🔴 **Failed**
+
+---
+
+### Overall Statistics
+- **Test Files**: 68 failed | 51 passed (119 total)
+- **Tests**: 93 failed | 78 passed (171 total)
+- **Start Time**: 12:53:20
+- **Duration**: 105.97s
+```
