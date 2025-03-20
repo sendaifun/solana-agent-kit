@@ -37,12 +37,16 @@ export * from "./debridge";
 export * from "./fluxbeam";
 export * from "./realm-governance";
 
+export * from "./wormhole";
+export * from "./okx-dex";
+
 import type { SolanaAgentKit } from "../agent";
 import {
   SolanaBalanceTool,
   SolanaBalanceOtherTool,
   SolanaTransferTool,
   SolanaDeployTokenTool,
+  SolanaDeployToken2022Tool,
   SolanaDeployCollectionTool,
   SolanaMintNFTTool,
   SolanaTradeTool,
@@ -163,7 +167,18 @@ import {
   SolanaCreateProposalTool,
   SolanaCastVoteTool,
   SolanaGetRealmInfoTool,
+
+  CctpTransferTool,
+  TokenTransferTool,
+  CreateWrappedTokenTool,
+  GetWormholeSupportedChainsTool,
 } from "./index";
+import {
+  SolanaCancelLimitOrdersTool,
+  SolanaCreateLimitOrderTool,
+  SolanaGetOpenOrdersTool,
+  SolanaGetOrderHistoryTool,
+} from "./jupiter";
 
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
@@ -173,6 +188,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaBalanceOtherTool(solanaKit),
     new SolanaTransferTool(solanaKit),
     new SolanaDeployTokenTool(solanaKit),
+    new SolanaDeployToken2022Tool(solanaKit),
     new SolanaDeployCollectionTool(solanaKit),
     new SolanaMintNFTTool(solanaKit),
     new SolanaTradeTool(solanaKit),
@@ -292,5 +308,14 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCreateProposalTool(solanaKit),
     new SolanaCastVoteTool(solanaKit),
     new SolanaGetRealmInfoTool(solanaKit),
+
+    new CctpTransferTool(solanaKit),
+    new TokenTransferTool(solanaKit),
+    new CreateWrappedTokenTool(solanaKit),
+    new GetWormholeSupportedChainsTool(solanaKit),
+    new SolanaCreateLimitOrderTool(solanaKit),
+    new SolanaCancelLimitOrdersTool(solanaKit),
+    new SolanaGetOpenOrdersTool(solanaKit),
+    new SolanaGetOrderHistoryTool(solanaKit),
   ];
 }

@@ -14,7 +14,7 @@ export function createMcpServer(
   options: {
     name: string;
     version: string;
-  }
+  },
 ) {
   // Create MCP server instance
   const server = new McpServer({
@@ -22,65 +22,74 @@ export function createMcpServer(
     version: options.version,
   });
 
+  const registeredActions: string[] = [];
+
   // Convert each action to an MCP tool
-  for (const [key, action] of Object.entries(actions)) {
-      const { result, keys } = zodToMCPShape(action.schema);
-    server.tool(
-      action.name,
-      action.description,
-      result,
-      async (params) => {
-        try {
-          // Execute the action handler with the params directly
-          const result = await action.handler(solanaAgentKit, params);
-          
-          // Format the result as MCP tool response
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(result, null, 2)
-              }
-            ]
-          };
-        } catch (error) {
-          console.error("error", error);
-          // Handle errors in MCP format
-          return {
-            isError: true,
-            content: [
-              {
-                type: "text",
-                text: error instanceof Error ? error.message : "Unknown error occurred"
-              }
-            ]
-          };
-        }
+  for (const [_key, action] of Object.entries(actions)) {
+    const { result } = zodToMCPShape(action.schema);
+
+    server.tool(action.name, action.description, result, async (params) => {
+      try {
+        // Execute the action handler with the params directly
+        const result = await action.handler(solanaAgentKit, params);
+
+        // Format the result as MCP tool response
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        console.error("error", error);
+        // Handle errors in MCP format
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text:
+                error instanceof Error
+                  ? error.message
+                  : "Unknown error occurred",
+            },
+          ],
+        };
       }
-    );
+    });
+
+    registeredActions.push(action.name);
 
     // Add examples as prompts if they exist
     if (action.examples && action.examples.length > 0) {
       server.prompt(
         `${action.name}-examples`,
         {
-          showIndex: z.string().optional().describe("Example index to show (number)")
+          showIndex: z
+            .string()
+            .optional()
+            .describe("Example index to show (number)"),
         },
         (args) => {
-          const showIndex = args.showIndex ? parseInt(args.showIndex) : undefined;
+          const showIndex = args.showIndex
+            ? parseInt(args.showIndex)
+            : undefined;
           const examples = action.examples.flat();
-          const selectedExamples = typeof showIndex === 'number' 
-            ? [examples[showIndex]]
-            : examples;
+          const selectedExamples =
+            typeof showIndex === "number" ? [examples[showIndex]] : examples;
 
           const exampleText = selectedExamples
-            .map((ex, idx) => `
+            .map(
+              (ex, idx) => `
 Example ${idx + 1}:
 Input: ${JSON.stringify(ex.input, null, 2)}
 Output: ${JSON.stringify(ex.output, null, 2)}
 Explanation: ${ex.explanation}
-            `)
-            .join('\n');
+            `,
+            )
+            .join("\n");
 
           return {
             messages: [
@@ -88,12 +97,12 @@ Explanation: ${ex.explanation}
                 role: "user",
                 content: {
                   type: "text",
-                  text: `Examples for ${action.name}:\n${exampleText}`
-                }
-              }
-            ]
+                  text: `Examples for ${action.name}:\n${exampleText}`,
+                },
+              },
+            ],
           };
-        }
+        },
       );
     }
   }
@@ -102,18 +111,18 @@ Explanation: ${ex.explanation}
 }
 /**
  * Helper to start the MCP server with stdio transport
- * 
+ *
  * @param actions - The actions to expose to the MCP server
  * @param solanaAgentKit - The Solana agent kit
  * @param options - The options for the MCP server
  * @returns The MCP server
  * @throws Error if the MCP server fails to start
- * @example 
+ * @example
  * import { ACTIONS } from "./actions";
  * import { startMcpServer } from "./mcpWrapper";
  *
  * const solanaAgentKit = new SolanaAgentKit();
- * 
+ *
  * startMcpServer(ACTIONS, solanaAgentKit, {
  *   name: "solana-actions",
  *   version: "1.0.0"
@@ -125,7 +134,7 @@ export async function startMcpServer(
   options: {
     name: string;
     version: string;
-  }
+  },
 ) {
   try {
     const server = createMcpServer(actions, solanaAgentKit, options);

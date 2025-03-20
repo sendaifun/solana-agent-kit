@@ -9,13 +9,13 @@ let solutiofiClient: SolutioFi | null = null;
  * @param agent The SolanaAgentKit instance
  */
 async function initClient(agent: SolanaAgentKit) {
-  if (!agent.config.SOLUTIOFI_API_KEY) {
+  if (!agent.config?.SOLUTIOFI_API_KEY) {
     throw new Error("SolutioFi API key not found in config");
   }
 
   if (!solutiofiClient) {
     solutiofiClient = new SolutioFi({
-      apiKey: agent.config.SOLUTIOFI_API_KEY,
+      apiKey: agent.config?.SOLUTIOFI_API_KEY,
     });
     await solutiofiClient.authenticate();
   }

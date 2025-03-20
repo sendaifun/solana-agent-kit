@@ -48,17 +48,17 @@ export async function trade(
           `&onlyDirectRoutes=false` +
           `&maxAccounts=64` +
           `&swapMode=ExactIn` +
-          `${agent.config.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config.JUPITER_FEE_BPS}` : ""}`,
+          `${agent.config?.JUPITER_FEE_BPS ? `&platformFeeBps=${agent.config?.JUPITER_FEE_BPS}` : ""}`,
       )
     ).json();
 
     // Get serialized transaction
     let feeAccount;
-    if (agent.config.JUPITER_REFERRAL_ACCOUNT) {
+    if (agent.config?.JUPITER_REFERRAL_ACCOUNT) {
       [feeAccount] = PublicKey.findProgramAddressSync(
         [
           Buffer.from("referral_ata"),
-          new PublicKey(agent.config.JUPITER_REFERRAL_ACCOUNT).toBuffer(),
+          new PublicKey(agent.config?.JUPITER_REFERRAL_ACCOUNT).toBuffer(),
           TOKENS.SOL.toBuffer(),
         ],
         new PublicKey(JUP_REFERRAL_ADDRESS),
@@ -81,7 +81,7 @@ export async function trade(
             priorityLevelWithMaxLamports: {
               maxLamports: 10000000,
               global: false,
-              priorityLevel: agent.config.PRIORITY_LEVEL || "medium",
+              priorityLevel: agent.config?.PRIORITY_LEVEL || "medium",
             },
           },
           feeAccount: feeAccount ? feeAccount.toString() : null,

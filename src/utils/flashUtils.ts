@@ -287,7 +287,7 @@ export function createPerpClient(
 }
 
 export function get_flash_privilege(agent: SolanaAgentKit): Privilege {
-  const FLASH_PRIVILEGE = agent.config.FLASH_PRIVILEGE || "None";
+  const FLASH_PRIVILEGE = agent.config?.FLASH_PRIVILEGE || "None";
 
   switch (FLASH_PRIVILEGE.toLowerCase()) {
     case "referral":

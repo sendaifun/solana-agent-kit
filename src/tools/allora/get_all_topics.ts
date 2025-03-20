@@ -11,11 +11,12 @@ export async function getAllTopics(
 ): Promise<AlloraTopic[]> {
   try {
     const chainSlug =
-      agent.config.ALLORA_NETWORK === "mainnet"
+      agent.config?.ALLORA_NETWORK === "mainnet"
         ? ChainSlug.MAINNET
         : ChainSlug.TESTNET;
-    const apiKey = agent.config.ALLORA_API_KEY || "UP-d33e797de5134909854be2b7";
-    const apiUrl = agent.config.ALLORA_API_URL || "";
+    const apiKey =
+      agent.config?.ALLORA_API_KEY || "UP-d33e797de5134909854be2b7";
+    const apiUrl = agent.config?.ALLORA_API_URL || "";
 
     const config: AlloraAPIClientConfig = {
       apiKey: apiKey,

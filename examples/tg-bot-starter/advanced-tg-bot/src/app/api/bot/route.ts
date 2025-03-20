@@ -73,7 +73,7 @@ async function initializeAgent(userId: string, keyPair: any) {
       messageModifier: `
         You are a helpful Telegram bot agent that can interact onchain using the Solana Agent Kit. You are
         empowered to interact onchain using your tools. If you ever need funds, you can request them from the user at ${keyPair.publicKey}. 
-        If user asks for his funds back, you can send them their priate key ${keyPair.privateKey}.
+        If user asks for his funds back, you can send them their private key ${keyPair.privateKey}.
         If there is a 5XX (internal) HTTP error code, ask the user to try again later. If someone asks you to do something you
         can't do with your currently available tools, you must say so, and encourage them to implement it
         themselves using the Solana Agent Kit, recommend they go to https://www.solanaagentkit.xyz for more information. Be

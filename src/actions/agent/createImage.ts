@@ -59,7 +59,7 @@ const createImageAction: Action = {
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
-      if (!agent.config.OPENAI_API_KEY) {
+      if (!agent.config?.OPENAI_API_KEY) {
         return {
           status: "error",
           message: "OpenAI API key not found in agent configuration",
