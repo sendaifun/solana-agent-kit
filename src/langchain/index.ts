@@ -35,6 +35,8 @@ export * from "./switchboard";
 export * from "./elfa_ai";
 export * from "./debridge";
 export * from "./fluxbeam";
+export * from "./realm-governance";
+
 export * from "./wormhole";
 export * from "./okx-dex";
 
@@ -161,6 +163,11 @@ import {
   ElfaGetTopMentionsTool,
   ElfaAccountSmartStatsTool,
   SolanaFluxbeamCreatePoolTool,
+  SolanaCreateRealmTool,
+  SolanaCreateProposalTool,
+  SolanaCastVoteTool,
+  SolanaGetRealmInfoTool,
+
   CctpTransferTool,
   TokenTransferTool,
   CreateWrappedTokenTool,
@@ -172,6 +179,7 @@ import {
   SolanaGetOpenOrdersTool,
   SolanaGetOrderHistoryTool,
 } from "./jupiter";
+
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -296,6 +304,11 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new ElfaGetTopMentionsTool(solanaKit),
     new ElfaAccountSmartStatsTool(solanaKit),
     new SolanaFluxbeamCreatePoolTool(solanaKit),
+    new SolanaCreateRealmTool(solanaKit),
+    new SolanaCreateProposalTool(solanaKit),
+    new SolanaCastVoteTool(solanaKit),
+    new SolanaGetRealmInfoTool(solanaKit),
+
     new CctpTransferTool(solanaKit),
     new TokenTransferTool(solanaKit),
     new CreateWrappedTokenTool(solanaKit),
