@@ -1,4 +1,4 @@
-import { runEvals } from "../../utils/runEvals";
+import { runEvals } from "../utils/runEvals";
 
 const TOKEN_DETAILED_REPORT_DATASET = [
   {
