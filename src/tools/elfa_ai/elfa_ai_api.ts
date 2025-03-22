@@ -17,7 +17,7 @@ function createAxiosInstance(apiKey: string | undefined): AxiosInstance {
 }
 
 export async function pingElfaAiApi(agent: SolanaAgentKit): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/ping");
   return response.data;
@@ -26,7 +26,7 @@ export async function pingElfaAiApi(agent: SolanaAgentKit): Promise<any> {
 export async function getElfaAiApiKeyStatus(
   agent: SolanaAgentKit,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/key-status");
   return response.data;
@@ -37,7 +37,7 @@ export async function getSmartMentions(
   limit: number = 100,
   offset: number = 0,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/mentions", {
     params: { limit, offset },
@@ -53,7 +53,7 @@ export async function getTopMentionsByTicker(
   pageSize: number = 10,
   includeAccountDetails: boolean = false,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/top-mentions", {
     params: { ticker, timeWindow, page, pageSize, includeAccountDetails },
@@ -69,7 +69,7 @@ export async function searchMentionsByKeywords(
   limit: number = 20,
   cursor?: string,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/mentions/search", {
     params: { keywords, from, to, limit, cursor },
@@ -84,7 +84,7 @@ export async function getTrendingTokensUsingElfaAi(
   pageSize: number = 50,
   minMentions: number = 5,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/trending-tokens", {
     params: { timeWindow, page, pageSize, minMentions },
@@ -96,7 +96,7 @@ export async function getSmartTwitterAccountStats(
   agent: SolanaAgentKit,
   username: string,
 ): Promise<any> {
-  const apiKey = agent.config.ELFA_AI_API_KEY;
+  const apiKey = agent.config?.ELFA_AI_API_KEY;
   const axiosInstance = createAxiosInstance(apiKey);
   const response = await axiosInstance.get("/v1/account/smart-stats", {
     params: { username },

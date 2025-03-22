@@ -86,10 +86,8 @@ const getAssetsByAuthorityAction: Action = {
     before: z.string().optional(),
     after: z.string().optional(),
   }),
-  handler: async (
-    agent: SolanaAgentKit,
-    input: z.infer<typeof getAssetsByAuthorityAction.schema>,
-  ) => {
+  handler: async (agent: SolanaAgentKit, input) => {
+    //@ts-expect-error - unnecessary type mismatch
     const result = await get_assets_by_authority(agent, input);
 
     return {

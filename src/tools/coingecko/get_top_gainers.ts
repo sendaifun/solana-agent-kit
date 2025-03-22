@@ -6,11 +6,11 @@ export async function getTopGainers(
   topCoins: 300 | 500 | 1000 | "all" = "all",
 ) {
   try {
-    if (!agent.config.COINGECKO_PRO_API_KEY) {
+    if (!agent.config?.COINGECKO_PRO_API_KEY) {
       throw new Error("No CoinGecko Pro API key provided");
     }
 
-    const url = `https://pro-api.coingecko.com/api/v3/coins/top_gainers_losers?vs_currency=usd&duration=${duration}&top_coins=${topCoins}&x_cg_pro_api_key=${agent.config.COINGECKO_PRO_API_KEY}`;
+    const url = `https://pro-api.coingecko.com/api/v3/coins/top_gainers_losers?vs_currency=usd&duration=${duration}&top_coins=${topCoins}&x_cg_pro_api_key=${agent.config?.COINGECKO_PRO_API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
 

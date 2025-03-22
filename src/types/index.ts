@@ -2,6 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
 import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
+import { Chain, TokenId } from "@wormhole-foundation/sdk/dist/cjs";
 
 export interface Config {
   OPENAI_API_KEY?: string;
@@ -20,6 +21,12 @@ export interface Config {
   ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
+  OKX_API_KEY?: string;
+  OKX_SECRET_KEY?: string;
+  OKX_API_PASSPHRASE?: string;
+  OKX_PROJECT_ID?: string;
+  OKX_SOLANA_PRIVATE_KEY?: string;
+  OKX_SOLANA_WALLET_ADDRESS?: string;
 }
 
 export interface Creator {
@@ -512,4 +519,158 @@ export interface SplAuthorityInput {
   freezeAuthority?: PublicKey | undefined | null;
   updateAuthority?: PublicKey | undefined;
   isMutable?: boolean;
+}
+
+// OKX DEX Types
+export interface OKXToken {
+  tokenSymbol: string;
+  name: string;
+  address: string;
+  decimal: string;
+  chainId: string;
+  tokenId: string;
+  icon: string;
+}
+
+export interface OKXChain {
+  chainId: string;
+  chainName: string;
+  dexTokenApproveAddress: string;
+}
+
+export interface OKXLiquiditySource {
+  id: string;
+  name: string;
+  logo: string;
+}
+
+export interface OKXQuoteData {
+  fromToken: OKXToken;
+  toToken: OKXToken;
+  fromTokenAmount: string;
+  toTokenAmount: string;
+  exchangeRate: string;
+  priceImpactPercentage: string;
+  fee: string;
+  route: string[];
+}
+
+export interface OKXResponse<T> {
+  code: string;
+  msg: string;
+  data: T[];
+}
+
+export interface OKXSwapResult {
+  transactionId: string;
+  explorerUrl?: string;
+  success: boolean;
+  details?: any;
+}
+
+export interface CctpTransferInput {
+  destinationChain: Chain;
+  transferAmount: string;
+  network?: "Mainnet" | "Testnet" | "Devnet";
+}
+
+export interface TokenTransferInput {
+  destinationChain: Chain;
+  network?: "Mainnet" | "Testnet" | "Devnet";
+  transferAmount: string;
+  tokenAddress?: TokenId;
+}
+
+export interface CreateWrappedTokenInput {
+  destinationChain: Chain;
+  tokenAddress: string;
+  network?: "Mainnet" | "Testnet" | "Devnet";
+}
+
+export interface CreateJupiterOrderRequest {
+  maker?: string;
+  payer?: string;
+  inputMint: string;
+  outputMint: string;
+  params: {
+    makingAmount: string;
+    takingAmount: string;
+    expiredAt?: string | undefined;
+    feeBps?: string;
+  };
+  computeUnitPrice?: string | "auto";
+  referral?: string;
+  wrapAndUnwrapSol?: boolean;
+}
+
+export interface CreateJupiterOrderResponse {
+  order: string;
+  tx: string;
+}
+
+export interface OpenJupiterOrderAccount {
+  borrowMakingAmount: string;
+  createdAt: string;
+  expiredAt: string | null;
+  makingAmount: string;
+  oriMakingAmount: string;
+  oriTakingAmount: string;
+  takingAmount: string;
+  uniqueId: string;
+  updatedAt: string;
+  feeAccount: string;
+  inputMint: string;
+  inputMintReserve: string;
+  inputTokenProgram: string;
+  maker: string;
+  outputMint: string;
+  outputTokenProgram: string;
+  feeBps: number;
+  bump: number;
+}
+
+export interface OpenJupiterOrderResponse {
+  account: OpenJupiterOrderAccount;
+  publicKey: string;
+}
+
+export interface CancelJupiterOrderRequest {
+  maker?: string;
+  computeUnitPrice?: string | "auto";
+  orders?: string[];
+}
+
+export interface CancelJupiterOrderResponse {
+  txs: string[];
+}
+
+export interface JupiterTrade {
+  amount: string;
+  price: string;
+  timestamp: string;
+}
+
+export interface JupiterOrderHistoryItem {
+  userPubkey: string;
+  orderKey: string;
+  inputMint: string;
+  outputMint: string;
+  makingAmount: string;
+  takingAmount: string;
+  remainingMakingAmount: string;
+  remainingTakingAmount: string;
+  expiredAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  status: "Open" | "Completed" | "Cancelled";
+  openTx: string;
+  closeTx: string;
+  programVersion: string;
+  trades: JupiterTrade[];
+}
+
+export interface JupiterOrderHistoryResponse {
+  orders: JupiterOrderHistoryItem[];
+  hasMoreData: boolean;
+  page: number;
 }

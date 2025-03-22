@@ -8,8 +8,13 @@ export class SolanaFetchPriceTool extends Tool {
   name = "solana_fetch_price";
   description = `Fetch the price of a given token in USDC.
 
-  Inputs:
-  - tokenId: string, the mint address of the token, e.g., "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"`;
+  Use this tool to check current token prices or value of tokens.
+  
+  Input should be the token mint address as a quoted JSON string.
+  
+  Example: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN"
+  
+  Do NOT pass a JSON object, just pass the address as a quoted string.`;
 
   constructor(private solanaKit: SolanaAgentKit) {
     super();

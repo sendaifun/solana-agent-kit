@@ -95,7 +95,7 @@ export async function analyzeToolTokens(
 
     Object.keys(ACTIONS).forEach((toolName) => {
       toolMap.set(toolName, {
-        action: ACTIONS[toolName as keyof typeof ACTIONS],
+        action: ACTIONS[toolName as keyof typeof ACTIONS] as Action,
         langchain: undefined,
         vercel: vercelTools[toolName as keyof typeof ACTIONS],
       });

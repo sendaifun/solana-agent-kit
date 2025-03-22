@@ -96,8 +96,7 @@ export async function initClients(
     driftClient.provider,
   );
   const vaultClient = new VaultClient({
-    // @ts-expect-error - type mismatch due to different dep versions
-    driftClient,
+    driftClient: driftClient,
     // @ts-expect-error - type mismatch due to different dep versions
     program: vaultProgram,
     cliMode: false,

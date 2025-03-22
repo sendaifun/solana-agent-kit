@@ -51,14 +51,10 @@ const getTokenDataAction: Action = {
       },
     ],
   ],
-  schema: z
-    .object({
-      address: z.string().optional().describe("The token's mint address"),
-      ticker: z.string().optional().describe("The token's ticker symbol"),
-    })
-    .refine((data) => data.address || data.ticker, {
-      message: "Either address or ticker must be provided",
-    }),
+  schema: z.object({
+    address: z.string().optional().describe("The token's mint address"),
+    ticker: z.string().optional().describe("The token's ticker symbol"),
+  }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       let tokenData: JupiterTokenData | undefined;

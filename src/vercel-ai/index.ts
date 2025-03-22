@@ -2,6 +2,7 @@ import { tool, type CoreTool } from "ai";
 import { SolanaAgentKit } from "../agent";
 import { executeAction } from "../utils/actionExecutor";
 import { ACTIONS } from "../actions";
+import { Action } from "../types";
 
 export function createSolanaTools(
   solanaAgentKit: SolanaAgentKit,
@@ -10,7 +11,7 @@ export function createSolanaTools(
   const actionKeys = Object.keys(ACTIONS);
 
   for (const key of actionKeys) {
-    const action = ACTIONS[key as keyof typeof ACTIONS];
+    const action = ACTIONS[key as keyof typeof ACTIONS] as Action;
     tools[key] = tool({
       // @ts-expect-error Value matches type however TS still shows error
       id: action.name,

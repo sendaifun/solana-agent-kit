@@ -1,12 +1,12 @@
 import tokenBalancesAction from "./tokenBalances";
 import deployTokenAction from "./metaplex/deployToken";
+import deployToken2022Action from "./metaplex/deployToken2022";
 import balanceAction from "./solana/balance";
 import transferAction from "./solana/transfer";
 import deployCollectionAction from "./metaplex/deployCollection";
 import mintNFTAction from "./metaplex/mintNFT";
 import tradeAction from "./jupiter/trade";
 import requestFundsAction from "./solana/requestFunds";
-import resolveDomainAction from "./sns/registerDomain";
 import getTokenDataAction from "./jupiter/getTokenData";
 import getTPSAction from "./solana/getTPS";
 import fetchPriceAction from "./jupiter/fetchPrice";
@@ -109,19 +109,32 @@ import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPrice
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
 import getCoingeckoTrendingPoolsAction from "./coingecko/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/getCoingeckoTrendingTokens";
+import okxDexQuoteAction from "./okx-dex/quote_action";
+import okxDexLiquidityAction from "./okx-dex/liquidity_action";
+import okxDexSwapAction from "./okx-dex/swap_action";
+import okxDexTokensAction from "./okx-dex/tokens_action";
+import okxDexChainDataAction from "./okx-dex/chain_data_action";
+import getWormholeSupportedChainsAction from "./wormhole/getSupportedChains";
+import cctpTransferAction from "./wormhole/cctpTransfer";
+import createWrappedTokenAction from "./wormhole/createWrappedToken";
+import tokenTransferAction from "./wormhole/tokenTransfer";
+import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
+import createLimitOrderAction from "./jupiter/createLimitOrder";
+import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
+import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
   TOKEN_BALANCES_ACTION: tokenBalancesAction,
   DEPLOY_TOKEN_ACTION: deployTokenAction,
+  DEPLOY_TOKEN2022_ACTION: deployToken2022Action,
   BALANCE_ACTION: balanceAction,
   TRANSFER_ACTION: transferAction,
   DEPLOY_COLLECTION_ACTION: deployCollectionAction,
   MINT_NFT_ACTION: mintNFTAction,
   TRADE_ACTION: tradeAction,
   REQUEST_FUNDS_ACTION: requestFundsAction,
-  RESOLVE_DOMAIN_ACTION: resolveDomainAction,
   GET_TOKEN_DATA_ACTION: getTokenDataAction,
   GET_TPS_ACTION: getTPSAction,
   FETCH_PRICE_ACTION: fetchPriceAction,
@@ -226,6 +239,19 @@ export const ACTIONS = {
   GET_COINGECKO_TOP_GAINERS_ACTION: getCoingeckoTopGainersAction,
   GET_COINGECKO_TRENDING_POOLS_ACTION: getCoingeckoTrendingPoolsAction,
   GET_COINGECKO_TRENDING_TOKENS_ACTION: getCoingeckoTrendingTokensAction,
+  OKX_DEX_QUOTE_ACTION: okxDexQuoteAction,
+  OKX_DEX_LIQUIDITY_ACTION: okxDexLiquidityAction,
+  OKX_DEX_CHAIN_DATA_ACTION: okxDexChainDataAction,
+  OKX_DEX_SWAP_ACTION: okxDexSwapAction,
+  OKX_DEX_TOKENS_ACTION: okxDexTokensAction,
+  GET_WORMHOLE_SUPPORTED_CHAINS_ACTION: getWormholeSupportedChainsAction,
+  CCTP_TRANSFER_ACTION: cctpTransferAction,
+  CREATE_WRAPPED_TOKEN_ACTION: createWrappedTokenAction,
+  TOKEN_TRANSFER_ACTION: tokenTransferAction,
+  CREATE_LIMIT_ORDER_ACTION: createLimitOrderAction,
+  CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
+  GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
+  GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

@@ -11,6 +11,7 @@ import { DEFAULT_OPTIONS } from "../constants";
 import {
   deploy_collection,
   deploy_token,
+  deploy_token2022,
   get_balance,
   get_balance_other,
   getTPS,
@@ -141,6 +142,10 @@ import {
   getTopGainers,
   getTrendingPools,
   getTrendingTokens,
+  getWormholeSupportedChains,
+  tokenTransfer,
+  cctpTransfer,
+  createWrappedToken,
 } from "../tools";
 import {
   Config,
@@ -163,6 +168,11 @@ import {
   deBridgeOrderStatusResponse,
   deBridgeTokensInfoResponse,
   SplAuthorityInput,
+  CctpTransferInput,
+  TokenTransferInput,
+  CreateWrappedTokenInput,
+  CreateJupiterOrderRequest,
+  CancelJupiterOrderRequest,
 } from "../types";
 import {
   DasApiAsset,
@@ -180,6 +190,17 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
+import {
+  getQuote as getOkxQuote,
+  executeSwap as executeOkxSwapTool,
+  getTokens,
+  getChainData,
+  getLiquidity,
+} from "../tools/okx-dex";
+import { createLimitOrder } from "../tools/jupiter/create_limit_order";
+import { cancelLimitOrders } from "../tools/jupiter/cancel_limit_orders";
+import { getOpenLimitOrders } from "../tools/jupiter/get_open_limit_orders";
+import { getLimitOrderHistory } from "../tools/jupiter/get_limit_order_history";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -195,7 +216,7 @@ export class SolanaAgentKit {
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
-  public config: Config;
+  public config?: Config;
 
   /**
    * @deprecated Using openai_api_key directly in constructor is deprecated.
@@ -210,11 +231,13 @@ export class SolanaAgentKit {
     rpc_url: string,
     openai_api_key: string | null,
   );
-  constructor(private_key: string, rpc_url: string, config: Config);
+
+  constructor(private_key: string, rpc_url: string, config?: Config);
+
   constructor(
     private_key: string,
     rpc_url: string,
-    configOrKey: Config | string | null,
+    configOrKey?: Config | string | null,
   ) {
     this.connection = new Connection(
       rpc_url || "https://api.mainnet-beta.solana.com",
@@ -226,7 +249,7 @@ export class SolanaAgentKit {
     if (typeof configOrKey === "string" || configOrKey === null) {
       this.config = { OPENAI_API_KEY: configOrKey || "" };
     } else {
-      this.config = configOrKey;
+      this.config = configOrKey as Config;
     }
   }
 
@@ -252,6 +275,16 @@ export class SolanaAgentKit {
       authority,
       initialSupply,
     );
+  }
+
+  async deployToken2022(
+    name: string,
+    uri: string,
+    symbol: string,
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    initialSupply?: number,
+  ): Promise<{ mint: PublicKey }> {
+    return deploy_token2022(this, name, uri, symbol, decimals, initialSupply);
   }
 
   async deployCollection(
@@ -1276,5 +1309,137 @@ export class SolanaAgentKit {
 
   async getTrendingTokensOnCoingecko() {
     return await getTrendingTokens(this);
+  }
+
+  // wormhole
+
+  async getWormholeSupportedChains() {
+    return await getWormholeSupportedChains();
+  }
+
+  async cctpTransfer(input: CctpTransferInput) {
+    return await cctpTransfer(input);
+  }
+
+  async tokenTransfer(input: TokenTransferInput) {
+    return await tokenTransfer(input);
+  }
+
+  async createWrappedToken(input: CreateWrappedTokenInput) {
+    return await createWrappedToken(input);
+  }
+
+  // OKX DEX Methods
+  /**
+   * Get quote for token swap on OKX DEX
+   * @param fromTokenAddress Source token address
+   * @param toTokenAddress Target token address
+   * @param amount Amount to swap in base units
+   * @param slippage Slippage tolerance as a decimal (default: 0.5%)
+   * @returns Quote information
+   */
+  async getOkxQuote(
+    fromTokenAddress: string,
+    toTokenAddress: string,
+    amount: string,
+    slippage: string = "0.5",
+  ) {
+    return getOkxQuote(
+      this,
+      fromTokenAddress,
+      toTokenAddress,
+      amount,
+      slippage,
+    );
+  }
+
+  /**
+   * Execute token swap on OKX DEX
+   * @param fromTokenAddress Source token address
+   * @param toTokenAddress Target token address
+   * @param amount Amount to swap in base units
+   * @param slippage Slippage tolerance as a decimal (default: 0.5%)
+   * @param autoSlippage Use auto slippage (default: false)
+   * @param maxAutoSlippageBps Maximum auto slippage in basis points (default: 100 = 1%)
+   * @param userWalletAddress Optional wallet address to use (defaults to agent's wallet)
+   * @returns Swap result with transaction ID
+   */
+  async executeOkxSwap(
+    fromTokenAddress: string,
+    toTokenAddress: string,
+    amount: string,
+    slippage: string = "0.5",
+    autoSlippage: boolean = false,
+    maxAutoSlippageBps: string = "100",
+    userWalletAddress?: string,
+  ) {
+    return executeOkxSwapTool(
+      this,
+      fromTokenAddress,
+      toTokenAddress,
+      amount,
+      slippage,
+      autoSlippage,
+      maxAutoSlippageBps,
+      userWalletAddress,
+    );
+  }
+  /**
+   * Get list of tokens supported by OKX DEX
+   * @returns List of supported tokens
+   */
+  async getOkxTokens() {
+    return getTokens(this);
+  }
+
+  /**
+   * Get liquidity information from OKX DEX
+   * @param chainId Chain ID to query liquidity for
+   * @returns Liquidity data
+   */
+  async getOkxLiquidity(chainId: string) {
+    return getLiquidity(this, chainId);
+  }
+
+  /**
+   * Get chain data from OKX DEX
+   * @returns Chain data
+   */
+  async getOkxChainData() {
+    return getChainData(this);
+  }
+
+  /**
+   * Create a limit order on Jupiter
+   * @param params Parameters for creating the limit order
+   * @returns Result of the limit order creation
+   */
+  async createJupiterLimitOrder(params: CreateJupiterOrderRequest) {
+    return createLimitOrder(this, params);
+  }
+
+  /**
+   * Cancel limit orders on Jupiter
+   * @param params Parameters for canceling the orders
+   * @returns Result of the order cancellation
+   */
+  async cancelJupiterLimitOrders(params: CancelJupiterOrderRequest) {
+    return cancelLimitOrders(this, params);
+  }
+
+  /**
+   * Get open limit orders on Jupiter
+   * @returns List of open limit orders
+   */
+  async getOpenJupiterLimitOrders() {
+    return getOpenLimitOrders(this);
+  }
+
+  /**
+   * Get limit order history on Jupiter
+   * @returns Limit order history
+   */
+  async getJupiterLimitOrderHistory() {
+    return getLimitOrderHistory(this);
   }
 }

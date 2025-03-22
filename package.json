@@ -1,6 +1,6 @@
 {
   "name": "solana-agent-kit",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "description": "connect any ai agents to solana protocols",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "tool-summary": "tsx src/utils/analyzeTools.ts",
     "tool-summary:langchain": "tsx src/utils/analyzeTools.ts --langchain",
-    "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts"
+    "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts",
+    "eval": "vitest run --config ls.vitest.config.ts"
   },
   "repository": {
     "type": "git",
@@ -42,8 +43,8 @@
     "@bonfida/spl-name-service": "^3.0.7",
     "@cks-systems/manifest-sdk": "0.1.59",
     "@coral-xyz/anchor": "0.29",
-    "@drift-labs/sdk": "2.109.0-beta.11",
-    "@drift-labs/vaults-sdk": "^0.3.29",
+    "@drift-labs/sdk": "2.110.0-beta.13",
+    "@drift-labs/vaults-sdk": "^0.4.10",
     "@langchain/core": "^0.3.26",
     "@langchain/groq": "^0.1.2",
     "@langchain/langgraph": "^0.2.36",
@@ -64,6 +65,7 @@
     "@meteora-ag/alpha-vault": "^1.1.7",
     "@meteora-ag/dlmm": "^1.3.0",
     "@modelcontextprotocol/sdk": "^1.5.0",
+    "@okx-dex/okx-dex-sdk": "^1.0.11",
     "@onsol/tldparser": "^0.6.7",
     "@openzeppelin/contracts": "^5.2.0",
     "@orca-so/common-sdk": "0.6.4",
@@ -79,6 +81,7 @@
     "@tensor-oss/tensorswap-sdk": "^4.5.0",
     "@tiplink/api": "^0.3.1",
     "@voltr/vault-sdk": "^0.1.1",
+    "@wormhole-foundation/sdk": "^1.13.1",
     "ai": "^4.0.22",
     "axios": "^1.7.9",
     "bn.js": "^5.2.1",
@@ -90,6 +93,7 @@
     "flash-sdk": "^2.24.3",
     "form-data": "^4.0.1",
     "langchain": "^0.3.8",
+    "langsmith": "^0.3.7",
     "openai": "^4.77.0",
     "tiktoken": "^1.0.18",
     "typedoc": "^0.27.6",
@@ -108,7 +112,10 @@
     "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.5"
   },
   "packageManager": "pnpm@9.15.3"
 }

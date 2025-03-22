@@ -38,7 +38,7 @@ const getInfoAction: Action = {
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
-      if (!agent.config.PERPLEXITY_API_KEY) {
+      if (!agent.config?.PERPLEXITY_API_KEY) {
         return {
           status: "error",
           message: "Perplexity API key not found in agent configuration",
