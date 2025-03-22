@@ -3,6 +3,12 @@ import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
 import { AlloraInference, AlloraTopic } from "@alloralabs/allora-sdk";
 import { Chain, TokenId } from "@wormhole-foundation/sdk/dist/cjs";
+import {
+  AccountParserInterface,
+  EventParserInterface,
+  InstructionParserInterface,
+  ParserOutput,
+} from "@solanafm/explorer-kit";
 
 export interface Config {
   OPENAI_API_KEY?: string;
@@ -673,4 +679,16 @@ export interface JupiterOrderHistoryResponse {
   orders: JupiterOrderHistoryItem[];
   hasMoreData: boolean;
   page: number;
+}
+
+export interface InstructionParserResponse {
+  name: string;
+  layout: InstructionParserInterface["instructionsLayout"];
+  data: ParserOutput;
+}
+
+export interface AccountParserResponse {
+  name: string;
+  layout: AccountParserInterface["accountLayouts"];
+  data: ParserOutput;
 }

@@ -782,6 +782,28 @@ const swapResult = await agent.executeSwap({
 console.log("Swap executed:", swapResult);
 ```
 
+### Parse Instruction Data
+
+```typescript
+const parsedData = await agent.parseInstruction(
+  "<programId>",
+  "<instructionData>" // base64
+)
+
+console.log("parsed data:", parsedData)
+```
+
+### Parse Instruction Data
+
+```typescript
+const parsedData = await agent.parseAccount(
+  "<programId>",
+  "<accountData>" // base64
+)
+
+console.log("parsed data:", parsedData)
+```
+
 ### Get Chain Data
 
 Note: To use OKX DEX integration, you need to set up the following environment variables: Get OKX API keys from the [OKX Developer Portal] (https://www.okx.com/web3/build/dev-portal)

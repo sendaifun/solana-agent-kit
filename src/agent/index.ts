@@ -146,6 +146,8 @@ import {
   tokenTransfer,
   cctpTransfer,
   createWrappedToken,
+  parse_instruction,
+  parse_account,
 } from "../tools";
 import {
   Config,
@@ -173,6 +175,8 @@ import {
   CreateWrappedTokenInput,
   CreateJupiterOrderRequest,
   CancelJupiterOrderRequest,
+  InstructionParserResponse,
+  AccountParserResponse,
 } from "../types";
 import {
   DasApiAsset,
@@ -412,6 +416,20 @@ export class SolanaAgentKit {
       agent: this,
       ...args,
     });
+  }
+
+  async parseInstruction(
+    program_id: string,
+    instruction_data: string,
+  ): Promise<InstructionParserResponse> {
+    return parse_instruction(program_id, instruction_data);
+  }
+
+  async parseAccount(
+    program_id: string,
+    account_data: string,
+  ): Promise<AccountParserResponse> {
+    return parse_account(program_id, account_data);
   }
 
   async lendAssets(amount: number): Promise<string> {

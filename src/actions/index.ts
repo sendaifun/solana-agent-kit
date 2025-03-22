@@ -122,6 +122,8 @@ import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
 import createLimitOrderAction from "./jupiter/createLimitOrder";
 import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
 import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
+import parseAccountAction from "./solanafm/parseAccount";
+import parseInstructionAction from "./solanafm/parseInstruction";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -252,6 +254,8 @@ export const ACTIONS = {
   CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
   GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
   GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
+  PARSE_ACCOUNT_ACTION: parseAccountAction,
+  PARSE_INSTRUCTION_ACTION: parseInstructionAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

@@ -37,6 +37,7 @@ export * from "./debridge";
 export * from "./fluxbeam";
 export * from "./wormhole";
 export * from "./okx-dex";
+export * from "./solanafm";
 
 import type { SolanaAgentKit } from "../agent";
 import {
@@ -165,6 +166,8 @@ import {
   TokenTransferTool,
   CreateWrappedTokenTool,
   GetWormholeSupportedChainsTool,
+  SolanaParseAccountTool,
+  SolanaParseInstructionTool,
 } from "./index";
 import {
   SolanaCancelLimitOrdersTool,
@@ -304,5 +307,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaCancelLimitOrdersTool(solanaKit),
     new SolanaGetOpenOrdersTool(solanaKit),
     new SolanaGetOrderHistoryTool(solanaKit),
+    new SolanaParseAccountTool(solanaKit),
+    new SolanaParseInstructionTool(solanaKit),
   ];
 }
