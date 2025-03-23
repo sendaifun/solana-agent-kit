@@ -1,7 +1,7 @@
 import { Action } from "../../types/action";
 import { SolanaAgentKit } from "../../agent";
 import { z } from "zod";
-import { stakeForToken, stakeWithJup } from "../../tools";
+import { stakeForToken } from "../../tools";
 
 const stakeForTokenAction: Action = {
   name: "STAKE_FOR_TOKEN",
