@@ -316,6 +316,15 @@ const signature = await agent.stake(
 );
 ```
 
+### Stake SOL for a token
+
+```typescript
+const signature = await agent.stakeForToken(
+  "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v", // token to stake SOL for
+  1 // amount in SOL to stake
+);
+```
+
 ### Stake SOL on Solayer
 
 ```typescript
