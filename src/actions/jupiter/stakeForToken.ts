@@ -11,7 +11,8 @@ const stakeForTokenAction: Action = {
     "jup staking",
     "stake with jup",
     "liquid staking",
-    "get jupsol",
+    "stake for token",
+    "stake for token with jup",
   ],
   description:
     "Stake SOL tokens with Jupiter's liquid staking protocol to receive specified token",
