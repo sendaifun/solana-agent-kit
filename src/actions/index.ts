@@ -123,6 +123,7 @@ import createLimitOrderAction from "./jupiter/createLimitOrder";
 import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
 import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
 import stakeForTokenAction from "./jupiter/stakeForToken";
+import getStakingYieldsAction from "./kamino/getStakingYields";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -254,6 +255,7 @@ export const ACTIONS = {
   CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
   GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
   GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
+  GET_STAKING_YIELDS_ACTION: getStakingYieldsAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

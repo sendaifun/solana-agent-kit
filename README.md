@@ -749,6 +749,13 @@ const trendingPools = await agent.getTrendingPools("24h");
 console.log("Trending pools:", trendingPools);
 ```
 
+### Get Staking Yields
+
+```typescript
+const stakingYields = await agent.getKaminoStakingYields();
+console.log("Staking yields:", stakingYields);
+```
+
 ## DEX API Tools
 
 ### OKX DEX Integration
