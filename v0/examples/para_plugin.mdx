@@ -1,0 +1,484 @@
+---
+title: 'Para Plugin Integration with Solana Agent Kit'
+description: 'Learn how to integrate Para wallet management plugin with Solana Agent Kit'
+---
+
+This documentation provides a comprehensive guide for integrating the Para wallet management plugin with Solana Agent Kit v2. Para offers advanced wallet management features that can be seamlessly incorporated into your Solana-powered applications.
+
+## Overview
+
+Para is a wallet management solution that provides:
+
+- Non-custodial wallet creation and management
+- Smart wallet capabilities
+- Transaction batching and management
+- Multi-chain support
+- Embedded wallet experiences
+
+When integrated with Solana Agent Kit, Para enables your applications to create and manage wallets without requiring users to install browser extensions or manage private keys.
+
+## Prerequisites
+
+Before getting started, ensure you have:
+
+- Node.js 16.x or higher
+- pnpm or bun package manager
+- Solana development environment
+- Para API keys (sign up at [Para](https://getpara.com))
+- OpenAI API key (optional, for AI features)
+
+## Installation
+
+1. Set up the Para plugin in your project:
+
+```bash
+# Install the Para plugins
+npm install @getpara/plugin-para-server @getpara/plugin-para-web
+# or with pnpm
+pnpm add @getpara/plugin-para-server @getpara/plugin-para-web
+# or with yarn
+yarn add @getpara/plugin-para-server @getpara/plugin-para-web
+```
+
+2. Configure environment variables:
+
+```env
+# Server-side variables
+PARA_API_KEY=your_para_api_key
+PARA_ENV=BETA  # or PROD for production
+RPC_URL=your_solana_rpc_url
+SOLANA_PRIVATE_KEY=your_solana_private_key
+
+# Client-side variables
+NEXT_PUBLIC_PARA_API_KEY=your_para_api_key
+NEXT_PUBLIC_PARA_ENV=BETA  # or PROD for production
+```
+
+## Integration Steps
+
+### Server-Side Integration
+
+1. Create a server-side Para plugin integration:
+
+```typescript
+// lib/solana-server.ts
+import { SolanaAgentKit } from "solana-agent-kit";
+import ParaServerPlugin from "@getpara/plugin-para-server";
+
+// Initialize Solana Agent Kit
+const solanaAgent = new SolanaAgentKit({
+  privateKey: process.env.SOLANA_PRIVATE_KEY!,
+  rpcUrl: process.env.RPC_URL!,
+});
+
+// Add Para plugin
+export const solanaAgentWithPara = solanaAgent.use(
+  ParaServerPlugin({
+    apiKey: process.env.PARA_API_KEY!,
+    environment: process.env.PARA_ENV as "BETA" | "PROD",
+  })
+);
+```
+
+2. Create API endpoints for Para operations:
+
+```typescript
+// app/api/para/create-wallet/route.ts
+import { NextResponse } from "next/server";
+import { solanaAgentWithPara } from "@/lib/solana-server";
+
+export async function POST(req: Request) {
+  try {
+    const { email } = await req.json();
+    
+    // Create a new Para wallet
+    const wallet = await solanaAgentWithPara.methods.createParaWallet({
+      email,
+    });
+    
+    return NextResponse.json({ success: true, wallet });
+  } catch (error: any) {
+    console.error("Error creating Para wallet:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Client-Side Integration
+
+1. Create a client-side Para plugin integration:
+
+```typescript
+// lib/solana-client.ts
+import { SolanaAgentKit } from "solana-agent-kit";
+import ParaWebPlugin from "@getpara/plugin-para-web";
+
+// Initialize Solana Agent Kit (minimal client config)
+const solanaAgent = new SolanaAgentKit({
+  publicKey: "dummy", // Not used for client, but required
+});
+
+// Add Para plugin
+export const solanaAgentWithPara = solanaAgent.use(
+  ParaWebPlugin({
+    apiKey: process.env.NEXT_PUBLIC_PARA_API_KEY!,
+    environment: process.env.NEXT_PUBLIC_PARA_ENV as "BETA" | "PROD",
+  })
+);
+
+// Export Para instance for direct use
+export const para = solanaAgentWithPara.methods.getParaInstance();
+```
+
+2. Create React components for wallet management:
+
+```tsx
+// components/ParaWalletManager.tsx
+import { useState } from "react";
+import { para } from "@/lib/solana-client";
+
+export default function ParaWalletManager() {
+  const [email, setEmail] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const createWallet = async () => {
+    if (!email) return;
+    
+    setLoading(true);
+    try {
+      // Call the API endpoint
+      const response = await fetch("/api/para/create-wallet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success && data.wallet) {
+        setWalletAddress(data.wallet.address);
+      }
+    } catch (error) {
+      console.error("Error creating wallet:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <div className="p-4 border rounded-lg">
+      <h2 className="text-lg font-bold mb-4">Para Wallet Management</h2>
+      
+      <div className="mb-4">
+        <label className="block mb-2">Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border rounded"
+          placeholder="user@example.com"
+        />
+      </div>
+      
+      <button
+        onClick={createWallet}
+        disabled={loading || !email}
+        className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      >
+        {loading ? "Creating..." : "Create Wallet"}
+      </button>
+      
+      {walletAddress && (
+        <div className="mt-4 p-2 bg-gray-100 rounded">
+          <p className="font-bold">Wallet Address:</p>
+          <p className="break-all">{walletAddress}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Key Features and Methods
+
+### Wallet Creation
+
+```typescript
+// Create a new Para wallet
+const wallet = await solanaAgentWithPara.methods.createParaWallet({
+  email: "user@example.com",
+  // Optional parameters
+  externalId: "custom-user-id",
+  metadata: { customData: "value" },
+});
+```
+
+### Wallet Authentication
+
+```typescript
+// Authenticate a user with their Para wallet
+const authResult = await solanaAgentWithPara.methods.authenticateParaWallet({
+  email: "user@example.com",
+});
+
+// Get auth link that was sent to the user's email
+const authLink = authResult.authLink;
+```
+
+### Sending Transactions
+
+```typescript
+// Send SOL using Para wallet
+const tx = await solanaAgentWithPara.methods.sendSolFromParaWallet({
+  walletId: "para-wallet-id",
+  recipient: "recipient-address",
+  amount: 0.1, // SOL amount
+});
+```
+
+### Token Management
+
+```typescript
+// Send tokens using Para wallet
+const tx = await solanaAgentWithPara.methods.sendTokenFromParaWallet({
+  walletId: "para-wallet-id",
+  tokenMint: "token-mint-address",
+  recipient: "recipient-address",
+  amount: "10", // Token amount as string
+});
+```
+
+### Wallet Information
+
+```typescript
+// Get wallet details
+const wallet = await solanaAgentWithPara.methods.getParaWallet({
+  walletId: "para-wallet-id",
+});
+
+// Get all wallets for an email
+const wallets = await solanaAgentWithPara.methods.getParaWalletsByEmail({
+  email: "user@example.com",
+});
+```
+
+## Client-Side Wallet Experience
+
+Para provides a client-side wallet experience that can be embedded directly in your application:
+
+```tsx
+import { para } from "@/lib/solana-client";
+import { useEffect } from "react";
+
+export default function ParaWalletExperience() {
+  useEffect(() => {
+    // Initialize the Para wallet experience
+    para.init({
+      apiKey: process.env.NEXT_PUBLIC_PARA_API_KEY!,
+      environment: process.env.NEXT_PUBLIC_PARA_ENV as "BETA" | "PROD",
+    });
+    
+    // Open the Para wallet UI
+    para.openWallet({
+      email: "user@example.com",
+      onSuccess: (wallet) => {
+        console.log("Wallet opened successfully:", wallet);
+      },
+      onError: (error) => {
+        console.error("Error opening wallet:", error);
+      },
+    });
+  }, []);
+  
+  return (
+    <div>
+      <h2>Para Wallet Experience</h2>
+      {/* The Para UI will be rendered automatically */}
+    </div>
+  );
+}
+```
+
+## Advanced Use Cases
+
+### Batch Transactions
+
+```typescript
+// Execute multiple transactions in a batch
+const batchTx = await solanaAgentWithPara.methods.executeBatchFromParaWallet({
+  walletId: "para-wallet-id",
+  transactions: [
+    {
+      type: "transfer",
+      params: {
+        recipient: "recipient-address-1",
+        amount: 0.01, // SOL
+      },
+    },
+    {
+      type: "tokenTransfer",
+      params: {
+        tokenMint: "token-mint-address",
+        recipient: "recipient-address-2",
+        amount: "5", // Token amount
+      },
+    },
+  ],
+});
+```
+
+### Sponsored Transactions
+
+```typescript
+// Execute a transaction with fees paid by a sponsor
+const sponsoredTx = await solanaAgentWithPara.methods.executeSponsoredFromParaWallet({
+  walletId: "para-wallet-id",
+  transaction: {
+    type: "transfer",
+    params: {
+      recipient: "recipient-address",
+      amount: 0.1, // SOL
+    },
+  },
+  sponsorWallet: "sponsor-wallet-id",
+});
+```
+
+## Webhook Integration
+
+Para can send webhooks for various events. Here's how to set up a webhook endpoint:
+
+```typescript
+// app/api/para/webhook/route.ts
+import { NextResponse } from "next/server";
+import { solanaAgentWithPara } from "@/lib/solana-server";
+
+export async function POST(req: Request) {
+  try {
+    // Get the raw body
+    const body = await req.text();
+    // Get the Para signature header
+    const signature = req.headers.get("x-para-signature");
+    
+    if (!signature) {
+      return NextResponse.json(
+        { success: false, error: "Missing signature" },
+        { status: 400 }
+      );
+    }
+    
+    // Verify the webhook signature
+    const isValid = solanaAgentWithPara.methods.verifyParaWebhook({
+      payload: body,
+      signature,
+    });
+    
+    if (!isValid) {
+      return NextResponse.json(
+        { success: false, error: "Invalid signature" },
+        { status: 401 }
+      );
+    }
+    
+    // Process the webhook event
+    const event = JSON.parse(body);
+    console.log("Para webhook event:", event);
+    
+    // Handle different event types
+    switch (event.type) {
+      case "wallet.created":
+        // Handle wallet creation
+        break;
+      case "transaction.completed":
+        // Handle transaction completion
+        break;
+      // Add other event types as needed
+    }
+    
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Error processing Para webhook:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
+```
+
+## Error Handling
+
+Proper error handling is essential when working with Para wallet operations:
+
+```typescript
+try {
+  const wallet = await solanaAgentWithPara.methods.createParaWallet({
+    email: "user@example.com",
+  });
+  // Success handling
+} catch (error: any) {
+  // Error categorization
+  if (error.message.includes("rate limit")) {
+    // Handle rate limiting
+    console.error("Rate limit exceeded, try again later");
+  } else if (error.message.includes("already exists")) {
+    // Handle duplicate wallet
+    console.error("Wallet already exists for this email");
+  } else {
+    // Handle other errors
+    console.error("Error creating Para wallet:", error.message);
+  }
+}
+```
+
+## Best Practices
+
+1. **Environment Separation**
+   - Use `BETA` environment for development and testing
+   - Switch to `PROD` for production deployments
+   - Keep API keys separate for each environment
+
+2. **Security Considerations**
+   - Never expose your Para API key in client-side code
+   - Use server-side API endpoints for sensitive operations
+   - Implement proper authentication for your API routes
+
+3. **User Experience**
+   - Provide clear feedback during wallet operations
+   - Implement proper loading states for async operations
+   - Handle errors gracefully with user-friendly messages
+
+4. **Performance Optimization**
+   - Cache wallet information when appropriate
+   - Batch transactions when possible to reduce network calls
+   - Implement retry logic for network-related errors
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Authentication Errors**
+   - Verify your Para API key is correct
+   - Check the environment setting (BETA vs PROD)
+   - Ensure the API key has the necessary permissions
+
+2. **Transaction Failures**
+   - Check for sufficient funds in the wallet
+   - Verify the recipient address is valid
+   - Look for any rate limiting issues
+
+3. **Webhook Integration**
+   - Ensure your webhook URL is accessible
+   - Verify the signature validation is correct
+   - Check webhook event processing logic
+
+## Resources
+
+- [Para Documentation](https://docs.getpara.com/)
+- [Solana Agent Kit Documentation](https://github.com/sendaifun/solana-agent-kit)
+- [Para Dashboard](https://app.getpara.com/)
+- [Implementation Demo Video](https://www.youtube.com/watch?v=qItH-SnOcr8)

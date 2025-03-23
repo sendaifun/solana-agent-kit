@@ -1,0 +1,535 @@
+---
+title: 'Wormhole NextJS Agent Integration'
+description: 'Learn how to build a cross-chain agent with Wormhole, NextJS, and Solana Agent Kit'
+---
+
+This documentation provides a comprehensive guide to building a NextJS application that leverages the Solana Agent Kit to create a Wormhole agent for cross-chain operations. This integration enables a chat-based interface for interacting with Wormhole's cross-chain messaging protocol.
+
+## Features Overview
+
+- **Interactive Chat Interface** for natural language interaction
+- **Cross-Chain Token Transfers** between supported blockchains
+- **CCTP Transfers** for USDC between compatible chains
+- **Real-Time Transaction Tracking** with visual feedback
+- **Transaction History** for reviewing past operations
+- **Responsive Design** with dark mode support
+- **Debug Panel** showing agent operations in real-time
+
+## Setup Guide
+
+### Prerequisites
+
+- Node.js (v18 or later recommended)
+- npm, yarn, pnpm, or bun
+- Solana wallet with private key
+- API keys for supported blockchains
+
+### Installation
+
+1. Clone the repository or create a new NextJS application:
+
+```bash
+# Create a new NextJS app
+npx create-next-app wormhole-agent
+cd wormhole-agent
+
+# OR clone existing repository
+git clone https://github.com/your-repo/wormhole-nextjs-agent.git
+cd wormhole-nextjs-agent
+```
+
+2. Install dependencies:
+
+```bash
+npm install @sendaifun/solana-agent-kit @wormhole-foundation/sdk react react-dom next typescript
+```
+
+3. Configure environment variables:
+
+```bash
+# Copy example environment file
+cp .example.env .env.local
+
+# Edit .env.local with your credentials
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
+```
+
+## Project Structure
+
+```
+wormhole-nextjs-agent/
+├── app/
+│   ├── api/
+│   │   └── chat/
+│   │       └── route.ts     # Chat API route
+│   ├── page.tsx             # Main application page
+│   └── layout.tsx           # Root layout
+├── components/
+│   ├── ChatInterface.tsx    # Main chat component
+│   ├── ChatInput.tsx        # User input component
+│   ├── MessageBubble.tsx    # Message rendering component
+│   ├── TransactionStatus.tsx # Transaction status indicator
+│   ├── TokenTransferUI.tsx  # Token transfer UI component
+│   ├── CCTPTransferUI.tsx   # CCTP transfer UI component
+│   └── LogsPanel.tsx        # Debug logs component
+├── lib/
+│   ├── agent.ts             # Solana Agent Kit configuration
+│   ├── wormhole.ts          # Wormhole SDK integration
+│   └── types.ts             # TypeScript type definitions
+├── public/
+│   └── assets/              # Static assets
+├── styles/
+│   └── globals.css          # Global styles
+├── next.config.js           # Next.js configuration
+├── package.json             # Project dependencies
+└── tsconfig.json            # TypeScript configuration
+```
+
+## Integration Steps
+
+### 1. Configure Solana Agent Kit
+
+```typescript
+// lib/agent.ts
+import { SolanaAgentKit } from '@sendaifun/solana-agent-kit';
+
+export function initializeAgent() {
+  const agent = new SolanaAgentKit({
+    privateKey: process.env.SOLANA_PRIVATE_KEY!,
+    rpcUrl: process.env.SOLANA_RPC_URL!,
+    wormholeConfig: {
+      rpcUrls: {
+        solana: process.env.SOLANA_RPC_URL!,
+        ethereum: process.env.ETHEREUM_RPC_URL!,
+        // Add other chain RPCs
+      },
+      privateKeys: {
+        solana: process.env.SOLANA_PRIVATE_KEY!,
+        ethereum: process.env.ETHEREUM_PRIVATE_KEY!,
+        // Add other chain private keys
+      }
+    }
+  });
+  
+  return agent;
+}
+```
+
+### 2. Create API Route for Chat
+
+```typescript
+// app/api/chat/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { initializeAgent } from '@/lib/agent';
+
+export async function POST(req: NextRequest) {
+  try {
+    const { message } = await req.json();
+    const agent = initializeAgent();
+    
+    // Process user message with agent
+    const response = await agent.processMessage(message);
+    
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error('Error processing chat message:', error);
+    return NextResponse.json(
+      { error: 'Failed to process message' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### 3. Create Chat Interface Component
+
+```tsx
+// components/ChatInterface.tsx
+import { useState, useEffect, useRef } from 'react';
+import MessageBubble from './MessageBubble';
+import ChatInput from './ChatInput';
+import LogsPanel from './LogsPanel';
+
+export default function ChatInterface() {
+  const [messages, setMessages] = useState([]);
+  const [logs, setLogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const sendMessage = async (message) => {
+    setIsLoading(true);
+    
+    // Add user message to chat
+    setMessages(prev => [...prev, { role: 'user', content: message }]);
+    
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      
+      const data = await response.json();
+      
+      // Add agent response to chat
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: data.text,
+        transactionData: data.transactionData // If available
+      }]);
+      
+      // Add to logs if available
+      if (data.logs) {
+        setLogs(prev => [...prev, ...data.logs]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // Add error message
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, an error occurred while processing your request.' 
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  return (
+    <div className="flex flex-col h-screen">
+      <div className="flex-1 overflow-y-auto p-4">
+        {messages.map((message, index) => (
+          <MessageBubble key={index} message={message} />
+        ))}
+      </div>
+      
+      <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
+      
+      <LogsPanel logs={logs} />
+    </div>
+  );
+}
+```
+
+### 4. Implement Message Bubble Component
+
+```tsx
+// components/MessageBubble.tsx
+import TokenTransferUI from './TokenTransferUI';
+import CCTPTransferUI from './CCTPTransferUI';
+
+export default function MessageBubble({ message }) {
+  const { role, content, transactionData } = message;
+  
+  const renderContent = () => {
+    // Basic text message
+    if (!transactionData) {
+      return <p>{content}</p>;
+    }
+    
+    // Render special UI based on transaction type
+    switch(transactionData.type) {
+      case 'tokenTransfer':
+        return (
+          <TokenTransferUI 
+            content={content}
+            transaction={transactionData}
+          />
+        );
+      case 'cctpTransfer':
+        return (
+          <CCTPTransferUI
+            content={content}
+            transaction={transactionData}
+          />
+        );
+      case 'chainInfo':
+        return (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {transactionData.chains.map(chain => (
+              <div key={chain.id} className="border rounded p-2">
+                <h3 className="font-bold">{chain.name}</h3>
+                <p className="text-sm">{chain.network}</p>
+              </div>
+            ))}
+          </div>
+        );
+      default:
+        return <p>{content}</p>;
+    }
+  };
+  
+  return (
+    <div className={`mb-4 ${role === 'user' ? 'text-right' : 'text-left'}`}>
+      <div
+        className={`inline-block max-w-[85%] rounded-lg p-4 
+          ${role === 'user' 
+            ? 'bg-blue-500 text-white' 
+            : 'bg-gray-200 dark:bg-gray-700 dark:text-white'
+          }`
+        }
+      >
+        {renderContent()}
+      </div>
+    </div>
+  );
+}
+```
+
+## Cross-Chain Operations
+
+### Token Transfers
+
+```typescript
+// lib/wormhole.ts
+import { SolanaAgentKit } from '@sendaifun/solana-agent-kit';
+
+export async function performTokenTransfer(
+  agent: SolanaAgentKit, 
+  sourceChain: string,
+  destinationChain: string,
+  token: string,
+  amount: string
+) {
+  // Perform the token transfer using the agent
+  const result = await agent.wormholeTransferToken({
+    sourceChain,
+    destinationChain,
+    token,
+    amount
+  });
+  
+  return {
+    type: 'tokenTransfer',
+    sourceTxId: result.sourceTxId,
+    destinationTxId: result.destinationTxId,
+    token,
+    amount,
+    sourceChain,
+    destinationChain,
+    status: result.status
+  };
+}
+```
+
+### CCTP Transfers
+
+```typescript
+// lib/wormhole.ts
+export async function performCCTPTransfer(
+  agent: SolanaAgentKit, 
+  sourceChain: string,
+  destinationChain: string,
+  amount: string
+) {
+  // Perform CCTP transfer for USDC
+  const result = await agent.wormholeTransferCCTP({
+    sourceChain,
+    destinationChain,
+    amount
+  });
+  
+  return {
+    type: 'cctpTransfer',
+    sourceTxId: result.sourceTxId,
+    destinationTxId: result.destinationTxId,
+    amount,
+    sourceChain,
+    destinationChain,
+    status: result.status
+  };
+}
+```
+
+## UI Components
+
+### Token Transfer UI
+
+```tsx
+// components/TokenTransferUI.tsx
+export default function TokenTransferUI({ content, transaction }) {
+  const {
+    sourceChain,
+    destinationChain,
+    token,
+    amount,
+    sourceTxId,
+    destinationTxId,
+    status
+  } = transaction;
+  
+  return (
+    <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-4 rounded-lg border-l-4 border-green-500">
+      <h3 className="font-bold text-lg mb-2">Token Transfer</h3>
+      <p className="mb-2">{content}</p>
+      
+      <div className="grid grid-cols-2 gap-2 mb-2">
+        <div>
+          <h4 className="text-xs text-gray-500 dark:text-gray-400">From</h4>
+          <p className="font-medium">{sourceChain}</p>
+        </div>
+        <div>
+          <h4 className="text-xs text-gray-500 dark:text-gray-400">To</h4>
+          <p className="font-medium">{destinationChain}</p>
+        </div>
+        <div>
+          <h4 className="text-xs text-gray-500 dark:text-gray-400">Token</h4>
+          <p className="font-medium">{token}</p>
+        </div>
+        <div>
+          <h4 className="text-xs text-gray-500 dark:text-gray-400">Amount</h4>
+          <p className="font-medium">{amount}</p>
+        </div>
+      </div>
+      
+      <div className="mt-2 text-xs">
+        <div className="flex items-center">
+          <div className={`w-3 h-3 rounded-full mr-2 ${
+            status === 'completed' ? 'bg-green-500' : 
+            status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+          }`}></div>
+          <span className="capitalize">{status}</span>
+        </div>
+        
+        {sourceTxId && (
+          <a 
+            href={`https://solscan.io/tx/${sourceTxId}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline block mt-1"
+          >
+            View Source Transaction
+          </a>
+        )}
+        
+        {destinationTxId && (
+          <a 
+            href={`https://explorer.sui.io/txblock/${destinationTxId}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline block mt-1"
+          >
+            View Destination Transaction
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## Example Prompts
+
+Here are some example prompts that can be handled by the Wormhole agent:
+
+```markdown
+# Token Transfer Examples
+- "Transfer 0.01 SOL from Solana to Ethereum"
+- "Send 5 USDC from Ethereum to Base"
+- "Move 1 WBTC from Polygon to Solana"
+
+# CCTP Transfer Examples
+- "Send 10 USDC from Solana to Base using CCTP"
+- "Transfer 50 USDC via CCTP from Ethereum to Arbitrum"
+- "Use CCTP to send 25 USDC from Avalanche to Optimism"
+
+# Information Requests
+- "What chains do you support?"
+- "Show me all available networks"
+- "What is Wormhole?"
+- "How does CCTP work?"
+- "What's the difference between token bridge and CCTP?"
+```
+
+## Styling Guide
+
+The application uses Tailwind CSS for styling with the following Wormhole brand color palette:
+
+```css
+/* tailwind.config.js */
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        wormhole: {
+          black: '#000000',
+          white: '#FFFFFF',
+          plum: '#C1BBF6',
+          yellow: '#DDE95A',
+          coral: '#FD8058',
+        },
+      },
+    },
+  },
+}
+```
+
+## Error Handling
+
+```typescript
+// lib/agent.ts
+export async function handleAgentError(error: any) {
+  console.error('Agent error:', error);
+  
+  // Categorize errors
+  if (error.message.includes('insufficient funds')) {
+    return {
+      status: 'error',
+      message: 'Insufficient funds for this transaction. Please check your balance and try again.',
+      code: 'INSUFFICIENT_FUNDS'
+    };
+  }
+  
+  if (error.message.includes('timeout')) {
+    return {
+      status: 'error',
+      message: 'The operation timed out. This could be due to network congestion.',
+      code: 'TIMEOUT'
+    };
+  }
+  
+  // Default error
+  return {
+    status: 'error',
+    message: 'An unexpected error occurred. Please try again later.',
+    code: 'UNKNOWN_ERROR'
+  };
+}
+```
+
+## Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+```
+
+## Deployment
+
+The application can be deployed on Vercel:
+
+1. Push your code to a Git repository
+2. Connect the repository to Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy the application
+
+## Best Practices
+
+1. **Error Handling**: Implement comprehensive error handling for all blockchain operations
+2. **Rate Limiting**: Add rate limiting for API endpoints to prevent abuse
+3. **Transaction Monitoring**: Implement a robust transaction monitoring system
+4. **User Feedback**: Provide clear feedback during long-running operations
+5. **Security**: Store private keys securely and never expose them in client-side code
+
+## Resources
+
+- [Wormhole Documentation](https://docs.wormhole.com/wormhole/)
+- [Circle CCTP Documentation](https://developers.circle.com/stablecoins/docs/cctp-getting-started)
+- [Solana Agent Kit Documentation](https://docs.solana.com/agent-kit)
+- [NextJS Documentation](https://nextjs.org/docs)

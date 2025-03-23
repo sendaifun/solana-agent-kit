@@ -1,0 +1,400 @@
+---
+title: 'Wormhole Integration'
+description: 'Learn how to use Wormhole for cross-chain operations with Solana Agent Kit'
+---
+
+# Wormhole Integration
+
+Solana Agent Kit provides comprehensive integration with Wormhole protocol for cross-chain operations, enabling token transfers, USDC transfers via Circle's CCTP (Cross-Chain Transfer Protocol), and wrapped token creation across multiple blockchains.
+
+## Overview
+
+The Wormhole integration enables:
+
+- Transfer of tokens from Solana to other supported chains
+- USDC transfers via Circle's CCTP
+- Creation of wrapped token versions on destination chains
+- Querying supported chains and networks
+
+## Supported Chains
+
+Wormhole supports multiple blockchains across different networks:
+
+**Mainnet:**
+- Solana
+- Ethereum
+- Avalanche
+- Optimism
+- Arbitrum
+- Base
+- Polygon
+- Sui
+- Aptos
+
+**Testnet:**
+- Solana
+- Sepolia (Ethereum testnet)
+- Avalanche testnet
+- OptimismSepolia
+- ArbitrumSepolia
+- BaseSepolia
+- Polygon testnet
+
+## Prerequisites
+
+To use the Wormhole integration, you need to set up environment variables for the chains you plan to interact with:
+
+```env
+# Solana configuration
+SOLANA_PRIVATE_KEY=your_solana_private_key
+
+# EVM configuration (Ethereum, Arbitrum, Optimism, etc.)
+ETH_PRIVATE_KEY=your_ethereum_private_key
+
+# Optional configurations for other chains
+SUI_MNEMONIC=your_sui_mnemonic
+APTOS_PRIVATE_KEY=your_aptos_private_key
+```
+
+## Core Functions
+
+### Token Transfer
+
+Transfer tokens from Solana to other supported chains:
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+const agent = new SolanaAgentKit(/* config */);
+const result = await agent.tokenTransfer({
+  destinationChain: "Ethereum",
+  network: "Mainnet",
+  transferAmount: "0.1",
+  tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" // USDC on Solana
+});
+```
+
+#### Token Transfer Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `destinationChain` | string | Target blockchain (e.g., "Ethereum", "Avalanche") |
+| `network` | string | "Mainnet", "Testnet", or "Devnet" |
+| `transferAmount` | string | Amount to transfer (in human-readable format) |
+| `tokenAddress` | string | Address of the token on Solana to transfer |
+
+### CCTP Transfer
+
+Transfer USDC via Circle's Cross-Chain Transfer Protocol:
+
+```typescript
+const result = await agent.cctpTransfer({
+  destinationChain: "Ethereum",
+  transferAmount: "10",
+  network: "Mainnet"
+});
+```
+
+#### CCTP Transfer Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `destinationChain` | string | Target blockchain (e.g., "Ethereum", "Base") |
+| `transferAmount` | string | Amount of USDC to transfer |
+| `network` | string | "Mainnet" or "Testnet" (default: "Mainnet") |
+
+### Create Wrapped Token
+
+Create a wrapped version of a Solana token on another chain:
+
+```typescript
+const result = await agent.createWrappedToken({
+  destinationChain: "Ethereum",
+  tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC on Solana
+  network: "Mainnet"
+});
+```
+
+#### Wrapped Token Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `destinationChain` | string | Target blockchain for the wrapped token |
+| `tokenAddress` | string | Address of token on Solana to be wrapped |
+| `network` | string | "Mainnet", "Testnet", or "Devnet" |
+
+### Get Supported Chains
+
+Retrieve a list of chains supported by Wormhole:
+
+```typescript
+const supportedChains = await agent.getWormholeSupportedChains();
+```
+
+## LangChain Tools
+
+The integration provides LangChain tools for AI agent integration:
+
+### Token Transfer Tool
+
+```typescript
+import { TokenTransferTool } from "solana-agent-kit";
+
+const tokenTransferTool = new TokenTransferTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  destinationChain: "Ethereum",
+  network: "Mainnet",
+  transferAmount: "0.1",
+  tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+});
+```
+
+### CCTP Transfer Tool
+
+```typescript
+import { CctpTransferTool } from "solana-agent-kit";
+
+const cctpTransferTool = new CctpTransferTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  destinationChain: "Ethereum",
+  transferAmount: "10",
+  network: "Mainnet"
+});
+```
+
+### Create Wrapped Token Tool
+
+```typescript
+import { CreateWrappedTokenTool } from "solana-agent-kit";
+
+const createWrappedTokenTool = new CreateWrappedTokenTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  destinationChain: "Ethereum",
+  tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  network: "Mainnet"
+});
+```
+
+### Get Supported Chains Tool
+
+```typescript
+import { GetWormholeSupportedChainsTool } from "solana-agent-kit";
+
+const supportedChainsTool = new GetWormholeSupportedChainsTool(agent);
+
+// No input required
+```
+
+## Response Types
+
+### Token Transfer Response
+
+```typescript
+interface TokenTransferResponse {
+  success: boolean;
+  status?: string;
+  sourceChain?: string;
+  destinationChain?: string;
+  amount?: string;
+  token?: string;
+  sourceTransaction?: string;
+  destinationTransaction?: string;
+  error?: string;
+}
+```
+
+### CCTP Transfer Response
+
+```typescript
+interface CctpTransferResponse {
+  success: boolean;
+  status?: string;
+  sourceChain?: string;
+  destinationChain?: string;
+  amount?: string;
+  sourceTransaction?: string[];
+  attestation?: string[];
+  destinationTransaction?: string[];
+  automatic?: boolean;
+  error?: string;
+}
+```
+
+### Create Wrapped Token Response
+
+```typescript
+interface CreateWrappedTokenResponse {
+  success: boolean;
+  wrappedToken?: {
+    chain: string;
+    address: string;
+  };
+  attestationTxid?: string;
+  error?: string;
+}
+```
+
+## Implementation Details
+
+### Token Transfer Process
+
+1. Initialize the Wormhole SDK with supported blockchain adapters
+2. Get chain contexts for source (Solana) and destination chains
+3. Create signers for both chains
+4. Determine token decimals and convert amount to base units
+5. Create and send token bridge transfer transaction
+6. Wait for attestation from Wormhole guardians
+7. Complete the transfer on the destination chain
+
+### CCTP Transfer Process
+
+1. Initialize the Wormhole SDK with supported blockchain adapters
+2. Get chain contexts for source (Solana) and destination chains
+3. Create signers for both chains
+4. Parse the transfer amount to correct decimal precision
+5. Create a USDC transfer object with specified parameters
+6. Initiate the transfer on the source chain
+7. Wait for the Circle attestation
+8. Complete the transfer on the destination chain
+
+### Wrapped Token Creation Process
+
+1. Check if the token is already wrapped on the destination chain
+2. If not wrapped, create an attestation on the source chain
+3. Wait for the attestation to be processed by Wormhole guardians
+4. Submit the attestation to the destination chain
+5. Poll for the wrapped token to be available
+
+## Error Handling
+
+All functions include comprehensive error handling:
+
+```typescript
+try {
+  const result = await agent.tokenTransfer({
+    destinationChain: "Ethereum",
+    network: "Mainnet",
+    transferAmount: "0.1",
+    tokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  });
+  
+  if (!result.success) {
+    console.error("Transfer failed:", result.error);
+    // Handle error
+  }
+} catch (error) {
+  console.error("Unexpected error:", error);
+  // Handle unexpected errors
+}
+```
+
+## Common Tokens
+
+Common token addresses on Solana:
+
+```typescript
+const TOKENS = {
+  USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  USDT: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  SOL: "So11111111111111111111111111111111111111112"  // Wrapped SOL
+};
+```
+
+## Advanced Features
+
+### Manual vs Automatic Mode
+
+For CCTP transfers, you can choose between manual and automatic mode:
+
+```typescript
+// Manual mode (default)
+const result = await agent.cctpTransfer({
+  destinationChain: "Ethereum",
+  transferAmount: "10",
+  network: "Mainnet",
+  automatic: false  // Manual mode
+});
+
+// Automatic mode with relayers
+const resultAuto = await agent.cctpTransfer({
+  destinationChain: "Ethereum",
+  transferAmount: "10",
+  network: "Mainnet",
+  automatic: true,  // Automatic mode
+  nativeGasAmount: "0.01"  // Gas for relayers
+});
+```
+
+### Checking If Token Is Already Wrapped
+
+Before creating a wrapped token, you can check if it already exists:
+
+```typescript
+import { isTokenWrapped } from "solana-agent-kit";
+
+const wrapped = await isTokenWrapped(
+  wormholeInstance,
+  "Solana",
+  "Ethereum",
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+);
+
+if (wrapped) {
+  console.log("Token is already wrapped:", wrapped);
+} else {
+  // Create wrapped token
+}
+```
+
+## Utility Functions
+
+### Getting Token Decimals
+
+```typescript
+import { getTokenDecimals } from "solana-agent-kit";
+
+const decimals = await getTokenDecimals(
+  wormholeInstance,
+  tokenId,
+  sourceChain
+);
+```
+
+### Getting Signers
+
+```typescript
+import { getSigner } from "solana-agent-kit";
+
+const { chain, signer, address } = await getSigner(
+  chainContext,
+  gasLimit  // Optional for EVM chains
+);
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Missing Environment Variables**: Ensure all required private keys are set
+2. **Insufficient Funds**: Make sure your wallet has enough tokens for the transfer
+3. **VAA Not Found**: Increase timeout for waiting for VAAs
+4. **Transaction Failures**: Check chain congestion and try again later
+
+### Debugging Tips
+
+1. Enable verbose logging for more detailed information
+2. Check transaction status on blockchain explorers
+3. Verify token addresses and chain identifiers
+4. Test on testnets before using mainnet
+
+## Resources
+
+- [Wormhole Documentation](https://docs.wormhole.com/)
+- [Circle CCTP Documentation](https://developers.circle.com/stablecoins/docs/cctp-getting-started)
+- [Solana Agent Kit Documentation](https://github.com/sendaifun/solana-agent-kit)

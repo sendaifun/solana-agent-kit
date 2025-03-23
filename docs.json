@@ -27,7 +27,10 @@
           "v0/examples/market_maker",
           "v0/examples/discord_agent",
           "v0/examples/claude_mcp",
-          "v0/examples/orbofi"
+          "v0/examples/orbofi",
+          "v0/examples/wormhole_agent",
+          "v0/examples/para_plugin",
+          "v0/examples/okx_dex"
         ]
       },
       {
@@ -87,7 +90,9 @@
               "v0/features/defi-integration/fluxbeam",
               "v0/features/defi-integration/debridge",
               "v0/features/defi-integration/allora",
-              "v0/features/defi-integration/switchboard"
+              "v0/features/defi-integration/switchboard",
+              "v0/features/defi-integration/okx",
+              "v0/features/defi-integration/wormhole"
             ]
           },
           {
@@ -108,7 +113,8 @@
           {
             "group": "Non-Financial Actions",
             "pages": [
-              "v0/features/non-financial/gibwork_bounties"
+              "v0/features/non-financial/gibwork_bounties",
+              "v0/features/non-financial/elfa_ai"
             ]
           }
         ]

@@ -1,0 +1,492 @@
+---
+title: 'Elfa AI Integration'
+description: 'Learn how to use Elfa AI features with Solana Agent Kit for social media intelligence'
+---
+
+Solana Agent Kit provides integration with Elfa AI for retrieving social media intelligence, market data, and trend analysis from platforms like Twitter. This documentation covers the available functions and tools for interacting with Elfa AI API.
+
+## Overview
+
+Elfa AI integration enables access to:
+
+- Smart mentions detection
+- Top mentions by ticker symbol
+- Keyword-based mentions search
+- Trending tokens analysis
+- Twitter account statistics
+- API key status monitoring
+
+## Configuration
+
+Before using Elfa AI integration, you need to configure your API key in the Solana Agent Kit:
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+const agent = new SolanaAgentKit(
+  privateKey,
+  rpcUrl,
+  {
+    ELFA_AI_API_KEY: "your_elfa_ai_api_key"
+  }
+);
+```
+
+## Core Functions
+
+The integration provides several core functions for interacting with the Elfa AI API:
+
+### API Health Check
+
+```typescript
+const pingResult = await agent.pingElfaAiApi();
+// Returns: { message: "pong" }
+```
+
+### API Key Status
+
+```typescript
+const keyStatus = await agent.getElfaAiApiKeyStatus();
+// Returns detailed information about API key status including usage limits
+```
+
+### Smart Mentions
+
+Retrieve tweets from smart accounts with high engagement:
+
+```typescript
+const smartMentions = await agent.getSmartMentions(
+  100, // limit
+  0    // offset
+);
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "611245869",
+      "type": "post",
+      "content": "In my opinion, it's a great time to add $ETH.",
+      "originalUrl": "/EricTrump/status/1886541132903133230",
+      "likeCount": 48036,
+      "quoteCount": 3103,
+      "replyCount": 8900,
+      "repostCount": 7981,
+      "viewCount": 5660995,
+      "mentionedAt": "2025-02-03T22:23:50.000Z",
+      "account": {
+        "id": 83583,
+        "username": "EricTrump",
+        "followerCount": 5500559,
+        "isVerified": true
+      }
+    }
+  ],
+  "metadata": {
+    "total": 6,
+    "limit": 100,
+    "offset": 0
+  }
+}
+```
+
+### Top Mentions by Ticker
+
+Retrieve top tweets for a specific ticker symbol:
+
+```typescript
+const topMentions = await agent.getTopMentionsByTicker(
+  "SOL",    // ticker
+  "1h",     // timeWindow
+  1,        // page
+  10,       // pageSize
+  false     // includeAccountDetails
+);
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "data": [
+      {
+        "id": 612200471,
+        "twitter_id": "1886663937518645714",
+        "content": "Same story for $SOL - looks like a failed breakdown.",
+        "mentioned_at": "2025-02-04T06:31:49+00:00",
+        "type": "post",
+        "metrics": {
+          "like_count": 45,
+          "reply_count": 6,
+          "repost_count": 7,
+          "view_count": 1744
+        }
+      }
+    ],
+    "total": 12,
+    "page": 1,
+    "pageSize": 10
+  }
+}
+```
+
+### Search Mentions by Keywords
+
+Search for tweets containing specific keywords within a date range:
+
+```typescript
+const searchResults = await agent.searchMentionsByKeywords(
+  "ai, agent",   // comma-separated keywords
+  1622505600,    // from timestamp
+  1625097600,    // to timestamp
+  20             // limit
+);
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 612258820,
+      "twitter_id": "1886671035048845535",
+      "content": "The Move AI Hackathon 🛠️\n\nUnlock limitless possibilities...",
+      "mentioned_at": "2025-02-04T07:00:02+00:00",
+      "type": "quote",
+      "metrics": {
+        "like_count": 1,
+        "reply_count": 0,
+        "repost_count": 0,
+        "view_count": 0
+      }
+    }
+  ],
+  "metadata": {
+    "total": 1875,
+    "cursor": "FGluY2x1ZGVfY29udGV4d..."
+  }
+}
+```
+
+### Trending Tokens
+
+Get tokens trending in social media discussions:
+
+```typescript
+const trendingTokens = await agent.getTrendingTokens();
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "total": 5,
+    "page": 1,
+    "pageSize": 5,
+    "data": [
+      {
+        "token": "eth",
+        "current_count": 916,
+        "previous_count": 377,
+        "change_percent": 142.97
+      },
+      {
+        "token": "btc",
+        "current_count": 580,
+        "previous_count": 458,
+        "change_percent": 26.64
+      }
+    ]
+  }
+}
+```
+
+### Twitter Account Smart Stats
+
+Get engagement and influence metrics for a Twitter account:
+
+```typescript
+const accountStats = await agent.getSmartTwitterAccountStats("elonmusk");
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "smartFollowingCount": 5913,
+    "averageEngagement": 30714784.98833819,
+    "followerEngagementRatio": 0.1423006675490259
+  }
+}
+```
+
+## LangChain Tools
+
+For AI agent integration with LangChain, the following tools are available:
+
+### Ping Tool
+
+```typescript
+import { ElfaPingTool } from "solana-agent-kit";
+
+const pingTool = new ElfaPingTool(agent);
+```
+
+### API Key Status Tool
+
+```typescript
+import { ElfaApiKeyStatusTool } from "solana-agent-kit";
+
+const apiKeyStatusTool = new ElfaApiKeyStatusTool(agent);
+```
+
+### Smart Mentions Tool
+
+```typescript
+import { ElfaGetMentionsTool } from "solana-agent-kit";
+
+const smartMentionsTool = new ElfaGetMentionsTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  limit: 100,
+  offset: 0
+});
+```
+
+### Top Mentions Tool
+
+```typescript
+import { ElfaGetTopMentionsTool } from "solana-agent-kit";
+
+const topMentionsTool = new ElfaGetTopMentionsTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  ticker: "SOL",
+  timeWindow: "1h",
+  page: 1,
+  pageSize: 10,
+  includeAccountDetails: false
+});
+```
+
+### Search Mentions Tool
+
+```typescript
+import { ElfaSearchMentionsTool } from "solana-agent-kit";
+
+const searchMentionsTool = new ElfaSearchMentionsTool(agent);
+
+// Tool input (JSON string):
+const input = JSON.stringify({
+  keywords: "ai, agent",
+  from: 1622505600,
+  to: 1625097600,
+  limit: 20
+});
+```
+
+### Trending Tokens Tool
+
+```typescript
+import { ElfaTrendingTokensTool } from "solana-agent-kit";
+
+const trendingTokensTool = new ElfaTrendingTokensTool(agent);
+```
+
+### Account Smart Stats Tool
+
+```typescript
+import { ElfaAccountSmartStatsTool } from "solana-agent-kit";
+
+const accountStatsTool = new ElfaAccountSmartStatsTool(agent);
+
+// Tool input: username as string
+const input = "elonmusk";
+```
+
+## Action Definitions
+
+In addition to functions and tools, Solana Agent Kit provides actions for interacting with Elfa AI:
+
+### Ping Action
+
+```typescript
+const pingResult = await agent.executeAction("ELFA_PING_ACTION", {});
+```
+
+### API Key Status Action
+
+```typescript
+const keyStatus = await agent.executeAction("ELFA_API_KEY_STATUS_ACTION", {});
+```
+
+### Smart Mentions Action
+
+```typescript
+const smartMentions = await agent.executeAction("ELFA_GET_SMART_MENTIONS_ACTION", {
+  limit: 100,
+  offset: 0
+});
+```
+
+### Top Mentions Action
+
+```typescript
+const topMentions = await agent.executeAction("ELFA_GET_TOP_MENTIONS_BY_TICKER_ACTION", {
+  ticker: "SOL",
+  timeWindow: "1h",
+  page: 1,
+  pageSize: 10,
+  includeAccountDetails: false
+});
+```
+
+### Search Mentions Action
+
+```typescript
+const searchResults = await agent.executeAction("ELFA_SEARCH_MENTIONS_BY_KEYWORDS_ACTION", {
+  keywords: "ai, agent",
+  from: 1622505600,
+  to: 1625097600,
+  limit: 20
+});
+```
+
+### Trending Tokens Action
+
+```typescript
+const trendingTokens = await agent.executeAction("ELFA_TRENDING_TOKENS_ACTION", {});
+```
+
+### Account Smart Stats Action
+
+```typescript
+const accountStats = await agent.executeAction("ELFA_SMART_TWITTER_ACCOUNT_STATS_ACTION", {
+  username: "elonmusk"
+});
+```
+
+## Parameter Details
+
+### Time Windows
+
+The following time windows are supported for various endpoints:
+
+- `1h` - Last hour
+- `24h` - Last 24 hours
+- `7d` - Last 7 days
+- `14d` - Last 14 days
+- `30d` - Last 30 days
+
+### Pagination
+
+Most endpoints support pagination with the following parameters:
+
+- `limit` or `pageSize` - Number of results per page
+- `offset` or `page` - Page number or offset for results
+- `cursor` - For cursor-based pagination (used in search endpoints)
+
+## Error Handling
+
+All functions and tools include error handling. Here's an example of handling errors:
+
+```typescript
+try {
+  const result = await agent.getTopMentionsByTicker("SOL");
+  
+  if (!result.success) {
+    console.error("API error:", result.error);
+    // Handle error
+  } else {
+    console.log("Top mentions:", result.data);
+    // Process data
+  }
+} catch (error) {
+  console.error("Exception:", error.message);
+  // Handle exception
+}
+```
+
+## Utility Functions
+
+The integration includes several utility functions:
+
+### Create Axios Instance
+
+```typescript
+function createAxiosInstance(apiKey: string): AxiosInstance {
+  return axios.create({
+    baseURL: "https://api.elfa.ai",
+    headers: {
+      "x-elfa-api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+  });
+}
+```
+
+## Integration with AI Agents
+
+For AI agents built with LangChain, you can register these tools:
+
+```typescript
+import { 
+  ElfaPingTool, 
+  ElfaGetTopMentionsTool, 
+  ElfaTrendingTokensTool 
+} from "solana-agent-kit";
+import { OpenAI } from "langchain/llms/openai";
+import { initializeAgentExecutorWithOptions } from "langchain/agents";
+
+// Create LangChain tools
+const tools = [
+  new ElfaPingTool(agent),
+  new ElfaGetTopMentionsTool(agent),
+  new ElfaTrendingTokensTool(agent)
+];
+
+// Create LLM
+const model = new OpenAI({ temperature: 0 });
+
+// Create agent
+const executor = await initializeAgentExecutorWithOptions(
+  tools,
+  model,
+  {
+    agentType: "structured-chat-zero-shot-react-description",
+  }
+);
+
+// Execute agent
+const result = await executor.call({
+  input: "What are the trending tokens today?"
+});
+```
+
+## Best Practices
+
+1. **Rate Limiting**: Monitor your API usage through the key status endpoint
+2. **Data Freshness**: Social media data can become stale quickly, consider time windows carefully
+3. **Error Handling**: Implement comprehensive error handling for all API calls
+4. **Pagination**: For large datasets, implement pagination to avoid timeouts
+5. **Date Ranges**: For search queries, use reasonable date ranges to optimize performance
+
+## Resources
+
+- [Elfa AI Website](https://elfa.ai)
+- [Elfa AI API Documentation](https://docs.elfa.ai)
+- [Solana Agent Kit Documentation](https://github.com/sendaifun/solana-agent-kit)

@@ -1,0 +1,464 @@
+---
+title: 'OKX DEX Integration'
+description: 'Learn how to use OKX DEX features with Solana Agent Kit'
+---
+
+# OKX DEX Integration
+
+Solana Agent Kit provides comprehensive integration with OKX DEX for token swapping, price quotes, and market data. This documentation covers the available actions and tools for interacting with OKX DEX.
+
+## Overview
+
+OKX DEX integration allows you to:
+
+- Fetch chain data and supported tokens
+- Get price quotes for token swaps
+- Execute token swaps with customizable slippage
+- View available liquidity sources
+- Create LangChain tools for AI agent integration
+
+## Actions
+
+Actions provide high-level functionality for common OKX DEX operations.
+
+### Chain Data
+
+The `OKX_DEX_CHAIN_DATA` action retrieves information about blockchain networks supported by OKX DEX.
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+
+// Example usage
+const agent = new SolanaAgentKit(/* config */);
+const result = await agent.executeAction("OKX_DEX_CHAIN_DATA", {});
+
+// Result
+{
+  status: "success",
+  summary: {
+    chains: [
+      {
+        symbol: "SOL",
+        name: "Solana",
+        address: "So11111111111111111111111111111111111111112",
+      },
+      // Other chains...
+    ],
+  },
+}
+```
+
+### Tokens
+
+The `OKX_DEX_TOKENS` action lists all tokens supported by OKX DEX.
+
+```typescript
+const result = await agent.executeAction("OKX_DEX_TOKENS", {});
+
+// Result
+{
+  status: "success",
+  summary: {
+    tokens: [
+      {
+        symbol: "SOL",
+        name: "Solana",
+        address: "So11111111111111111111111111111111111111112",
+      },
+      {
+        symbol: "USDC",
+        name: "USD Coin",
+        address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      },
+      // Other tokens...
+    ],
+  },
+}
+```
+
+### Liquidity
+
+The `OKX_DEX_LIQUIDITY` action retrieves available liquidity sources supported by OKX DEX.
+
+```typescript
+const result = await agent.executeAction("OKX_DEX_LIQUIDITY", {});
+
+// Result
+{
+  status: "success",
+  summary: {
+    liquidity: [
+      {
+        name: "Orca",
+        type: "amm",
+        // Additional details...
+      },
+      // Other liquidity sources...
+    ],
+  },
+}
+```
+
+### Quote
+
+The `OKX_DEX_QUOTE` action provides price quotes for token swaps.
+
+```typescript
+const result = await agent.executeAction("OKX_DEX_QUOTE", {
+  fromToken: "sol",
+  toToken: "usdc",
+  amount: 0.1,
+  slippage: "0.001", // Optional, default is 0.001 (0.1%)
+});
+
+// Result
+{
+  status: "success",
+  summary: {
+    fromToken: "SOL",
+    toToken: "USDC",
+    fromAmount: 0.1,
+    toAmount: 10.5,
+    exchangeRate: 105,
+    priceImpact: "0.01%",
+  },
+}
+```
+
+### Swap
+
+The `OKX_DEX_SWAP` action executes token swaps on OKX DEX.
+
+```typescript
+const result = await agent.executeAction("OKX_DEX_SWAP", {
+  fromToken: "sol",
+  toToken: "usdc",
+  amount: 0.1,
+  slippage: "0.001", // Optional, default is 0.001 (0.1%)
+});
+
+// Result
+{
+  status: "success",
+  summary: {
+    fromToken: "SOL",
+    toToken: "USDC",
+    fromAmount: 0.1,
+    toAmount: 10.5,
+    exchangeRate: 105,
+    priceImpact: "0.01%",
+    txId: "5KtPn3...",
+    explorerUrl: "https://www.okx.com/web3/explorer/sol/tx/5KtPn3...",
+  },
+}
+```
+
+## LangChain Tools
+
+For AI agent integration with LangChain, the following tools are available:
+
+### Get Chain Data Tool
+
+```typescript
+import { createOKXDexGetChainDataTool } from "solana-agent-kit";
+
+const chainDataTool = createOKXDexGetChainDataTool(agent);
+
+// Tool output (JSON string):
+{
+  "chains": [
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "address": "So11111111111111111111111111111111111111112"
+    }
+    // Other chains...
+  ]
+}
+```
+
+### Get Tokens Tool
+
+```typescript
+import { createOKXDexGetTokensTool } from "solana-agent-kit";
+
+const tokensTool = createOKXDexGetTokensTool(agent);
+
+// Tool output (JSON string):
+{
+  "tokens": [
+    {
+      "symbol": "SOL",
+      "name": "Solana",
+      "address": "So11111111111111111111111111111111111111112"
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    }
+    // Other tokens...
+  ]
+}
+```
+
+### Get Liquidity Tool
+
+```typescript
+import { createOKXDexGetLiquidityTool } from "solana-agent-kit";
+
+const liquidityTool = createOKXDexGetLiquidityTool(agent);
+
+// Tool output (JSON string):
+{
+  "sources": [
+    {
+      "name": "Orca",
+      "type": "amm"
+    }
+    // Other liquidity sources...
+  ]
+}
+```
+
+### Get Quote Tool
+
+```typescript
+import { createOKXDexGetQuoteTool } from "solana-agent-kit";
+
+const quoteTool = createOKXDexGetQuoteTool(agent);
+
+// Tool input:
+{
+  fromTokenAddress: "So11111111111111111111111111111111111111112",
+  toTokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  amount: "100000000", // 0.1 SOL in lamports
+  slippage: "0.5" // Optional
+}
+
+// Tool output (JSON string):
+{
+  "fromToken": "SOL",
+  "toToken": "USDC",
+  "fromAmount": 0.1,
+  "toAmount": 10.5,
+  "exchangeRate": 105,
+  "priceImpact": "0.01%"
+}
+```
+
+### Execute Swap Tool
+
+```typescript
+import { createOKXDexExecuteSwapTool } from "solana-agent-kit";
+
+const swapTool = createOKXDexExecuteSwapTool(agent);
+
+// Tool input:
+{
+  fromTokenAddress: "So11111111111111111111111111111111111111112",
+  toTokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  amount: "100000000", // 0.1 SOL in lamports
+  slippage: "0.5", // Optional
+  autoSlippage: false, // Optional
+  maxAutoSlippageBps: "100", // Optional
+  userWalletAddress: "FzwqxL67..." // Optional
+}
+
+// Tool output (JSON string):
+{
+  "status": "success",
+  "summary": {
+    "fromToken": "SOL",
+    "toToken": "USDC",
+    "fromAmount": 0.1,
+    "toAmount": 10.5,
+    "exchangeRate": 105,
+    "priceImpact": "0.01%",
+    "txId": "5KtPn3...",
+    "explorerUrl": "https://www.okx.com/web3/explorer/sol/tx/5KtPn3..."
+  }
+}
+```
+
+### Confirm Swap Tool
+
+```typescript
+import { createOKXDexConfirmSwapTool, setPendingSwap } from "solana-agent-kit";
+
+// First, set a pending swap
+setPendingSwap({
+  fromTokenAddress: "So11111111111111111111111111111111111111112",
+  toTokenAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  amount: "100000000",
+  slippage: "0.5"
+});
+
+// Then create and use the confirm tool
+const confirmTool = createOKXDexConfirmSwapTool(agent);
+
+// Tool output (JSON string):
+{
+  "status": "success",
+  "summary": {
+    "fromToken": "SOL",
+    "toToken": "USDC",
+    "fromAmount": 0.1,
+    "toAmount": 10.5,
+    "txId": "5KtPn3...",
+    "explorerUrl": "https://www.okx.com/web3/explorer/sol/tx/5KtPn3..."
+  }
+}
+```
+
+## Token Addresses
+
+Here are some common token addresses for Solana:
+
+```typescript
+const TOKEN_ADDRESSES = {
+  sol: "So11111111111111111111111111111111111111112",
+  usdc: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  usdt: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+  wif: "2222222222222222222222222222222222222222222222222222222222222222",
+};
+```
+
+## Amount Conversion
+
+When working with token amounts, you need to convert between human-readable amounts and base units (like lamports for SOL):
+
+```typescript
+// Convert from human-readable to base units
+function toBaseUnits(amount, decimals) {
+  return (amount * Math.pow(10, decimals)).toString();
+}
+
+// For SOL (9 decimals)
+const solBaseUnits = toBaseUnits(0.1, 9); // "100000000"
+
+// For USDC (6 decimals)
+const usdcBaseUnits = toBaseUnits(10, 6); // "10000000"
+```
+
+## Error Handling
+
+All actions and tools include error handling. Here's an example of handling errors:
+
+```typescript
+try {
+  const result = await agent.executeAction("OKX_DEX_SWAP", {
+    fromToken: "sol",
+    toToken: "usdc",
+    amount: 0.1,
+  });
+  
+  if (result.status === "error") {
+    console.error("Swap failed:", result.message);
+    // Handle error
+  } else {
+    console.log("Swap successful:", result.summary);
+    // Process success
+  }
+} catch (error) {
+  console.error("Unexpected error:", error.message);
+  // Handle unexpected errors
+}
+```
+
+## Advanced Features
+
+### Auto Slippage
+
+You can enable auto slippage for potentially better swap rates:
+
+```typescript
+const result = await executeSwap(
+  agent,
+  fromTokenAddress,
+  toTokenAddress,
+  amount,
+  "0.5", // Default slippage
+  true, // Enable auto slippage
+  "100" // Maximum auto slippage in basis points (1%)
+);
+```
+
+### Custom Wallet Address
+
+You can specify a custom wallet address for the swap:
+
+```typescript
+const result = await executeSwap(
+  agent,
+  fromTokenAddress,
+  toTokenAddress,
+  amount,
+  "0.5",
+  false,
+  "100",
+  "your_custom_wallet_address"
+);
+```
+
+## Integration with AI Agents
+
+For AI agents built with LangChain, you can register these tools:
+
+```typescript
+import { createOpenAI } from "langchain/chat_models/openai";
+import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
+
+// Create LLM
+const llm = createOpenAI({
+  temperature: 0,
+  modelName: "gpt-4",
+});
+
+// Create tools
+const tools = [
+  createOKXDexGetTokensTool(agent),
+  createOKXDexGetQuoteTool(agent),
+  createOKXDexExecuteSwapTool(agent),
+];
+
+// Create agent
+const agent = createStructuredChatAgent({
+  llm,
+  tools,
+});
+
+const agentExecutor = new AgentExecutor({
+  agent,
+  tools,
+});
+
+// Run agent
+const result = await agentExecutor.invoke({
+  input: "I want to swap 0.1 SOL to USDC",
+});
+```
+
+## Best Practices
+
+1. **Amount Validation**: Always verify that amounts are positive and within acceptable ranges.
+2. **Slippage Control**: Use appropriate slippage values depending on token volatility.
+3. **Error Handling**: Implement comprehensive error handling for all operations.
+4. **Gas Considerations**: Make sure your wallet has enough SOL for transaction fees.
+5. **User Confirmation**: For UIs, always show and confirm quotes before executing swaps.
+
+## Troubleshooting
+
+Common issues and their solutions:
+
+1. **Insufficient Funds**: Make sure your wallet has enough tokens for the swap.
+2. **Price Impact Too High**: Try reducing the amount or increasing slippage.
+3. **Invalid Token Address**: Double-check token addresses or use predefined constants.
+4. **Failed Transaction**: Check chain congestion and try again with higher slippage.
+
+## Resources
+
+- [OKX DEX Documentation](https://www.okx.com/web3/dex)
+- [Solana Agent Kit Documentation](https://github.com/sendaifun/solana-agent-kit)
+- [Solana Explorer](https://explorer.solana.com/)
+- [OKX DEX Explorer](https://www.okx.com/web3/explorer/sol)

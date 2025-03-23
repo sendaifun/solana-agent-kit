@@ -1,0 +1,450 @@
+# OKX DEX Starter
+
+A comprehensive integration example for using OKX DEX with Solana Agent Kit. This package provides a CLI-based trading bot that allows you to get quotes, execute swaps, and manage tokens directly from your terminal.
+
+## Features
+
+- **Token Swapping**: Swap between any tokens available on OKX DEX
+- **Price Quotes**: Get real-time quotes with price impact and fee information
+- **Token Discovery**: Automatic token resolution and information caching
+- **Interactive CLI**: User-friendly command-line interface for trading
+- **AI-Powered Assistance**: Optional AI trading assistant using LangChain
+- **Transaction Monitoring**: Real-time feedback for transaction status
+
+## Prerequisites
+
+- Node.js 16 or higher
+- Solana wallet with private key
+- OKX account with API credentials
+
+## Installation
+
+1. Clone the repository or create a new project:
+
+```bash
+# Create new project
+mkdir okx-dex-bot
+cd okx-dex-bot
+
+# Initialize package.json
+npm init -y
+```
+
+2. Install dependencies:
+
+```bash
+npm install solana-agent-kit dotenv @okx-dex/okx-dex-sdk @langchain/openai @langchain/core @langchain/langgraph bs58
+```
+
+3. Set up environment variables by creating a `.env` file:
+
+```
+OKX_API_KEY=your_okx_api_key
+OKX_SECRET_KEY=your_okx_secret_key
+OKX_API_PASSPHRASE=your_okx_api_passphrase
+OKX_PROJECT_ID=your_okx_project_id
+OKX_SOLANA_WALLET_ADDRESS=your_solana_wallet_address
+OKX_SOLANA_PRIVATE_KEY=your_solana_private_key
+OPENAI_API_KEY=your_openai_api_key  # Optional for AI assistant
+RPC_URL=your_solana_rpc_url
+```
+
+## Quick Start
+
+Create a file named `okx-dex-solana.ts` with the implementation code and run:
+
+```bash
+npx ts-node okx-dex-solana.ts
+```
+
+## Usage
+
+Once the trading bot is running, you can use the following commands:
+
+- `swap [amount] [from_token] to [to_token]` - Prepare a token swap
+- `quote [amount] [from_token] to [to_token]` - Get a quote without executing
+- `confirm` - Execute the prepared swap
+- `cancel` - Cancel the current swap
+- `tokens` - List all known tokens
+- `tokens [search]` - Search for a specific token
+- `help` - Show available commands
+- `exit` - Exit the bot
+
+### Examples
+
+```
+swap 0.1 SOL to USDC
+quote 10 USDC to SOL
+tokens usdt
+confirm
+```
+
+You can also ask natural language questions and get AI-powered trading assistance:
+
+```
+What's the current price of SOL?
+Should I swap USDC to SOL right now?
+How much USDT will I get for 0.5 SOL?
+```
+
+## Core Components
+
+### Token Management
+
+The integration includes a token cache system that learns about tokens as they're used:
+
+```typescript
+interface TokenInfo {
+  symbol: string;
+  address: string;
+  decimals: number;
+}
+
+// Initialize with known tokens
+let tokenInfoCache: Record<string, TokenInfo> = {
+  "So11111111111111111111111111111111111111112": {
+    symbol: "SOL",
+    address: "So11111111111111111111111111111111111111112",
+    decimals: 9
+  },
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": {
+    symbol: "USDC",
+    address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    decimals: 6
+  },
+  // ... other tokens
+};
+```
+
+### Getting Quotes
+
+The integration uses the OKX DEX API to fetch quotes for token swaps:
+
+```typescript
+async function getQuote(
+  agent: SolanaAgentKit, 
+  fromAddress: string, 
+  toAddress: string, 
+  amount: string
+) {
+  // Validate and format amount
+  const { isValid, formatted: formattedAmount } = validateAndFormatAmount(amount, fromAddress);
+  
+  if (!isValid) {
+    return { status: "error", message: "Invalid amount format" };
+  }
+  
+  try {
+    const quote = await agent.getOkxQuote(
+      fromAddress,
+      toAddress,
+      formattedAmount,
+      "0.5" // slippage in percentage
+    );
+    
+    // Process and display quote information
+    formatQuoteResult(quote, fromAddress, toAddress);
+    return quote;
+  } catch (error) {
+    console.error("Error getting quote:", error);
+    return { status: "error", message: "Failed to get quote" };
+  }
+}
+```
+
+### Executing Swaps
+
+Swaps are executed using the OKX DEX SDK:
+
+```typescript
+async function executeSwap(
+  agent: SolanaAgentKit,
+  fromTokenAddress: string,
+  toTokenAddress: string,
+  amount: string,
+  slippage: string = "0.5",
+  autoSlippage: boolean = false
+) {
+  try {
+    // Initialize the OKX DEX client
+    const dexClient = initDexClient(agent);
+    
+    // Execute the swap
+    const swapResult = await dexClient.dex.executeSwap({
+      chainId: '501', // Solana mainnet
+      fromTokenAddress,
+      toTokenAddress,
+      amount: amount.toString(),
+      slippage,
+      autoSlippage,
+      userWalletAddress: agent.wallet_address.toString()
+    });
+    
+    return {
+      status: "success",
+      summary: {
+        // Transaction summary
+        txId: swapResult.transactionId,
+        explorerUrl: `https://www.okx.com/web3/explorer/sol/tx/${swapResult.transactionId}`
+      },
+      data: swapResult
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message || "Failed to execute swap"
+    };
+  }
+}
+```
+
+### AI Trading Assistant (Optional)
+
+The integration includes an optional AI trading assistant using LangChain:
+
+```typescript
+const llm = new ChatOpenAI({
+  modelName: "gpt-4",
+  temperature: 0.7,
+});
+
+const tools = [
+  tool(
+    async ({ fromAddress, toAddress, amount }) => 
+      getQuote(solanaAgent, fromAddress, toAddress, amount),
+    {
+      name: "getQuote",
+      description: "Get a quote for swapping tokens on OKX DEX",
+      schema: z.object({
+        fromAddress: z.string(),
+        toAddress: z.string(),
+        amount: z.string()
+      })
+    }
+  ),
+  // ... other tools
+];
+
+const agent = createReactAgent({
+  llm,
+  tools,
+  messageModifier: `
+    You are an expert DEX trading assistant on OKX.
+    ...
+  `
+});
+```
+
+## Configuration Details
+
+### OKX DEX Client Initialization
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import { initDexClient } from "./utils";
+
+// Initialize Solana Agent Kit
+const solanaAgent = new SolanaAgentKit(
+  process.env.OKX_SOLANA_PRIVATE_KEY!,
+  process.env.RPC_URL!,
+  {
+    OKX_API_KEY: process.env.OKX_API_KEY!,
+    OKX_SECRET_KEY: process.env.OKX_SECRET_KEY!,
+    OKX_API_PASSPHRASE: process.env.OKX_API_PASSPHRASE!,
+    OKX_PROJECT_ID: process.env.OKX_PROJECT_ID!,
+    OKX_SOLANA_WALLET_ADDRESS: process.env.OKX_SOLANA_WALLET_ADDRESS!,
+  }
+);
+
+// Initialize OKX DEX client
+const dexClient = initDexClient(solanaAgent);
+```
+
+### Amount Formatting
+
+The integration includes utilities for formatting token amounts correctly:
+
+```typescript
+function validateAndFormatAmount(
+  amount: string, 
+  address: string
+): { isValid: boolean; formatted: string; humanReadable: string } {
+  const cleanAmount = amount.replace(/,/g, '').trim();
+  
+  if (!/^\d*\.?\d+$/.test(cleanAmount)) {
+    return { isValid: false, formatted: "0", humanReadable: "0" };
+  }
+  
+  const value = parseFloat(cleanAmount);
+  const tokenInfo = getTokenInfo(address);
+  const decimals = tokenInfo?.decimals ?? 9;
+  
+  // Format amount in base units (e.g., lamports for SOL)
+  const parts = cleanAmount.split('.');
+  let wholePart = parts[0] || '0';
+  const fractionalPart = parts[1] || '';
+  const paddedFractional = fractionalPart.padEnd(decimals, '0').slice(0, decimals);
+  const baseUnits = wholePart + paddedFractional;
+  
+  // Format human readable amount
+  const humanValue = value.toLocaleString(undefined, {
+    minimumFractionDigits: Math.min(6, decimals),
+    maximumFractionDigits: Math.min(6, decimals)
+  });
+  
+  return {
+    isValid: true,
+    formatted: baseUnits.replace(/^0+/, '') || '0',
+    humanReadable: `${humanValue} ${tokenInfo?.symbol || address.slice(0, 8)}`
+  };
+}
+```
+
+## Error Handling
+
+The integration includes comprehensive error handling:
+
+```typescript
+try {
+  // Code that might throw
+} catch (error) {
+  console.error("Error details:", {
+    message: error.message,
+    stack: error.stack,
+    responseBody: error.responseBody,
+    requestDetails: error.requestDetails
+  });
+  
+  // Error categorization
+  if (error.message?.includes("Non-base58")) {
+    // Handle base58 encoding issues
+  } else if (error.message?.includes("insufficient funds")) {
+    // Handle insufficient balance
+  } else if (error.message?.includes("rate limit")) {
+    // Handle rate limiting
+  }
+  
+  return {
+    status: "error",
+    message: error.message || "An error occurred",
+    details: error.response?.data || error.stack
+  };
+}
+```
+
+## Token Resolution
+
+The integration can resolve tokens by symbol or address:
+
+```typescript
+async function findToken(
+  query: string, 
+  agent: SolanaAgentKit
+): Promise<TokenInfo | undefined> {
+  // Check cache
+  for (const [address, info] of Object.entries(tokenInfoCache)) {
+    if (address.toLowerCase() === query.toLowerCase() || 
+        info.symbol.toLowerCase() === query.toLowerCase()) {
+      return info;
+    }
+  }
+  
+  // Try to discover token via API
+  try {
+    const quote = await getQuote(agent, query, USDC_ADDRESS, "1");
+    if (quote?.data?.[0]?.fromToken) {
+      return {
+        symbol: quote.data[0].fromToken.tokenSymbol,
+        address: quote.data[0].fromToken.address,
+        decimals: parseInt(quote.data[0].fromToken.decimal)
+      };
+    }
+  } catch (error) {
+    // Ignore discovery errors
+  }
+  
+  return undefined;
+}
+```
+
+## Common Tokens
+
+Here are some common tokens you can use with this integration:
+
+| Symbol | Address                                       | Decimals |
+|--------|-----------------------------------------------|----------|
+| SOL    | So11111111111111111111111111111111111111112   | 9        |
+| USDC   | EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v | 6        |
+| USDT   | Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB | 6        |
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Invalid private key**
+   - Ensure your private key is in base58 format
+   - Check for extra whitespace or special characters
+
+2. **Connection errors**
+   - Verify your OKX API credentials
+   - Check your internet connection
+   - Try using a different RPC URL
+
+3. **Swap failures**
+   - Check token balances
+   - Verify token addresses
+   - Increase slippage for volatile tokens
+
+### Debugging Tips
+
+The integration includes extensive debug logging:
+
+```typescript
+console.log("\nDebug - OKX DEX Swap Execution:");
+console.log("  From token:", fromAddress);
+console.log("  To token:", toAddress);
+console.log("  Amount:", amount);
+console.log("  User wallet:", walletAddress);
+```
+
+## Advanced Features
+
+### Custom Slippage
+
+```typescript
+// Set custom slippage (as percentage)
+const slippage = "1.0"; // 1% slippage
+
+// Enable auto slippage with maximum
+const autoSlippage = true;
+const maxAutoSlippageBps = "100"; // 1% max slippage in basis points
+
+const result = await executeSwap(
+  agent,
+  fromAddress,
+  toAddress,
+  amount,
+  slippage,
+  autoSlippage,
+  maxAutoSlippageBps
+);
+```
+
+### Token Price Monitoring
+
+```typescript
+const quote = await getQuote(agent, "SOL", "USDC", "1");
+if (quote.data?.[0]?.fromToken?.tokenUnitPrice) {
+  console.log(`SOL price: $${quote.data[0].fromToken.tokenUnitPrice}`);
+}
+```
+
+## Resources
+
+- [OKX DEX API Documentation](https://www.okx.com/docs-v5/en/)
+- [Solana Agent Kit Documentation](https://github.com/sendaifun/solana-agent-kit)
+- [Solana Documentation](https://docs.solana.com/)
+
+## License
+
+MIT
