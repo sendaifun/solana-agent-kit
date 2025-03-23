@@ -674,3 +674,10 @@ export interface JupiterOrderHistoryResponse {
   hasMoreData: boolean;
   page: number;
 }
+
+interface KaminoStakingYieldItem {
+  apy: string;
+  tokenMint: string;
+}
+
+export type KaminoStakingYieldsResponse = KaminoStakingYieldItem[];

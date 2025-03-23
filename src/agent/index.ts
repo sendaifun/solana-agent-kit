@@ -146,6 +146,7 @@ import {
   tokenTransfer,
   cctpTransfer,
   createWrappedToken,
+  getStakingYields,
 } from "../tools";
 import {
   Config,
@@ -1441,5 +1442,9 @@ export class SolanaAgentKit {
    */
   async getJupiterLimitOrderHistory() {
     return getLimitOrderHistory(this);
+  }
+
+  async getKaminoStakingYields() {
+    return getStakingYields(this);
   }
 }
