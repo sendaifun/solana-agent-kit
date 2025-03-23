@@ -43,6 +43,12 @@
         "icon": "book-open"
       },
       {
+        "group": "v2-beta",
+        "pages": [
+          "v0/v2-beta/getting_started"
+        ]
+      },
+      {
         "group": "Features",
         "pages": [
           {

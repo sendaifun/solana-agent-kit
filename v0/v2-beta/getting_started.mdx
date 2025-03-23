@@ -1,0 +1,434 @@
+# Solana Agent Kit v2 Beta Integration Guide
+
+This guide demonstrates how to integrate and use Solana Agent Kit v2 Beta in your applications, showcasing a modular, plugin-based architecture for building Solana-powered applications and AI agents.
+
+## Overview
+
+Solana Agent Kit v2 introduces a plugin-based architecture that allows developers to:
+
+- Extend functionality through modular plugins
+- Create interactive AI agents that can perform on-chain operations
+- Build programmatic interfaces for Solana dApps
+- Seamlessly integrate with AI frameworks like Vercel AI SDK
+
+## Prerequisites
+
+- Node.js 16+ and npm/yarn/pnpm
+- Solana wallet with private key
+- OpenAI API key (for AI agent functionality)
+- Solana RPC URL
+
+## Installation
+
+Start by installing the core package and desired plugins:
+
+```bash
+npm install solana-agent-kit @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
+```
+
+Additional dependencies:
+
+```bash
+npm install @solana/web3.js bs58 dotenv @ai-sdk/openai ai
+```
+
+## Basic Setup
+
+### Environment Setup
+
+Create a `.env` file with the following variables:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+RPC_URL=your_solana_rpc_url
+SOLANA_PRIVATE_KEY=your_solana_wallet_private_key
+```
+
+### Core Initialization
+
+```typescript
+import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+import NFTPlugin from "@solana-agent-kit/plugin-nft";
+import DefiPlugin from "@solana-agent-kit/plugin-defi";
+import MiscPlugin from "@solana-agent-kit/plugin-misc";
+import BlinksPlugin from "@solana-agent-kit/plugin-blinks";
+import * as dotenv from "dotenv";
+import { Keypair } from "@solana/web3.js";
+import bs58 from "bs58";
+
+dotenv.config();
+
+// Initialize wallet
+// We are using Keypair for this demo, but it can be connected to Embedded wallet
+
+const keyPair = Keypair.fromSecretKey(
+  bs58.decode(process.env.SOLANA_PRIVATE_KEY as string)
+);
+const wallet = new KeypairWallet(keyPair, process.env.RPC_URL as string);
+
+// Initialize agent with wallet and RPC URL, then add plugins
+const agent = new SolanaAgentKit(wallet, process.env.RPC_URL!, {
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+})
+  .use(TokenPlugin)
+  .use(NFTPlugin)
+  .use(DefiPlugin)
+  .use(MiscPlugin)
+  .use(BlinksPlugin);
+```
+
+## Plugins Overview
+
+Solana Agent Kit v2 uses a modular plugin system to extend functionality:
+
+- **TokenPlugin**: SPL token operations (transfers, balances, minting)
+- **NFTPlugin**: NFT operations (minting, transfers, metadata)
+- **DefiPlugin**: DeFi operations (swaps, pools, lending)
+- **MiscPlugin**: Miscellaneous utilities (airdrop, network info)
+- **BlinksPlugin**: Integration with Blinks protocol
+
+Plugins encapsulate related functionality in a modular way, allowing you to include only what your application needs.
+
+## Usage Modes
+
+Solana Agent Kit v2 supports two primary usage modes:
+
+### 1. AI Agent Mode
+
+Create interactive agents that can respond to natural language instructions:
+
+```typescript
+import { createOpenAI } from "@ai-sdk/openai";
+import { type Message, streamText } from "ai";
+import { randomUUID } from "node:crypto";
+import { createVercelAITools } from "solana-agent-kit";
+
+export default async function (agent: SolanaAgentKit) {
+  // Create AI tools from agent's actions
+  const tools = createVercelAITools(agent, agent.actions);
+  
+  // Initialize OpenAI client
+  const openai = createOpenAI({
+    apiKey: process.env.OPENAI_API_KEY as string,
+  });
+  
+  // Initialize message history
+  const messages: Message[] = [];
+  
+  // Interactive chat loop
+  while (true) {
+    const prompt = await question("\nYou: ");
+    if (prompt === "exit") break;
+    
+    // Add user message to history
+    messages.push({
+      content: prompt,
+      id: randomUUID(),
+      role: "user",
+    });
+    
+    // Stream response from the AI model with tools
+    const response = streamText({
+      model: openai("gpt-4o"),
+      tools,
+      messages,
+      system: `You are a helpful agent that can interact onchain using the Solana Agent Kit...`,
+      maxSteps: 5,
+    });
+    
+    // Display streaming response
+    process.stdout.write("Agent: ");
+    for await (const textPart of response.textStream) {
+      process.stdout.write(textPart);
+    }
+    console.log();
+    
+    // Add AI response to history
+    messages.push({
+      content: await response.text,
+      id: randomUUID(),
+      role: "assistant",
+    });
+  }
+}
+```
+
+### 2. Programmatic Mode
+
+For direct programmatic usage without AI:
+
+```typescript
+async function programmaticExample(agent: SolanaAgentKit) {
+  // Get SOL balance
+  const balance = await agent.methods.getBalance();
+  console.log("SOL Balance:", balance);
+  
+  // Airdrop SOL (devnet/testnet only)
+  const airdropResult = await agent.methods.requestAirdrop("1");
+  console.log("Airdrop result:", airdropResult);
+  
+  // Transfer SPL token
+  const transferResult = await agent.methods.transferToken({
+    destination: "recipient_address",
+    amount: "1",
+    mint: "token_mint_address",
+  });
+  console.log("Transfer result:", transferResult);
+  
+  // Swap tokens using Jupiter
+  const swapResult = await agent.methods.swapToken({
+    inputMint: "input_token_mint",
+    outputMint: "output_token_mint",
+    amount: "1",
+    slippage: 0.5,
+  });
+  console.log("Swap result:", swapResult);
+}
+```
+
+## Integrating with Vercel AI SDK
+
+Solana Agent Kit v2 provides built-in integration with Vercel AI SDK:
+
+```typescript
+import { createVercelAITools } from "solana-agent-kit";
+import { createAI } from "ai";
+
+// Create AI tools from agent's actions
+const tools = createVercelAITools(agent, agent.actions);
+
+// Create AI configuration
+const ai = createAI({
+  actions: tools,
+  initialMessages: [
+    {
+      role: "system",
+      content: "You are a helpful agent that can interact with Solana blockchain."
+    }
+  ]
+});
+```
+
+## Custom Plugins
+
+Create your own plugins to extend functionality:
+
+```typescript
+import { SolanaAgentKitPlugin } from "solana-agent-kit";
+
+// Define custom plugin
+const CustomPlugin: SolanaAgentKitPlugin = {
+  name: "custom",
+  
+  // Methods that will be available on agent.methods
+  methods: {
+    customFunction: async (agent, param1: string, param2: number) => {
+      // Implementation
+      return { status: "success", data: {} };
+    }
+  },
+  
+  // Actions for AI integration
+  actions: [
+    {
+      name: "CUSTOM_ACTION",
+      description: "Performs a custom function",
+      schema: z.object({
+        param1: z.string(),
+        param2: z.number(),
+      }),
+      handler: async (agent, input) => {
+        const result = await agent.methods.customFunction(
+          input.param1,
+          input.param2
+        );
+        return { status: "success", data: result };
+      }
+    }
+  ]
+};
+
+// Use the custom plugin
+const agent = new SolanaAgentKit(wallet, rpcUrl)
+  .use(CustomPlugin);
+```
+
+## Error Handling
+
+Implement proper error handling for blockchain operations:
+
+```typescript
+try {
+  const result = await agent.methods.transferToken({
+    destination: "recipient_address",
+    amount: "1",
+    mint: "token_mint_address",
+  });
+  
+  console.log("Transfer successful:", result);
+} catch (error) {
+  if (error.message.includes("insufficient funds")) {
+    console.error("Insufficient funds for transfer");
+  } else if (error.message.includes("invalid address")) {
+    console.error("Invalid recipient address");
+  } else {
+    console.error("Transfer failed:", error);
+  }
+}
+```
+
+## Utility Functions
+
+For a better developer experience, create utility functions:
+
+```typescript
+// Environment validation
+function validateEnvironment(): void {
+  const missingVars: string[] = [];
+  const requiredVars = ["OPENAI_API_KEY", "RPC_URL", "SOLANA_PRIVATE_KEY"];
+  
+  requiredVars.forEach((varName) => {
+    if (!process.env[varName]) {
+      missingVars.push(varName);
+    }
+  });
+  
+  if (missingVars.length > 0) {
+    console.error("Error: Required environment variables are not set");
+    missingVars.forEach((varName) => {
+      console.error(`${varName}=your_${varName.toLowerCase()}_here`);
+    });
+    process.exit(1);
+  }
+}
+
+// Interactive prompt
+const question = (prompt: string): Promise<string> =>
+  new Promise((resolve) => rl.question(prompt, resolve));
+```
+
+## Mode Selection
+
+Allow users to choose between AI agent and programmatic modes:
+
+```typescript
+async function chooseMode(): Promise<"agent" | "programmatic"> {
+  while (true) {
+    console.log("\nAvailable modes:");
+    console.log("1. agent    - Interactive agent chat mode");
+    console.log("2. programmatic    - Programmatic tests written using Jest");
+    
+    const choice = (await question("\nChoose a mode (enter number or name): "))
+      .toLowerCase()
+      .trim();
+      
+    if (choice === "1" || choice === "agent") {
+      return "agent";
+    } else if (choice === "2" || choice === "programmatic") {
+      return "programmatic";
+    }
+    
+    console.log("Invalid choice. Please try again.");
+  }
+}
+```
+
+## Full Example Application
+
+```typescript
+import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+import NFTPlugin from "@solana-agent-kit/plugin-nft";
+import DefiPlugin from "@solana-agent-kit/plugin-defi";
+import MiscPlugin from "@solana-agent-kit/plugin-misc";
+import BlinksPlugin from "@solana-agent-kit/plugin-blinks";
+import * as dotenv from "dotenv";
+import { Keypair } from "@solana/web3.js";
+import bs58 from "bs58";
+import { chooseMode, rl } from "./utils";
+import aiTests from "./agentTests";
+import programmaticTests from "./programmaticTests";
+
+dotenv.config();
+
+// Validate environment
+function validateEnvironment(): void {
+  const missingVars: string[] = [];
+  const requiredVars = ["OPENAI_API_KEY", "RPC_URL", "SOLANA_PRIVATE_KEY"];
+  requiredVars.forEach((varName) => {
+    if (!process.env[varName]) {
+      missingVars.push(varName);
+    }
+  });
+  if (missingVars.length > 0) {
+    console.error("Error: Required environment variables are not set");
+    missingVars.forEach((varName) => {
+      console.error(`${varName}=your_${varName.toLowerCase()}_here`);
+    });
+    process.exit(1);
+  }
+}
+
+validateEnvironment();
+
+async function main() {
+  // Choose mode
+  const mode = await chooseMode();
+  
+  // Create wallet
+  const keyPair = Keypair.fromSecretKey(
+    bs58.decode(process.env.SOLANA_PRIVATE_KEY as string),
+  );
+  const wallet = new KeypairWallet(keyPair, process.env.RPC_URL as string);
+  
+  // Initialize agent with plugins
+  const agent = new SolanaAgentKit(wallet, process.env.RPC_URL!, {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  })
+    .use(TokenPlugin)
+    .use(NFTPlugin)
+    .use(DefiPlugin)
+    .use(MiscPlugin)
+    .use(BlinksPlugin);
+  
+  // Run selected mode
+  if (mode === "agent") {
+    await aiTests(agent);
+  } else {
+    await programmaticTests(agent);
+  }
+  
+  rl.close();
+}
+
+main()
+  .then(() => console.log("All tests completed successfully!"))
+  .catch((error) => {
+    console.error("Error during tests:", error);
+    process.exit(1);
+  });
+```
+
+## Best Practices
+
+1. **Plugin Selection**: Only include plugins your application needs to reduce bundle size
+2. **Error Handling**: Implement robust error handling for all blockchain operations
+3. **Environment Variables**: Use environment variables for sensitive information
+4. **Testing**: Test on devnet before moving to mainnet
+5. **Rate Limiting**: Be mindful of RPC rate limits in high-volume applications
+6. **User Experience**: For AI agents, provide clear instructions and examples
+
+## Common Issues
+
+1. **Invalid Private Key**: Ensure your private key is in the correct format (base58)
+2. **RPC Errors**: Watch for rate limiting or connectivity issues with RPC providers
+3. **Plugin Conflicts**: Some plugins may have overlapping functionality
+4. **AI Token Limits**: Be aware of token limits when using AI models
+
+## Resources
+
+- [Solana Agent Kit Documentation](https://www.solanaagentkit.xyz)
+- [Solana Web3.js Documentation](https://docs.solanalabs.com/sdk/web3js)
+- [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
+- [OpenAI API Documentation](https://platform.openai.com/docs/api-reference)
