@@ -122,6 +122,7 @@ import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
 import createLimitOrderAction from "./jupiter/createLimitOrder";
 import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
 import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
+import stakeForTokenAction from "./jupiter/stakeForToken";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -139,6 +140,7 @@ export const ACTIONS = {
   GET_TPS_ACTION: getTPSAction,
   FETCH_PRICE_ACTION: fetchPriceAction,
   STAKE_WITH_JUP_ACTION: stakeWithJupAction,
+  STAKE_FOR_TOKEN_ACTION: stakeForTokenAction,
   STAKE_WITH_SOLAYER_ACTION: stakeWithSolayerAction,
   REGISTER_DOMAIN_ACTION: registerDomainAction,
   LEND_ASSET_ACTION: lendAssetAction,
