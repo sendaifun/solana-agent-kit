@@ -88,7 +88,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Streaming responses for real-time feedback
 
 - **Vercel AI SDK Integration**
-  - Vercel AI SDK for AI agent integration
+  - Vercel AI SDK for AI agent integrations
   - Framework agnostic support
   - Quick and easy toolkit setup
 
