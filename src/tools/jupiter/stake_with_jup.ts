@@ -54,3 +54,60 @@ export async function stakeWithJup(
     throw new Error(`jupSOL staking failed: ${error.message}`);
   }
 }
+
+
+/**
+ * Stake SOL with Jup but to different pools
+ * @param agent SolanaAgentKit instance
+ * @param tokenMint Token recieved for staking
+ * @param amount Amount of SOL to stake
+ * @returns Transaction signature
+ */
+export async function stakeForToken(
+  agent: SolanaAgentKit,
+  tokenMint: string,
+  amount: number,
+): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://worker.jup.ag/blinks/swap/So11111111111111111111111111111111111111112/${tokenMint}/${amount}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          account: agent.wallet.publicKey.toBase58(),
+        }),
+      },
+    );
+
+    const data = await res.json();
+
+    const txn = VersionedTransaction.deserialize(
+      Buffer.from(data.transaction, "base64"),
+    );
+
+    const { blockhash } = await agent.connection.getLatestBlockhash();
+    txn.message.recentBlockhash = blockhash;
+
+    // Sign and send transaction
+    txn.sign([agent.wallet]);
+    const signature = await agent.connection.sendTransaction(txn, {
+      preflightCommitment: "confirmed",
+      maxRetries: 3,
+    });
+
+    const latestBlockhash = await agent.connection.getLatestBlockhash();
+    await agent.connection.confirmTransaction({
+      signature,
+      blockhash: latestBlockhash.blockhash,
+      lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+    });
+
+    return signature;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(`${tokenMint} staking failed: ${error.message}`);
+  }
+}

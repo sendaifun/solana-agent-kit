@@ -146,6 +146,8 @@ import {
   tokenTransfer,
   cctpTransfer,
   createWrappedToken,
+  getStakingYields,
+  stakeForToken,
 } from "../tools";
 import {
   Config,
@@ -465,6 +467,10 @@ export class SolanaAgentKit {
 
   async stake(amount: number): Promise<string> {
     return stakeWithJup(this, amount);
+  }
+
+  async stakeForToken(tokenMint: string, amount: number): Promise<string> {
+    return stakeForToken(this, tokenMint, amount);
   }
 
   async restake(amount: number): Promise<string> {
@@ -1441,5 +1447,9 @@ export class SolanaAgentKit {
    */
   async getJupiterLimitOrderHistory() {
     return getLimitOrderHistory(this);
+  }
+
+  async getKaminoStakingYields() {
+    return getStakingYields(this);
   }
 }

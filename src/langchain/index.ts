@@ -37,6 +37,7 @@ export * from "./debridge";
 export * from "./fluxbeam";
 export * from "./wormhole";
 export * from "./okx-dex";
+export * from "./kamino";
 
 import type { SolanaAgentKit } from "../agent";
 import {
@@ -58,6 +59,7 @@ import {
   SolanaLuloWithdrawTool,
   SolanaTPSCalculatorTool,
   SolanaStakeTool,
+  SolanaStakeForTokenTool,
   SolanaRestakeTool,
   SolanaFetchPriceTool,
   SolanaGetDomainTool,
@@ -194,6 +196,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaLuloWithdrawTool(solanaKit),
     new SolanaTPSCalculatorTool(solanaKit),
     new SolanaStakeTool(solanaKit),
+    new SolanaStakeForTokenTool(solanaKit),
     new SolanaRestakeTool(solanaKit),
     new SolanaFetchPriceTool(solanaKit),
     new SolanaGetDomainTool(solanaKit),

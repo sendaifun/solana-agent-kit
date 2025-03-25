@@ -122,6 +122,8 @@ import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
 import createLimitOrderAction from "./jupiter/createLimitOrder";
 import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
 import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
+import stakeForTokenAction from "./jupiter/stakeForToken";
+import getStakingYieldsAction from "./kamino/getStakingYields";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -139,6 +141,7 @@ export const ACTIONS = {
   GET_TPS_ACTION: getTPSAction,
   FETCH_PRICE_ACTION: fetchPriceAction,
   STAKE_WITH_JUP_ACTION: stakeWithJupAction,
+  STAKE_FOR_TOKEN_ACTION: stakeForTokenAction,
   STAKE_WITH_SOLAYER_ACTION: stakeWithSolayerAction,
   REGISTER_DOMAIN_ACTION: registerDomainAction,
   LEND_ASSET_ACTION: lendAssetAction,
@@ -252,6 +255,7 @@ export const ACTIONS = {
   CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
   GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
   GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
+  GET_STAKING_YIELDS_ACTION: getStakingYieldsAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";
