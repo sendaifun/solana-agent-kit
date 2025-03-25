@@ -50,7 +50,7 @@ function deepCmp(referenceArguments: any, llmArguments: any): boolean {
   if (!referenceKeys.every((key) => llmKeys.includes(key))) {
     return false;
   }
-  // Only comparse keys from reference (all mandatory) since the llm may return optional parameters that may not be in reference
+  // Only compare keys from reference (all mandatory) since the llm may return optional parameters that may not be in reference
   return referenceKeys.every((key) =>
     deepCmp(referenceArguments[key], llmArguments[key]),
   );
@@ -58,12 +58,11 @@ function deepCmp(referenceArguments: any, llmArguments: any): boolean {
 
 function compareArgs(
   referenceAnswer: { tool: string; response: string },
-
   llmAnswer: { tool: string; response: string | undefined },
 ): boolean {
   if (!llmAnswer.response || !referenceAnswer.response) return false;
 
-  // Repsonses can be just strings (single argument) or KV of parameter names and arguments
+  // Responses can be just strings (single argument) or KV of parameter names and arguments
   let parsedReferenceResponse = referenceAnswer.response.startsWith("{")
     ? JSON.parse(referenceAnswer.response)
     : referenceAnswer.response;
@@ -76,11 +75,29 @@ function compareArgs(
 
 function compareTools(
   referenceAnswer: { tool: string; response: string },
-
   llmAnswer: { tool: string; response: string | undefined },
 ): boolean {
   return llmAnswer.tool === referenceAnswer.tool;
 }
+
+const toolEvaluator = async (params: {
+  referenceOutputs: { tool: string; response: string };
+  llmAnswer: { tool: string; response: string };
+}) => {
+  return {
+    key: "correct_tool",
+    score: compareTools(params.referenceOutputs, params.llmAnswer),
+  };
+};
+const argsEvaluator = async (params: {
+  referenceOutputs: { tool: string; response: string };
+  llmAnswer: { tool: string; response: string };
+}) => {
+  return {
+    key: "correct_args",
+    score: compareArgs(params.referenceOutputs, params.llmAnswer),
+  };
+};
 
 export async function runEvals<T>(
   dataset: {
@@ -128,25 +145,6 @@ export async function runEvals<T>(
           compareArgs(referenceOutputs, llmAnswer) &&
           compareTools(referenceOutputs, llmAnswer);
 
-        const toolEvaluator = async (params: {
-          referenceOutputs: { tool: string; response: string };
-          llmAnswer: { tool: string; response: string };
-        }) => {
-          return {
-            key: "correct_tool",
-            score: compareArgs(params.referenceOutputs, params.llmAnswer),
-          };
-        };
-        const argsEvaluator = async (params: {
-          referenceOutputs: { tool: string; response: string };
-          llmAnswer: { tool: string; response: string };
-        }) => {
-          return {
-            key: "correct_args",
-            score: compareArgs(params.referenceOutputs, params.llmAnswer),
-          };
-        };
-
         const wrappedToolEvaluator = ls.wrapEvaluator(toolEvaluator);
         await wrappedToolEvaluator({
           referenceOutputs,
@@ -162,5 +160,105 @@ export async function runEvals<T>(
         expect(isCorrect).toBe(true);
       },
     );
+  });
+}
+
+export type ConversationTurn = {
+  input: string;
+  expectedToolCall?: {
+    tool: string;
+    params: Record<string, any>;
+  };
+};
+
+export type ComplexEvalDataset = {
+  description: string;
+  turns: ConversationTurn[];
+  inputs: Record<string, string>;
+};
+
+export async function runComplexEval(
+  dataset: ComplexEvalDataset[],
+  testName: string,
+) {
+  ls.describe(testName, () => {
+    ls.test.each(dataset as any)(testName, async (scenario) => {
+      const conversation: Array<{
+        role: string;
+        content: string | null;
+        tool_calls?: any;
+      }> = [];
+      let foundCorrectToolCall = true;
+
+      for (let i = 0; i < scenario.turns.length; i++) {
+        const turn = scenario.turns[i];
+        conversation.push({ role: "user", content: turn.input });
+
+        const result = await agent.invoke(
+          { messages: conversation },
+          {
+            configurable: {
+              thread_id: `${testName}-${new Date().toISOString()}`, // Need unique thread-id to keep context seperate betweet tests
+            },
+          },
+        );
+
+        ls.logOutputs(result);
+        const assistantMessage = result.messages[result.messages.length - 1];
+        conversation.push(assistantMessage);
+        // conversation.forEach((message) => console.log(message.content));
+        if (
+          turn.expectedToolCall &&
+          !(
+            assistantMessage.tool_calls &&
+            assistantMessage.tool_calls.length > 0
+          )
+        ) {
+          foundCorrectToolCall = false;
+          continue;
+        }
+        if (
+          assistantMessage.tool_calls &&
+          assistantMessage.tool_calls.length > 0 &&
+          turn.expectedToolCall
+        ) {
+          const toolCall = assistantMessage.tool_calls[0];
+
+          const toolName = toolCall?.name || "";
+          const llmArgs = toolCall.args.input;
+          const toolArgs: string = typeof llmArgs === "string" ? llmArgs : "{}";
+
+          if (toolName === turn.expectedToolCall.tool) {
+            const referenceOutputs = {
+              tool: turn.expectedToolCall.tool,
+              response: JSON.stringify(turn.expectedToolCall.params),
+            };
+            const llmAnswer: { tool: string; response: string } = {
+              tool: toolName,
+              response: toolArgs,
+            };
+
+            const argsMatch = compareArgs(referenceOutputs, llmAnswer);
+            const toolMatches = compareTools(referenceOutputs, llmAnswer);
+
+            foundCorrectToolCall =
+              foundCorrectToolCall && argsMatch && toolMatches; // && so if it fails on one tool the whole test fails
+
+            const wrappedToolEvaluator = ls.wrapEvaluator(toolEvaluator);
+            await wrappedToolEvaluator({
+              referenceOutputs,
+              llmAnswer,
+            });
+
+            const wrappedArgsEvaluator = ls.wrapEvaluator(argsEvaluator);
+            await wrappedArgsEvaluator({
+              referenceOutputs,
+              llmAnswer,
+            });
+          }
+        }
+      }
+      expect(foundCorrectToolCall).toBe(true);
+    });
   });
 }
