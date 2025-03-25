@@ -521,7 +521,7 @@ const signature = await agent.updateDriftVault({
 Withdraw tokens from your drift account.
 
 ```typescript
-const {txSig} = await agent.withdrawFromDriftAccount(100, "USDC")
+const {txSig} = await agent.withdrawFromDriftAccount(90, "USDC")
 ```
 
 ### Borrow from Drift
@@ -591,7 +591,7 @@ const signature = await agent.voltrWithdrawStrategy(
 ### Get a Solana asset by its ID
 
 ```typescript
-const asset = await agent.getAsset("41Y8C4oxk4zgJT1KXyQr35UhZcfsp5mP86Z2G7UUzojU")
+const asset = await agent.getAsset("Gw1kvynw524mqLso6TbfKneDdnZv1hTJTWF8cdtkLsGK")
 ```
 
 ### Get a price inference from Allora
