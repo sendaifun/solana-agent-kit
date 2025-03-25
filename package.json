@@ -17,7 +17,8 @@
     "tool-summary": "tsx src/utils/analyzeTools.ts",
     "tool-summary:langchain": "tsx src/utils/analyzeTools.ts --langchain",
     "check-tool-names:langchain": "tsx scripts/check-langchain-tool-duplicates.ts",
-    "eval": "vitest run --config ls.vitest.config.ts"
+    "eval": "vitest run --config ls.vitest.config.ts",
+    "test:complex": "vitest src/langchain/evals/utils/complex.eval.ts --config ls.vitest.config.ts"
   },
   "repository": {
     "type": "git",
