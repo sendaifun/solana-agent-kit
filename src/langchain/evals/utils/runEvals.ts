@@ -167,7 +167,7 @@ export type ConversationTurn = {
   input: string;
   expectedToolCall?: {
     tool: string;
-    params: Record<string, any>;
+    params: any;
   };
 };
 
@@ -227,11 +227,15 @@ export async function runComplexEval(
           const toolName = toolCall?.name || "";
           const llmArgs = toolCall.args.input;
           const toolArgs: string = typeof llmArgs === "string" ? llmArgs : "{}";
+          const params = turn.expectedToolCall.params;
 
           if (toolName === turn.expectedToolCall.tool) {
             const referenceOutputs = {
               tool: turn.expectedToolCall.tool,
-              response: JSON.stringify(turn.expectedToolCall.params),
+              response:
+                typeof params === "string"
+                  ? params
+                  : JSON.stringify(turn.expectedToolCall.params),
             };
             const llmAnswer: { tool: string; response: string } = {
               tool: toolName,
