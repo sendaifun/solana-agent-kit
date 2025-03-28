@@ -38,6 +38,7 @@ export * from "./fluxbeam";
 export * from "./wormhole";
 export * from "./okx-dex";
 export * from "./solanafm";
+export * from "./sanctum";
 
 import type { SolanaAgentKit } from "../agent";
 import {
@@ -168,6 +169,11 @@ import {
   GetWormholeSupportedChainsTool,
   SolanaParseAccountTool,
   SolanaParseInstructionTool,
+  SanctumGetPriceTool,
+  SanctumGetApyTool,
+  SanctumGetTvlTool,
+  SanctumAddLiquidityTool,
+  SanctumRemoveLiquidityTool,
 } from "./index";
 import {
   SolanaCancelLimitOrdersTool,
@@ -309,5 +315,10 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetOrderHistoryTool(solanaKit),
     new SolanaParseAccountTool(solanaKit),
     new SolanaParseInstructionTool(solanaKit),
+    new SanctumGetPriceTool(solanaKit),
+    new SanctumGetApyTool(solanaKit),
+    new SanctumGetTvlTool(solanaKit),
+    new SanctumAddLiquidityTool(solanaKit),
+    new SanctumRemoveLiquidityTool(solanaKit),
   ];
 }
