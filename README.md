@@ -804,6 +804,66 @@ const parsedData = await agent.parseAccount(
 console.log("parsed data:", parsedData)
 ```
 
+### Get Sanctum LST Price
+
+```typescript
+const prices = await agent.getSanctumPrice([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('prices', prices)
+```
+
+### Get Sanctum LST APY
+
+```typescript
+const apys = await agent.getSanctumApy([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('apys', apys)
+```
+
+### Get Sanctum LST TVL
+
+```typescript
+const tvls = await agent.getSanctumTvl([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('tvls', tvls)
+```
+
+### Add Liquidity to Sanctum Infinite Pool
+
+```typescript
+const txId = await agent.addSanctumLiquidity(
+  "So11111111111111111111111111111111111111112",
+  "1000000000",
+  "1100000000"
+  5000
+)
+
+console.log('txId', txId)
+```
+
+### Remove Liquidity from Sanctum Infinite Pool
+
+```typescript
+const txId = await agent.removeSanctumLiquidity(
+  "So11111111111111111111111111111111111111112",
+  "1000000000",
+  "1100000000"
+  5000
+)
+
+console.log('txId', txId)
+```
+
+
 ### Get Chain Data
 
 Note: To use OKX DEX integration, you need to set up the following environment variables: Get OKX API keys from the [OKX Developer Portal] (https://www.okx.com/web3/build/dev-portal)
