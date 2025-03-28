@@ -148,6 +148,11 @@ import {
   createWrappedToken,
   parse_instruction,
   parse_account,
+  get_price as getSanctumLSTPrice,
+  get_apy as getSanctumLSTApy,
+  get_tvl as getSanctumLSTTvl,
+  add_liquidity as addSanctumLSTLiquidity,
+  remove_liquidity as removeSanctumLSTLiquidity,
 } from "../tools";
 import {
   Config,
@@ -1459,5 +1464,47 @@ export class SolanaAgentKit {
    */
   async getJupiterLimitOrderHistory() {
     return getLimitOrderHistory(this);
+  }
+
+  async getSanctumPrice(mints: string[]) {
+    return getSanctumLSTPrice(mints);
+  }
+
+  async getSanctumApy(inputs: string[]) {
+    return getSanctumLSTApy(inputs);
+  }
+
+  async getSanctumTvl(inputs: string[]) {
+    return getSanctumLSTTvl(inputs);
+  }
+
+  async addSanctumLiquidity(
+    lstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+  ) {
+    return addSanctumLSTLiquidity(
+      this,
+      lstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+    );
+  }
+
+  async removeSanctumLiquidity(
+    lstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+  ) {
+    return removeSanctumLSTLiquidity(
+      this,
+      lstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+    );
   }
 }
