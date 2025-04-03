@@ -29,7 +29,7 @@ function validateEnvironment(): void {
 }
 
 validateEnvironment();
-  
+
 const WALLET_DATA_FILE = "wallet_data.txt";
 
 async function initializeAgent(system_prompt: string) {
@@ -70,8 +70,7 @@ async function initializeAgent(system_prompt: string) {
       checkpointSaver: memory,
       messageModifier: `
         ${system_prompt}. You are
-        empowered to interact onchain using your tools. If you ever need funds, you can request them from the
-        faucet. If not, you can provide your wallet details and request funds from the user. If there is a 5XX
+        empowered to interact onchain using your tools. If you need funds you can request it from the user and provide your wallet details. If there is a 5XX
         (internal) HTTP error code, ask the user to try again later. If someone asks you to do something you
         can't do with your currently available tools, you must say so, and encourage them to implement it
         themselves using the Solana Agent Kit, recommend they go to https://www.solanaagentkit.xyz for more information. Be
@@ -207,9 +206,11 @@ async function choosePersonality(): Promise<string> {
   console.log("************\nPersonality Selection:");
 
   while (true) {
-    
-    const choice = (await question("What is the name of the celebrity/person/character that you would like to create?\n************\n\n"))
-      .toLowerCase();
+    const choice = (
+      await question(
+        "What is the name of the celebrity/person/character that you would like to create?\n************\n\n",
+      )
+    ).toLowerCase();
 
     rl.close();
 
@@ -218,14 +219,12 @@ async function choosePersonality(): Promise<string> {
   }
 }
 
-async function fetchOrbofiPersonality(
-  celebrity_name:String
-) {
-    const url = `https://api.orbofi.com/bots/getBotData?bot_name=${celebrity_name}`;
-   
+async function fetchOrbofiPersonality(celebrity_name: String) {
+  const url = `https://api.orbofi.com/bots/getBotData?bot_name=${celebrity_name}`;
+
   try {
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
     });
 
     if (!response.ok) {
@@ -235,25 +234,23 @@ async function fetchOrbofiPersonality(
     const responseDataTmp = await response.json();
     const responseData = JSON.parse(responseDataTmp.results);
 
-    let selected_chatbot_prompt = responseData[0]['description'];
+    let selected_chatbot_prompt = responseData[0]["description"];
 
-    console.log(`Fetched personality: ${selected_chatbot_prompt}`)
+    console.log(`Fetched personality: ${selected_chatbot_prompt}`);
 
     return selected_chatbot_prompt;
   } catch (error) {
-    console.error('Error fetching chatbot list:', error);
+    console.error("Error fetching chatbot list:", error);
     return [];
   }
 }
-  
 
 async function main() {
   try {
-
     console.log("Starting Agent...");
 
     const selected_chatbot_prompt = await choosePersonality();
-  
+
     const { agent, config } = await initializeAgent(selected_chatbot_prompt);
     const mode = await chooseMode();
 
