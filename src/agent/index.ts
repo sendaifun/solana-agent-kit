@@ -8,6 +8,9 @@ import {
   StoreInitOptions,
 } from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 import { DEFAULT_OPTIONS } from "../constants";
+import { MemoryVectorStore } from "./memory";
+import { VectorStoreConfig, VectorStoreResult } from "./memory/base";
+import { generateEmbedding } from "./memory/embeddings";
 import {
   deploy_collection,
   deploy_token,
@@ -221,6 +224,7 @@ export class SolanaAgentKit {
   public wallet: Keypair;
   public wallet_address: PublicKey;
   public config?: Config;
+  private memoryStore: MemoryVectorStore;
 
   /**
    * @deprecated Using openai_api_key directly in constructor is deprecated.
@@ -255,6 +259,56 @@ export class SolanaAgentKit {
     } else {
       this.config = configOrKey as Config;
     }
+
+    // Initialize memory store
+    const vectorStoreConfig: VectorStoreConfig = {
+      dimension: 1536, // OpenAI embedding dimension
+      collectionName: 'agent_memories',
+      dbPath: 'agent_memory.db'
+    };
+    this.memoryStore = new MemoryVectorStore(vectorStoreConfig);
+  }
+
+  // Memory methods
+  async storeMemory(id: string, vector: number[], payload: Record<string, any>): Promise<void> {
+    await this.memoryStore.insert([vector], [id], [payload]);
+  }
+
+  async searchMemories(query: number[], limit: number = 5): Promise<VectorStoreResult[]> {
+    return await this.memoryStore.search(query, limit);
+  }
+
+  async getMemory(id: string): Promise<VectorStoreResult | null> {
+    return await this.memoryStore.get(id);
+  }
+
+  async deleteMemory(id: string): Promise<void> {
+    await this.memoryStore.delete(id);
+  }
+
+  // Text embedding methods
+  async storeTextMemory(id: string, text: string, metadata: Record<string, any> = {}): Promise<void> {
+    if (!this.config?.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is required for text embeddings');
+    }
+
+    const embedding = await generateEmbedding(text, this.config.OPENAI_API_KEY);
+    const payload = {
+      text,
+      ...metadata,
+      timestamp: new Date().toISOString()
+    };
+
+    await this.storeMemory(id, embedding, payload);
+  }
+
+  async searchTextMemories(query: string, limit: number = 5): Promise<VectorStoreResult[]> {
+    if (!this.config?.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key is required for text embeddings');
+    }
+
+    const embedding = await generateEmbedding(query, this.config.OPENAI_API_KEY);
+    return await this.searchMemories(embedding, limit);
   }
 
   // Tool methods
