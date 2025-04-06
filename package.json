@@ -82,6 +82,7 @@
     "@switchboard-xyz/common": "^2.5.15",
     "@tensor-oss/tensorswap-sdk": "^4.5.0",
     "@tiplink/api": "^0.3.1",
+    "@types/sqlite3": "^5.1.0",
     "@voltr/vault-sdk": "^0.1.1",
     "@wormhole-foundation/sdk": "^1.13.1",
     "ai": "^4.0.22",
@@ -96,7 +97,9 @@
     "form-data": "^4.0.1",
     "langchain": "^0.3.8",
     "langsmith": "^0.3.7",
-    "openai": "^4.77.0",
+    "openai": "^4.77.3",
+    "solana-agent-kit": "link:",
+    "sqlite3": "^5.1.7",
     "tiktoken": "^1.0.18",
     "typedoc": "^0.27.6",
     "zod": "^3.24.1"
