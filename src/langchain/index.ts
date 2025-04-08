@@ -174,6 +174,8 @@ import {
   SanctumGetTvlTool,
   SanctumAddLiquidityTool,
   SanctumRemoveLiquidityTool,
+  SanctumGetOwnedLstTool,
+  SanctumSwapLstTool,
 } from "./index";
 import {
   SolanaCancelLimitOrdersTool,
@@ -320,5 +322,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SanctumGetTvlTool(solanaKit),
     new SanctumAddLiquidityTool(solanaKit),
     new SanctumRemoveLiquidityTool(solanaKit),
+    new SanctumGetOwnedLstTool(solanaKit),
+    new SanctumSwapLstTool(solanaKit),
   ];
 }

@@ -3,3 +3,5 @@ export * from "./get_apy";
 export * from "./get_tvl";
 export * from "./add_liquidity";
 export * from "./remove_liquidity";
+export * from "./get_owned_lst";
+export * from "./swap_lst";

@@ -129,6 +129,8 @@ import getSanctumApyAction from "./sanctum/getApy";
 import getSanctumTvlAction from "./sanctum/getTvl";
 import sanctumAddLiquidityAction from "./sanctum/addLiquidity";
 import sanctumRemoveLiquidityAction from "./sanctum/removeLiquidity";
+import sanctumGetOwnedLstAction from "./sanctum/getOwnedLst";
+import sanctumSwapLstAction from "./sanctum/swapLst";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -266,6 +268,8 @@ export const ACTIONS = {
   SANCTUM_GET_TVL_ACTION: getSanctumTvlAction,
   SANCTUM_ADD_LIQUIDITY_ACTION: sanctumAddLiquidityAction,
   SANCTUM_REMOVE_LIQUIDITY_ACTION: sanctumRemoveLiquidityAction,
+  SANCTUM_GET_OWNED_LST_ACTION: sanctumGetOwnedLstAction,
+  SANCTUM_SWAP_LST_ACTION: sanctumSwapLstAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

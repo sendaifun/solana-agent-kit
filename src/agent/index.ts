@@ -153,6 +153,8 @@ import {
   get_tvl as getSanctumLSTTvl,
   add_liquidity as addSanctumLSTLiquidity,
   remove_liquidity as removeSanctumLSTLiquidity,
+  get_owned_lst as getSanctumOwnedLst,
+  swap_lst as swapLst,
 } from "../tools";
 import {
   Config,
@@ -1478,6 +1480,10 @@ export class SolanaAgentKit {
     return getSanctumLSTTvl(inputs);
   }
 
+  async getSanctumOwnedLst() {
+    return getSanctumOwnedLst(this);
+  }
+
   async addSanctumLiquidity(
     lstMint: string,
     amount: string,
@@ -1505,6 +1511,23 @@ export class SolanaAgentKit {
       amount,
       quotedAmount,
       priorityFee,
+    );
+  }
+
+  async swapSanctumLst(
+    inputLstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+    outputLstMint: string,
+  ) {
+    return swapLst(
+      this,
+      inputLstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+      outputLstMint,
     );
   }
 }
