@@ -1,0 +1,56 @@
+{
+  "name": "n8n-nodes-solana-agent",
+  "version": "0.1.0",
+  "description": "n8n node for Solana Agent Kit integration",
+  "keywords": [
+    "n8n-community-node-package",
+    "solana",
+    "blockchain",
+    "ai"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sendaifun/solana-agent-kit",
+  "author": {
+    "name": "Jovian Dsouza",
+    "email": "dsouzajovian123@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/SolanaApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/SolanaAgent/SolanaAgent.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/request-promise-native": "~1.0.15",
+    "@typescript-eslint/parser": "~5.45",
+    "eslint-plugin-n8n-nodes-base": "^1.11.0",
+    "gulp": "^4.0.2",
+    "n8n-core": "~0.125.0",
+    "n8n-workflow": "~0.107.0",
+    "prettier": "^2.7.1",
+    "typescript": "~4.8.4"
+  },
+  "dependencies": {
+    "solana-agent-kit": "latest"
+  }
+} 
