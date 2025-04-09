@@ -7,7 +7,18 @@ import {
 } from 'n8n-workflow';
 import { SolanaAgentKit } from 'solana-agent-kit';
 
-export class SolanaAgent implements INodeType {
+// Define the expected methods interface
+interface SolanaAgentMethods {
+	deployToken(params: { name: string; symbol: string }): Promise<any>;
+	deployCollection(params: { name: string; symbol: string }): Promise<any>;
+}
+
+// Extend SolanaAgentKit with the methods we need
+type SolanaAgent = SolanaAgentKit & {
+	methods: SolanaAgentMethods;
+};
+
+export class SolanaAgentNode implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Solana Agent',
 		name: 'solanaAgent',
@@ -188,21 +199,18 @@ export class SolanaAgent implements INodeType {
 			credentials.privateKey as string,
 			credentials.rpcUrl as string,
 			credentials.openAiApiKey as string,
-		);
+		) as SolanaAgent;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
 				let result;
 				
 				if (resource === 'token') {
-					result = await this.handleTokenOperations(agent, operation, i);
+					result = await handleTokenOperations(this, agent, operation, i);
 				} else if (resource === 'nft') {
-					result = await this.handleNFTOperations(agent, operation, i);
+					result = await handleNFTOperations(this, agent, operation, i);
 				} else {
-					throw new NodeOperationError(
-						this.getNode(),
-						`The resource "${resource}" is not supported!`,
-					);
+					throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not supported!`);
 				}
 
 				returnData.push({
@@ -223,64 +231,62 @@ export class SolanaAgent implements INodeType {
 		
 		return [returnData];
 	}
+}
 
-	private async handleTokenOperations(
-		agent: SolanaAgentKit,
-		operation: string,
-		itemIndex: number,
-	) {
-		switch (operation) {
-			case 'create':
-				const tokenName = this.getNodeParameter('tokenName', itemIndex) as string;
-				const tokenSymbol = this.getNodeParameter('tokenSymbol', itemIndex) as string;
-				return await agent.methods.deployToken({
-					name: tokenName,
-					symbol: tokenSymbol,
-				});
-				
-			case 'mint':
-				// Implement mint operation
-				break;
-				
-			case 'transfer':
-				// Implement transfer operation
-				break;
-				
-			default:
-				throw new NodeOperationError(
-					this.getNode(),
-					`The operation "${operation}" is not supported!`,
-				);
-		}
+async function handleTokenOperations(
+	executeFunctions: IExecuteFunctions,
+	agent: SolanaAgent,
+	operation: string,
+	itemIndex: number,
+) {
+	const tokenName = executeFunctions.getNodeParameter('tokenName', itemIndex) as string;
+	const tokenSymbol = executeFunctions.getNodeParameter('tokenSymbol', itemIndex) as string;
+	
+	switch (operation) {
+		case 'create':
+			return await agent.methods.deployToken({
+				name: tokenName,
+				symbol: tokenSymbol,
+			});
+		case 'mint':
+			// Implement mint operation
+			break;
+		case 'transfer':
+			// Implement transfer operation
+			break;
+		default:
+			throw new NodeOperationError(
+				executeFunctions.getNode(),
+				`The operation "${operation}" is not supported for tokens!`,
+			);
 	}
+}
 
-	private async handleNFTOperations(
-		agent: SolanaAgentKit,
-		operation: string,
-		itemIndex: number,
-	) {
-		switch (operation) {
-			case 'deployCollection':
-				const collectionName = this.getNodeParameter('collectionName', itemIndex) as string;
-				const collectionSymbol = this.getNodeParameter('collectionSymbol', itemIndex) as string;
-				return await agent.methods.deployCollection({
-					name: collectionName,
-					symbol: collectionSymbol,
-				});
-				
-			case 'mintNFT':
-				// Implement mint NFT operation
-				break;
-				
-			case 'listForSale':
-				// Implement list for sale operation
-				break;
-				
-			default:
-				throw new NodeOperationError(
-					this.getNode(),
-					`The operation "${operation}" is not supported!`,
-				);
-		}
+async function handleNFTOperations(
+	executeFunctions: IExecuteFunctions,
+	agent: SolanaAgent,
+	operation: string,
+	itemIndex: number,
+) {
+	const collectionName = executeFunctions.getNodeParameter('collectionName', itemIndex) as string;
+	const collectionSymbol = executeFunctions.getNodeParameter('collectionSymbol', itemIndex) as string;
+	
+	switch (operation) {
+		case 'deployCollection':
+			return await agent.methods.deployCollection({
+				name: collectionName,
+				symbol: collectionSymbol,
+			});
+		case 'mintNFT':
+			// Implement mint NFT operation
+			break;
+		case 'listForSale':
+			// Implement list for sale operation
+			break;
+		default:
+			throw new NodeOperationError(
+				executeFunctions.getNode(),
+				`The operation "${operation}" is not supported for NFTs!`,
+			);
 	}
 } 

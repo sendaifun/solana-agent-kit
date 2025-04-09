@@ -3,8 +3,8 @@
     "strict": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2019",
-    "lib": ["es2019", "es2020", "es2021"],
+    "target": "es2020",
+    "lib": ["es2020", "es2021", "es2022"],
     "removeComments": true,
     "useUnknownInCatchVariables": false,
     "forceConsistentCasingInFileNames": true,
@@ -16,7 +16,11 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "declaration": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules/**/*", "dist/**/*"]

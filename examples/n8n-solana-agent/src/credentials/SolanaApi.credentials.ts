@@ -17,6 +17,7 @@ export class SolanaApi implements ICredentialType {
 			typeOptions: {
 				password: true,
 			},
+			default: '',
 			required: true,
 			description: 'The private key of your Solana wallet',
 		},
@@ -35,6 +36,7 @@ export class SolanaApi implements ICredentialType {
 			typeOptions: {
 				password: true,
 			},
+			default: '',
 			required: true,
 			description: 'API key for OpenAI services',
 		},
