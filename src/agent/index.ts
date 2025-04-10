@@ -205,6 +205,7 @@ import { createLimitOrder } from "../tools/jupiter/create_limit_order";
 import { cancelLimitOrders } from "../tools/jupiter/cancel_limit_orders";
 import { getOpenLimitOrders } from "../tools/jupiter/get_open_limit_orders";
 import { getLimitOrderHistory } from "../tools/jupiter/get_limit_order_history";
+import * as nacl from "tweetnacl";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -1459,5 +1460,15 @@ export class SolanaAgentKit {
    */
   async getJupiterLimitOrderHistory() {
     return getLimitOrderHistory(this);
+  }
+
+  /**
+   * Sign a message using the agent's wallet
+   * @param message Message to sign
+   * @returns Signed message
+   */
+  async signMessage(message: Buffer): Promise<string> {
+    const signature = nacl.sign.detached(message, this.wallet.secretKey);
+    return Buffer.from(signature).toString('base64');
   }
 }

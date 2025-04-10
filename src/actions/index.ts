@@ -124,6 +124,7 @@ import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
 import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
 import parseAccountAction from "./solanafm/parseAccount";
 import parseInstructionAction from "./solanafm/parseInstruction";
+import verifyProgramAction from "./solana/verifyProgram";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
@@ -256,6 +257,7 @@ export const ACTIONS = {
   GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
   PARSE_ACCOUNT_ACTION: parseAccountAction,
   PARSE_INSTRUCTION_ACTION: parseInstructionAction,
+  VERIFY_PROGRAM_ACTION: verifyProgramAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

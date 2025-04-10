@@ -92,7 +92,6 @@ import {
   SolanaTipLinkTool,
   SolanaListNFTForSaleTool,
   SolanaCancelNFTListingTool,
-  SolanaCloseEmptyTokenAccounts,
   SolanaFetchTokenReportSummaryTool,
   SolanaFetchTokenDetailedReportTool,
   Solana3LandCreateSingle,
@@ -175,19 +174,18 @@ import {
   SolanaGetOpenOrdersTool,
   SolanaGetOrderHistoryTool,
 } from "./jupiter";
+import { SolanaVerifyProgramTool } from "./solana/verify_program";
+import { SolanaWalletUnifiedTool } from "./solana/wallet_unified";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
     new SolanaGetInfoTool(solanaKit),
-    new SolanaBalanceTool(solanaKit),
-    new SolanaBalanceOtherTool(solanaKit),
-    new SolanaTransferTool(solanaKit),
+    new SolanaWalletUnifiedTool(solanaKit),
     new SolanaDeployTokenTool(solanaKit),
     new SolanaDeployToken2022Tool(solanaKit),
     new SolanaDeployCollectionTool(solanaKit),
     new SolanaMintNFTTool(solanaKit),
     new SolanaTradeTool(solanaKit),
-    new SolanaRequestFundsTool(solanaKit),
     new SolanaRegisterDomainTool(solanaKit),
     new SolanaGetWalletAddressTool(solanaKit),
     new SolanaPumpfunTokenLaunchTool(solanaKit),
@@ -232,7 +230,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaTipLinkTool(solanaKit),
     new SolanaListNFTForSaleTool(solanaKit),
     new SolanaCancelNFTListingTool(solanaKit),
-    new SolanaCloseEmptyTokenAccounts(solanaKit),
     new SolanaFetchTokenReportSummaryTool(solanaKit),
     new SolanaFetchTokenDetailedReportTool(solanaKit),
     new Solana3LandCreateSingle(solanaKit),
@@ -309,5 +306,6 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaGetOrderHistoryTool(solanaKit),
     new SolanaParseAccountTool(solanaKit),
     new SolanaParseInstructionTool(solanaKit),
+    new SolanaVerifyProgramTool(solanaKit),
   ];
 }
