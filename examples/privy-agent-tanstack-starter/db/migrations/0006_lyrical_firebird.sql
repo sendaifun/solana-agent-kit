@@ -1,0 +1,1 @@
+ALTER TABLE "User" ADD COLUMN "walletId" varchar(64);
