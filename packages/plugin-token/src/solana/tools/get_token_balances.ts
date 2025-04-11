@@ -1,6 +1,6 @@
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL, type PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "solana-agent-kit";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { getTokenMetadata } from "./utils/tokenMetadata";
 
 /**

@@ -1,17 +1,17 @@
 import { ComputeBudgetProgram } from "@solana/web3.js";
-import { PoolConfig, Side } from "flash-sdk";
 import { BN } from "bn.js";
+import { PoolConfig, Side } from "flash-sdk";
 import type { SolanaAgentKit } from "solana-agent-kit";
+import type { FlashCloseTradeParams } from "../types";
 import {
   CLOSE_POSITION_CU,
+  createPerpClient,
+  fetchOraclePrice,
+  getNftTradingAccountInfo,
+  get_flash_privilege,
   marketSdkInfo,
   marketTokenMap,
-  getNftTradingAccountInfo,
-  fetchOraclePrice,
-  createPerpClient,
-  get_flash_privilege,
 } from "./utils/flashUtils";
-import type { FlashCloseTradeParams } from "../types";
 
 /**
  * Closes an existing position on Flash.Trade

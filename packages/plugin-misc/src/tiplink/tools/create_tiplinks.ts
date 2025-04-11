@@ -1,18 +1,18 @@
-import { TipLink } from "@tiplink/api";
 import {
-  Transaction,
-  SystemProgram,
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAssociatedTokenAddress,
+  getMint,
+} from "@solana/spl-token";
+import {
+  ComputeBudgetProgram,
   LAMPORTS_PER_SOL,
   PublicKey,
-  ComputeBudgetProgram,
+  SystemProgram,
+  Transaction,
 } from "@solana/web3.js";
-import {
-  getAssociatedTokenAddress,
-  createTransferInstruction,
-  getMint,
-  createAssociatedTokenAccountInstruction,
-} from "@solana/spl-token";
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
+import { TipLink } from "@tiplink/api";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 const MINIMUM_SOL_BALANCE = 0.003 * LAMPORTS_PER_SOL;
 

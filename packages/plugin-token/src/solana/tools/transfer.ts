@@ -1,13 +1,13 @@
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import {
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  getMint,
+} from "@solana/spl-token";
 import { type PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import {
-  getAssociatedTokenAddress,
-  createTransferInstruction,
-  getMint,
-  getAccount,
-  createAssociatedTokenAccountInstruction,
-} from "@solana/spl-token";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Transfer SOL or SPL tokens to a recipient

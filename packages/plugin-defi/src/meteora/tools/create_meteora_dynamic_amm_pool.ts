@@ -1,8 +1,8 @@
 import AmmImpl from "@mercurial-finance/dynamic-amm-sdk";
-import type { SolanaAgentKit } from "solana-agent-kit";
-import BN from "bn.js";
-import { PublicKey } from "@solana/web3.js";
 import { CustomizableParams } from "@mercurial-finance/dynamic-amm-sdk/dist/cjs/src/amm/types";
+import { PublicKey } from "@solana/web3.js";
+import BN from "bn.js";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import { sendTx, signOrSendTX } from "solana-agent-kit";
 
 /**

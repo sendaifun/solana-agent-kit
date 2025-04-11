@@ -4,25 +4,25 @@ import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
 // dexscreener
 import getTokenDataAction from "./dexscreener/actions/getTokenData";
 
+import cancelLimitOrdersAction from "./jupiter/actions/cancelLimitOrders";
+import createLimitOrderAction from "./jupiter/actions/createLimitOrder";
 // jupiter
 import fetchPriceAction from "./jupiter/actions/fetchPrice";
+import getLimitOrderHistoryAction from "./jupiter/actions/getLimitOrderHistory";
+import getOpenLimitOrdersAction from "./jupiter/actions/getOpenLimitOrders";
+import tokenDataByTickerAction from "./jupiter/actions/getTokenDataByTicker";
 import stakeWithJupAction from "./jupiter/actions/stakeWithJup";
 import tradeAction from "./jupiter/actions/trade";
-import cancelLimitOrdersAction from "./jupiter/actions/cancelLimitOrders";
-import getOpenLimitOrdersAction from "./jupiter/actions/getOpenLimitOrders";
-import getLimitOrderHistoryAction from "./jupiter/actions/getLimitOrderHistory";
-import createLimitOrderAction from "./jupiter/actions/createLimitOrder";
-import tokenDataByTickerAction from "./jupiter/actions/getTokenDataByTicker";
 
 // lightprotocol
 import compressedAirdropAction from "./lightprotocol/actions/compressedAirdrop";
 
 // solana
 import balanceAction from "./solana/actions/balance";
-import tokenBalancesAction from "./solana/actions/tokenBalances";
-import getTPSAction from "./solana/actions/getTPS";
 import closeEmptyTokenAccountsAction from "./solana/actions/closeEmptyTokenAccounts";
+import getTPSAction from "./solana/actions/getTPS";
 import requestFundsAction from "./solana/actions/requestFunds";
+import tokenBalancesAction from "./solana/actions/tokenBalances";
 import transferAction from "./solana/actions/transfer";
 import walletAddressAction from "./solana/actions/walletAddress";
 
@@ -40,39 +40,39 @@ import rugcheckAction from "./rugcheck/actions/rugcheck";
 
 // solutiofi
 import burnTokensUsingSolutiofiAction from "./solutiofi/actions/burnTokens";
-import spreadTokenUsingSolutiofiAction from "./solutiofi/actions/spreadToken";
 import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts";
 import mergeTokensUsingSolutiofiAction from "./solutiofi/actions/mergeTokens";
+import spreadTokenUsingSolutiofiAction from "./solutiofi/actions/spreadToken";
 
 // Import all tools
 import {
-  getTokenDataByAddress,
   getTokenAddressFromTicker,
+  getTokenDataByAddress,
 } from "./dexscreener/tools";
 import {
+  cancelLimitOrders as cancelJupiterLimitOrders,
+  createLimitOrder as createJupiterLimitOrder,
   fetchPrice,
+  getLimitOrderHistory as getJupiterLimitOrderHistory,
+  getOpenLimitOrders as getOpenJupiterLimitOrders,
   stakeWithJup,
   trade,
-  createLimitOrder as createJupiterLimitOrder,
-  cancelLimitOrders as cancelJupiterLimitOrders,
-  getOpenLimitOrders as getOpenJupiterLimitOrders,
-  getLimitOrderHistory as getJupiterLimitOrderHistory,
 } from "./jupiter/tools";
 import { sendCompressedAirdrop } from "./lightprotocol/tools";
+import { swap } from "./mayan/tools";
+import { launchPumpFunToken } from "./pumpfun/tools";
+import { fetchPythPrice, fetchPythPriceFeedID } from "./pyth/tools";
+import { fetchTokenDetailedReport, fetchTokenReportSummary } from "./rugcheck";
 import {
   closeEmptyTokenAccounts,
   getTPS,
+  getWalletAddress,
   get_balance,
   get_balance_other,
   get_token_balance,
   request_faucet_funds,
   transfer,
-  getWalletAddress,
 } from "./solana/tools";
-import { swap } from "./mayan/tools";
-import { launchPumpFunToken } from "./pumpfun/tools";
-import { fetchPythPrice, fetchPythPriceFeedID } from "./pyth/tools";
-import { fetchTokenDetailedReport, fetchTokenReportSummary } from "./rugcheck";
 import {
   burnTokens,
   closeAccounts,

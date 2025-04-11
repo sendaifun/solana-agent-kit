@@ -1,6 +1,6 @@
 import type { Transaction, VersionedTransaction } from "@solana/web3.js";
-import type { SolanaAgentKit } from "../agent";
 import type { z } from "zod";
+import type { SolanaAgentKit } from "../agent";
 
 export interface Plugin {
   name: string;

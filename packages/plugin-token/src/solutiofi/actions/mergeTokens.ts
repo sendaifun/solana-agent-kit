@@ -1,7 +1,7 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
-import { InputAssetStruct, PriorityFee } from "../types";
 import { mergeTokens } from "../tools/solutiofi";
+import { InputAssetStruct, PriorityFee } from "../types";
 
 const mergeTokensAction: Action = {
   name: "SOLUTIOFI_MERGE_TOKENS",

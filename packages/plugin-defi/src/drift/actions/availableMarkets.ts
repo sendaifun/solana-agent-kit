@@ -37,7 +37,7 @@ const availableDriftMarketsAction: Action = {
       .describe("Type of market to get")
       .optional(),
   }),
-  handler: async (agent, input) => {
+  handler: async (_agent, input) => {
     switch (input.marketType) {
       case "perp":
         return getAvailableDriftPerpMarkets();

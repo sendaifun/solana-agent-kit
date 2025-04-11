@@ -1,5 +1,5 @@
-import { SolanaAgentKit } from "../agent";
 import { z } from "zod";
+import { SolanaAgentKit } from "../agent";
 
 /**
  * Example of an action with input and output

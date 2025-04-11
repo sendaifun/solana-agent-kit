@@ -3,17 +3,17 @@ import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
 // Import Metaplex actions
 import deployCollectionAction from "./metaplex/actions/deployCollection";
 import deployTokenAction from "./metaplex/actions/deployToken";
+import deployToken2022Action from "./metaplex/actions/deployToken2022";
 import getAssetAction from "./metaplex/actions/getAsset";
 import getAssetsByAuthorityAction from "./metaplex/actions/getAssetsByAuthority";
 import getAssetsByCreatorAction from "./metaplex/actions/getAssetsByCreator";
 import mintNFTAction from "./metaplex/actions/mintNFT";
 import searchAssetsAction from "./metaplex/actions/searchAssets";
-import deployToken2022Action from "./metaplex/actions/deployToken2022";
 
 // Import Tensor actions
 import {
-  listNFTForSaleAction,
   cancelNFTListingAction,
+  listNFTForSaleAction,
 } from "./tensor/actions/tensorTrade";
 
 // Import 3Land actions
@@ -23,15 +23,15 @@ import create3LandCollectibleAction from "./3land/actions/create3LandCollectible
 import {
   deploy_collection,
   deploy_token,
+  deploy_token2022,
   get_asset,
   get_assets_by_authority,
   get_assets_by_creator,
   mintCollectionNFT,
-  deploy_token2022,
 } from "./metaplex/tools";
 
 // Import Tensor tools
-import { listNFTForSale, cancelListing } from "./tensor/tools/tensor_trade";
+import { cancelListing, listNFTForSale } from "./tensor/tools/tensor_trade";
 
 // Import 3Land tools
 import {

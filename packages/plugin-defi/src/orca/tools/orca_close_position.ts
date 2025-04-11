@@ -1,3 +1,10 @@
+import { Percentage } from "@orca-so/common-sdk";
+import {
+  ORCA_WHIRLPOOL_PROGRAM_ID,
+  PDAUtil,
+  WhirlpoolContext,
+  buildWhirlpoolClient,
+} from "@orca-so/whirlpools-sdk";
 import {
   Keypair,
   PublicKey,
@@ -5,14 +12,7 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import type { SolanaAgentKit } from "solana-agent-kit";
-import {
-  ORCA_WHIRLPOOL_PROGRAM_ID,
-  WhirlpoolContext,
-  buildWhirlpoolClient,
-  PDAUtil,
-} from "@orca-so/whirlpools-sdk";
 import { sendTx } from "solana-agent-kit";
-import { Percentage } from "@orca-so/common-sdk";
 
 /**
  * # Closes a Liquidity Position in an Orca Whirlpool

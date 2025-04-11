@@ -1,19 +1,19 @@
 import {
   BASE_PRECISION,
+  MainnetPerpMarkets,
+  MainnetSpotMarkets,
+  MarketType,
+  PERCENTAGE_PRECISION,
+  PRICE_PRECISION,
+  PositionDirection,
+  PostOnlyParams,
+  QUOTE_PRECISION,
+  TEN,
   convertToNumber,
   getLimitOrderParams,
   getMarketOrderParams,
   getOrderParams,
-  MainnetPerpMarkets,
-  MainnetSpotMarkets,
-  MarketType,
   numberToSafeBN,
-  PERCENTAGE_PRECISION,
-  PositionDirection,
-  PostOnlyParams,
-  PRICE_PRECISION,
-  QUOTE_PRECISION,
-  TEN,
 } from "@drift-labs/sdk";
 import {
   WithdrawUnit,
@@ -27,8 +27,8 @@ import {
   PublicKey,
   type TransactionInstruction,
 } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
 import { BN } from "bn.js";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import { initClients } from "./drift";
 
 export function getMarketIndexAndType(name: `${string}-${string}`) {

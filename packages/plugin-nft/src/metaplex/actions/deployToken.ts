@@ -1,7 +1,7 @@
+import { Transaction, VersionedTransaction } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { deploy_token } from "../tools";
-import { Transaction, VersionedTransaction } from "@solana/web3.js";
 
 const deployTokenAction: Action = {
   name: "DEPLOY_TOKEN",

@@ -1,7 +1,7 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
-import { PublicKey } from "@solana/web3.js";
-import { listNFTForSale, cancelListing } from "../tools";
+import { cancelListing, listNFTForSale } from "../tools";
 
 const listNFTForSaleAction: Action = {
   name: "LIST_NFT_FOR_SALE",

@@ -1,12 +1,12 @@
-import { SolanaAgentKit, Action } from "solana-agent-kit";
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import {
-  pingElfaAiApi,
   getElfaAiApiKeyStatus,
   getSmartMentions,
   getSmartTwitterAccountStats,
   getTopMentionsByTicker,
   getTrendingTokensUsingElfaAi,
+  pingElfaAiApi,
   searchMentionsByKeywords,
 } from "../tools/elfa_ai_api";
 
@@ -478,7 +478,7 @@ export const elfaTrendingTokensAction: Action = {
     ],
   ],
   schema: z.object({}),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent: SolanaAgentKit, _input) => {
     const data = await getTrendingTokensUsingElfaAi(agent);
     return {
       status: "success",

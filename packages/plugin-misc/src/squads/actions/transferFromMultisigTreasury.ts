@@ -1,7 +1,7 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { multisig_transfer_from_treasury } from "../tools";
-import { PublicKey } from "@solana/web3.js";
 
 const transferFromMultisigAction: Action = {
   name: "TRANSFER_FROM_MULTISIG_ACTION",

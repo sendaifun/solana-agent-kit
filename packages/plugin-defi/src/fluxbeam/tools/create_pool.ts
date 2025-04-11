@@ -1,5 +1,5 @@
-import { VersionedTransaction, type PublicKey } from "@solana/web3.js";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { type PublicKey, VersionedTransaction } from "@solana/web3.js";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { FLUXBEAM_BASE_URI, TOKENS } from "../constants";
 import { getTokenDecimals } from "../utils";
 

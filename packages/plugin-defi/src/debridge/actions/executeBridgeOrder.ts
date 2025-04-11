@@ -1,6 +1,6 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { executeDebridgeBridgeOrder } from "../tools/execute_bridge_order";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
 
 const executeDebridgeBridgeOrderAction: Action = {
   name: "DEBRIDGE_EXECUTE_BRIDGE_ORDER",

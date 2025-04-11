@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action } from "solana-agent-kit";
+import { z } from "zod";
 import { getEntryQuoteOfPerpTrade } from "../tools";
 
 const entryQuoteOfPerpTradeAction: Action = {
@@ -43,7 +43,7 @@ const entryQuoteOfPerpTradeAction: Action = {
     type: z.enum(["long", "short"]).describe("Type of trade"),
     amount: z.number().positive().describe("Amount to trade"),
   }),
-  handler: async (agent, input) => {
+  handler: async (_agent, input) => {
     try {
       const data = await getEntryQuoteOfPerpTrade(
         input.marketSymbol,

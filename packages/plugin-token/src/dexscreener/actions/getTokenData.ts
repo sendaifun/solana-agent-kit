@@ -1,7 +1,7 @@
 import { Action, SolanaAgentKit } from "solana-agent-kit";
 
-import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
+import { z } from "zod";
 import { JupiterTokenData } from "../../jupiter/types";
 import { getTokenAddressFromTicker, getTokenDataByAddress } from "../tools";
 
@@ -55,7 +55,7 @@ const getTokenDataAction: Action = {
     address: z.string().optional().describe("The token's mint address"),
     ticker: z.string().optional().describe("The token's ticker symbol"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       let tokenData: JupiterTokenData | undefined;
       if (input.address) {

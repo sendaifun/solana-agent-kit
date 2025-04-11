@@ -1,6 +1,6 @@
 import { TldParser } from "@onsol/tldparser";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
+import { SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Resolve all domains for a given agent and domain

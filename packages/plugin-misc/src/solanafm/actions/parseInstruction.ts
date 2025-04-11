@@ -1,6 +1,6 @@
-import { parse_instruction } from "../tools";
 import type { Action } from "solana-agent-kit";
 import { z } from "zod";
+import { parse_instruction } from "../tools";
 
 const parseInstructionAction: Action = {
   name: "PARSE_INSTRUCTION",

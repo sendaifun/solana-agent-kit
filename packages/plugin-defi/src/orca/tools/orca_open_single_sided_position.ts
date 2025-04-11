@@ -1,3 +1,14 @@
+import { Percentage } from "@orca-so/common-sdk";
+import {
+  NO_TOKEN_EXTENSION_CONTEXT,
+  ORCA_WHIRLPOOL_PROGRAM_ID,
+  PriceMath,
+  TokenExtensionContextForPool,
+  WhirlpoolContext,
+  buildWhirlpoolClient,
+  increaseLiquidityQuoteByInputToken,
+} from "@orca-so/whirlpools-sdk";
+import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 import {
   Keypair,
   PublicKey,
@@ -5,20 +16,9 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
 import { Decimal } from "decimal.js";
-import {
-  ORCA_WHIRLPOOL_PROGRAM_ID,
-  WhirlpoolContext,
-  PriceMath,
-  buildWhirlpoolClient,
-  increaseLiquidityQuoteByInputToken,
-  TokenExtensionContextForPool,
-  NO_TOKEN_EXTENSION_CONTEXT,
-} from "@orca-so/whirlpools-sdk";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import { sendTx } from "solana-agent-kit";
-import { Percentage } from "@orca-so/common-sdk";
-import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 
 /**
  * # Opens a Single-Sided Liquidity Position in an Orca Whirlpool

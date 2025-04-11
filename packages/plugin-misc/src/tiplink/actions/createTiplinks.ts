@@ -1,7 +1,7 @@
-import { Action } from "solana-agent-kit";
-import { create_TipLink } from "../tools/create_tiplinks";
-import { z } from "zod";
 import { Transaction } from "@solana/web3.js";
+import { Action } from "solana-agent-kit";
+import { z } from "zod";
+import { create_TipLink } from "../tools/create_tiplinks";
 
 const createTiplinksAction: Action = {
   name: "CREATE_TIPLINKS_ACTION",

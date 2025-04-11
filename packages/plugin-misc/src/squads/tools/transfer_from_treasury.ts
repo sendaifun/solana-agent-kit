@@ -1,4 +1,8 @@
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
+import {
+  createTransferInstruction,
+  getAssociatedTokenAddress,
+  getMint,
+} from "@solana/spl-token";
 import {
   PublicKey,
   SystemProgram,
@@ -6,12 +10,8 @@ import {
   TransactionMessage,
 } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import {
-  getAssociatedTokenAddress,
-  createTransferInstruction,
-  getMint,
-} from "@solana/spl-token";
 import * as multisig from "@sqds/multisig";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 const { Multisig } = multisig.accounts;
 
 /**

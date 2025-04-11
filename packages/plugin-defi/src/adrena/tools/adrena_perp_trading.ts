@@ -1,15 +1,15 @@
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
   PublicKey,
   SystemProgram,
   type TransactionInstruction,
 } from "@solana/web3.js";
-import type { SolanaAgentKit } from "solana-agent-kit";
-import { TOKENS, DEFAULT_OPTIONS } from "./utils/constants";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import BN from "bn.js";
+import type { SolanaAgentKit } from "solana-agent-kit";
+import { DEFAULT_OPTIONS, TOKENS } from "./utils/constants";
 
-import AdrenaClient from "./utils/anchor/AdrenaClient";
 import { signOrSendTX } from "solana-agent-kit";
+import AdrenaClient from "./utils/anchor/AdrenaClient";
 
 const PRICE_DECIMALS = 10;
 const ADRENA_PROGRAM_ID = new PublicKey(

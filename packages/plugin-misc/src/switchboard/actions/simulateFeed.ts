@@ -1,7 +1,7 @@
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
-import { simulate_switchboard_feed } from "../tools";
 import { SWITCHBOARD_DEFAULT_CROSSBAR } from "../constants";
+import { simulate_switchboard_feed } from "../tools";
 
 const switchboardSimulateFeedAction: Action = {
   name: "SWITCHBOARD_SIMULATE_FEED",

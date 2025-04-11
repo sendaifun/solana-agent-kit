@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { Action } from "solana-agent-kit";
+import { z } from "zod";
 import { getTrendingTokens } from "../tools";
 
 const getCoingeckoTrendingTokensAction: Action = {

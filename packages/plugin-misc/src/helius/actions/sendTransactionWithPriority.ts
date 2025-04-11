@@ -1,8 +1,8 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { sendTransactionWithPriorityFee } from "../tools";
-import { PublicKey } from "@solana/web3.js";
 
 const sendTransactionWithPriorityFeeAction: Action = {
   name: "SEND_TRANSACTION_WITH_PRIORITY_FEE",

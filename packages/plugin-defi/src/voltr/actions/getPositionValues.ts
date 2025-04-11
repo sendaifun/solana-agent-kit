@@ -1,6 +1,6 @@
+import { PublicKey } from "@solana/web3.js";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { PublicKey } from "@solana/web3.js";
 import { voltrGetPositionValues } from "../tools/voltr_get_position_values";
 
 const getVoltrPositionValuesAction: Action = {

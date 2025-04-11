@@ -22,21 +22,21 @@ import getAssetsByOwnerAction from "./helius/actions/getAssetsbyOwner";
 import getWebhookAction from "./helius/actions/getWebhook";
 import parseSolanaTransactionAction from "./helius/actions/parseTransaction";
 
+import getAllRegisteredAllDomainsAction from "./sns/actions/getAllRegisteredAllDomains";
+import getMainAllDomainsDomainAction from "./sns/actions/getMainAllDomainsDomain";
+import getPrimaryDomainAction from "./sns/actions/getPrimaryDomain";
+import registerDomainAction from "./sns/actions/registerDomain";
 // sns
 import resolveSolDomainAction from "./sns/actions/resolveSolDomain";
-import registerDomainAction from "./sns/actions/registerDomain";
-import getPrimaryDomainAction from "./sns/actions/getPrimaryDomain";
-import getMainAllDomainsDomainAction from "./sns/actions/getMainAllDomainsDomain";
-import getAllRegisteredAllDomainsAction from "./sns/actions/getAllRegisteredAllDomains";
 
-// squads
-import transferFromMultisigTreasuryAction from "./squads/actions/transferFromMultisigTreasury";
-import rejectMultisigProposalAction from "./squads/actions/rejectMultisigProposal";
-import executeMultisigProposalAction from "./squads/actions/executeMultisigProposal";
-import depositToMultisigTreasuryAction from "./squads/actions/depositToMultisigTreasury";
+import approveMultisigProposalAction from "./squads/actions/approveMultisigProposal";
 import createMultisigAction from "./squads/actions/createMultisig";
 import createMultisigProposalAction from "./squads/actions/createMultisigProposal";
-import approveMultisigProposalAction from "./squads/actions/approveMultisigProposal";
+import depositToMultisigTreasuryAction from "./squads/actions/depositToMultisigTreasury";
+import executeMultisigProposalAction from "./squads/actions/executeMultisigProposal";
+import rejectMultisigProposalAction from "./squads/actions/rejectMultisigProposal";
+// squads
+import transferFromMultisigTreasuryAction from "./squads/actions/transferFromMultisigTreasury";
 
 // switchboard
 import simulateFeedAction from "./switchboard/actions/simulateFeed";
@@ -47,10 +47,10 @@ import createTiplinkAction from "./tiplink/actions/createTiplinks";
 // coingecko
 import getCoingeckoLatestPoolsAction from "./coingecko/actions/getCoingeckoLatestPools";
 import getCoingeckoTokenInfoAction from "./coingecko/actions/getCoingeckoTokenInfo";
-import getCoingeckoTrendingPoolsAction from "./coingecko/actions/getCoingeckoTrendingPools";
-import getCoingeckoTrendingTokensAction from "./coingecko/actions/getCoingeckoTrendingTokens";
 import getCoingeckoTokenPriceDataAction from "./coingecko/actions/getCoingeckoTokenPriceData";
 import getCoingeckoTopGainersAction from "./coingecko/actions/getCoingeckoTopGainers";
+import getCoingeckoTrendingPoolsAction from "./coingecko/actions/getCoingeckoTrendingPools";
+import getCoingeckoTrendingTokensAction from "./coingecko/actions/getCoingeckoTrendingTokens";
 
 // elfa ai
 import {
@@ -79,39 +79,12 @@ import {
   getInferenceByTopicId,
   getPriceInference,
 } from "./allora/tools";
-import { createGibworkTask } from "./gibwork/tools";
 import {
-  create_HeliusWebhook,
-  deleteHeliusWebhook,
-  getAssetsByOwner,
-  getHeliusWebhook,
-  parseTransaction,
-  sendTransactionWithPriorityFee,
-} from "./helius/tools";
-import {
-  resolveSolDomain,
-  registerDomain,
-  getAllRegisteredAllDomains,
-  getMainAllDomainsDomain,
-  getPrimaryDomain,
-} from "./sns/tools";
-import {
-  create_squads_multisig,
-  multisig_create_proposal,
-  multisig_approve_proposal,
-  multisig_deposit_to_treasury,
-  multisig_execute_proposal,
-  multisig_reject_proposal,
-  multisig_transfer_from_treasury,
-} from "./squads/tools";
-import { simulate_switchboard_feed } from "./switchboard/tools";
-import { create_TipLink } from "./tiplink/tools";
-import {
-  getTokenInfo,
-  getTopGainers,
   getLatestPools,
-  getTrendingPools,
+  getTokenInfo,
   getTokenPriceData,
+  getTopGainers,
+  getTrendingPools,
   getTrendingTokens,
 } from "./coingecko/tools";
 import {
@@ -123,10 +96,37 @@ import {
   pingElfaAiApi,
   searchMentionsByKeywords,
 } from "./elfaai/tools/elfa_ai_api";
+import { createGibworkTask } from "./gibwork/tools";
+import {
+  create_HeliusWebhook,
+  deleteHeliusWebhook,
+  getAssetsByOwner,
+  getHeliusWebhook,
+  parseTransaction,
+  sendTransactionWithPriorityFee,
+} from "./helius/tools";
+import {
+  getAllRegisteredAllDomains,
+  getMainAllDomainsDomain,
+  getPrimaryDomain,
+  registerDomain,
+  resolveSolDomain,
+} from "./sns/tools";
 import {
   parse_account as parseAccountUsingSolanaFM,
   parse_instruction as parseInstructionUsingSolanaFM,
 } from "./solanafm/tools";
+import {
+  create_squads_multisig,
+  multisig_approve_proposal,
+  multisig_create_proposal,
+  multisig_deposit_to_treasury,
+  multisig_execute_proposal,
+  multisig_reject_proposal,
+  multisig_transfer_from_treasury,
+} from "./squads/tools";
+import { simulate_switchboard_feed } from "./switchboard/tools";
+import { create_TipLink } from "./tiplink/tools";
 
 // Define and export the plugin
 const MiscPlugin = {

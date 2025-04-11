@@ -1,15 +1,15 @@
 import {
+  AccountLayout,
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  createCloseAccountInstruction,
+} from "@solana/spl-token";
+import {
   type PublicKey,
   Transaction,
   type TransactionInstruction,
 } from "@solana/web3.js";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
-import {
-  AccountLayout,
-  createCloseAccountInstruction,
-  TOKEN_2022_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Close Empty SPL Token accounts of the agent

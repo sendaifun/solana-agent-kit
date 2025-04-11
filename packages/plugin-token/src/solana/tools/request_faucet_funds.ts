@@ -1,5 +1,5 @@
-import { SolanaAgentKit } from "solana-agent-kit";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Request SOL from the Solana faucet (devnet/testnet only)

@@ -64,7 +64,7 @@ const compressedAirdropAction: Action = {
       .optional()
       .describe("Whether to log progress to stdout (default is false)"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const {
         mintAddress,

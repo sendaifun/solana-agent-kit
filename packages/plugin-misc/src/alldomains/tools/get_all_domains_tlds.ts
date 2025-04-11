@@ -1,5 +1,5 @@
-import { SolanaAgentKit } from "solana-agent-kit";
 import { getAllTld } from "@onsol/tldparser";
+import { SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Get all active top-level domains (TLDs) in the AllDomains Name Service

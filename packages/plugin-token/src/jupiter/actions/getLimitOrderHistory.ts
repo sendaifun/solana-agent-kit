@@ -1,4 +1,4 @@
-import type { SolanaAgentKit, Action } from "solana-agent-kit";
+import type { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getLimitOrderHistory } from "../tools/get_limit_order_history";
 

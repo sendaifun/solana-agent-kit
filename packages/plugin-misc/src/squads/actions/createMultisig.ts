@@ -1,7 +1,7 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
 import { create_squads_multisig } from "../tools";
-import { PublicKey } from "@solana/web3.js";
 
 const createMultisigAction: Action = {
   name: "CREATE_MULTISIG_ACTION",

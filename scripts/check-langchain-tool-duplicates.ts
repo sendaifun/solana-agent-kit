@@ -1,8 +1,8 @@
 import { Keypair } from "@solana/web3.js";
+import bs58 from "bs58";
+import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../src";
 import { createSolanaTools } from "../src/langchain/index";
-import { Tool } from "langchain/tools";
-import bs58 from "bs58";
 
 function findDuplicateNames(tools: Tool[]): Map<string, string[]> {
   const nameMap = new Map<string, string[]>();
@@ -85,10 +85,6 @@ async function main() {
     console.error(errorMessages.join("\n"));
     process.exit(1);
   }
-
-  console.log(
-    "✅ All checks passed:\n- No duplicate tool names\n- No classes reused for multiple tools",
-  );
   process.exit(0);
 }
 

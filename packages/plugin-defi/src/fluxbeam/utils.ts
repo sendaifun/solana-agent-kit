@@ -1,10 +1,10 @@
+import {
+  TOKEN_2022_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  getMint,
+} from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "solana-agent-kit";
-import {
-  getMint,
-  TOKEN_PROGRAM_ID,
-  TOKEN_2022_PROGRAM_ID,
-} from "@solana/spl-token";
 
 // handles the case where a token in the pool is a token 2022 token
 export async function getTokenDecimals(
@@ -15,7 +15,7 @@ export async function getTokenDecimals(
     return (
       await getMint(agent.connection, mint, "finalized", TOKEN_PROGRAM_ID)
     ).decimals;
-  } catch (error) {
+  } catch (_error) {
     try {
       return (
         await getMint(

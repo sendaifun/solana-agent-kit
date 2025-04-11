@@ -1,5 +1,5 @@
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import { VersionedTransaction } from "@solana/web3.js";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Execute a bridge transaction on Solana.

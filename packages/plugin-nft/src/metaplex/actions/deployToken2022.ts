@@ -1,4 +1,4 @@
-import type { SolanaAgentKit, Action } from "solana-agent-kit";
+import type { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { deploy_token2022 } from "../tools";
 

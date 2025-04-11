@@ -1,12 +1,12 @@
-import { VersionedTransaction, PublicKey } from "@solana/web3.js";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { getMint } from "@solana/spl-token";
+import { PublicKey, VersionedTransaction } from "@solana/web3.js";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import {
-  TOKENS,
   DEFAULT_OPTIONS,
   JUP_API,
   JUP_REFERRAL_ADDRESS,
+  TOKENS,
 } from "./utils/constants";
-import { getMint } from "@solana/spl-token";
 /**
  * Swap tokens using Jupiter Exchange
  * @param agent SolanaAgentKit instance
@@ -23,7 +23,7 @@ export async function trade(
   inputAmount: number,
   inputMint: PublicKey = TOKENS.USDC,
   // @deprecated use dynamicSlippage instead
-  slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
+  _slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
 ) {
   try {
     // Check if input token is native SOL

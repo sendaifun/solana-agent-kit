@@ -33,7 +33,7 @@ const tokenDataByTickerAction: Action = {
   schema: z.object({
     ticker: z.string().min(1).describe("Ticker of the token, e.g. 'USDC'"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const ticker = input.ticker as string;
 

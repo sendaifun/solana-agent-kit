@@ -1,6 +1,6 @@
 import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
-import { rock_paper_scissor } from "./sendarcade/tools/rock_paper_scissor";
 import rockPaperScissorAction from "./sendarcade/actions/rockPaperScissors";
+import { rock_paper_scissor } from "./sendarcade/tools/rock_paper_scissor";
 
 // Define and export the plugin
 const BlinksPlugin = {

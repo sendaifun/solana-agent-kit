@@ -1,5 +1,5 @@
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import * as multisig from "@sqds/multisig";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 const { Multisig } = multisig.accounts;
 
 /**

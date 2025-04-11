@@ -1,25 +1,25 @@
 import {
-  addresses,
   type ChainName,
   type Erc20Permit,
+  type Quote,
+  addresses,
   fetchQuote,
   fetchTokenList,
-  type Quote,
   swapFromEvm,
   swapFromSolana,
 } from "@mayanfinance/swap-sdk";
-import type { SolanaAgentKit } from "solana-agent-kit";
+import ERC20Permit_ABI from "@openzeppelin/contracts/build/contracts/ERC20Permit.json";
 import {
   Contract,
-  getDefaultProvider,
-  parseUnits,
   Signature,
   type Signer,
   type TransactionResponse,
   TypedDataEncoder,
   Wallet,
+  getDefaultProvider,
+  parseUnits,
 } from "ethers";
-import ERC20Permit_ABI from "@openzeppelin/contracts/build/contracts/ERC20Permit.json";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import MayanForwarderArtifact from "./MayanForwarderArtifact";
 
 async function findTokenContract(

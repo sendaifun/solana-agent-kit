@@ -7,7 +7,7 @@ import { MintLayout } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
 import Decimal from "decimal.js";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 export async function raydiumCreateClmm(
   agent: SolanaAgentKit,

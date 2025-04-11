@@ -1,14 +1,12 @@
 {
   "name": "@solana-agent-kit/adapter-mcp",
-  "version": "2.0.0-beta.9", 
+  "version": "2.0.0-beta.9",
   "type": "module",
   "description": "Create MCP servers with the Solana Agent Kit",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "import": {

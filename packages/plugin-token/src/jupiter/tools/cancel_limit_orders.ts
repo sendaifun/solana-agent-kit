@@ -1,7 +1,7 @@
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
+import type { CancelJupiterOrderRequest } from "../types";
 import { cancelOrdersApi } from "./common/jupiterLimitApi";
 import { deserializeTransaction } from "./common/transactions";
-import type { CancelJupiterOrderRequest } from "../types";
 
 export async function cancelLimitOrders(
   agent: SolanaAgentKit,

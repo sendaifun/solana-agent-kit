@@ -1,15 +1,15 @@
-import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
-import TokenPlugin from "@solana-agent-kit/plugin-token";
-import NFTPlugin from "@solana-agent-kit/plugin-nft";
+import BlinksPlugin from "@solana-agent-kit/plugin-blinks";
 import DefiPlugin from "@solana-agent-kit/plugin-defi";
 import MiscPlugin from "@solana-agent-kit/plugin-misc";
-import BlinksPlugin from "@solana-agent-kit/plugin-blinks";
-import * as dotenv from "dotenv";
+import NFTPlugin from "@solana-agent-kit/plugin-nft";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
 import { Keypair } from "@solana/web3.js";
 import bs58 from "bs58";
-import { chooseMode, rl } from "./utils";
+import * as dotenv from "dotenv";
+import { KeypairWallet, SolanaAgentKit } from "solana-agent-kit";
 import aiTests from "./agentTests";
 import programmaticTests from "./programmaticTests";
+import { chooseMode, rl } from "./utils";
 
 dotenv.config();
 

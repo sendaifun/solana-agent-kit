@@ -5,7 +5,7 @@ import {
 } from "@raydium-io/raydium-sdk-v2";
 import { MintLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { PublicKey } from "@solana/web3.js";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 export async function openbookCreateMarket(
   agent: SolanaAgentKit,

@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
 import { type Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 
 // Define the raw shape type that MCP tools expect
 export type MCPSchemaShape = {

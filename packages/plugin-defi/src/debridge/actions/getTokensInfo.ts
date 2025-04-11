@@ -1,5 +1,5 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { getDebridgeTokensInfo } from "../tools/get_tokens_info";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
 import { getDebridgeTokensInfoSchema } from "../types";
 
 const getDebridgeTokensInfoAction: Action = {

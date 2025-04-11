@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action } from "solana-agent-kit";
+import { z } from "zod";
 import { withdrawFromDriftUserAccount } from "../tools";
 
 const withdrawFromDriftAccountAction: Action = {

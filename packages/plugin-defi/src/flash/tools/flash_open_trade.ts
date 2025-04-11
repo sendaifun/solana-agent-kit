@@ -1,25 +1,25 @@
 import { ComputeBudgetProgram } from "@solana/web3.js";
+import BN from "bn.js";
 import {
-  PerpetualsClient,
+  Custody,
+  CustodyAccount,
   OraclePrice,
+  PerpetualsClient,
   PoolConfig,
   Side,
-  CustodyAccount,
-  Custody,
 } from "flash-sdk";
-import BN from "bn.js";
 import type { SolanaAgentKit } from "solana-agent-kit";
+import type { FlashTradeParams } from "../types";
 import {
   ALL_TOKENS,
+  OPEN_POSITION_CU,
+  createPerpClient,
+  fetchOraclePrice,
+  getNftTradingAccountInfo,
+  get_flash_privilege,
   marketSdkInfo,
   marketTokenMap,
-  getNftTradingAccountInfo,
-  OPEN_POSITION_CU,
-  fetchOraclePrice,
-  createPerpClient,
-  get_flash_privilege,
 } from "./utils/flashUtils";
-import type { FlashTradeParams } from "../types";
 
 /**
  * Opens a new position on Flash.Trade

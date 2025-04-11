@@ -1,5 +1,5 @@
 import { Transaction } from "@solana/web3.js";
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 export async function rock_paper_scissor(
   agent: SolanaAgentKit,

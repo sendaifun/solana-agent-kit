@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Stake SOL with Jup validator

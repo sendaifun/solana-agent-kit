@@ -1,4 +1,4 @@
-import { SolanaAgentKit, Action } from "solana-agent-kit";
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { checkDebridgeTransactionStatus } from "../tools";
 
@@ -46,7 +46,7 @@ const checkDebridgeTransactionStatusAction: Action = {
   schema: z.object({
     txHash: z.string().describe("Transaction hash to check status for"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const orders = await checkDebridgeTransactionStatus(input.txHash);
 

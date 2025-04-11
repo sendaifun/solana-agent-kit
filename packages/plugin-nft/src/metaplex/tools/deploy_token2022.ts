@@ -1,18 +1,18 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
-import type { PublicKey as LegacyPublicKey } from "@solana/web3.js";
-import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import {
+  TokenStandard,
   createFungible,
   mintV1,
-  TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
+import { findAssociatedTokenPda } from "@metaplex-foundation/mpl-toolbox";
+import { generateSigner, publicKey } from "@metaplex-foundation/umi";
+import type { PublicKey } from "@metaplex-foundation/umi";
 import {
   fromWeb3JsPublicKey,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
-import { findAssociatedTokenPda } from "@metaplex-foundation/mpl-toolbox";
 import { TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
-import type { PublicKey } from "@metaplex-foundation/umi";
+import type { PublicKey as LegacyPublicKey } from "@solana/web3.js";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import { initUmi } from "../../utils";
 
 /**

@@ -1,11 +1,11 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
 import {
   ORCA_WHIRLPOOL_PROGRAM_ID,
+  PriceMath,
   WhirlpoolContext,
   buildWhirlpoolClient,
   getAllPositionAccountsByOwner,
-  PriceMath,
 } from "@orca-so/whirlpools-sdk";
+import type { SolanaAgentKit } from "solana-agent-kit";
 
 interface PositionInfo {
   whirlpoolAddress: string;

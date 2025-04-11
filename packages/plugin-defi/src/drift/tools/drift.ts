@@ -1,42 +1,42 @@
+import * as anchor from "@coral-xyz/anchor";
 import {
   BASE_PRECISION,
   BigNum,
   BulkAccountLoader,
+  DRIFT_PROGRAM_ID,
+  DriftClient,
+  FUNDING_RATE_BUFFER_PRECISION,
+  FUNDING_RATE_PRECISION_EXP,
+  FastSingleTxSender,
+  type IWallet,
+  JupiterClient,
+  MainnetPerpMarkets,
+  MainnetSpotMarkets,
+  PERCENTAGE_PRECISION,
+  PRICE_PRECISION,
+  PositionDirection,
+  PostOnlyParams,
+  QUOTE_PRECISION,
+  User,
   calculateDepositRate,
   calculateEstimatedEntryPriceWithL2,
   calculateInterestRate,
   calculateLongShortFundingRateAndLiveTwaps,
   convertToNumber,
-  DRIFT_PROGRAM_ID,
-  DriftClient,
-  FastSingleTxSender,
-  FUNDING_RATE_BUFFER_PRECISION,
-  FUNDING_RATE_PRECISION_EXP,
   getInsuranceFundStakeAccountPublicKey,
   getLimitOrderParams,
   getMarketOrderParams,
   getTokenAmount,
   getUserAccountPublicKeySync,
   isVariant,
-  JupiterClient,
-  MainnetPerpMarkets,
-  MainnetSpotMarkets,
   numberToSafeBN,
-  PERCENTAGE_PRECISION,
-  PositionDirection,
-  PostOnlyParams,
-  PRICE_PRECISION,
-  QUOTE_PRECISION,
-  User,
-  type IWallet,
 } from "@drift-labs/sdk";
-import type { SolanaAgentKit } from "solana-agent-kit";
-import * as anchor from "@coral-xyz/anchor";
 import { IDL, VAULT_PROGRAM_ID, VaultClient } from "@drift-labs/vaults-sdk";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";
 import { ComputeBudgetProgram } from "@solana/web3.js";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import type { RawL2Output } from "./types";
 import { MINIMUM_COMPUTE_PRICE_FOR_COMPLEX_ACTIONS } from "./utils/contants";
 

@@ -1,6 +1,6 @@
-import * as multisig from "@sqds/multisig";
 import { PublicKey } from "@solana/web3.js";
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
+import * as multisig from "@sqds/multisig";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Creates a new Squads multisig account.

@@ -1,7 +1,7 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action } from "solana-agent-kit";
 import { SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { PublicKey } from "@solana/web3.js";
 import { createGibworkTask } from "../tools";
 
 const createGibworkTaskAction: Action = {

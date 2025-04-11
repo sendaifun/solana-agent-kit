@@ -1,13 +1,13 @@
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
-import { generateSigner } from "@metaplex-foundation/umi";
 import { create, mplCore } from "@metaplex-foundation/mpl-core";
 import { fetchCollection } from "@metaplex-foundation/mpl-core";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import { generateSigner } from "@metaplex-foundation/umi";
 import {
   fromWeb3JsPublicKey,
   toWeb3JsInstruction,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { initUmi } from "../../utils";
 
 /**

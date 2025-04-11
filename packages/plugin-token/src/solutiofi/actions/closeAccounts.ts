@@ -1,5 +1,5 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
 import { closeAccounts } from "../tools/solutiofi";
 
 const closeAccountsAction: Action = {

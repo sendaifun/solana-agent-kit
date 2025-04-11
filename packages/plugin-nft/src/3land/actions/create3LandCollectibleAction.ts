@@ -1,13 +1,13 @@
+import type {
+  CreateCollectionOptions,
+  CreateSingleOptions,
+} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 import type { Action } from "solana-agent-kit";
 import { z } from "zod";
 import {
   createCollection,
   createSingle,
 } from "../tools/create_3land_collectible";
-import type {
-  CreateCollectionOptions,
-  CreateSingleOptions,
-} from "@3land/listings-sdk/dist/types/implementation/implementationTypes";
 
 const create3LandCollectibleAction: Action = {
   name: "CREATE_3LAND_COLLECTIBLE",
@@ -79,7 +79,7 @@ const create3LandCollectibleAction: Action = {
     sellerFeeBasisPoints: z.number().min(0).max(10000).optional(),
     withPool: z.boolean().optional().default(false),
   }),
-  handler: async (agent, input: Record<string, any>) => {
+  handler: async (_agent, input: Record<string, any>) => {
     try {
       if (input.isCollection) {
         const collectionOpts: CreateCollectionOptions = {

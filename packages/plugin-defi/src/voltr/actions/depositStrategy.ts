@@ -1,7 +1,7 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
-import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "bn.js";
+import { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { voltrDepositStrategy } from "../tools/voltr_deposit_strategy";
 
 const depositVoltrStrategyAction: Action = {

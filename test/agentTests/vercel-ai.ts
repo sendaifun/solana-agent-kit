@@ -1,6 +1,6 @@
+import { randomUUID } from "node:crypto";
 import { createOpenAI } from "@ai-sdk/openai";
 import { type Message, streamText } from "ai";
-import { randomUUID } from "node:crypto";
 import { createVercelAITools } from "solana-agent-kit";
 import type { SolanaAgentKit } from "solana-agent-kit";
 import { question, rl } from "../utils";

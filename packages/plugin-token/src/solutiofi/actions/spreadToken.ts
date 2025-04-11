@@ -1,7 +1,7 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
-import { InputAssetStruct, TargetTokenStruct, PriorityFee } from "../types";
 import { spreadToken } from "../tools/solutiofi";
+import { InputAssetStruct, PriorityFee, TargetTokenStruct } from "../types";
 
 const spreadTokenAction: Action = {
   name: "SOLUTIOFI_SPREAD_TOKEN",

@@ -1,6 +1,6 @@
+import { PublicKey } from "@solana/web3.js";
 import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { PublicKey } from "@solana/web3.js";
 import { fetchPrice } from "../tools";
 
 const fetchPriceAction: Action = {
@@ -34,7 +34,7 @@ const fetchPriceAction: Action = {
       .string()
       .describe("The mint address of the token to fetch the price for"),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const tokenId = new PublicKey(input.tokenAddress);
       const price = await fetchPrice(tokenId);

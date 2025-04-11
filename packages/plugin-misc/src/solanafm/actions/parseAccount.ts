@@ -1,6 +1,6 @@
-import { parse_account } from "../tools";
 import type { Action } from "solana-agent-kit";
 import { z } from "zod";
+import { parse_account } from "../tools";
 
 const parseAccountAction: Action = {
   name: "PARSE_ACCOUNT",

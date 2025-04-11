@@ -1,5 +1,5 @@
 import { Connection } from "@solana/web3.js";
-import type { Config, Plugin, Action } from "../types";
+import type { Action, Config, Plugin } from "../types";
 import { BaseWallet } from "../types/wallet";
 
 /**

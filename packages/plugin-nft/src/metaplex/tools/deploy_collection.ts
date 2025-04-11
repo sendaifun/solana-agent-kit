@@ -1,13 +1,13 @@
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
-import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import { createCollection, ruleSet } from "@metaplex-foundation/mpl-core";
-import type { CollectionOptions } from "../types";
+import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import {
   toWeb3JsInstruction,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
-import { initUmi } from "../../utils";
 import { Transaction } from "@solana/web3.js";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
+import { initUmi } from "../../utils";
+import type { CollectionOptions } from "../types";
 
 /**
  * Deploy a new NFT collection

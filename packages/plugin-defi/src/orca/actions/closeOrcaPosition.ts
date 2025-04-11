@@ -1,7 +1,7 @@
-import { z } from "zod";
-import type { Action } from "solana-agent-kit";
-import { orcaClosePosition } from "../tools";
 import { PublicKey } from "@solana/web3.js";
+import type { Action } from "solana-agent-kit";
+import { z } from "zod";
+import { orcaClosePosition } from "../tools";
 
 const closeOrcaPositionAction: Action = {
   name: "CLOSE_ORCA_POSITION_ACTION",

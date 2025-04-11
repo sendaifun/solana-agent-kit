@@ -1,8 +1,8 @@
-import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
-import { signOrSendTX, type SolanaAgentKit } from "solana-agent-kit";
+import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { VoltrClient } from "@voltr/vault-sdk";
 import BN from "bn.js";
+import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Deposits assets into a Voltr strategy

@@ -1,7 +1,7 @@
 import { registerDomainNameV2 } from "@bonfida/spl-name-service";
-import { Transaction } from "@solana/web3.js";
-import { signOrSendTX, SolanaAgentKit } from "solana-agent-kit";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { Transaction } from "@solana/web3.js";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { TOKENS } from "./utils/constant";
 
 /**

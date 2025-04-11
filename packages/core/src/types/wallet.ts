@@ -1,20 +1,20 @@
 import {
-  Transaction,
-  type PublicKey,
-  VersionedTransaction,
-  TransactionMessage,
-  type Signer,
   type Keypair,
-  type TransactionInstruction,
+  type PublicKey,
   type SendOptions,
+  type Signer,
+  Transaction,
+  type TransactionInstruction,
+  TransactionMessage,
   type TransactionSignature,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import type { TransactionOrVersionedTransaction } from ".";
 import type { SolanaAgentKit } from "../agent";
 import {
-  sendTx,
   type feeTiers,
   getComputeBudgetInstructions,
+  sendTx,
 } from "../utils/send_tx";
 
 /**
@@ -42,9 +42,7 @@ export interface BaseWallet {
       | Transaction
       | VersionedTransaction
       | TransactionOrVersionedTransaction,
-  >(
-    transaction: T,
-  ): Promise<T>;
+  >(transaction: T): Promise<T>;
 
   /**
    * Signs multiple transactions in batch
@@ -57,9 +55,7 @@ export interface BaseWallet {
       | Transaction
       | VersionedTransaction
       | TransactionOrVersionedTransaction,
-  >(
-    transactions: T[],
-  ): Promise<T[]>;
+  >(transactions: T[]): Promise<T[]>;
 
   /**
    * Sends a transaction on chain
@@ -71,9 +67,7 @@ export interface BaseWallet {
       | Transaction
       | VersionedTransaction
       | TransactionOrVersionedTransaction,
-  >(
-    transaction: T,
-  ): Promise<string>;
+  >(transaction: T): Promise<string>;
 
   /**
    * Signs and sends a transaction to the network

@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { Action } from "solana-agent-kit";
+import { z } from "zod";
 import { getTopGainers } from "../tools";
 
 const getCoingeckoTopGainersAction: Action = {
@@ -55,7 +55,7 @@ const getCoingeckoTopGainersAction: Action = {
   schema: z.object({
     duration: z.enum(["1h", "24h", "7d", "14d", "30d", "60d", "1y"]).optional(),
   }),
-  handler: async (agent, input) => {
+  handler: async (_agent, input) => {
     try {
       return {
         status: "success",

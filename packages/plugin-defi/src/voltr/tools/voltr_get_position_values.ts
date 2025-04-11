@@ -1,6 +1,6 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
 import { PublicKey } from "@solana/web3.js";
 import { VoltrClient } from "@voltr/vault-sdk";
+import type { SolanaAgentKit } from "solana-agent-kit";
 
 /**
  * Gets the value of assets in a Voltr vault

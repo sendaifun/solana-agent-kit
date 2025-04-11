@@ -1,6 +1,6 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getDebridgeSupportedChains } from "../tools/get_supported_chains";
-import { SolanaAgentKit, Action } from "solana-agent-kit";
 
 const getDebridgeSupportedChainsAction: Action = {
   name: "DEBRIDGE_GET_SUPPORTED_CHAINS",

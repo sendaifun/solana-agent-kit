@@ -1,8 +1,8 @@
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { SolanaAgentKit } from "@packages/core/dist";
 import { mplCore } from "@metaplex-foundation/mpl-core";
 import { mplToolbox } from "@metaplex-foundation/mpl-toolbox";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { fromWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
+import { SolanaAgentKit } from "@packages/core/dist";
 import { PublicKey } from "@solana/web3.js";
 
 export function initUmi(agent: SolanaAgentKit) {

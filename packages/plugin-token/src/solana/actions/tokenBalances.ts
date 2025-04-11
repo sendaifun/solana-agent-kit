@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { Action, SolanaAgentKit } from "solana-agent-kit";
+import type { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { get_token_balance } from "../tools";
 
@@ -63,10 +63,10 @@ const tokenBalancesAction: Action = {
   schema: z.object({
     walletAddress: z.string().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input) => {
+  handler: async (agent: SolanaAgentKit, input: { walletAddress?: string }) => {
     const balance = await get_token_balance(
       agent,
-      input.tokenAddress && new PublicKey(input.tokenAddress),
+      input.walletAddress ? new PublicKey(input.walletAddress) : undefined,
     );
 
     return {

@@ -1,9 +1,9 @@
 import {
   AlloraAPIClient,
-  PriceInferenceTimeframe,
-  PriceInferenceToken,
   AlloraAPIClientConfig,
   ChainSlug,
+  PriceInferenceTimeframe,
+  PriceInferenceToken,
 } from "@alloralabs/allora-sdk";
 import { SolanaAgentKit } from "solana-agent-kit";
 

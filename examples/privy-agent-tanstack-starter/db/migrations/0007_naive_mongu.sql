@@ -1,0 +1,1 @@
+ALTER TABLE "User" ALTER COLUMN "walletId" SET DATA TYPE text;
