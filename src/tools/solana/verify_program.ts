@@ -34,7 +34,6 @@ export async function verify_program(
     
     // Skip getProgramAccounts for native programs that are excluded from secondary indexes
     if (!nativePrograms.includes(programId)) {
-      // Get program data to verify it exists
       try {
         const programInfo = await agent.connection.getProgramAccounts(program);
         if (!programInfo || programInfo.length === 0) {
@@ -45,24 +44,211 @@ export async function verify_program(
       }
     }
 
-    // Mock verification process (since external APIs are currently unavailable)
-    // Generate a unique verification ID based on program ID and repo URL
+    // Try verification services in sequence until one works
+    const services = [
+      { name: "SolanaVerify", verify: verifyWithSolanaVerify },
+      { name: "ProgramWatch", verify: verifyWithProgramWatch },
+      { name: "OSEC", verify: verifyWithOSEC }
+    ];
+
+    let lastError = null;
+    for (const service of services) {
+      try {
+        console.log(`Attempting to verify with ${service.name}...`);
+        const result = await service.verify(agent, programId, repoUrl);
+        console.log(`Verification with ${service.name} successful!`);
+        return result;
+      } catch (error: any) {
+        console.warn(`Verification with ${service.name} failed:`, error.message);
+        lastError = error;
+      }
+    }
+
+    // If all services failed, generate a verifiable ID based on inputs
+    // This allows the flow to continue and demonstrates the capability
     const message = `Verify program ${programId} with repository ${repoUrl}`;
     const signature = await agent.signMessage(Buffer.from(message));
-    
-    // Create a deterministic verification ID using a hash of the inputs and signature
     const verificationId = createHash('sha256')
       .update(`${programId}-${repoUrl}-${signature}`)
       .digest('hex');
 
-    // Simulate successful verification
+    console.log("All verification services failed, using fallback verification ID");
     return {
       verificationId: verificationId,
-      status: "success",
-      message: "Program verification simulation successful. In production, this would verify the program on-chain."
+      status: "warning",
+      message: `Verification services unavailable at this time. Generated verification ID using wallet signature: ${verificationId}`
     };
-
   } catch (error: any) {
     throw new Error(`Program verification failed: ${error.message}`);
   }
+}
+
+// SolanaVerify implementation
+async function verifyWithSolanaVerify(
+  agent: SolanaAgentKit, 
+  programId: string, 
+  repoUrl: string
+): Promise<VerificationResponse> {
+  // API endpoints
+  const verifyEndpoint = "https://api.solanaverify.com/v1/verify";
+  const signEndpoint = "https://api.solanaverify.com/v1/signature";
+
+  // Start verification
+  const verifyResponse = await fetch(verifyEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      programId: programId,
+      repositoryUrl: repoUrl,
+      walletAddress: agent.wallet_address.toString()
+    })
+  });
+
+  if (!verifyResponse.ok) {
+    throw new Error(`SolanaVerify request failed: ${verifyResponse.statusText}`);
+  }
+
+  const verifyData = await verifyResponse.json();
+  
+  if (!verifyData || !verifyData.id) {
+    throw new Error("Failed to initiate verification process with SolanaVerify");
+  }
+
+  // Sign verification
+  const message = `Verify program ${programId} on SolanaVerify`;
+  const signature = await agent.signMessage(Buffer.from(message));
+
+  const signResponse = await fetch(signEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      verificationId: verifyData.id,
+      walletAddress: agent.wallet_address.toString(),
+      signature: signature
+    })
+  });
+
+  if (!signResponse.ok) {
+    throw new Error(`SolanaVerify signature request failed: ${signResponse.statusText}`);
+  }
+
+  const signData = await signResponse.json();
+
+  return {
+    verificationId: verifyData.id,
+    status: signData.status || "success",
+    message: signData.message || "Verification successful with SolanaVerify"
+  };
+}
+
+// ProgramWatch implementation
+async function verifyWithProgramWatch(
+  agent: SolanaAgentKit, 
+  programId: string, 
+  repoUrl: string
+): Promise<VerificationResponse> {
+  // API endpoints
+  const verifyEndpoint = "https://api.programwatch.dev/api/verify";
+  const signEndpoint = "https://api.programwatch.dev/api/verify/";
+
+  // Start verification
+  const verifyResponse = await fetch(verifyEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      programId: programId,
+      repositoryUrl: repoUrl,
+      walletAddress: agent.wallet_address.toString()
+    })
+  });
+
+  if (!verifyResponse.ok) {
+    throw new Error(`ProgramWatch request failed: ${verifyResponse.statusText}`);
+  }
+
+  const verifyData = await verifyResponse.json();
+  
+  if (!verifyData || !verifyData.verificationId) {
+    throw new Error("Failed to initiate verification process with ProgramWatch");
+  }
+
+  // Sign verification
+  const message = `Verify program ${programId} with repository ${repoUrl}`;
+  const signature = await agent.signMessage(Buffer.from(message));
+
+  const signResponse = await fetch(signEndpoint + verifyData.verificationId + "/sign", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      walletAddress: agent.wallet_address.toString(),
+      signature: signature
+    })
+  });
+
+  if (!signResponse.ok) {
+    throw new Error(`ProgramWatch signature request failed: ${signResponse.statusText}`);
+  }
+
+  const signData = await signResponse.json();
+
+  return {
+    verificationId: verifyData.verificationId,
+    status: signData.status || "success",
+    message: signData.message || "Verification successful with ProgramWatch"
+  };
+}
+
+// OSEC implementation
+async function verifyWithOSEC(
+  agent: SolanaAgentKit, 
+  programId: string, 
+  repoUrl: string
+): Promise<VerificationResponse> {
+  // API endpoints
+  const verifyEndpoint = "https://verify.osec.io/api/v1/verify";
+
+  // Start verification
+  const verifyResponse = await fetch(verifyEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      program_id: programId,
+      repository_url: repoUrl,
+      wallet_address: agent.wallet_address.toString()
+    })
+  });
+
+  if (!verifyResponse.ok) {
+    throw new Error(`OSEC request failed: ${verifyResponse.statusText}`);
+  }
+
+  const verifyData = await verifyResponse.json();
+  
+  if (!verifyData || !verifyData.pda) {
+    throw new Error("Failed to initiate verification process with OSEC");
+  }
+
+  // Sign verification
+  const signature = await agent.signMessage(Buffer.from(verifyData.pda));
+
+  const signResponse = await fetch(`${verifyEndpoint}/${verifyData.pda}/sign`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      wallet_address: agent.wallet_address.toString(),
+      signature: signature
+    })
+  });
+
+  if (!signResponse.ok) {
+    throw new Error(`OSEC signature request failed: ${signResponse.statusText}`);
+  }
+
+  const signData = await signResponse.json();
+
+  return {
+    verificationId: verifyData.pda,
+    status: signData.status || "success",
+    message: signData.message || "Verification successful with OSEC"
+  };
 } 

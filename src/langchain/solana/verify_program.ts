@@ -2,6 +2,7 @@ import { Tool } from "langchain/tools";
 import { SolanaAgentKit } from "../../agent";
 import { PublicKey } from "@solana/web3.js";
 import { createHash } from "crypto";
+import { verify_program } from "../../tools";
 
 export class SolanaVerifyProgramTool extends Tool {
   name = "solana_verify_program";
@@ -28,48 +29,19 @@ export class SolanaVerifyProgramTool extends Tool {
         throw new Error("repoUrl is required");
       }
 
-      // Check for known native programs that are excluded from secondary indexes
-      const nativePrograms = [
-        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", // SPL Token Program
-        "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s", // Token Metadata Program
-        "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL", // Associated Token Account Program
-        "11111111111111111111111111111111", // System Program
-      ];
-
-      // Validate program ID
-      const program = new PublicKey(parsedInput.programId);
+      // Use the core verify_program tool that handles all verification logic
+      const result = await verify_program(
+        this.solanaKit,
+        parsedInput.programId,
+        parsedInput.repoUrl
+      );
       
-      // Skip getProgramAccounts for native programs that are excluded from secondary indexes
-      if (!nativePrograms.includes(parsedInput.programId)) {
-        // Get program data to verify it exists
-        try {
-          const programInfo = await this.solanaKit.connection.getProgramAccounts(program);
-          if (!programInfo || programInfo.length === 0) {
-            throw new Error(`Program ${parsedInput.programId} not found on chain`);
-          }
-        } catch (err) {
-          console.warn("Unable to check program accounts, continuing verification anyway");
-        }
-      }
-
-      // Mock verification process (since external APIs are currently unavailable)
-      // Generate a unique verification ID based on program ID and repo URL
-      const message = `Verify program ${parsedInput.programId} with repository ${parsedInput.repoUrl}`;
-      const signature = await this.solanaKit.signMessage(Buffer.from(message));
-      
-      // Create a deterministic verification ID using a hash of the inputs and signature
-      const verificationId = createHash('sha256')
-        .update(`${parsedInput.programId}-${parsedInput.repoUrl}-${signature}`)
-        .digest('hex');
-
-      // Simulate successful verification
       return JSON.stringify({
-        status: "success",
-        message: "Program verification simulation successful. In production, this would verify the program on-chain.",
-        verificationId: verificationId,
+        status: result.status,
+        message: result.message,
+        verificationId: result.verificationId,
         programId: parsedInput.programId,
-        repoUrl: parsedInput.repoUrl,
-        note: "This is a mock implementation. In production, this would connect to an actual verification service."
+        repoUrl: parsedInput.repoUrl
       });
     } catch (error: any) {
       return JSON.stringify({
