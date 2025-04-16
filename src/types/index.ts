@@ -276,6 +276,16 @@ export interface HeliusWebhookIdResponse {
   webhookType: string;
 }
 
+export interface HeliusDisplayOptions {
+  showFungible?: boolean;
+  showUnverifiedCollections?: boolean;
+  showCollectionMetadata?: boolean;
+  showGrandTotal?: boolean;
+  showNativeBalance?: boolean;
+  showInscription?: boolean;
+  showZeroBalance?: boolean;
+}
+
 export interface PriorityFeeResponse {
   jsonrpc: string;
   id: string;
