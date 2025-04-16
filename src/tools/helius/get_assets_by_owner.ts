@@ -17,7 +17,7 @@ export async function getAssetsByOwner(
   },
 ): Promise<any> {
   try {
-    const apiKey = agent.config.HELIUS_API_KEY;
+    const apiKey = agent.config?.HELIUS_API_KEY;
     if (!apiKey) {
       throw new Error("HELIUS_API_KEY not found in environment variables");
     }

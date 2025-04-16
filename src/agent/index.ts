@@ -11,6 +11,7 @@ import { DEFAULT_OPTIONS } from "../constants";
 import {
   deploy_collection,
   deploy_token,
+  deploy_token2022,
   get_balance,
   get_balance_other,
   getTPS,
@@ -145,6 +146,15 @@ import {
   tokenTransfer,
   cctpTransfer,
   createWrappedToken,
+  parse_instruction,
+  parse_account,
+  sanctumGetLSTPrice,
+  sanctumGetLSTTVL,
+  sanctumGetLSTAPY,
+  sanctumGetOwnedLST,
+  sanctumSwapLST,
+  sanctumAddLiquidity,
+  sanctumRemoveLiquidity,
 } from "../tools";
 import {
   Config,
@@ -170,6 +180,10 @@ import {
   CctpTransferInput,
   TokenTransferInput,
   CreateWrappedTokenInput,
+  CreateJupiterOrderRequest,
+  CancelJupiterOrderRequest,
+  InstructionParserResponse,
+  AccountParserResponse,
 } from "../types";
 import {
   DasApiAsset,
@@ -187,7 +201,6 @@ import {
   getTrendingTokensUsingElfaAi,
   getSmartTwitterAccountStats,
 } from "../tools/elfa_ai";
-import { Chain, TokenId } from "@wormhole-foundation/sdk/dist/cjs";
 import {
   getQuote as getOkxQuote,
   executeSwap as executeOkxSwapTool,
@@ -195,6 +208,10 @@ import {
   getChainData,
   getLiquidity,
 } from "../tools/okx-dex";
+import { createLimitOrder } from "../tools/jupiter/create_limit_order";
+import { cancelLimitOrders } from "../tools/jupiter/cancel_limit_orders";
+import { getOpenLimitOrders } from "../tools/jupiter/get_open_limit_orders";
+import { getLimitOrderHistory } from "../tools/jupiter/get_limit_order_history";
 
 /**
  * Main class for interacting with Solana blockchain
@@ -210,7 +227,7 @@ export class SolanaAgentKit {
   public connection: Connection;
   public wallet: Keypair;
   public wallet_address: PublicKey;
-  public config: Config;
+  public config?: Config;
 
   /**
    * @deprecated Using openai_api_key directly in constructor is deprecated.
@@ -225,11 +242,13 @@ export class SolanaAgentKit {
     rpc_url: string,
     openai_api_key: string | null,
   );
-  constructor(private_key: string, rpc_url: string, config: Config);
+
+  constructor(private_key: string, rpc_url: string, config?: Config);
+
   constructor(
     private_key: string,
     rpc_url: string,
-    configOrKey: Config | string | null,
+    configOrKey?: Config | string | null,
   ) {
     this.connection = new Connection(
       rpc_url || "https://api.mainnet-beta.solana.com",
@@ -241,7 +260,7 @@ export class SolanaAgentKit {
     if (typeof configOrKey === "string" || configOrKey === null) {
       this.config = { OPENAI_API_KEY: configOrKey || "" };
     } else {
-      this.config = configOrKey;
+      this.config = configOrKey as Config;
     }
   }
 
@@ -267,6 +286,16 @@ export class SolanaAgentKit {
       authority,
       initialSupply,
     );
+  }
+
+  async deployToken2022(
+    name: string,
+    uri: string,
+    symbol: string,
+    decimals: number = DEFAULT_OPTIONS.TOKEN_DECIMALS,
+    initialSupply?: number,
+  ): Promise<{ mint: PublicKey }> {
+    return deploy_token2022(this, name, uri, symbol, decimals, initialSupply);
   }
 
   async deployCollection(
@@ -394,6 +423,20 @@ export class SolanaAgentKit {
       agent: this,
       ...args,
     });
+  }
+
+  async parseInstruction(
+    program_id: string,
+    instruction_data: string,
+  ): Promise<InstructionParserResponse> {
+    return parse_instruction(program_id, instruction_data);
+  }
+
+  async parseAccount(
+    program_id: string,
+    account_data: string,
+  ): Promise<AccountParserResponse> {
+    return parse_account(program_id, account_data);
   }
 
   async lendAssets(amount: number): Promise<string> {
@@ -1389,5 +1432,102 @@ export class SolanaAgentKit {
    */
   async getOkxChainData() {
     return getChainData(this);
+  }
+
+  /**
+   * Create a limit order on Jupiter
+   * @param params Parameters for creating the limit order
+   * @returns Result of the limit order creation
+   */
+  async createJupiterLimitOrder(params: CreateJupiterOrderRequest) {
+    return createLimitOrder(this, params);
+  }
+
+  /**
+   * Cancel limit orders on Jupiter
+   * @param params Parameters for canceling the orders
+   * @returns Result of the order cancellation
+   */
+  async cancelJupiterLimitOrders(params: CancelJupiterOrderRequest) {
+    return cancelLimitOrders(this, params);
+  }
+
+  /**
+   * Get open limit orders on Jupiter
+   * @returns List of open limit orders
+   */
+  async getOpenJupiterLimitOrders() {
+    return getOpenLimitOrders(this);
+  }
+
+  /**
+   * Get limit order history on Jupiter
+   * @returns Limit order history
+   */
+  async getJupiterLimitOrderHistory() {
+    return getLimitOrderHistory(this);
+  }
+
+  async getSanctumLSTPrice(mints: string[]) {
+    return sanctumGetLSTPrice(mints);
+  }
+
+  async getSanctumLSTAPY(inputs: string[]) {
+    return sanctumGetLSTAPY(inputs);
+  }
+
+  async getSanctumLSTTVL(inputs: string[]) {
+    return sanctumGetLSTTVL(inputs);
+  }
+
+  async getSanctumOwnedLST() {
+    return sanctumGetOwnedLST(this);
+  }
+
+  async addSanctumLiquidity(
+    lstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+  ) {
+    return sanctumAddLiquidity(
+      this,
+      lstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+    );
+  }
+
+  async removeSanctumLiquidity(
+    lstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+  ) {
+    return sanctumRemoveLiquidity(
+      this,
+      lstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+    );
+  }
+
+  async swapSanctumLST(
+    inputLstMint: string,
+    amount: string,
+    quotedAmount: string,
+    priorityFee: number,
+    outputLstMint: string,
+  ) {
+    return sanctumSwapLST(
+      this,
+      inputLstMint,
+      amount,
+      quotedAmount,
+      priorityFee,
+      outputLstMint,
+    );
   }
 }

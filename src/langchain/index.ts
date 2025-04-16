@@ -37,6 +37,8 @@ export * from "./debridge";
 export * from "./fluxbeam";
 export * from "./wormhole";
 export * from "./okx-dex";
+export * from "./solanafm";
+export * from "./sanctum";
 
 import type { SolanaAgentKit } from "../agent";
 import {
@@ -44,6 +46,7 @@ import {
   SolanaBalanceOtherTool,
   SolanaTransferTool,
   SolanaDeployTokenTool,
+  SolanaDeployToken2022Tool,
   SolanaDeployCollectionTool,
   SolanaMintNFTTool,
   SolanaTradeTool,
@@ -164,7 +167,24 @@ import {
   TokenTransferTool,
   CreateWrappedTokenTool,
   GetWormholeSupportedChainsTool,
+  SolanaParseAccountTool,
+  SolanaParseInstructionTool,
 } from "./index";
+import {
+  SolanaCancelLimitOrdersTool,
+  SolanaCreateLimitOrderTool,
+  SolanaGetOpenOrdersTool,
+  SolanaGetOrderHistoryTool,
+} from "./jupiter";
+import {
+  SanctumAddLiquidityTool,
+  SanctumGetLSTAPYTool,
+  SanctumGetLSTPriceTool,
+  SanctumGetLSTTVLTool,
+  SanctumGetOwnedLSTTool,
+  SanctumRemoveLiquidityTool,
+  SanctumSwapLSTTool,
+} from "./sanctum";
 
 export function createSolanaTools(solanaKit: SolanaAgentKit) {
   return [
@@ -173,6 +193,7 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new SolanaBalanceOtherTool(solanaKit),
     new SolanaTransferTool(solanaKit),
     new SolanaDeployTokenTool(solanaKit),
+    new SolanaDeployToken2022Tool(solanaKit),
     new SolanaDeployCollectionTool(solanaKit),
     new SolanaMintNFTTool(solanaKit),
     new SolanaTradeTool(solanaKit),
@@ -292,5 +313,25 @@ export function createSolanaTools(solanaKit: SolanaAgentKit) {
     new TokenTransferTool(solanaKit),
     new CreateWrappedTokenTool(solanaKit),
     new GetWormholeSupportedChainsTool(solanaKit),
+    new SolanaCreateLimitOrderTool(solanaKit),
+    new SolanaCancelLimitOrdersTool(solanaKit),
+    new SolanaGetOpenOrdersTool(solanaKit),
+    new SolanaGetOrderHistoryTool(solanaKit),
+    new SolanaParseAccountTool(solanaKit),
+    new SolanaParseInstructionTool(solanaKit),
+    new SanctumGetLSTPriceTool(solanaKit),
+    new SanctumGetLSTTVLTool(solanaKit),
+    new SanctumGetLSTAPYTool(solanaKit),
+    new SanctumGetOwnedLSTTool(solanaKit),
+    new SanctumAddLiquidityTool(solanaKit),
+    new SanctumRemoveLiquidityTool(solanaKit),
+    new SanctumSwapLSTTool(solanaKit),
+    // new SanctumGetPriceTool(solanaKit),
+    // new SanctumGetApyTool(solanaKit),
+    // new SanctumGetTvlTool(solanaKit),
+    // new SanctumAddLiquidityTool(solanaKit),
+    // new SanctumRemoveLiquidityTool(solanaKit),
+    // new SanctumGetOwnedLstTool(solanaKit),
+    // new SanctumSwapLstTool(solanaKit),
   ];
 }

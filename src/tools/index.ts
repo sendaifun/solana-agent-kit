@@ -37,3 +37,5 @@ export * from "./fluxbeam";
 export * from "./coingecko";
 export * from "./wormhole";
 export * from "./okx-dex";
+export * from "./solanafm";
+export * from "./sanctum";

@@ -1,5 +1,6 @@
 import tokenBalancesAction from "./tokenBalances";
 import deployTokenAction from "./metaplex/deployToken";
+import deployToken2022Action from "./metaplex/deployToken2022";
 import balanceAction from "./solana/balance";
 import transferAction from "./solana/transfer";
 import deployCollectionAction from "./metaplex/deployCollection";
@@ -117,12 +118,26 @@ import getWormholeSupportedChainsAction from "./wormhole/getSupportedChains";
 import cctpTransferAction from "./wormhole/cctpTransfer";
 import createWrappedTokenAction from "./wormhole/createWrappedToken";
 import tokenTransferAction from "./wormhole/tokenTransfer";
+import getLimitOrderHistoryAction from "./jupiter/getLimitOrderHistory";
+import createLimitOrderAction from "./jupiter/createLimitOrder";
+import cancelLimitOrdersAction from "./jupiter/cancelLimitOrders";
+import getOpenLimitOrdersAction from "./jupiter/getOpenLimitOrders";
+import parseAccountAction from "./solanafm/parseAccount";
+import parseInstructionAction from "./solanafm/parseInstruction";
+import getSanctumLSTPriceAction from "./sanctum/sanctumGetLSTPrice";
+import getSanctumLSTAPYAction from "./sanctum/sanctumGetLSTAPY";
+import getSanctumLSTTVLAction from "./sanctum/sanctumGetLSTTVL";
+import sanctumAddLiquidityAction from "./sanctum/sanctumAddLiquidity";
+import sanctumRemoveLiquidityAction from "./sanctum/sanctumRemoveLiquidity";
+import sanctumGetOwnedLSTAction from "./sanctum/sanctumGetOwnedLST";
+import sanctumSwapLSTAction from "./sanctum/sanctumSwapLST";
 
 export const ACTIONS = {
   GET_INFO_ACTION: getInfoAction,
   WALLET_ADDRESS_ACTION: getWalletAddressAction,
   TOKEN_BALANCES_ACTION: tokenBalancesAction,
   DEPLOY_TOKEN_ACTION: deployTokenAction,
+  DEPLOY_TOKEN2022_ACTION: deployToken2022Action,
   BALANCE_ACTION: balanceAction,
   TRANSFER_ACTION: transferAction,
   DEPLOY_COLLECTION_ACTION: deployCollectionAction,
@@ -242,6 +257,19 @@ export const ACTIONS = {
   CCTP_TRANSFER_ACTION: cctpTransferAction,
   CREATE_WRAPPED_TOKEN_ACTION: createWrappedTokenAction,
   TOKEN_TRANSFER_ACTION: tokenTransferAction,
+  CREATE_LIMIT_ORDER_ACTION: createLimitOrderAction,
+  CANCEL_LIMIT_ORDERS_ACTION: cancelLimitOrdersAction,
+  GET_LIMIT_ORDER_HISTORY_ACTION: getLimitOrderHistoryAction,
+  GET_OPEN_LIMIT_ORDERS_ACTION: getOpenLimitOrdersAction,
+  PARSE_ACCOUNT_ACTION: parseAccountAction,
+  PARSE_INSTRUCTION_ACTION: parseInstructionAction,
+  SANCTUM_GET_PRICE_ACTION: getSanctumLSTPriceAction,
+  SANCTUM_GET_APY_ACTION: getSanctumLSTAPYAction,
+  SANCTUM_GET_TVL_ACTION: getSanctumLSTTVLAction,
+  SANCTUM_ADD_LIQUIDITY_ACTION: sanctumAddLiquidityAction,
+  SANCTUM_REMOVE_LIQUIDITY_ACTION: sanctumRemoveLiquidityAction,
+  SANCTUM_GET_OWNED_LST_ACTION: sanctumGetOwnedLSTAction,
+  SANCTUM_SWAP_LST_ACTION: sanctumSwapLSTAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

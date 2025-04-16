@@ -2,7 +2,7 @@
 
 # Solana Agent Kit
 
-![Solana Agent Kit Cover 1 (3)](https://github.com/user-attachments/assets/cfa380f6-79d9-474d-9852-3e1976c6de70)
+![SAKCover2](https://github.com/user-attachments/assets/a6072421-8958-4cee-934a-a10ea32ae75e)
 
 ![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)
@@ -122,7 +122,7 @@ import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
 const agent = new SolanaAgentKit(
   "your-wallet-private-key-as-base58",
   "https://api.mainnet-beta.solana.com",
-  "your-openai-api-key"
+  { OPENAI_API_KEY: "your-openai-api-key" } // optional config
 );
 
 // Create LangChain tools
@@ -150,6 +150,27 @@ const result = await agent.deployToken(
 
 console.log("Token Mint Address:", result.mint.toString());
 ```
+
+### Deploy a New Token2022
+
+```typescript
+const result = await agent.delpoyToken2022(
+  "my ai token 2022", // name
+  "uri", // uri
+  "token2022", // symbol
+  9, // decimals
+  {
+    mintAuthority: null, // by default, deployer account
+    freezeAuthority: null, // by default, deployer account
+    updateAuthority: undefined, // by default, deployer account
+    isMutable: false // by default, true
+  },
+  1000000 // initial supply
+);
+
+console.log("Token2022 Mint Address:", result.mint.toString());
+```
+
 
 
 ### Get all supported chains using Wormhole
@@ -760,6 +781,110 @@ const swapResult = await agent.executeSwap({
 });
 console.log("Swap executed:", swapResult);
 ```
+
+### Parse Instruction Data
+
+```typescript
+const parsedData = await agent.parseInstruction(
+  "<programId>",
+  "<instructionData>" // base64
+)
+
+console.log("parsed data:", parsedData)
+```
+
+### Parse Instruction Data
+
+```typescript
+const parsedData = await agent.parseAccount(
+  "<programId>",
+  "<accountData>" // base64
+)
+
+console.log("parsed data:", parsedData)
+```
+
+### Get Sanctum LST Price
+
+```typescript
+const prices = await agent.getSanctumLSTPrice([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('prices', prices)
+```
+
+### Get Sanctum LST APY
+
+```typescript
+const apys = await agent.getSanctumLSTAPY([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('apys', apys)
+```
+
+### Get Sanctum LST TVL
+
+```typescript
+const tvls = await agent.getSanctumLSTTVL([
+  "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1", 
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+  ])
+
+console.log('tvls', tvls)
+```
+
+### Get Sanctum Owend LST
+
+```typescript
+const lsts = await agent.getSanctumOwnedLST()
+
+console.log('lsts', lsts)
+```
+
+### Add Liquidity to Sanctum Infinite Pool
+
+```typescript
+const txId = await agent.addSanctumLiquidity(
+  "So11111111111111111111111111111111111111112",
+  "1000000000",
+  "1100000000",
+  5000
+)
+
+console.log('txId', txId)
+```
+
+### Remove Liquidity from Sanctum Infinite Pool
+
+```typescript
+const txId = await agent.removeSanctumLiquidity(
+  "So11111111111111111111111111111111111111112",
+  "1000000000",
+  "1100000000",
+  5000
+)
+
+console.log('txId', txId)
+```
+
+### Swap Sanctum LST
+
+```typescript
+const txId = await agent.swapSanctumLST(
+  "So11111111111111111111111111111111111111112",
+  "1000000000",
+  "1100000000",
+  5000,
+  "7Q2afV64in6N6SeZsAAB81TJzwDoD6zpqmHkzi9Dcavn"
+)
+
+console.log('txId', txId)
+```
+
 
 ### Get Chain Data
 

@@ -5,11 +5,11 @@ export async function getTrendingPools(
   duration: "5m" | "1h" | "24h" | "6h" = "24h",
 ) {
   try {
-    if (!agent.config.COINGECKO_PRO_API_KEY) {
+    if (!agent.config?.COINGECKO_PRO_API_KEY) {
       throw new Error("No CoinGecko Pro API key provided");
     }
 
-    const url = `https://pro-api.coingecko.com/api/v3/onchain/networks/solana/trending_pools?include=base_token,network&duration=${duration}&x_cg_pro_api_key=${agent.config.COINGECKO_PRO_API_KEY}`;
+    const url = `https://pro-api.coingecko.com/api/v3/onchain/networks/solana/trending_pools?include=base_token,network&duration=${duration}&x_cg_pro_api_key=${agent.config?.COINGECKO_PRO_API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
 

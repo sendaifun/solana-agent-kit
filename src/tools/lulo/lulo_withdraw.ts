@@ -14,7 +14,7 @@ export async function luloWithdraw(
   amount: number,
 ): Promise<string> {
   try {
-    if (!agent.config.FLEXLEND_API_KEY) {
+    if (!agent.config?.FLEXLEND_API_KEY) {
       throw new Error("Lulo API key not found in agent configuration");
     }
 
@@ -25,7 +25,7 @@ export async function luloWithdraw(
         headers: {
           "Content-Type": "application/json",
           "x-wallet-pubkey": agent.wallet.publicKey.toBase58(),
-          "x-api-key": agent.config.FLEXLEND_API_KEY,
+          "x-api-key": agent.config?.FLEXLEND_API_KEY,
         },
         body: JSON.stringify({
           owner: agent.wallet.publicKey.toBase58(),

@@ -173,8 +173,8 @@ async function swapEVM(
   dstAddr: string,
 ): Promise<string> {
   if (!evmWallet) {
-    if (agent.config.ETHEREUM_PRIVATE_KEY) {
-      evmWallet = new Wallet(agent.config.ETHEREUM_PRIVATE_KEY);
+    if (agent.config?.ETHEREUM_PRIVATE_KEY) {
+      evmWallet = new Wallet(agent.config?.ETHEREUM_PRIVATE_KEY);
     } else {
       throw new Error("You haven't provided EVM wallet private key.");
     }

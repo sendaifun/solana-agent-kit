@@ -53,7 +53,7 @@ export async function getComputeBudgetInstructions(
 
   let priorityFee: number;
 
-  if (agent.config.HELIUS_API_KEY) {
+  if (agent.config?.HELIUS_API_KEY) {
     // Create and set up a legacy transaction for Helius fee estimation
     const legacyTransaction = new Transaction();
     legacyTransaction.recentBlockhash = blockhash;
@@ -68,7 +68,7 @@ export async function getComputeBudgetInstructions(
 
     // Use Helius API for priority fee calculation
     const response = await fetch(
-      `https://mainnet.helius-rpc.com/?api-key=${agent.config.HELIUS_API_KEY}`,
+      `https://mainnet.helius-rpc.com/?api-key=${agent.config?.HELIUS_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

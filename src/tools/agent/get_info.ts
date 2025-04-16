@@ -10,12 +10,12 @@ import { ChatCompletionMessageParam } from "openai/resources";
  */
 export async function get_info(agent: SolanaAgentKit, prompt: string) {
   try {
-    if (!agent.config.PERPLEXITY_API_KEY) {
+    if (!agent.config?.PERPLEXITY_API_KEY) {
       throw new Error("Perplexity API key not found in agent configuration");
     }
 
     const perplexity = new OpenAI({
-      apiKey: agent.config.PERPLEXITY_API_KEY,
+      apiKey: agent.config?.PERPLEXITY_API_KEY,
       baseURL: "https://api.perplexity.ai",
     });
 
