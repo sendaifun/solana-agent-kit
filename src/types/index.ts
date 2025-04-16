@@ -593,7 +593,6 @@ export interface CreateWrappedTokenInput {
   network?: "Mainnet" | "Testnet" | "Devnet";
 }
 
-
 export interface HeliusDisplayOptions {
   showFungible?: boolean;
   showUnverifiedCollections?: boolean;
