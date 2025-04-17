@@ -14,7 +14,7 @@ import { SANCTUM_TRADE_API_URI } from "../constants";
  * @param amount amount of LST to remove
  * @param quotedAmount amount of the INF token to burn
  * @param priorityFee priority fee for the transaction
- * @return tranasction signature
+ * @return transaction signature
  */
 
 export async function sanctumRemoveLiquidity(

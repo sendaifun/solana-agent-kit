@@ -188,7 +188,7 @@ console.log("Token Mint Address:", result.mint.toString());
 ### Deploy a New Token2022
 
 ```typescript
-const result = await agent.methods.delpoyToken2022(
+const result = await agent.methods.deployToken2022(
   "my ai token 2022", // name
   "uri", // uri
   "token2022", // symbol

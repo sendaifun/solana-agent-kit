@@ -285,7 +285,7 @@ export function createPerpClient(agent: SolanaAgentKit): PerpetualsClient {
   return new PerpetualsClient(
     provider,
     POOL_CONFIGS[0].programId,
-    POOL_CONFIGS[0].perpComposibilityProgramId,
+    POOL_CONFIGS[0].perpComposabilityProgramId,
     POOL_CONFIGS[0].fbNftRewardProgramId,
     POOL_CONFIGS[0].rewardDistributionProgram.programId,
     {},
