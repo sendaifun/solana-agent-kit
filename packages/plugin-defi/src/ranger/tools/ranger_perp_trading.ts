@@ -11,6 +11,29 @@ import { RANGER_SOR_API_BASE } from "../index";
 
 /**
  * Open perp trade on Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/increase_position to open or increase a perp position.
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (e.g., "SOL", "BTC")
+ *   - side: "Long" | "Short"
+ *   - size: number (position size in base asset)
+ *   - collateral: number (collateral in USDC)
+ *   - size_denomination: string (must match symbol)
+ *   - collateral_denomination: string (must be "USDC")
+ *   - adjustment_type: string ("Increase")
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue allocations, total size/collateral, price impact, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function openPerpTradeRanger({
   agent,
@@ -64,6 +87,25 @@ export async function openPerpTradeRanger({
 
 /**
  * Close perp trade on Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/close_position to close a perp position.
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (e.g., "SOL", "BTC")
+ *   - side: "Long" | "Short"
+ *   - adjustment_type: string (e.g., "CloseFlash", "CloseJupiter", "CloseAll")
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue allocations, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function closePerpTradeRanger({
   agent,
@@ -109,6 +151,29 @@ export async function closePerpTradeRanger({
 
 /**
  * Increase perp position on Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/increase_position to increase the size of an existing perp position.
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (e.g., "SOL", "BTC")
+ *   - side: "Long" | "Short"
+ *   - size: number (position size in base asset)
+ *   - collateral: number (collateral in USDC)
+ *   - size_denomination: string (must match symbol)
+ *   - collateral_denomination: string (must be "USDC")
+ *   - adjustment_type: string ("Increase")
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue allocations, total size/collateral, price impact, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function increasePerpPositionRanger({
   agent,
@@ -162,6 +227,26 @@ export async function increasePerpPositionRanger({
 
 /**
  * Decrease perp position on Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/decrease_position to decrease the size of an existing perp position.
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (e.g., "SOL", "BTC")
+ *   - side: "Long" | "Short"
+ *   - size: number (amount to decrease)
+ *   - adjustment_type: string (e.g., "DecreaseFlash", "DecreaseJupiter")
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue allocations, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function decreasePerpPositionRanger({
   agent,
@@ -210,6 +295,25 @@ export async function decreasePerpPositionRanger({
 
 /**
  * Withdraw balance from Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/withdraw_balance to withdraw available balance from a venue account (e.g., Drift).
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (token symbol, e.g., "USDC")
+ *   - amount: number (amount to withdraw)
+ *   - adjustment_type: string ("WithdrawBalanceDrift")
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue, amount, symbol, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function withdrawBalanceRanger({
   agent,
@@ -255,6 +359,27 @@ export async function withdrawBalanceRanger({
 
 /**
  * Withdraw collateral from Ranger (uses SOR API)
+ *
+ * Calls the SOR API endpoint POST /v1/withdraw_collateral to withdraw collateral from an existing position.
+ *
+ * Request body fields:
+ *   - fee_payer: string (your Solana wallet public key)
+ *   - symbol: string (e.g., "SOL", "BTC")
+ *   - side: "Long" | "Short"
+ *   - collateral: number (amount to withdraw)
+ *   - collateral_denomination: string (must be "USDC")
+ *   - adjustment_type: string ("WithdrawCollateralFlash", etc.)
+ *   - ...other optional params (see SOR API docs)
+ *
+ * Response fields:
+ *   - message: string (base64-encoded Solana transaction message)
+ *   - meta: object (venue, amount, symbol, etc.)
+ *
+ * The function decodes and deserializes the message, adds a recent blockhash, and signs/sends the transaction.
+ *
+ * @see https://github.com/ranger-finance/sor-sdk
+ * @see https://gist.github.com/yongkangc/9ce79d6f6bf4df9ca5b52359adced1ee
+ * @see SOR API docs for full details
  */
 export async function withdrawCollateralRanger({
   agent,
