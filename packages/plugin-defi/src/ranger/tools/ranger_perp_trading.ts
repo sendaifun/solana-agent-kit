@@ -1,6 +1,11 @@
 import type { SolanaAgentKit } from "solana-agent-kit";
 import { signOrSendTX } from "solana-agent-kit";
-import { TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import {
+  TransactionMessage,
+  VersionedTransaction,
+  VersionedMessage,
+  Message,
+} from "@solana/web3.js";
 import base64js from "base64-js";
 import { RANGER_SOR_API_BASE } from "../index";
 
@@ -50,7 +55,7 @@ export async function openPerpTradeRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
@@ -95,7 +100,7 @@ export async function closePerpTradeRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
@@ -148,7 +153,7 @@ export async function increasePerpPositionRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
@@ -196,7 +201,7 @@ export async function decreasePerpPositionRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
@@ -241,7 +246,7 @@ export async function withdrawBalanceRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
@@ -293,9 +298,18 @@ export async function withdrawCollateralRanger({
   const data = await response.json();
   const messageBase64 = data.message;
   const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
+  const transactionMessage = deserializeTransactionMessage(messageBytes);
   const transaction = new VersionedTransaction(transactionMessage);
   const { blockhash } = await agent.connection.getLatestBlockhash();
   transaction.message.recentBlockhash = blockhash;
   return signOrSendTX(agent, transaction);
+}
+
+// Helper function for deserialization
+function deserializeTransactionMessage(messageBytes: Uint8Array) {
+  try {
+    return VersionedMessage.deserialize(messageBytes);
+  } catch {
+    return Message.from(messageBytes);
+  }
 }
