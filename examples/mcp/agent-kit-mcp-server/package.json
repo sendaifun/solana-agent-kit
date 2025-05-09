@@ -18,8 +18,13 @@
   "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.5.0",
+    "@solana-agent-kit/adapter-mcp": "^2.0.3",
+    "@solana-agent-kit/plugin-defi": "2.0.3",
+    "@solana-agent-kit/plugin-token": "2.0.3",
+    "@solana/web3.js": "^1.98.2",
+    "bs58": "^6.0.0",
     "dotenv": "^16.4.7",
-    "solana-agent-kit": "1.4.8",
+    "solana-agent-kit": "2.0.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {

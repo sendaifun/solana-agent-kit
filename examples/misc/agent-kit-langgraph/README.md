@@ -76,6 +76,9 @@ The example demonstrates a workflow where:
 - `@langchain/core`: Core LangChain functionality
 - `@langchain/langgraph`: Graph-based agent workflows
 - `solana-agent-kit`: Solana Agent Kit for blockchain interactions
+- `@solana-agent-kit/plugin-token`: Token plugin for Solana Agent Kit
+- `@solana-agent-kit/plugin-defi`: DeFi plugin for Solana Agent Kit
+- `@solana/web3.js`: Solana Web3 library for blockchain interactions
 - `zod`: Runtime type checking
 
 ## Contributing

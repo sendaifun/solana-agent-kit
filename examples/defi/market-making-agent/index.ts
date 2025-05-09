@@ -2,10 +2,18 @@ import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
+import bs58 from "bs58";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
-import { createSolanaTools, SolanaAgentKit } from "../../src";
+import {
+  createLangchainTools,
+  KeypairWallet,
+  SolanaAgentKit,
+} from "solana-agent-kit";
+import { Keypair } from "@solana/web3.js";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+import DefiPlugin from "@solana-agent-kit/plugin-defi";
 
 dotenv.config();
 
@@ -49,15 +57,24 @@ async function initializeAgent() {
       }
     }
 
-    const solanaAgent = new SolanaAgentKit(
-      process.env.SOLANA_PRIVATE_KEY!,
-      process.env.RPC_URL!,
-      {
-        OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
-      },
+    // const privateKeyBytes =
+    const keypair = Keypair.fromSecretKey(
+      bs58.decode(process.env.SOLANA_PRIVATE_KEY as string),
+    );
+    const keypairWallet = new KeypairWallet(
+      keypair,
+      process.env.RPC_URL as string,
     );
 
-    const tools = createSolanaTools(solanaAgent);
+    const solanaAgent = new SolanaAgentKit(
+      keypairWallet,
+      process.env.RPC_URL as string,
+      {},
+    )
+      .use(TokenPlugin)
+      .use(DefiPlugin);
+
+    const tools = createLangchainTools(solanaAgent, solanaAgent.actions);
 
     const memory = new MemorySaver();
     const config = { configurable: { thread_id: "Solana Agent Kit!" } };
@@ -291,9 +308,9 @@ async function runMarketMakerMode(agent: any, config: any) {
 
     while (true) {
       try {
-        const thought = `You are an on-chain Solana market maker for the ${marketMakerConfig.baseToken}/${marketMakerConfig.quoteToken} Manifest market, ${marketMakerConfig.marketId}. 
-        Find the ${marketMakerConfig.baseToken}/${marketMakerConfig.quoteToken} live price by checking Jupiter. 
-        Use solana_batch_order to provide ${marketMakerConfig.quoteParams.number} buys at different prices between -${marketMakerConfig.quoteParams.minDepth}% to -${marketMakerConfig.quoteParams.maxDepth}% and ${marketMakerConfig.quoteParams.number} sells at different prices between +${marketMakerConfig.quoteParams.minDepth}% to +${marketMakerConfig.quoteParams.maxDepth}% with increasing quantities further from the live price. 
+        const thought = `You are an on-chain Solana market maker for the ${marketMakerConfig.baseToken}/${marketMakerConfig.quoteToken} Manifest market, ${marketMakerConfig.marketId}.
+        Find the ${marketMakerConfig.baseToken}/${marketMakerConfig.quoteToken} live price by checking Jupiter.
+        Use solana_batch_order to provide ${marketMakerConfig.quoteParams.number} buys at different prices between -${marketMakerConfig.quoteParams.minDepth}% to -${marketMakerConfig.quoteParams.maxDepth}% and ${marketMakerConfig.quoteParams.number} sells at different prices between +${marketMakerConfig.quoteParams.minDepth}% to +${marketMakerConfig.quoteParams.maxDepth}% with increasing quantities further from the live price.
         You have an allowance of ${marketMakerConfig.allowance.base} ${marketMakerConfig.baseToken} and ${marketMakerConfig.allowance.quote} ${marketMakerConfig.quoteToken}.
         Important! Only send 1 transaction, buy and sells can be combined into a single solana_batch_order.`;
 

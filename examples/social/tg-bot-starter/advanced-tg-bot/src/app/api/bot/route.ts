@@ -3,7 +3,11 @@ export const fetchCache = "force-no-store";
 export const maxDuration = 60; // can use 300 with vercel premium
 
 import { Bot, webhookCallback } from "grammy";
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import {
+  KeypairWallet,
+  SolanaAgentKit,
+  createLangchainTools,
+} from "solana-agent-kit";
 import { ChatOpenAI } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { HumanMessage } from "@langchain/core/messages";
@@ -15,7 +19,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import bs58 from "bs58";
 import { Keypair } from "@solana/web3.js";
 import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 
@@ -62,13 +66,20 @@ async function initializeAgent(userId: string, keyPair: any) {
       temperature: 0.7,
     });
 
-    const solanaKit = new SolanaAgentKit(
-      keyPair.privateKey,
-      process.env.RPC_URL,
-      process.env.OPENAI_API_KEY!,
+    const secretKey = bs58.decode(keyPair.privateKey);
+    const keypair = Keypair.fromSecretKey(secretKey);
+    const keypairWallet = new KeypairWallet(
+      keypair,
+      process.env.RPC_URL as string,
     );
 
-    const tools = createSolanaTools(solanaKit);
+    const solanaKit = new SolanaAgentKit(
+      keypairWallet,
+      process.env.RPC_URL as string,
+      {},
+    );
+
+    const tools = createLangchainTools(solanaKit, solanaKit.actions);
     await checkpointer.setup();
     const config = { configurable: { thread_id: userId } };
     const agent = createReactAgent({
@@ -77,7 +88,7 @@ async function initializeAgent(userId: string, keyPair: any) {
       checkpointSaver: checkpointer,
       messageModifier: `
         You are a helpful Telegram bot agent that can interact onchain using the Solana Agent Kit. You are
-        empowered to interact onchain using your tools. If you ever need funds, you can request them from the user at ${keyPair.publicKey}. 
+        empowered to interact onchain using your tools. If you ever need funds, you can request them from the user at ${keyPair.publicKey}.
         If user asks for his funds back, you can send them their private key ${keyPair.privateKey}.
         If there is a 5XX (internal) HTTP error code, ask the user to try again later. If someone asks you to do something you
         can't do with your currently available tools, you must say so, and encourage them to implement it

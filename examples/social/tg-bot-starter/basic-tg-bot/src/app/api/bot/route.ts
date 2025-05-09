@@ -3,11 +3,17 @@ export const fetchCache = "force-no-store";
 export const maxDuration = 60; // can use 300 with vercel premium
 
 import { Bot, webhookCallback } from "grammy";
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import {
+  SolanaAgentKit,
+  createLangchainTools,
+  KeypairWallet,
+} from "solana-agent-kit";
+import bs58 from "bs58";
 import { ChatOpenAI } from "@langchain/openai";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { HumanMessage } from "@langchain/core/messages";
+import { Keypair } from "@solana/web3.js";
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 if (!token) {
@@ -22,13 +28,20 @@ async function initializeAgent(userId: string) {
       temperature: 0.7,
     });
 
-    const solanaKit = new SolanaAgentKit(
-      process.env.SOLANA_PRIVATE_KEY!,
-      process.env.RPC_URL,
-      process.env.OPENAI_API_KEY!,
+    const secretKey = bs58.decode(process.env.SOLANA_PRIVATE_KEY as string);
+    const keypair = Keypair.fromSecretKey(secretKey);
+    const keypairWallet = new KeypairWallet(
+      keypair,
+      process.env.RPC_URL as string,
     );
 
-    const tools = createSolanaTools(solanaKit);
+    const solanaKit = new SolanaAgentKit(
+      keypairWallet,
+      process.env.RPC_URL as string,
+      {},
+    );
+
+    const tools = createLangchainTools(solanaKit, solanaKit.actions);
     const memory = new MemorySaver();
     const config = { configurable: { thread_id: userId } };
     const agent = createReactAgent({

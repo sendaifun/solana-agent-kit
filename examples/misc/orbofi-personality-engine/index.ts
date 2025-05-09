@@ -1,10 +1,16 @@
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import {
+  SolanaAgentKit,
+  createLangchainTools,
+  KeypairWallet,
+} from "solana-agent-kit";
+import { Keypair } from "@solana/web3.js";
 import { HumanMessage } from "@langchain/core/messages";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
+import bs58 from "bs58";
 import { MemorySaver } from "@langchain/langgraph";
 
 dotenv.config();
@@ -49,9 +55,18 @@ async function initializeAgent(system_prompt: string) {
       }
     }
 
+    const decodedPrivateKey = bs58.decode(
+      process.env.SOLANA_PRIVATE_KEY as string,
+    );
+    const keypair = Keypair.fromSecretKey(decodedPrivateKey);
+    const keypairWallet = new KeypairWallet(
+      keypair,
+      process.env.RPC_URL as string,
+    );
+
     const solanaAgent = new SolanaAgentKit(
-      process.env.SOLANA_PRIVATE_KEY!,
-      process.env.RPC_URL!,
+      keypairWallet,
+      process.env.RPC_URL as string,
       {
         OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
         HELIUS_API_KEY: process.env.HELIUS_API_KEY!,
@@ -59,7 +74,7 @@ async function initializeAgent(system_prompt: string) {
       },
     );
 
-    const tools = createSolanaTools(solanaAgent);
+    const tools = createLangchainTools(solanaAgent, solanaAgent.actions);
 
     const memory = new MemorySaver();
     const config = { configurable: { thread_id: "Solana Agent Kit!" } };

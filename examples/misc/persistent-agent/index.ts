@@ -1,10 +1,16 @@
-import { SolanaAgentKit, createSolanaTools } from "solana-agent-kit";
+import {
+  KeypairWallet,
+  SolanaAgentKit,
+  createLangchainTools,
+} from "solana-agent-kit";
 import { HumanMessage } from "@langchain/core/messages";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
+import bs58 from "bs58";
+import { Keypair } from "@solana/web3.js";
 import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 dotenv.config();
 
@@ -55,13 +61,20 @@ async function initializeAgent() {
       }
     }
 
-    const solanaAgent = new SolanaAgentKit(
-      process.env.SOLANA_PRIVATE_KEY!,
-      process.env.RPC_URL,
-      process.env.OPENAI_API_KEY!,
+    const secretKey = bs58.decode(process.env.SOLANA_PRIVATE_KEY as string);
+    const keypair = Keypair.fromSecretKey(secretKey);
+    const keypairWallet = new KeypairWallet(
+      keypair,
+      process.env.RPC_URL as string,
     );
 
-    const tools = createSolanaTools(solanaAgent);
+    const solanaAgent = new SolanaAgentKit(
+      keypairWallet,
+      process.env.RPC_URL as string,
+      {},
+    );
+
+    const tools = createLangchainTools(solanaAgent, solanaAgent.actions);
     await checkpointer.setup();
     const config = { configurable: { thread_id: "Solana Agent Kit!" } };
 

@@ -32,7 +32,15 @@ The application includes custom UI components for displaying different types of 
 
 ## Getting Started
 
-First, set up your environment variables:
+### Cloning the template
+
+To clone the template, run the following command:
+
+```bash
+gitpick sendaifun/solana-agent-kit/examples/defi/wormhole-nextjs-agent
+```
+
+Then, set up your environment variables:
 
 1. Copy `.example.env` to `.env.local`
 2. Fill in the required API keys and configuration values

@@ -15,7 +15,7 @@ A Solana Agent Kit implementation using the Model Context Protocol (MCP) for han
 
 ## Prerequisites
 
-- Node.js (v16 or higher recommended)
+- Node.js (v22 or higher recommended)
 - pnpm or yarn or npm
 - Solana wallet with private key
 - Solana RPC URL
@@ -86,6 +86,10 @@ This will compile the TypeScript code and set the appropriate permissions for th
 ## Dependencies
 
 - [solana-agent-kit](https://github.com/sendaifun/solana-agent-kit): Core functionality for Solana blockchain interactions
+- [@solana-agent-kit/plugin-token](https://github.com/sendaifun/solana-agent-kit/packages/plugin-token): Token plugin for the Solana Agent Kit
+- [@solana-agent-kit/plugin-defi](https://github.com/sendaifun/solana-agent-kit/packages/plugin-defi): DeFi plugin for the Solana Agent Kit
+- [@solana/web3.js](https://github.com/solana-foundation/solana-web3.js): Solana JavaScript SDK for blockchain interactions
+- [bs58](https://github.com/cryptocoinjs/bs58): Base58 encoding/decoding
 - [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk): MCP implementation
 - dotenv: Environment variable management
 - zod: Runtime type checking

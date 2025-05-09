@@ -6,7 +6,7 @@ This is a starter template for creating a Discord bot using the Solana Agent Kit
 
 ### Prerequisites
 
-- Node.js (v20 or higher)
+- Node.js (v22 or higher)
 - pnpm (v9 or higher)
 - A Discord account
 - A Solana account keypair

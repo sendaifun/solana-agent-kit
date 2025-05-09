@@ -3,6 +3,14 @@
 This agent showcases an ai guided market maker on Manifest, Solana's CLOB DEX. The agent guides the user to setup basic two-sided quotes on Manifest markets.
 [Reference](https://github.com/CKS-Systems/manifest)
 
+## Cloning example
+
+To clone the repository, run the following command:
+
+```bash
+npx gitpick sendaifun/solana-agent-kit/examples/defi/market-making-agent
+```
+
 ## Key Features
 
 - **Automated Quoting**: The agent automatically refreshes quotes on an interval.

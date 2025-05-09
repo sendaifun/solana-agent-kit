@@ -4,7 +4,9 @@ import { HumanMessage } from '@langchain/core/messages';
 import { MemorySaver } from '@langchain/langgraph';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { ChatOpenAI } from '@langchain/openai';
-import { SolanaAgentKit, createSolanaTools } from 'solana-agent-kit';
+import { KeypairWallet, SolanaAgentKit, createLangchainTools } from 'solana-agent-kit';
+import bs58 from 'bs58';
+import { Keypair } from '@solana/web3.js';
 
 const client = new Client({
   intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages],
@@ -16,16 +18,18 @@ const chatHistory = new Map();
 async function initializeAgent() {
   try {
     const llm = new ChatOpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
       modelName: 'gpt-4o-mini',
       temperature: 0.3,
     });
 
-    const solanaAgent = new SolanaAgentKit(process.env.SOLANA_PRIVATE_KEY!, process.env.SOLANA_RPC_URL!, {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
-      // other config options here
-    });
+    const secretKey = bs58.decode(process.env.SOLANA_PRIVATE_KEY as string);
+    const keypair = Keypair.fromSecretKey(secretKey);
+    const keypairWallet = new KeypairWallet(keypair, process.env.RPC_URL as string);
 
-    const tools = createSolanaTools(solanaAgent);
+    const solanaAgent = new SolanaAgentKit(keypairWallet, process.env.SOLANA_RPC_URL as string, {});
+
+    const tools = createLangchainTools(solanaAgent, solanaAgent.actions);
 
     const memory = new MemorySaver();
     const config = { configurable: { thread_id: 'Solana Agent Kit!' } };
