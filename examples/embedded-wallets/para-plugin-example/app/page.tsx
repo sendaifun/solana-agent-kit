@@ -1,21 +1,17 @@
-'use client';
+"use client";
 
 import { ChatWindow } from "../components/ChatWindow";
 import { AuthLayout, ParaModal } from "@getpara/react-sdk";
 import "@getpara/react-sdk/styles.css";
-import { para} from "@/utils/para";
+import { para } from "@/utils/para";
 import { useEffect, useState } from "react";
-
-
 
 export default function ChatbotPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-   const [email, setEmail] = useState("");
-
- 
+  const [email, setEmail] = useState("");
 
   const handleCheckIfAuthenticated = async () => {
     if (!para) return;
@@ -35,7 +31,7 @@ export default function ChatbotPage() {
   useEffect(() => {
     if (!para) return;
     const initialize = async () => {
-        handleCheckIfAuthenticated();
+      handleCheckIfAuthenticated();
     };
     initialize();
   }, [para]);
@@ -57,10 +53,7 @@ export default function ChatbotPage() {
 
   const InfoCard = (
     <div className="p-4 md:p-8 rounded bg-[#25252d] w-full max-h-[85%] overflow-hidden">
-    
-      <h1 className="text-3xl md:text-4xl mb-4">
-        Para Agent Chatbot 🤖
-      </h1>
+      <h1 className="text-3xl md:text-4xl mb-4">Para Agent Chatbot 🤖</h1>
 
       <ul>
         <li className="text-l">
@@ -72,7 +65,11 @@ export default function ChatbotPage() {
         <li className="text-l">
           💡
           <span className="ml-2">
-            Try asking e.g. <code>create pregen wallet with this email  dev@test.getpara.com</code> or <code>claim pregen wallet with email dev@test.getpara.com</code>
+            Try asking e.g.{" "}
+            <code>
+              create pregen wallet with this email dev@test.getpara.com
+            </code>{" "}
+            or <code>claim pregen wallet with this user share 1234567890</code>
           </span>
         </li>
       </ul>
@@ -82,13 +79,23 @@ export default function ChatbotPage() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-end p-4">
-      <span className="flex items-center justify-center mr-4">{email}</span>
-        {!isConnected && <button onClick={handleOpenModal} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          Login
-        </button>}
-        {isConnected && <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-          Logout
-        </button>}
+        <span className="flex items-center justify-center mr-4">{email}</span>
+        {!isConnected && (
+          <button
+            onClick={handleOpenModal}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Login
+          </button>
+        )}
+        {isConnected && (
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          >
+            Logout
+          </button>
+        )}
         <ParaModal
           para={para}
           isOpen={isOpen}
@@ -120,8 +127,8 @@ export default function ChatbotPage() {
         titleText="Solana Agent Chatbot"
         placeholder="Ask me anything about Solana..."
         emptyStateComponent={InfoCard}
-      para={para}
+        para={para}
       />
     </div>
   );
-} 
+}

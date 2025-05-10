@@ -16,8 +16,6 @@
 	"dependencies": {
 		"@ai-sdk/groq": "^1.1.12",
 		"@ai-sdk/openai": "^1.2.5",
-		"@getpara/plugin-para-server": "file:../../../solana-plugin-para/packages/plugin-para-server",
-		"@getpara/plugin-para-web": "file:../../../solana-plugin-para/packages/plugin-para-web",
 		"@getpara/react-sdk": "^1.5.0",
 		"@getpara/solana-web3.js-v1-integration": "^1.5.1",
 		"@getpara/web-sdk": "^1.5.0",
@@ -28,7 +26,7 @@
 		"@next/bundle-analyzer": "^13.4.19",
 		"@radix-ui/react-slot": "^1.1.2",
 		"@solana-agent-kit/plugin-token": "^2.0.0",
-		"@solana/web3.js": "^1.98.0",
+		"@solana/web3.js": "1.98.0",
 		"@supabase/supabase-js": "^2.32.0",
 		"@tailwindcss/typography": "^0.5.15",
 		"@types/node": "20.12.12",
@@ -54,7 +52,9 @@
 		"react-dom": "^19.0.0",
 		"react-markdown": "^10.1.0",
 		"react-toastify": "^9.1.3",
-		"solana-agent-kit": "2.0.3",
+		"solana-agent-kit": "2.0.4",
+		"solana-plugin-para-server": "^2.0.5",
+		"solana-plugin-para-web": "^2.0.5",
 		"sonner": "^2.0.1",
 		"tailwind-merge": "^3.0.2",
 		"tailwindcss": "3.3.3",
@@ -62,6 +62,9 @@
 		"typescript": "5.1.6",
 		"zod": "^3.22.3",
 		"zod-to-json-schema": "^3.21.4"
+	},
+	"overrides": {
+		"@solana/web3.js": "1.98.0"
 	},
 	"devDependencies": {
 		"prettier": "3.0.0"

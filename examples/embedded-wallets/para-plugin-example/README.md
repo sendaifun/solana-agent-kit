@@ -10,7 +10,7 @@ https://github.com/user-attachments/assets/e4f6b64a-4829-4528-bd83-bee1c8db6cce
 
 ## 🚀 Features
 
-- Integration of [solana-plugin-para](https://github.com/uratmangun/solana-plugin-para) for backend and frontend respectively
+- Integration of [solana-plugin-para](https://github.com/uratmangun/solana-plugin-para) a third party plugin for solana-agent-kit for backend and frontend respectively
 - Complete example of Para wallet management
 - Real-world usage patterns and best practices
 
@@ -22,27 +22,8 @@ https://github.com/user-attachments/assets/e4f6b64a-4829-4528-bd83-bee1c8db6cce
 
 ## 🛠️ Installation
 
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-```
-
-2. Install dependencies:
-In order to install this dependency:
-
-```
-"@getpara/plugin-para-server": "file:../../../solana-plugin-para/packages/plugin-para-server",
-"@getpara/plugin-para-web": "file:../../../solana-plugin-para/packages/plugin-para-web",
-```
-
-```
-git clone https://github.com/uratmangun/solana-plugin-para/
-cd solana-plugin-para
-pnpm install
-pnpm build
-cd ..
-cd <this-repository-folder>/examples/para-plugin-example
-pnpm install
+pnpm install --ignore-workspace
 ```
 
 3. Copy the environment variables:
@@ -54,12 +35,11 @@ cp .env.example .env
 4. Update the `.env` file with your credentials:
 ```env
 LANGCHAIN_CALLBACKS_BACKGROUND=false
-OPENAI_API_KEY=#optional
+OPENAI_API_KEY=#<use groq api https://console.groq.com/docs/openai>
 RPC_URL=
 SOLANA_PRIVATE_KEY=
 PARA_API_KEY=
 PARA_ENV=BETA | PROD
-GROQ_API_KEY=
 NEXT_PUBLIC_PARA_ENV=BETA | PROD
 NEXT_PUBLIC_PARA_API_KEY=
 ```
@@ -79,7 +59,7 @@ pnpm dev
 
 ```typescript
 import { SolanaAgentKit } from "solana-agent-kit";
-import ParaServerPlugin from "@getpara/plugin-para-server";
+import ParaServerPlugin from "solana-plugin-para-server";
 
 const solanaAgent = new SolanaAgentKit(/* config */);
 export const solanaAgentWithPara = solanaAgent.use(ParaServerPlugin);
@@ -88,7 +68,7 @@ export const solanaAgentWithPara = solanaAgent.use(ParaServerPlugin);
 ### Web Integration
 
 ```typescript
-import ParaWebPlugin from "@getpara/plugin-para-web";
+import ParaWebPlugin from "solana-plugin-para-web";
 import { solanaAgent } from "./solana";
 
 export const solanaAgentWithPara = solanaAgent.use(ParaWebPlugin);
