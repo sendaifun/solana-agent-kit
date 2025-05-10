@@ -65,7 +65,7 @@ The following environment variables are required:
 
 - `OPENAI_API_KEY`: Your OpenAI API key for AI functionality
 - `MONGODB_URI`: MongoDB connection string (local by default)
-- `HELIUS_STAKED_URL`: Helius RPC URL with API key (Not necessarry staked)
+- `HELIUS_STAKED_URL`: Helius RPC URL with API key (Not necessary staked)
 - `PORT`: Server port (default: 3001)
 
 ## Project Structure

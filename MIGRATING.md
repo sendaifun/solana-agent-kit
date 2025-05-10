@@ -4,7 +4,7 @@
 
 We built V2 to improve the performance, compatibility, and usability of the Solana Agent Kit. We designed it to be more compasable, extensible, and easier to use. By going with the plugin architecture, we can add new features and tools without breaking existing ones. This allows us to keep up with the rapidly evolving landscape of AI and Solana development.
 
-Unlike V1, V2 is designed for composability and production readiness. Insted of a monolithic architecture where all protocols are bundled into one package, V2 uses plugins to provide a more modular and flexible approach, also allowing for easier updates and maintenance. It also allows for community contributions through third-party plugins, more on that later.
+Unlike V1, V2 is designed for composability and production readiness. Instead of a monolithic architecture where all protocols are bundled into one package, V2 uses plugins to provide a more modular and flexible approach, also allowing for easier updates and maintenance. It also allows for community contributions through third-party plugins, more on that later.
 
 ## Do I still need to provide a private key?
 
