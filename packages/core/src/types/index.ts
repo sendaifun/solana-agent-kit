@@ -28,6 +28,7 @@ export interface Config {
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
   MESSARI_API_KEY?: string;
+  RANGER_API_KEY?: string;
 }
 
 export interface PumpFunTokenOptions {
