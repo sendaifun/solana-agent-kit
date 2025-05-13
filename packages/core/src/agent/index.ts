@@ -1,5 +1,5 @@
 import { Connection } from "@solana/web3.js";
-import type { Action, Config, Plugin } from "../types";
+import type { Action, Config, Plugin, State } from "../types";
 import { BaseWallet } from "../types/wallet";
 
 /**
@@ -44,15 +44,17 @@ export class SolanaAgentKit<TPlugins = Record<string, never>> {
   public connection: Connection;
   public config: Config;
   public wallet: BaseWallet;
+  public state: State;
   private plugins: Map<string, Plugin> = new Map();
 
   public methods: TPlugins = {} as TPlugins;
   public actions: Action[] = [];
 
-  constructor(wallet: BaseWallet, rpc_url: string, config: Config) {
+  constructor(wallet: BaseWallet, rpc_url: string, config: Config, state?: State) {
     this.connection = new Connection(rpc_url);
     this.wallet = wallet;
     this.config = config;
+    this.state = state || {};
   }
 
   /**
