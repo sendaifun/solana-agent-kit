@@ -67,6 +67,7 @@ export function createMcpServer(
   // Convert each action to an MCP tool
   for (const [_key, action] of Object.entries(actions)) {
     const { result } = zodToMCPShape(action.schema);
+    // @ts-expect-error - deep type reference
     server.tool(action.name, action.description, result, async (params) => {
       try {
         // Execute the action handler with the params directly
@@ -101,6 +102,7 @@ export function createMcpServer(
 
     // Add examples as prompts if they exist
     if (action.examples && action.examples.length > 0) {
+      // @ts-expect-error - deep type reference
       server.prompt(
         `${action.name}-examples`,
         {

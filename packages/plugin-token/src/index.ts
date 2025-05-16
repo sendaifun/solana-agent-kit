@@ -146,11 +146,11 @@ const TokenPlugin = {
   ],
 
   // Initialize function
-  initialize: function (agent: SolanaAgentKit): void {
+  initialize: function (): void {
     // Initialize all methods with the agent instance
     for (const [methodName, method] of Object.entries(this.methods)) {
       if (typeof method === "function") {
-        this.methods[methodName] = method.bind(null, agent);
+        this.methods[methodName] = method;
       }
     }
   },
