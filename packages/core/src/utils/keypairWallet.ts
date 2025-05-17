@@ -2,7 +2,7 @@ import {
   type ConfirmOptions,
   Connection,
   type Keypair,
-  type PublicKey,
+  PublicKey,
   SendOptions,
   type Transaction,
   TransactionSignature,
@@ -107,4 +107,22 @@ export class KeypairWallet implements BaseWallet {
     );
     return { signature };
   }
+}
+
+/**
+ * A mock wallet implementation that cannot sign transactions
+ */
+export const mockBaseWallet: BaseWallet = {
+  publicKey:  PublicKey.default,
+  signTransaction: <T extends Transaction | VersionedTransaction>(_tx: T) => mockWalletThrowMessaage(),
+  signMessage: (_message: Uint8Array) => mockWalletThrowMessaage(),
+  signAllTransactions: <T extends Transaction | VersionedTransaction>(_transactions: T[]) =>
+    mockWalletThrowMessaage(),
+  signAndSendTransaction: (tx: Transaction | VersionedTransaction) =>
+    mockWalletThrowMessaage(),
+}
+
+
+function mockWalletThrowMessaage(): any {
+  throw "mockBaseWallet cannot sign transactions"
 }
