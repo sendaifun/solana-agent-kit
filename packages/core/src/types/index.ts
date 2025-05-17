@@ -28,6 +28,10 @@ export interface Config {
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
   MESSARI_API_KEY?: string;
+  OKX_API_KEY?: string;
+  OKX_SECRET_KEY?: string;
+  OKX_API_PASSPHRASE?: string;
+  OKX_PROJECT_ID?: string;
 }
 
 export interface PumpFunTokenOptions {
