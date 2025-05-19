@@ -12,6 +12,8 @@ This plugin provides a set of tools and actions to interact with NFTs on the Sol
 - `getAssetsByCreator` - Get assets by creator
 - `mintCollectionNFT` - Mint an NFT in a collection
 - `searchAssets` - Search for assets
+- `mintNFT` - Mint a new NFT
+- `deployToken2022` - Deploy a new NFT token using the 2022 standard
 
 ### Tensor
 - `listNFTForSale` - List an NFT for sale

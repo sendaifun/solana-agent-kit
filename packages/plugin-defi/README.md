@@ -25,6 +25,11 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`withdrawAll`**: Withdraw all assets.
 - **`manifestCreateMarket`**: Create a market on Manifest.
 
+## Meteora
+
+- **`createMeteoraDLMMPool`**: Create a DLMMPool on Meteora.
+- **`createMeteoraDynamicAMMPool`**: Create a dynamic AMM pool on Meteora.
+
 ### Debridge
 - **`checkDebridgeTransactionStatus`**: Check the status of a Debridge transaction.
 - **`createDebridgeBridgeOrder`**: Create a bridge order.
@@ -49,20 +54,34 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`fluxBeamCreatePool`**: Create a pool on FluxBeam.
 
 ### Orca
-- **`orcaClosePosition`**: Close a position on Orca.
-- **`orcaCreateCLMM`**: Create a CLMM on Orca.
-- **`orcaOpenCenteredPositionWithLiquidity`**: Open a centered position with liquidity on Orca.
+- **`closeOrcaPosition`**: Close a position on Orca.
+- **`createOrcaCLMM`**: Create a CLMM on Orca.
+- **`openOrcaCenteredPositionWithLiquidity`**: Open a centered position with liquidity on Orca.
+- **`openOrcaSingleSidedPosition`**: Open a single-sided position on Orca.
+- **`fetchOrcaPositions`**: Fetch a wallet's positions on Orca.
+- **`createOrcaSingleSidedWhirlpool`**: Create a single-sided whirlpool on Orca.
 
 ### Ranger
-- **`openPerpTradeRanger`**: Open a new perpetual trading position.
-- **`closePerpTradeRanger`**: Close an existing perpetual trading position.
-- **`increasePerpPositionRanger`**: Increase an existing perpetual position.
-- **`decreasePerpPositionRanger`**: Decrease an existing perpetual position.
-- **`withdrawBalanceRanger`**: Withdraw available balance from Ranger.
-- **`withdrawCollateralRanger`**: Withdraw collateral from an existing position.
-- **`getPositions`**: Get all positions for a specific wallet.
-- **`getQuote`**: Get a quote for opening or modifying a position.
-- **`getTradeHistory`**: Get the trade history for a specific wallet.
+- **`closePosition`**: Close a position on Ranger.
+- **`decreasePosition`**: Decrease a position on Ranger.
+- **`depositCollateral`**: Deposit collateral on Ranger.
+- **`getBorrowRatesAccumulated`**: Get accumulated borrow rates on Ranger.
+- **`getFundingRateArbs`**: Get funding rate arbitrage opportunities on Ranger.
+- **`getFundingRatesAccumulated`**: Get accumulated funding rates on Ranger.
+- **`getFundingRatesExtreme`**: Get extreme funding rates on Ranger.
+- **`getFundingRatesOiWeighted`**: Get OI weighted funding rates on Ranger.
+- **`getFundingRatesTrend`**: Get funding rate trends on Ranger.
+- **`getLiquidationsCapitulation`**: Get liquidation capitulation data on Ranger.
+- **`getLiquidationsHeatmap`**: Get a heatmap of liquidations on Ranger.
+- **`getLiquidationsLargest`**: Get the largest liquidations on Ranger.
+- **`getLiquidationsLatest`**: Get the latest liquidations on Ranger.
+- **`getLiquidationsTotals`**: Get total liquidations on Ranger.
+- **`getPositions`**: Get positions on Ranger.
+- **`getQuote`**: Get a quote for a trade on Ranger.
+- **`getTradeHistory`**: Get trade history on Ranger.
+- **`increasePosition`**: Increase a position on Ranger.
+- **`withdrawBalance`**: Withdraw balance from Ranger.
+- **`withdrawCollateral`**: Withdraw collateral from Ranger.
 
 ### Raydium
 - **`raydiumCreateAmmV4`**: Create an AMM v4 on Raydium.

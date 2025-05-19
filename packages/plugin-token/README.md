@@ -9,10 +9,14 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `getTokenAddressFromTicker` - Get a token's mint address using its ticker symbol
 
 ### Jupiter
-- `fetchPrice` - Get the current price of a token in USDC
-- `stakeWithJup` - Stake SOL to receive jupSOL
-- `trade` - Swap tokens using Jupiter's aggregator
-- `getTokenByTicker` - Get token data using a token's ticker symbol
+- `cancelLimitOrders` - Cancel limit orders on Jupiter
+- `createLimitOrder` - Create a limit order on Jupiter
+- `fetchPrice` - Fetch the price of a token
+- `getLimitOrderHistory` - Get the history of limit orders
+- `getOpenLimitOrders` - Get open limit orders
+- `getTokenDataByTicker` - Get token data using a ticker symbol
+- `stakeWithJup` - Stake tokens using Jupiter
+- `trade` - Trade tokens using Jupiter
 
 ### Light Protocol
 - `sendCompressedAirdrop` - Send compressed token airdrops to multiple addresses efficiently
@@ -40,6 +44,15 @@ This plugin provides a set of tools and actions to interact with, create and tra
 ### Rugcheck
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report
+
+### Solana
+- `balance` - Get SOL balance for a wallet
+- `closeEmptyTokenAccounts` - Close empty token accounts
+- `getTPS` - Get transactions per second on Solana
+- `requestFunds` - Request funds from a faucet on devnet/testnet
+- `tokenBalances` - Get token balances for a wallet
+- `transfer` - Transfer SOL or tokens to another address
+- `walletAddress` - Get the wallet address of the current user
 
 ### Solutiofi
 - `burnTokens` - Burn tokens using Solutiofi

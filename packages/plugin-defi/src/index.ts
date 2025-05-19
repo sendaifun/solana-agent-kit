@@ -37,6 +37,10 @@ import {
   withdrawAll,
 } from "./manifest/tools";
 
+// Import OKX actions
+import getOkxDexQuoteAction from "./okx/actions/OkxDexQuoteAction";
+import getOkxSwapAction from "./okx/actions/OkxDexSwapAction";
+
 // Import Debridge tools & actions
 import checkDebridgeTransactionStatusAction from "./debridge/actions/checkTransactionStatus";
 import createDebridgeBridgeOrderAction from "./debridge/actions/createBridgeOrder";
@@ -191,6 +195,9 @@ import {
   sanctumSwapLST,
 } from "./sanctum/tools";
 
+// Import OKX tools
+import { getOkxDexQuote, getOkxSwap } from "./okx/tools";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -296,6 +303,10 @@ const DefiPlugin = {
     sanctumGetLSTTVL,
     sanctumGetOwnedLST,
     sanctumRemoveLiquidity,
+
+    // OKX methods
+    getOkxDexQuote,
+    getOkxSwap,
   },
 
   // Combine all actions
@@ -387,6 +398,10 @@ const DefiPlugin = {
     sanctumGetOwnedLSTAction,
     sanctumRemoveLiquidityAction,
     sanctumSwapLSTAction,
+
+    // OKX actions
+    getOkxDexQuoteAction,
+    getOkxSwapAction,
   ],
 
   // Initialize function

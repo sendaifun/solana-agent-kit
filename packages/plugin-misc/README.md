@@ -25,12 +25,19 @@ This plugin provides a set of miscellaneous tools and actions for interacting wi
 - `getWebhook` - Retrieve webhook details.
 - `parseTransaction` - Parse a Solana transaction.
 
+### Messari
+- `askMessariAi` - Ask a question to Messari AI.
+
 ### SNS
 - `resolveSolDomain` - Resolve a .sol domain.
 - `registerDomain` - Register a new .sol domain.
 - `getPrimaryDomain` - Get the primary domain for a wallet.
 - `getMainAllDomainsDomain` - Get the main domain for AllDomains.
 - `getAllRegisteredAllDomains` - Get all registered domains.
+
+### SolanaFM
+- `parseAccount` - Parse a Solana account.
+- `parseInstruction` - Parse a Solana instruction.
 
 ### Squads
 - `transferFromMultisigTreasury` - Transfer funds from a multisig treasury.

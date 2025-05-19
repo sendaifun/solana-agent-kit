@@ -5,4 +5,4 @@ This plugin provides a set of tools and actions for quick, fun interactions on S
 ## Tools Available
 
 ### Send
-- `sendArcadeGames` - Integrate with arcade games
+- `sendArcadeGames` - Integrate with a send arcade game. Specifically rock, paper, scissors.

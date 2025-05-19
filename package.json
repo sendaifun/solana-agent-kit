@@ -2,7 +2,9 @@
   "name": "solana-agent-kit",
   "description": "connect any ai agents to solana protocols",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "clean": "turbo run clean",
     "build": "turbo run build",
@@ -27,7 +29,13 @@
     "node": ">=22.0.0",
     "pnpm": ">=8.0.0"
   },
-  "keywords": ["solana", "agent", "ai", "solana agent kit", "sendai"],
+  "keywords": [
+    "solana",
+    "agent",
+    "ai",
+    "solana agent kit",
+    "sendai"
+  ],
   "author": "sendaifun",
   "license": "Apache-2.0",
   "devDependencies": {
@@ -37,9 +45,13 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
+    "ai": "^4.1.5",
+    "axios": "^1.9.0",
+    "crypto-js": "^4.2.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
