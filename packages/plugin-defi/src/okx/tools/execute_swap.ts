@@ -28,7 +28,7 @@ export async function executeSwap(
     projectId: agent.config.OKX_PROJECT_ID,
     solana: {
       wallet: {
-        publicKey: agent.wallet.publicKey,
+        ...agent.wallet,
         connection: agent.connection,
         signTransaction: agent.wallet.signTransaction,
         signAllTransactions: agent.wallet.signAllTransactions,
