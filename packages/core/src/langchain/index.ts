@@ -14,6 +14,7 @@ export function createLangchainTools(
   }
 
   const tools = actions.slice(0, 127).map((action) => {
+    //@ts-ignore - type instantiation is not recognized by TypeScript, but it works at runtime
     const toolInstance = tool(
       async (inputs) =>
         JSON.stringify(await action.handler(solanaAgentKit, inputs)),

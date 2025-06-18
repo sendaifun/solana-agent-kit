@@ -5,10 +5,16 @@ import {
   toWeb3JsKeypair,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
-import { Transaction } from "@solana/web3.js";
+import { Transaction, type PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { initUmi } from "../../utils";
 import type { CollectionOptions } from "../types";
+
+interface DeployCollectionResponse {
+  collectionAddress: PublicKey;
+  signature?: string;
+  signedTransaction?: Awaited<ReturnType<typeof signOrSendTX>>;
+}
 
 /**
  * Deploy a new NFT collection
@@ -19,7 +25,7 @@ import type { CollectionOptions } from "../types";
 export async function deploy_collection(
   agent: SolanaAgentKit,
   options: CollectionOptions,
-) {
+): Promise<DeployCollectionResponse> {
   try {
     // Initialize Umi
     const umi = initUmi(agent);

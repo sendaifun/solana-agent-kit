@@ -1,6 +1,6 @@
 {
   "name": "@solana-agent-kit/plugin-blinks",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -8,7 +8,9 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -32,12 +34,12 @@
   },
   "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-blinks",
   "dependencies": {
-    "@solana/web3.js": "^1.98.0",
     "rpc-websockets": "^10.0.0",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "solana-agent-kit": "2.0.4"
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.5"
   }
 }

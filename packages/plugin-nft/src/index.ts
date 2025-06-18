@@ -1,4 +1,4 @@
-import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
+import type { Plugin } from "solana-agent-kit";
 
 // Import Metaplex actions
 import deployCollectionAction from "./metaplex/actions/deployCollection";
@@ -18,6 +18,13 @@ import {
 
 // Import 3Land actions
 import create3LandCollectibleAction from "./3land/actions/create3LandCollectibleAction";
+
+// Import Magic Eden actions
+import getMagicEdenCollectionStatsAction from "./magiceden/actions/getCollectionStats";
+import getMagicEdenPopularCollectionsAction from "./magiceden/actions/getPopularCollections";
+import listNFTOnMagicEdenAction from "./magiceden/actions/listNFT";
+import bidOnMagicEdenNFTAction from "./magiceden/actions/bidOnNFT";
+import getMagicEdenCollectionListingsAction from "./magiceden/actions/getCollectionListings";
 
 // Import Metaplex tools
 import {
@@ -39,6 +46,15 @@ import {
   createSingle,
 } from "./3land/tools/create_3land_collectible";
 import { search_assets } from "./metaplex/tools/search_assets";
+
+// Import Magic Eden tools
+import {
+  bid_on_magiceden_nft,
+  get_magiceden_collection_listings,
+  get_magiceden_collection_stats,
+  get_magiceden_popular_collections,
+  list_nft_on_magiceden,
+} from "./magiceden/tools";
 
 // Define and export the plugin
 const NFTPlugin = {
@@ -63,6 +79,13 @@ const NFTPlugin = {
     // 3Land methods
     create3LandCollection: createCollection,
     create3LandSingle: createSingle,
+
+    // Magic Eden methods
+    getMagicEdenCollectionStats: get_magiceden_collection_stats,
+    getMagicEdenPopularCollections: get_magiceden_popular_collections,
+    listNFTOnMagicEden: list_nft_on_magiceden,
+    bidOnMagicEdenNFT: bid_on_magiceden_nft,
+    getMagicEdenCollectionListings: get_magiceden_collection_listings,
   },
 
   // Combine all actions
@@ -83,14 +106,21 @@ const NFTPlugin = {
 
     // 3Land actions
     create3LandCollectibleAction,
+
+    // Magic Eden actions
+    getMagicEdenCollectionStatsAction,
+    getMagicEdenPopularCollectionsAction,
+    listNFTOnMagicEdenAction,
+    bidOnMagicEdenNFTAction,
+    getMagicEdenCollectionListingsAction,
   ],
 
   // Initialize function
-  initialize: function (agent: SolanaAgentKit): void {
+  initialize: function (): void {
     // Initialize all methods with the agent instance
     Object.entries(this.methods).forEach(([methodName, method]) => {
       if (typeof method === "function") {
-        this.methods[methodName] = method.bind(null, agent);
+        this.methods[methodName] = method;
       }
     });
   },

@@ -1,11 +1,13 @@
 {
   "name": "@solana-agent-kit/plugin-nft",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -47,12 +49,13 @@
     "@tensor-oss/tensorswap-sdk": "^4.5.0",
     "@types/bn.js": "^5.1.6",
     "bn.js": "^5.2.1",
+    "redaxios": "^0.5.1",
     "rpc-websockets": "^10.0.0",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.98.0",
-    "solana-agent-kit": "2.0.4"
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.7"
   }
 }

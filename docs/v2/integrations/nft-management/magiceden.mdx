@@ -1,0 +1,525 @@
+---
+title: 'Magic Eden NFT Marketplace'
+description: 'Complete guide for interacting with Magic Eden marketplace - listing, bidding, and discovering NFTs'
+---
+
+Comprehensive guide for interacting with Magic Eden, the leading Solana NFT marketplace. This covers listing NFTs, placing bids, fetching collection data, and discovering popular collections.
+
+## Features Overview
+
+### 1. NFT Trading
+- **List NFTs**: Put your NFTs up for sale
+- **Bid on NFTs**: Place bids on listed NFTs
+- **Auction House Integration**: Support for custom auction houses
+
+### 2. Collection Analytics
+- **Collection Stats**: Floor price, volume, listings count
+- **Collection Listings**: Browse available NFTs in collections
+- **Popular Collections**: Discover trending collections
+
+### 3. Market Intelligence
+- **Real-time Data**: Live pricing and availability
+- **Historical Analytics**: Volume and price trends
+- **Rarity Information**: NFT attributes and rarity scores
+
+## Setup Requirements
+
+### API Key Configuration
+```typescript
+// Required for trading operations (listing, bidding)
+agent.config.MAGIC_EDEN_API_KEY = "your-api-key-here";
+
+// Optional for read-only operations (stats, listings)
+// Read operations work without API key but may have rate limits
+```
+
+## Core Functionality
+
+### 1. List NFT for Sale
+```typescript
+const result = await agent.methods.listMagicEdenNFT({
+  tokenMint: "NFT_MINT_ADDRESS",
+  tokenAccount: "TOKEN_ACCOUNT_ADDRESS", 
+  price: 1.5, // Price in SOL
+  auctionHouseAddress: "OPTIONAL_AUCTION_HOUSE", // Optional
+  sellerReferral: "OPTIONAL_REFERRAL_ADDRESS" // Optional
+});
+```
+
+### 2. Bid on NFT
+```typescript
+const result = await agent.methods.bidOnMagicEdenNFT({
+  tokenMint: "NFT_MINT_ADDRESS",
+  price: 0.8, // Bid price in SOL
+  auctionHouseAddress: "OPTIONAL_AUCTION_HOUSE" // Optional
+});
+```
+
+### 3. Get Collection Listings
+```typescript
+const listings = await agent.methods.getMagicEdenCollectionListings({
+  collectionSymbol: "degenape", // Collection symbol
+  limit: 20, // Number of listings to fetch (1-100)
+  min_price: 0.1, // Minimum price filter
+  max_price: 10.0, // Maximum price filter
+  sort: "listPrice", // Sort by: "listPrice" or "updatedAt"
+  sort_direction: "asc" // "asc" or "desc"
+});
+```
+
+### 4. Get Collection Statistics
+```typescript
+const stats = await agent.methods.getMagicEdenCollectionStats({
+  collectionSymbol: "degenape",
+  timeWindow: "24h" // Options: "24h", "7d", "30d", "all"
+});
+```
+
+### 5. Get Popular Collections
+```typescript
+const popular = await agent.methods.getPopularMagicEdenCollections({
+  timeRange: "1d" // Options: "1h", "1d", "7d", "30d"
+});
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"List my NFT for 2.5 SOL on Magic Eden"
+
+"Bid 1.2 SOL on this DeGods NFT: [mint-address]"
+
+"Show me the cheapest Okay Bears listings"
+
+"Get stats for the SMB collection"
+
+"What are the most popular NFT collections today?"
+
+"Find NFTs under 1 SOL in the Solana Monkey Business collection"
+```
+
+### LangChain Tool Prompts
+
+#### List NFT
+```json
+{
+  "tokenMint": "7BgBvyjrZX1YKz4oh9mjb8ZScatkkwb8DzFx7LoiVkM3",
+  "tokenAccount": "ATokenAccount1234567890123456789012345678901234",
+  "price": 2.5,
+  "auctionHouseAddress": "E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe",
+  "sellerReferral": "RefAccount1234567890123456789012345678901234"
+}
+```
+
+#### Bid on NFT
+```json
+{
+  "tokenMint": "7BgBvyjrZX1YKz4oh9mjb8ZScatkkwb8DzFx7LoiVkM3",
+  "price": 1.8,
+  "auctionHouseAddress": "E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe"
+}
+```
+
+#### Get Collection Listings
+```json
+{
+  "collectionSymbol": "degenape",
+  "limit": 50,
+  "min_price": 0.5,
+  "max_price": 5.0,
+  "sort": "listPrice",
+  "sort_direction": "asc"
+}
+```
+
+#### Get Collection Stats
+```json
+{
+  "collectionSymbol": "okay_bears",
+  "timeWindow": "7d"
+}
+```
+
+#### Get Popular Collections
+```json
+{
+  "timeRange": "24h"
+}
+```
+
+## Response Formats
+
+### List NFT Response
+```typescript
+{
+  status: "success",
+  message: "NFT listed successfully",
+  signature: "transaction_signature_hash"
+}
+```
+
+### Bid Response
+```typescript
+{
+  status: "success", 
+  message: "Bid placed successfully",
+  signature: "transaction_signature_hash"
+}
+```
+
+### Collection Listings Response
+```typescript
+{
+  status: "success",
+  message: "Collection listings fetched successfully",
+  listings: [
+    {
+      pdaAddress: "PDA_ADDRESS",
+      auctionHouse: "AUCTION_HOUSE_ADDRESS",
+      tokenAddress: "TOKEN_ADDRESS",
+      tokenMint: "TOKEN_MINT",
+      seller: "SELLER_ADDRESS",
+      sellerReferral: "REFERRAL_ADDRESS",
+      tokenSize: 1,
+      price: 1.5, // SOL
+      rarity: {},
+      extra: {
+        img: "https://image-url.com/nft.png"
+      },
+      expiry: 1640995200,
+      token: {
+        mintAddress: "MINT_ADDRESS",
+        owner: "OWNER_ADDRESS",
+        supply: 1,
+        collection: "COLLECTION_ADDRESS",
+        name: "NFT Name",
+        updateAuthority: "UPDATE_AUTHORITY",
+        primarySaleHappened: true,
+        sellerFeeBasisPoints: 500,
+        image: "https://image-url.com/nft.png",
+        animationUrl: "https://animation-url.com/nft.mp4",
+        externalUrl: "https://external-url.com",
+        attributes: [
+          {
+            trait_type: "Background",
+            value: "Blue"
+          }
+        ],
+        properties: {
+          category: "image",
+          files: [
+            {
+              uri: "https://image-url.com/nft.png",
+              type: "image/png"
+            }
+          ],
+          creators: [
+            {
+              address: "CREATOR_ADDRESS",
+              share: 100
+            }
+          ]
+        }
+      },
+      listingSource: "magiceden_v2"
+    }
+  ]
+}
+```
+
+### Collection Stats Response
+```typescript
+{
+  status: "success",
+  message: "Collection stats fetched successfully", 
+  stats: {
+    symbol: "degenape",
+    floorPrice: 2.5, // SOL
+    listedCount: 157,
+    avgPrice24hr: 3.2, // SOL
+    volumeAll: 45678.9 // SOL
+  }
+}
+```
+
+### Popular Collections Response
+```typescript
+{
+  status: "success",
+  message: "Popular collections fetched successfully",
+  collections: [
+    {
+      symbol: "degenape",
+      name: "Degenerate Ape Academy",
+      description: "A collection of 10,000 unique apes",
+      image: "https://collection-image.com/ape.png",
+      floorPrice: 2.5, // SOL
+      volumeAll: 123456.78, // SOL
+      hasCNFTs: false
+    }
+  ]
+}
+```
+
+## Advanced Features
+
+### Auction House Integration
+```typescript
+// Custom auction house for specific collections or marketplaces
+const customAuctionHouse = "E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe";
+
+// List with custom auction house
+await agent.methods.listMagicEdenNFT({
+  tokenMint: "NFT_MINT",
+  tokenAccount: "TOKEN_ACCOUNT",
+  price: 1.5,
+  auctionHouseAddress: customAuctionHouse
+});
+```
+
+### Referral System
+```typescript
+// Earn referral fees on sales
+const referralAddress = "YOUR_REFERRAL_ADDRESS";
+
+await agent.methods.listMagicEdenNFT({
+  tokenMint: "NFT_MINT",
+  tokenAccount: "TOKEN_ACCOUNT", 
+  price: 1.5,
+  sellerReferral: referralAddress // Seller referral
+});
+
+await agent.methods.bidOnMagicEdenNFT({
+  tokenMint: "NFT_MINT",
+  price: 1.2,
+  buyerReferral: referralAddress // Buyer referral
+});
+```
+
+### Advanced Filtering
+```typescript
+// Filter listings by price range and sort options
+const expensiveListings = await agent.methods.getMagicEdenCollectionListings({
+  collectionSymbol: "degods",
+  min_price: 50.0, // Only NFTs above 50 SOL
+  max_price: 1000.0,
+  sort: "listPrice",
+  sort_direction: "desc", // Most expensive first
+  limit: 10
+});
+
+// Recently listed items
+const recentListings = await agent.methods.getMagicEdenCollectionListings({
+  collectionSymbol: "solana_monkey_business",
+  sort: "updatedAt",
+  sort_direction: "desc", // Most recent first
+  limit: 20
+});
+```
+
+## Error Handling
+
+### Common Error Scenarios
+```typescript
+try {
+  const result = await agent.methods.listMagicEdenNFT({...});
+} catch (error) {
+  if (error.message.includes("Magic Eden API key is required")) {
+    // Handle missing API key
+  } else if (error.message.includes("Invalid response")) {
+    // Handle API response errors
+  } else if (error.message.includes("insufficient funds")) {
+    // Handle insufficient balance
+  }
+}
+```
+
+### Error Types
+1. **Authentication Errors**
+   - Missing or invalid API key
+   - Expired authentication
+
+2. **Validation Errors**
+   - Invalid token mint address
+   - Invalid price (negative or zero)
+   - Missing required parameters
+
+3. **Transaction Errors**
+   - Insufficient SOL balance
+   - NFT not owned by wallet
+   - Network congestion
+
+4. **API Errors**
+   - Rate limiting
+   - Service unavailable
+   - Invalid collection symbol
+
+## Best Practices
+
+### 1. Listing Strategy
+```typescript
+// Check collection floor price before listing
+const stats = await agent.methods.getMagicEdenCollectionStats({
+  collectionSymbol: "collection_name"
+});
+
+const floorPrice = stats.stats.floorPrice;
+const listPrice = floorPrice * 0.95; // List 5% below floor
+
+await agent.methods.listMagicEdenNFT({
+  tokenMint: "NFT_MINT",
+  tokenAccount: "TOKEN_ACCOUNT",
+  price: listPrice
+});
+```
+
+### 2. Bidding Strategy
+```typescript
+// Research recent sales before bidding
+const listings = await agent.methods.getMagicEdenCollectionListings({
+  collectionSymbol: "collection_name",
+  sort: "listPrice",
+  sort_direction: "asc",
+  limit: 10
+});
+
+// Bid on the cheapest listing
+const cheapestListing = listings.listings[0];
+const bidPrice = cheapestListing.price * 0.9; // Bid 10% below asking
+
+await agent.methods.bidOnMagicEdenNFT({
+  tokenMint: cheapestListing.tokenMint,
+  price: bidPrice
+});
+```
+
+### 3. Market Analysis
+```typescript
+// Compare popular collections
+const popular = await agent.methods.getPopularMagicEdenCollections({
+  timeRange: "7d"
+});
+
+// Analyze each collection
+for (const collection of popular.collections) {
+  const stats = await agent.methods.getMagicEdenCollectionStats({
+    collectionSymbol: collection.symbol,
+    timeWindow: "7d"
+  });
+  
+  console.log(`${collection.name}: Floor ${stats.stats.floorPrice} SOL, Volume ${stats.stats.volumeAll} SOL`);
+}
+```
+
+## Security Considerations
+
+### 1. NFT Ownership Verification
+```typescript
+// Always verify you own the NFT before listing
+// The tokenAccount must be owned by your wallet
+```
+
+### 2. Price Validation
+```typescript
+// Implement price checks to avoid listing errors
+const minPrice = 0.001; // Minimum 0.001 SOL
+const maxPrice = 1000; // Maximum 1000 SOL
+
+if (price < minPrice || price > maxPrice) {
+  throw new Error("Price out of acceptable range");
+}
+```
+
+### 3. API Key Security
+```typescript
+// Never expose API keys in client-side code
+// Use environment variables for API key storage
+process.env.MAGIC_EDEN_API_KEY
+```
+
+## Rate Limits & Performance
+
+### API Rate Limits
+- **With API Key**: Higher rate limits for authenticated requests
+- **Without API Key**: Limited requests for public endpoints
+- **Recommended**: Use API key for production applications
+
+### Optimization Tips
+```typescript
+// Batch collection data requests
+const collections = ["degods", "okay_bears", "degenape"];
+const statsPromises = collections.map(symbol => 
+  agent.methods.getMagicEdenCollectionStats({ collectionSymbol: symbol })
+);
+const allStats = await Promise.all(statsPromises);
+```
+
+## Popular Collection Symbols
+
+### Top Solana NFT Collections
+- `degods` - DeGods
+- `okay_bears` - Okay Bears  
+- `degenape` - Degenerate Ape Academy
+- `solana_monkey_business` - Solana Monkey Business
+- `thugbirdz` - Thugbirdz
+- `shadowy_super_coder` - Shadowy Super Coders
+- `galactic_geckos` - Galactic Geckos
+- `aurory` - Aurory
+- `famous_fox_federation` - Famous Fox Federation
+- `bold_badgers` - Bold Badgers
+
+### Finding Collection Symbols
+```typescript
+// Use popular collections endpoint to discover symbols
+const popular = await agent.methods.getPopularMagicEdenCollections({
+  timeRange: "7d"
+});
+
+// Each collection object contains the symbol field
+popular.collections.forEach(collection => {
+  console.log(`Name: ${collection.name}, Symbol: ${collection.symbol}`);
+});
+```
+
+## Integration Examples
+
+### Trading Bot Example
+```typescript
+// Simple arbitrage detection
+async function findArbitrageOpportunities() {
+  const collections = ["degods", "okay_bears"];
+  
+  for (const symbol of collections) {
+    const stats = await agent.methods.getMagicEdenCollectionStats({
+      collectionSymbol: symbol
+    });
+    
+    const listings = await agent.methods.getMagicEdenCollectionListings({
+      collectionSymbol: symbol,
+      limit: 5,
+      sort: "listPrice",
+      sort_direction: "asc"
+    });
+    
+    const cheapest = listings.listings[0];
+    const floorPrice = stats.stats.floorPrice;
+    
+    // If cheapest listing is significantly below floor
+    if (cheapest.price < floorPrice * 0.8) {
+      console.log(`Opportunity found: ${symbol} listed at ${cheapest.price} SOL (floor: ${floorPrice} SOL)`);
+    }
+  }
+}
+```
+
+### Portfolio Tracker Example
+```typescript
+// Track your listed NFTs
+async function trackListings(ownedNfts: string[]) {
+  for (const tokenMint of ownedNfts) {
+    // Check if NFT is listed by looking through collection listings
+    // This requires knowing which collection each NFT belongs to
+  }
+}
+```

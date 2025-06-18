@@ -32,6 +32,11 @@ export interface Config {
   OKX_SECRET_KEY?: string;
   OKX_API_PASSPHRASE?: string;
   OKX_PROJECT_ID?: string;
+  PINATA_JWT?: string;
+  PINATA_GATEWAY?: string;
+  PUMP_FUN_REFERRAL_WALLET?: string;
+  MAGIC_EDEN_API_KEY?: string;
+  OTHER_API_KEYS?: Record<string, string>;
 }
 
 export interface PumpFunTokenOptions {

@@ -13,7 +13,7 @@ export async function listNFTForSale(
   agent: SolanaAgentKit,
   nftMint: PublicKey,
   price: number,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     if (!PublicKey.isOnCurve(nftMint)) {
       throw new Error("Invalid NFT mint address");
@@ -81,7 +81,10 @@ export async function listNFTForSale(
   }
 }
 
-export async function cancelListing(agent: SolanaAgentKit, nftMint: PublicKey) {
+export async function cancelListing(
+  agent: SolanaAgentKit,
+  nftMint: PublicKey,
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   const provider = new AnchorProvider(
     agent.connection,
     {

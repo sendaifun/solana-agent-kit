@@ -32,7 +32,10 @@ async function initClient(agent: SolanaAgentKit) {
  * @param agent SolanaAgentKit instance
  * @param mints Array of mint addresses to close
  */
-export async function closeAccounts(agent: SolanaAgentKit, mints: string[]) {
+export async function closeAccounts(
+  agent: SolanaAgentKit,
+  mints: string[],
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>[]> {
   try {
     const client = await initClient(agent);
     const signaturesOrTxs: Awaited<ReturnType<typeof signOrSendTX>>[] = [];
@@ -63,7 +66,10 @@ export async function closeAccounts(agent: SolanaAgentKit, mints: string[]) {
  * @param mints Array of mint addresses for the tokens to burn
  * @returns Array of versioned transactions
  */
-export async function burnTokens(agent: SolanaAgentKit, mints: string[]) {
+export async function burnTokens(
+  agent: SolanaAgentKit,
+  mints: string[],
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>[]> {
   try {
     const client = await initClient(agent);
     const signaturesOrTxs: Awaited<ReturnType<typeof signOrSendTX>>[] = [];
@@ -100,7 +106,7 @@ export async function mergeTokens(
   inputAssets: InputAssetStruct[],
   outputMint: string,
   priorityFee: PriorityFee,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>[]> {
   try {
     const client = await initClient(agent);
     const signaturesOrTxs: Awaited<ReturnType<typeof signOrSendTX>>[] = [];
@@ -139,7 +145,7 @@ export async function spreadToken(
   inputAsset: InputAssetStruct,
   targetTokens: TargetTokenStruct[],
   priorityFee: PriorityFee,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>[]> {
   try {
     const client = await initClient(agent);
     const signaturesOrTxs: Awaited<ReturnType<typeof signOrSendTX>>[] = [];

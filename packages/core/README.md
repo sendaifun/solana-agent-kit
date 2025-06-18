@@ -132,7 +132,7 @@ npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-
 Initializing the wallet interface and agent with plugins:
 
 ```typescript
-import { SolanaAgentKit, createVercelAITools, KeypairWallet } from "solana-agent-kit"; // or import createLangchainTools if using langchain
+import { SolanaAgentKit, createVercelAITools, KeypairWallet } from "solana-agent-kit"; // or import createLangchainTools if using langchain or createOpenAITools if using OpenAI agents
 import TokenPlugin from "@solana-agent-kit/plugin-token";
 import NFTPlugin from "@solana-agent-kit/plugin-nft";
 import DefiPlugin from "@solana-agent-kit/plugin-defi";
@@ -188,7 +188,7 @@ console.log("Token Mint Address:", result.mint.toString());
 ### Deploy a New Token2022
 
 ```typescript
-const result = await agent.methods.delpoyToken2022(
+const result = await agent.methods.deployToken2022(
   "my ai token 2022", // name
   "uri", // uri
   "token2022", // symbol

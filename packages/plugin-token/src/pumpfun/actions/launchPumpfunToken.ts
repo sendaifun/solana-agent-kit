@@ -1,6 +1,6 @@
 import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { launchPumpFunToken } from "../tools";
+import launchPumpFunToken from "../tools/launchPumpfunToken";
 
 const launchPumpfunTokenAction: Action = {
   name: "LAUNCH_PUMPFUN_TOKEN",
@@ -83,17 +83,32 @@ const launchPumpfunTokenAction: Action = {
         tokenTicker,
         description,
         imageUrl,
-        input,
+        input.initialLiquiditySOL,
+        input.twitter,
+        input.telegram,
+        input.website,
       );
 
-      return {
-        status: "success",
-        signature: result.signature,
-        mint: result.mint,
-        metadataUri: result.metadataUri,
-        transaction: result.signedTransaction ?? result.signature,
-        message: "Successfully launched token on Pump.fun",
-      };
+      if ("signedTransaction" in result) {
+        return {
+          status: "success",
+          transaction: result.signedTransaction,
+          message: "Successfully prepared transaction to launch token on Pump.fun. Please sign and send.",
+        };
+      } else if ("txHash" in result) {
+        return {
+          status: "success",
+          mint: result.mint,
+          metadataUri: result.metadataUri,
+          transaction: result.txHash,
+          message: "Successfully launched token on Pump.fun",
+        };
+      } else {
+        return {
+          status: "error",
+          message: "Failed to launch token on Pump.fun",
+        };
+      }
     } catch (error: any) {
       return {
         status: "error",

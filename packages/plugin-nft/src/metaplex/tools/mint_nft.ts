@@ -11,6 +11,14 @@ import { PublicKey, Transaction } from "@solana/web3.js";
 import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { initUmi } from "../../utils";
 
+interface MintCollectionNFTResponse {
+  mint: PublicKey;
+  metadata: PublicKey;
+  tokenAccount?: PublicKey;
+  signature?: string;
+  signedTransaction?: Awaited<ReturnType<typeof signOrSendTX>>;
+}
+
 /**
  * Mint a new NFT as part of an existing collection
  * @param agent SolanaAgentKit instance
@@ -32,7 +40,7 @@ export async function mintCollectionNFT(
     }>;
   },
   recipient?: PublicKey,
-) {
+): Promise<MintCollectionNFTResponse> {
   try {
     // Create UMI instance from agent
     const umi = initUmi(agent).use(mplCore());

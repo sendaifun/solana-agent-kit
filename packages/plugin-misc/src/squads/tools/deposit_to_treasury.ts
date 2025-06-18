@@ -4,8 +4,12 @@ import {
   getAssociatedTokenAddress,
   getMint,
 } from "@solana/spl-token";
-import { type PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import {
+  type PublicKey,
+  SystemProgram,
+  Transaction,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 import * as multisig from "@sqds/multisig";
 import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
@@ -22,7 +26,7 @@ export async function multisig_deposit_to_treasury(
   amount: number,
   vaultIndex?: number,
   mint?: PublicKey,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     let tx: Awaited<ReturnType<typeof signOrSendTX>>;
     if (!vaultIndex) {

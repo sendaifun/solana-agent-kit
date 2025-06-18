@@ -22,7 +22,7 @@ export async function transfer(
   to: PublicKey,
   amount: number,
   mint?: PublicKey,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     let tx: Awaited<ReturnType<typeof signOrSendTX>>;
 

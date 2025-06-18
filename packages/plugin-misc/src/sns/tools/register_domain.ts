@@ -15,7 +15,7 @@ export async function registerDomain(
   agent: SolanaAgentKit,
   name: string,
   spaceKB: number = 1,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     // Validate space size
     if (spaceKB > 10) {

@@ -87,6 +87,7 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`raydiumCreateAmmV4`**: Create an AMM v4 on Raydium.
 - **`raydiumCreateClmm`**: Create a CLMM on Raydium.
 - **`raydiumCreateCpmm`**: Create a CPMM on Raydium.
+- **`raydiumCreateLaunchlabToken`**: Create a token on Raydium's Launchlab.
 
 ## Solayer
 - **`stakeWithSolayer`**: Stake SOL with Solayer.

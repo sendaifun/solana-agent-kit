@@ -4,10 +4,16 @@ import type { CreateJupiterOrderRequest } from "../types";
 import { createOrderApi } from "./common/jupiterLimitApi";
 import { deserializeTransaction } from "./common/transactions";
 
+interface CreateLimitOrderResponse {
+  order: string;
+  signature: Awaited<ReturnType<typeof signOrSendTX>>;
+  success: boolean;
+}
+
 export async function createLimitOrder(
   agent: SolanaAgentKit,
   params: CreateJupiterOrderRequest,
-) {
+): Promise<CreateLimitOrderResponse> {
   const wallet = agent.wallet.publicKey.toString();
   params.maker = params.payer = wallet;
 

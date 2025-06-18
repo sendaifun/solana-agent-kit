@@ -38,8 +38,12 @@ import {
 } from "./manifest/tools";
 
 // Import OKX actions
-import getOkxDexQuoteAction from "./okx/actions/OkxDexQuoteAction";
-import getOkxSwapAction from "./okx/actions/OkxDexSwapAction";
+import getTokensAction from "./okx/actions/getTokens";
+import getSwapDataAction from "./okx/actions/getSwapData";
+import getQuoteAction from "./okx/actions/getQuote";
+import getLiquidityAction from "./okx/actions/getLiquidity";
+import getChainDataAction from "./okx/actions/getChainData";
+import executeSwapAction from "./okx/actions/executeSwap";
 
 // Import Debridge tools & actions
 import checkDebridgeTransactionStatusAction from "./debridge/actions/checkTransactionStatus";
@@ -78,6 +82,7 @@ import createOrcaSingleSidedWhirlpoolAction from "./orca/actions/createOrcaSingl
 import raydiumCreateAmmV4Action from "./raydium/actions/raydiumCreateAmmV4";
 import raydiumCreateClmmAction from "./raydium/actions/raydiumCreateClmm";
 import raydiumCreateCpmmAction from "./raydium/actions/raydiumCreateCpmm";
+import raydiumCreateLaunchlabTokenAction from "./raydium/actions/raydiumCreateLaunchlabToken";
 
 // Import Solayer actions
 import stakeWithSolayerAction from "./solayer/actions/stakeWithSolayer";
@@ -94,7 +99,7 @@ import createVaultAction from "./drift/actions/createVault";
 import depositIntoDriftVaultAction from "./drift/actions/depositIntoVault";
 import depositToDriftUserAccountAction from "./drift/actions/depositToDriftUserAccount";
 import deriveDriftVaultAddressAction from "./drift/actions/deriveVaultAddress";
-import doesUserHaveDriftAcccountAction from "./drift/actions/doesUserHaveDriftAccount";
+import doesUserHaveDriftAccountAction from "./drift/actions/doesUserHaveDriftAccount";
 import driftUserAccountInfoAction from "./drift/actions/driftUserAccountInfo";
 import entryQuoteOfDriftPerpTradeAction from "./drift/actions/entryQuoteOfPerpTrade";
 import getDriftLendAndBorrowAPYAction from "./drift/actions/getLendAndBorrowAPY";
@@ -130,6 +135,7 @@ import {
   raydiumCreateAmmV4,
   raydiumCreateClmm,
   raydiumCreateCpmm,
+  raydiumCreateLaunchlabToken,
 } from "./raydium";
 
 // Import Solayer tools
@@ -196,7 +202,14 @@ import {
 } from "./sanctum/tools";
 
 // Import OKX tools
-import { getOkxDexQuote, getOkxSwap } from "./okx/tools";
+import {
+  getTokens,
+  getSwapData,
+  getQuote,
+  getLiquidity,
+  getChainData,
+  executeSwap,
+} from "./okx/tools";
 
 // Define and export the plugin
 const DefiPlugin = {
@@ -244,6 +257,7 @@ const DefiPlugin = {
     raydiumCreateAmmV4,
     raydiumCreateClmm,
     raydiumCreateCpmm,
+    raydiumCreateLaunchlabToken,
 
     // Solayer methods
     stakeWithSolayer,
@@ -305,8 +319,12 @@ const DefiPlugin = {
     sanctumRemoveLiquidity,
 
     // OKX methods
-    getOkxDexQuote,
-    getOkxSwap,
+    getTokens,
+    getSwapData,
+    getQuote,
+    getLiquidity,
+    getChainData,
+    executeSwap,
   },
 
   // Combine all actions
@@ -346,6 +364,7 @@ const DefiPlugin = {
     raydiumCreateAmmV4Action,
     raydiumCreateClmmAction,
     raydiumCreateCpmmAction,
+    raydiumCreateLaunchlabTokenAction,
 
     // Solayer actions
     stakeWithSolayerAction,
@@ -362,7 +381,7 @@ const DefiPlugin = {
     depositIntoDriftVaultAction,
     depositToDriftUserAccountAction,
     deriveDriftVaultAddressAction,
-    doesUserHaveDriftAcccountAction,
+    doesUserHaveDriftAccountAction,
     driftUserAccountInfoAction,
     entryQuoteOfDriftPerpTradeAction,
     getDriftLendAndBorrowAPYAction,
@@ -400,16 +419,20 @@ const DefiPlugin = {
     sanctumSwapLSTAction,
 
     // OKX actions
-    getOkxDexQuoteAction,
-    getOkxSwapAction,
+    getTokensAction,
+    getSwapDataAction,
+    getQuoteAction,
+    getLiquidityAction,
+    getChainDataAction,
+    executeSwapAction,
   ],
 
   // Initialize function
-  initialize: function (agent: SolanaAgentKit): void {
+  initialize: function (): void {
     // Initialize all methods with the agent instance
     Object.entries(this.methods).forEach(([methodName, method]) => {
       if (typeof method === "function") {
-        this.methods[methodName] = method.bind(null, agent);
+        this.methods[methodName] = method;
       }
     });
   },

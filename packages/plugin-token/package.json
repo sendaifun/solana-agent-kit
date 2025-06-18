@@ -1,10 +1,12 @@
 {
   "name": "@solana-agent-kit/plugin-token",
-  "version": "2.0.4",
+  "version": "2.0.7",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -43,20 +45,22 @@
     "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
     "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
     "@openzeppelin/contracts": "^5.2.0",
+    "@pump-fun/pump-sdk": "^1.3.8",
     "@solana/codecs": "^2.1.0",
     "@solana/spl-token": "^0.4.9",
     "@solutiofi/sdk": "^1.0.2",
     "@types/bn.js": "^5.1.6",
     "bn.js": "^5.2.1",
     "ethers": "^6.13.5",
+    "pinata": "^2.4.3",
     "redaxios": "^0.5.1",
     "rpc-websockets": "^10.0.0",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.98.0",
-    "solana-agent-kit": "2.0.4"
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.7"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

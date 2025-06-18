@@ -12,4 +12,5 @@ node_modules
 .turbo/
 .rollup.*/
 .rollup/
+drizzle/
 tsconfig.tsbuildinfo

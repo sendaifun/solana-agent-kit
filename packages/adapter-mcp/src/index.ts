@@ -67,6 +67,7 @@ export function createMcpServer(
   // Convert each action to an MCP tool
   for (const [_key, action] of Object.entries(actions)) {
     const { result } = zodToMCPShape(action.schema);
+    // @ts-ignore Type instantiation is excessively deep and possibly infinite.
     server.tool(action.name, action.description, result, async (params) => {
       try {
         // Execute the action handler with the params directly
@@ -76,11 +77,11 @@ export function createMcpServer(
         return {
           content: [
             {
-              type: "text",
+              type: "text" as const,
               text: JSON.stringify(result, null, 2),
             },
           ],
-        };
+        } as const;
       } catch (error) {
         console.error("error", error);
         // Handle errors in MCP format
@@ -88,19 +89,20 @@ export function createMcpServer(
           isError: true,
           content: [
             {
-              type: "text",
+              type: "text" as const,
               text:
                 error instanceof Error
                   ? error.message
                   : "Unknown error occurred",
             },
           ],
-        };
+        } as const;
       }
     });
 
     // Add examples as prompts if they exist
     if (action.examples && action.examples.length > 0) {
+      // @ts-ignore Type instantiation is excessively deep and possibly infinite.
       server.prompt(
         `${action.name}-examples`,
         {

@@ -4,10 +4,9 @@
 
 ![SAKCover2](https://github.com/user-attachments/assets/a6072421-8958-4cee-934a-a10ea32ae75e)
 
-![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)
-![GitHub License](https://img.shields.io/github/license/sendaifun/solana-agent-kit?style=for-the-badge)
-
+[![NPM Downloads](https://img.shields.io/npm/dm/solana-agent-kit?style=for-the-badge)](https://www.npmjs.com/package/solana-agent-kit)
+[![GitHub forks](https://img.shields.io/github/forks/sendaifun/solana-agent-kit?style=for-the-badge)](https://github.com/sendaifun/solana-agent-kit/network/members)
+[![GitHub License](https://img.shields.io/github/license/sendaifun/solana-agent-kit?style=for-the-badge)](https://github.com/sendaifun/solana-agent-kit/blob/v2/LICENSE)
 </div>
 
 An open-source toolkit for connecting AI agents to Solana protocols. Now, any agent, using any model can autonomously perform 60+ Solana actions:
@@ -110,7 +109,7 @@ You can view the full documentation of the kit at [docs.sendai.fun](https://docs
 
 ## Why We Built V2 and Why Upgrade?
 
-The Solana Agent Kit V2 is a major upgrade from V1, to learn why check out our [migration guide](./MIGRATING)
+The Solana Agent Kit V2 is a major upgrade from V1, to learn why check out our [migration guide](./MIGRATING.md)
 
 ## 📦 Core Installation
 
@@ -137,7 +136,7 @@ npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-
 Initializing the wallet interface and agent with plugins:
 
 ```typescript
-import { SolanaAgentKit, createVercelAITools, KeypairWallet } from "solana-agent-kit"; // or import createLangchainTools if using langchain
+import { SolanaAgentKit, createVercelAITools, KeypairWallet } from "solana-agent-kit"; // or import createLangchainTools if using langchain or createOpenAITools for OpenAI agents
 import TokenPlugin from "@solana-agent-kit/plugin-token";
 import NFTPlugin from "@solana-agent-kit/plugin-nft";
 import DefiPlugin from "@solana-agent-kit/plugin-defi";
@@ -907,3 +906,7 @@ Solana Network : EKHTbXpsm6YDgJzMkFxNU1LNXeWcUW7Ezf8mjUNQQ4Pa
 ## Security
 
 This toolkit handles transaction generation, signing and sending, using provided wallets. Always ensure you're using it in a secure environment and never share your private keys.
+
+## Attributions
+
+System prompt logic adapted from Coinbase AgentKit (Apache 2.0)

@@ -1,0 +1,37 @@
+{
+  "name": "privy-tg-bot",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --watch index.ts",
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:pull": "drizzle-kit pull",
+    "drizzle:migrate": "drizzle-kit migrate"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.31.1",
+    "tsx": "^4.19.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.3.22",
+    "@privy-io/server-auth": "^1.23.0",
+    "@solana-agent-kit/plugin-defi": "^2.0.5",
+    "@solana-agent-kit/plugin-god-mode": "^0.0.9",
+    "@solana-agent-kit/plugin-token": "^2.0.5",
+    "@solana/web3.js": "^1.98.2",
+    "@supabase/supabase-js": "^2.49.8",
+    "ai": "^4.3.16",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.44.0",
+    "grammy": "^1.36.3",
+    "postgres": "^3.4.7",
+    "solana-agent-kit": "^2.0.5",
+    "try.rs": "^0.1.2"
+  }
+}

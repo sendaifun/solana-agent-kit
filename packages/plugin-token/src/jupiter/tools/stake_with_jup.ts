@@ -7,7 +7,10 @@ import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
  * @param amount Amount of SOL to stake
  * @returns Transaction signature
  */
-export async function stakeWithJup(agent: SolanaAgentKit, amount: number) {
+export async function stakeWithJup(
+  agent: SolanaAgentKit,
+  amount: number,
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     const res = await fetch(
       `https://worker.jup.ag/blinks/swap/So11111111111111111111111111111111111111112/jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v/${amount}`,

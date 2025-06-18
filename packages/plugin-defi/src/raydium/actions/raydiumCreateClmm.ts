@@ -3,7 +3,7 @@ import { BN } from "bn.js";
 import Decimal from "decimal.js";
 import type { Action } from "solana-agent-kit";
 import { z } from "zod";
-import { raydiumCreateClmm } from "../raydium_create_clmm";
+import { raydiumCreateClmm } from "../tools/raydium_create_clmm";
 
 const raydiumCreateClmmAction: Action = {
   name: "RAYDIUM_CREATE_CLMM",

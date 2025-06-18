@@ -5,7 +5,7 @@ export async function rock_paper_scissor(
   agent: SolanaAgentKit,
   amount: number,
   choice: "rock" | "paper" | "scissors",
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     const res = await fetch(
       `https://rps.sendarcade.fun/api/actions/bot?amount=${amount}&choice=${choice}`,

@@ -7,6 +7,9 @@
     "light": "#14F195",
     "dark": "#9945FF"
   },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude"]
+  },
   "navigation": {
     "versions": [
       {
@@ -14,9 +17,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "docs/v2/introduction"
-            ]
+            "pages": ["docs/v2/introduction"]
           },
           {
             "group": "Quickstart",
@@ -32,41 +33,33 @@
             "pages": [
               {
                 "group": "Defi",
-                "pages": [
-                  "docs/v2/plugins/defi/defi-plugin-intro"
-                ]
+                "pages": ["docs/v2/plugins/defi/defi-plugin-intro"]
               },
               {
                 "group": "Token",
-                "pages": [
-                  "docs/v2/plugins/token/token-plugin-intro"
-                ]
+                "pages": ["docs/v2/plugins/token/token-plugin-intro"]
               },
               {
                 "group": "Blinks",
-                "pages": [
-                  "docs/v2/plugins/blinks/blinks-plugin-intro"
-                ]
+                "pages": ["docs/v2/plugins/blinks/blinks-plugin-intro"]
               },
               {
                 "group": "NFT",
-                "pages": [
-                  "docs/v2/plugins/nft/nft-plugin-intro"
-                ]
+                "pages": ["docs/v2/plugins/nft/nft-plugin-intro"]
               },
               {
                 "group": "Misc",
-                "pages": [
-                  "docs/v2/plugins/misc/misc-plugin-intro"
-                ]
+                "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
               }
             ]
           },
           {
             "group": "Adapters",
-            "pages": [
-              "docs/v2/adapters/mcp/mcp-adapter-intro"
-            ]
+            "pages": ["docs/v2/adapters/mcp/mcp-adapter-intro"]
+          },
+          {
+            "group": "Using LLMs",
+            "pages": ["docs/v2/using-llms/overview"]
           },
           {
             "group": "Examples",
@@ -103,7 +96,8 @@
                   "docs/v2/integrations/nft-management/deploy_collection",
                   "docs/v2/integrations/nft-management/mint_nft",
                   "docs/v2/integrations/nft-management/3land_create_manage",
-                  "docs/v2/integrations/nft-management/tensor_nft"
+                  "docs/v2/integrations/nft-management/tensor_nft",
+                  "docs/v2/integrations/nft-management/magiceden"
                 ]
               },
               {
@@ -138,9 +132,7 @@
               },
               {
                 "group": "Squads Protocol Multisig",
-                "pages": [
-                  "docs/v2/integrations/squads/squads_operations"
-                ]
+                "pages": ["docs/v2/integrations/squads/squads_operations"]
               },
               {
                 "group": "Solana Blinks",
@@ -162,8 +154,7 @@
           },
           {
             "group": "References",
-            "pages": [
-            ]
+            "pages": []
           }
         ]
       },
@@ -172,10 +163,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "docs/v1/introduction",
-              "docs/v1/quickstart"
-            ]
+            "pages": ["docs/v1/introduction", "docs/v1/quickstart"]
           },
           {
             "group": "Examples",
@@ -204,9 +192,7 @@
           },
           {
             "group": "v2-beta",
-            "pages": [
-              "docs/v1/v2-beta/getting_started"
-            ]
+            "pages": ["docs/v1/v2-beta/getting_started"]
           },
           {
             "group": "Features",
@@ -262,9 +248,7 @@
               },
               {
                 "group": "Squads Protocol Multisig",
-                "pages": [
-                  "docs/v1/features/squads/squads_operations"
-                ]
+                "pages": ["docs/v1/features/squads/squads_operations"]
               },
               {
                 "group": "Solana Blinks",
@@ -286,14 +270,11 @@
           },
           {
             "group": "Utilities",
-            "pages": [
-            ]
+            "pages": []
           },
           {
             "group": "Classes",
-            "pages": [
-              "docs/v1/classes/SolanaAgentKit"
-            ],
+            "pages": ["docs/v1/classes/SolanaAgentKit"],
             "icon": "cube"
           },
           {

@@ -1,11 +1,13 @@
 {
   "name": "solana-agent-kit",
-  "version": "2.0.4",
+  "version": "2.0.7",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -33,7 +35,13 @@
     "node": ">=22.0.0",
     "pnpm": ">=8.0.0"
   },
-  "keywords": ["solana", "agent", "ai", "solana agent kit", "sendai"],
+  "keywords": [
+    "solana",
+    "agent",
+    "ai",
+    "solana agent kit",
+    "sendai"
+  ],
   "author": "sendaifun",
   "license": "Apache-2.0",
   "devDependencies": {
@@ -53,7 +61,9 @@
   "packageManager": "pnpm@9.15.3",
   "dependencies": {
     "@langchain/core": "^0.3.44",
-    "@solana/web3.js": "^1.98.0",
+    "@openai/agents": "^0.0.7",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.2",
     "ai": "^4.1.5",
     "bs58": "^6.0.0",
     "rpc-websockets": "^10.0.0",

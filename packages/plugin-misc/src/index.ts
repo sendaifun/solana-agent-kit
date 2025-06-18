@@ -226,11 +226,11 @@ const MiscPlugin = {
   ],
 
   // Initialize function
-  initialize: function (agent: SolanaAgentKit): void {
+  initialize: function (): void {
     // Initialize all methods with the agent instance
     Object.entries(this.methods).forEach(([methodName, method]) => {
       if (typeof method === "function") {
-        this.methods[methodName] = method.bind(null, agent);
+        this.methods[methodName] = method;
       }
     });
   },

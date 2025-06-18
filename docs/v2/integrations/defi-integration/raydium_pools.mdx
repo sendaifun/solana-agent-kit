@@ -1,11 +1,11 @@
 ---
-title: 'Raydium Pool Creation'
-description: 'Create liquidity pools on Raydium using AMM V4, CLMM, and CPMM'
+title: 'Raydium Pools & Launchlab'
+description: 'Create liquidity pools and launch tokens on Raydium using AMM V4, CLMM, CPMM, and Launchlab'
 ---
 
-Create and manage different types of liquidity pools on Raydium, including AMM V4 (Legacy), Concentrated Liquidity (CLMM), and Constant Product (CPMM) pools.
+Create and manage different types of liquidity pools on Raydium, including AMM V4 (Legacy), Concentrated Liquidity (CLMM), Constant Product (CPMM) pools, and launch tokens using Raydium Launchlab.
 
-## Pool Types
+## Pool Types & Token Launch
 
 ### 1. AMM V4 (Legacy)
 - Requires OpenBook marketID
@@ -21,6 +21,12 @@ Create and manage different types of liquidity pools on Raydium, including AMM V
 - Newest pool type
 - Supports Token-2022 standard
 - No OpenBook market requirement
+
+### 4. Launchlab Token
+- Token creation platform
+- Built-in token launch capabilities
+- Automatic migration options (AMM/CPMM)
+- Integrated buy functionality
 
 ## Usage
 
@@ -57,6 +63,21 @@ const signature = await agent.methods.raydiumCreateCpmm(
 );
 ```
 
+### Launchlab Token
+```typescript
+const result = await agent.methods.raydiumCreateLaunchlabToken({
+  name: "My Token",
+  symbol: "MTK",
+  decimals: 9,
+  supply: 1000000,
+  uri: "https://example.com/metadata.json",
+  migrateType: "amm",
+  buyAmount: new BN(1000000),
+  createOnly: false,
+  slippageBps: 100
+});
+```
+
 ## Example Prompts
 
 ### Natural Language Prompts
@@ -68,6 +89,12 @@ const signature = await agent.methods.raydiumCreateCpmm(
 "Launch AMM V4 pool with OpenBook market integration"
 
 "Initialize CLMM pool with specific initial price"
+
+"Create a new token on Raydium Launchlab with 1M supply"
+
+"Launch token with automatic AMM migration"
+
+"Create launchlab token and buy 0.1 SOL worth immediately"
 ```
 
 ### LangChain Tool Prompts
@@ -102,6 +129,21 @@ const signature = await agent.methods.raydiumCreateCpmm(
   "mintAAmount": "1000000000",
   "mintBAmount": "1000000000",
   "startTime": "0"
+}
+```
+
+#### Launchlab Token
+```text
+{
+  "name": "My Awesome Token",
+  "symbol": "MAT",
+  "decimals": 9,
+  "supply": 1000000,
+  "uri": "https://example.com/token-metadata.json",
+  "migrateType": "amm",
+  "buyAmount": 1000000,
+  "createOnly": false,
+  "slippageBps": 100
 }
 ```
 
@@ -161,6 +203,31 @@ interface CpmmParams {
 - Configurable fees
 ```
 
+### Launchlab Token
+```typescript
+// Parameters
+interface LaunchlabTokenParams {
+  name: string;            // Token name
+  symbol: string;          // Token symbol
+  decimals?: number;       // Token decimals (default: 6)
+  supply?: number;         // Initial supply (default: LaunchpadPoolInitParam.supply)
+  uri: string;             // Metadata URI
+  platformId?: string;     // Platform ID (default: Raydium platform)
+  migrateType?: "amm" | "cpmm";  // Migration type (default: "amm")
+  txVersion?: TxVersion;   // Transaction version (default: V0)
+  slippageBps?: number;    // Slippage in basis points (default: 100)
+  buyAmount?: BN;          // Buy amount in lamports (default: 0)
+  createOnly: boolean;     // Create only or create and buy
+}
+
+// Features
+- Integrated token creation and launch
+- Automatic migration to AMM or CPMM
+- Built-in buy functionality
+- Configurable slippage protection
+- Custom platform support
+```
+
 ## Implementation Details
 
 ### Common Features
@@ -173,6 +240,15 @@ interface CpmmParams {
 - AMM V4: OpenBook integration
 - CLMM: Tick range management
 - CPMM: Token-2022 support
+- Launchlab: Token creation and launch automation
+
+### Launchlab Token Features
+- **Token Creation**: Generates new token mint with custom parameters
+- **Metadata Support**: Links to off-chain metadata via URI
+- **Migration Options**: Automatic pool creation with AMM or CPMM
+- **Instant Buy**: Optional immediate token purchase upon creation
+- **Platform Integration**: Supports custom platform IDs
+- **Slippage Protection**: Configurable slippage tolerance
 
 ## Error Handling
 
@@ -184,6 +260,8 @@ try {
     // Handle liquidity issues
   } else if (error.message.includes("invalid market")) {
     // Handle market validation issues
+  } else if (error.message.includes("Launchpad config not found")) {
+    // Handle launchlab configuration issues
   }
 }
 ```
@@ -194,6 +272,7 @@ try {
    - Use CPMM for Token-2022
    - Use CLMM for efficient ranges
    - Use AMM V4 for OpenBook integration
+   - Use Launchlab for new token launches
 
 2. **Initial Liquidity**
    - Calculate appropriate amounts
@@ -207,11 +286,19 @@ try {
    - Plan start time
    - Consider trading volume
 
-4. **Security**
+4. **Launchlab Token Setup**
+   - Prepare metadata JSON with proper schema
+   - Choose appropriate decimals (6-9 recommended)
+   - Set realistic initial supply
+   - Configure migration type based on use case
+   - Test with small buy amounts first
+
+5. **Security**
    - Validate all addresses
    - Check token programs
    - Verify configurations
    - Monitor transactions
+   - Secure metadata hosting
 
 ## Common Issues
 
@@ -220,12 +307,14 @@ try {
    - Insufficient liquidity
    - Wrong token program
    - Incorrect decimals
+   - Missing metadata URI
 
 2. **Transaction Failures**
    - Network congestion
    - Invalid parameters
    - Configuration errors
    - Insufficient funds
+   - Slippage exceeded
 
 3. **Permission Issues**
    - Missing approvals
@@ -233,9 +322,58 @@ try {
    - Invalid authority
    - Program restrictions
 
+4. **Launchlab Specific Issues**
+   - Invalid metadata format
+   - Unreachable URI
+   - Configuration mismatch
+   - Platform ID errors
+   - Supply calculation errors
+
+## Metadata Schema for Launchlab Tokens
+
+```json
+{
+  "name": "Token Name",
+  "symbol": "TOKEN",
+  "description": "Token description",
+  "image": "https://example.com/image.png",
+  "external_url": "https://example.com",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "DeFi"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://example.com/image.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}
+```
+
 ## Common Token Addresses
 
 - USDC: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
 - SOL: `So11111111111111111111111111111111111111112`
 - USDT: `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`
 - RAY: `4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R`
+
+## Migration Types
+
+### AMM Migration
+- Creates traditional AMM pool
+- Suitable for most use cases
+- Higher liquidity requirements
+- OpenBook market integration
+
+### CPMM Migration
+- Creates constant product pool
+- Lower barriers to entry
+- Token-2022 support
+- No market ID requirement
+- Faster setup process

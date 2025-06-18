@@ -22,3 +22,10 @@ This plugin provides a set of tools and actions to interact with NFTs on the Sol
 ### 3Land
 - `create3LandCollection` - Create a collection on 3Land
 - `create3LandSingle` - Create a single NFT on 3Land
+
+### Magic Eden
+- `listNFTOnMagicEden` - List an NFT on Magic Eden
+- `bidOnMagicEdenNFT` - Place a bid on an NFT on Magic Eden
+- `getMagicEdenCollectionStats` - Get statistics for a Magic Eden collection
+- `getMagicEdenPopularCollections` - Get popular collections on Magic Eden
+- `getMagicEdenCollectionListings` - Get listings for a Magic Eden collection

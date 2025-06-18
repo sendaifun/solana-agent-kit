@@ -1,7 +1,7 @@
 packages:
   - "packages/*"
   - "test"
-  - "examples/**/*"
+  - "!examples/**/*"
   - "!**/para-plugin-example"
   # exclude packages that are inside test directories
   # - "!**/test/**"

@@ -52,7 +52,7 @@ export async function sendCompressedAirdrop(
   decimals: number,
   recipients: PublicKey[],
   priorityFeeInLamports: number,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   const setupTransaction = new Transaction();
 
   if (recipients.length > MAX_AIRDROP_RECIPIENTS) {

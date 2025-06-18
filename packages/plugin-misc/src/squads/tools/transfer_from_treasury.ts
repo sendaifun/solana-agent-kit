@@ -29,7 +29,7 @@ export async function multisig_transfer_from_treasury(
   to: PublicKey,
   vaultIndex: number = 0,
   mint?: PublicKey,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     let transferInstruction: TransactionInstruction;
 

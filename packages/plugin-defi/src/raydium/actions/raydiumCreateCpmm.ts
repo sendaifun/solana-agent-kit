@@ -2,7 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
-import { raydiumCreateCpmm } from "../raydium_create_cpmm";
+import { raydiumCreateCpmm } from "../tools/raydium_create_cpmm";
 
 const raydiumCreateCpmmAction: Action = {
   name: "RAYDIUM_CREATE_CPMM",

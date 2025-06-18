@@ -48,7 +48,7 @@ async function main() {
   })
     // Load all plugins
     .use(TokenPlugin)
-    .use(NFTPlugin)
+    // .use(NFTPlugin)
     .use(DefiPlugin)
     .use(MiscPlugin)
     .use(BlinksPlugin);

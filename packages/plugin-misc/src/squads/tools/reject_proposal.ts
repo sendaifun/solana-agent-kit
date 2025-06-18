@@ -13,7 +13,7 @@ const { Multisig } = multisig.accounts;
 export async function multisig_reject_proposal(
   agent: SolanaAgentKit,
   transactionIndex?: number | bigint,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     const [multisigPda] = multisig.getMultisigPda({
       createKey: agent.wallet.publicKey,

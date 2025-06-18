@@ -14,7 +14,7 @@ import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 export async function create_squads_multisig(
   agent: SolanaAgentKit,
   creator: PublicKey,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   const connection = agent.connection;
   // const createKey = agent.wallet; // can be any keypair, using the agent wallet as only one multisig is required
 

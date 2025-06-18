@@ -1,6 +1,9 @@
-import { getMint } from "@solana/spl-token";
 import { PublicKey, VersionedTransaction } from "@solana/web3.js";
-import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
+import {
+  type SolanaAgentKit,
+  signOrSendTX,
+  getMintInfo,
+} from "solana-agent-kit";
 import {
   DEFAULT_OPTIONS,
   JUP_API,
@@ -24,7 +27,7 @@ export async function trade(
   inputMint: PublicKey = TOKENS.USDC,
   // @deprecated use dynamicSlippage instead
   _slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
-) {
+): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
     // Check if input token is native SOL
     const isNativeSol = inputMint.equals(TOKENS.SOL);
@@ -32,7 +35,7 @@ export async function trade(
     // For native SOL, we use LAMPORTS_PER_SOL, otherwise fetch mint info
     const inputDecimals = isNativeSol
       ? 9 // SOL always has 9 decimals
-      : (await getMint(agent.connection, inputMint)).decimals;
+      : (await getMintInfo(agent.connection, inputMint.toBase58())).decimals;
 
     // Calculate the correct amount based on actual decimals
     const scaledAmount = inputAmount * Math.pow(10, inputDecimals);
