@@ -877,7 +877,7 @@ The toolkit relies on several key Solana and Metaplex libraries:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
+Refer to [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
 
 ## Contributors
 
