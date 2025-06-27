@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-token",
   "dependencies": {
+    "@0xobedient/memetus-pumpfun-sdk": "^1.0.7",
     "@lightprotocol/compressed-token": "^0.20.0",
     "@lightprotocol/stateless.js": "^0.20.0",
     "@mayanfinance/swap-sdk": "^10.0.0",
