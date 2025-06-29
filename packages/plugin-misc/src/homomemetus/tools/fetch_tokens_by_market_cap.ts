@@ -1,5 +1,4 @@
-import { MemetusPumpfun } from "@0xobedient/memetus-pumpfun-sdk";
-import { TokenResponse } from "@0xobedient/memetus-pumpfun-sdk/dist/shared/types/response";
+import { MemetusPumpfun, TokenResponse } from "@0xobedient/memetus-pumpfun-sdk";
 
 /**
  * @name        fetchTokensByMarketCap

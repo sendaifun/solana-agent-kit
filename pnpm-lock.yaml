@@ -106,10 +106,10 @@ importers:
     dependencies:
       '@langchain/core':
         specifier: ^0.3.44
-        version: 0.3.44(openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))
+        version: 0.3.44(openai@5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))
       '@openai/agents':
         specifier: ^0.0.7
-        version: 0.0.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+        version: 0.0.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
       '@solana/spl-token':
         specifier: ^0.4.13
         version: 0.4.13(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.7.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.2)(utf-8-validate@5.0.10)
@@ -264,6 +264,9 @@ importers:
 
   packages/plugin-misc:
     dependencies:
+      '@0xobedient/memetus-pumpfun-sdk':
+        specifier: ^1.0.9
+        version: 1.0.9
       '@alloralabs/allora-sdk':
         specifier: ^0.1.0
         version: 0.1.0
@@ -375,9 +378,6 @@ importers:
 
   packages/plugin-token:
     dependencies:
-      '@0xobedient/memetus-pumpfun-sdk':
-        specifier: ^1.0.7
-        version: 1.0.7
       '@lightprotocol/compressed-token':
         specifier: ^0.20.0
         version: 0.20.0(@lightprotocol/stateless.js@0.20.0(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)))(@solana/spl-token@0.4.9(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))
@@ -529,8 +529,8 @@ packages:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0
 
-  '@0xobedient/memetus-pumpfun-sdk@1.0.7':
-    resolution: {integrity: sha512-itj8IIJK8fGncHiLlECzdieuoQnLR+JdOnaAXc8LaxQtRQgqK1NCCjjso6jbslVXd9YlymXT72kX1HM+VjtTVg==}
+  '@0xobedient/memetus-pumpfun-sdk@1.0.9':
+    resolution: {integrity: sha512-uZzpspTXS1hL/EJu5zEGxdJKl0y3p5oDu/1U5Hz2+HRArUQp/a+iTtuJXMNXaU9sWevureEUZ+YP1tFva7boMA==}
 
   '@3land/listings-sdk@0.0.7':
     resolution: {integrity: sha512-7hEgqBcYFTF15OzXKliG8JuO3SKKDTkFZDgyldxXwPX/HSwvVEGjnX+LorGDhhWt/9YazV7K5iEC3qyeuqibIA==}
@@ -6750,11 +6750,7 @@ snapshots:
       graphql: 16.10.0
       typescript: 5.8.3
 
-  '@0xobedient/memetus-pumpfun-sdk@1.0.7':
-    dependencies:
-      axios: 1.10.0
-    transitivePeerDependencies:
-      - debug
+  '@0xobedient/memetus-pumpfun-sdk@1.0.9': {}
 
   '@3land/listings-sdk@0.0.7(@types/node@22.15.18)(arweave@1.15.5)(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)':
     dependencies:
@@ -8361,14 +8357,14 @@ snapshots:
 
   '@jup-ag/api@6.0.39': {}
 
-  '@langchain/core@0.3.44(openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))':
+  '@langchain/core@0.3.44(openai@5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.19
-      langsmith: 0.3.15(openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))
+      langsmith: 0.3.15(openai@5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -9412,6 +9408,18 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  '@openai/agents-core@0.0.7(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
+    dependencies:
+      '@openai/zod': zod@3.25.63
+      debug: 4.4.0
+      openai: 5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.12.1
+      zod: 3.24.1
+    transitivePeerDependencies:
+      - supports-color
+      - ws
+
   '@openai/agents-core@0.0.7(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
     dependencies:
       '@openai/zod': zod@3.25.63
@@ -9436,12 +9444,12 @@ snapshots:
       - supports-color
       - ws
 
-  '@openai/agents-openai@0.0.7(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
+  '@openai/agents-openai@0.0.7(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
     dependencies:
-      '@openai/agents-core': 0.0.7(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      '@openai/agents-core': 0.0.7(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
       '@openai/zod': zod@3.25.63
       debug: 4.4.0
-      openai: 5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      openai: 5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
     transitivePeerDependencies:
       - supports-color
       - ws
@@ -9484,13 +9492,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@openai/agents@0.0.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
+  '@openai/agents@0.0.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)':
     dependencies:
-      '@openai/agents-core': 0.0.7(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
-      '@openai/agents-openai': 0.0.7(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      '@openai/agents-core': 0.0.7(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      '@openai/agents-openai': 0.0.7(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
       '@openai/agents-realtime': 0.0.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(zod@3.24.1)
       debug: 4.4.0
-      openai: 5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      openai: 5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -13791,7 +13799,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  langsmith@0.3.15(openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)):
+  langsmith@0.3.15(openai@5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)):
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2
@@ -13801,7 +13809,7 @@ snapshots:
       semver: 7.7.1
       uuid: 10.0.0
     optionalDependencies:
-      openai: 5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
+      openai: 5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1)
 
   langsmith@0.3.15(openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.4)):
     dependencies:
@@ -14251,6 +14259,11 @@ snapshots:
       zod: 3.24.4
     transitivePeerDependencies:
       - encoding
+
+  openai@5.3.0(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1):
+    optionalDependencies:
+      ws: 7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      zod: 3.24.1
 
   openai@5.3.0(ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.1):
     optionalDependencies:

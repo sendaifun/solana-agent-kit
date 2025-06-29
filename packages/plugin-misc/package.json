@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-misc",
   "dependencies": {
+    "@0xobedient/memetus-pumpfun-sdk": "^1.0.9",
     "@alloralabs/allora-sdk": "^0.1.0",
     "@bonfida/spl-name-service": "^3.0.8",
     "@onsol/tldparser": "^0.6.7",

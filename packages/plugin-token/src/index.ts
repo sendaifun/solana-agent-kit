@@ -81,33 +81,6 @@ import {
   spreadToken,
 } from "./solutiofi/tools/solutiofi";
 
-import {
-  fetch_oldest_tokens,
-  fetch_recent_tokens,
-  fetch_token_by_creator,
-  fetch_token_by_initializer,
-  fetch_token_by_mint,
-  fetch_token_by_signature,
-  fetch_tokens_by_creators,
-  fetch_tokens_by_duration,
-  fetch_tokens_by_initializers,
-  fetch_tokens_by_market_cap,
-  fetch_tokens_by_metadata,
-  fetch_tokens_by_mints,
-} from "./homomemetus/tools";
-import fetchOldestTokensAction from "./homomemetus/actions/fetchOldestTokens";
-import fetchRecentTokensAction from "./homomemetus/actions/fetchRecentTokens";
-import fetchTokenByCreatorAction from "./homomemetus/actions/fetchTokenByCreator";
-import fetchTokenByInitializerAction from "./homomemetus/actions/fetchTokenByInitializer";
-import fetchTokenByMintAction from "./homomemetus/actions/fetchTokenByMint";
-import fetchTokenBySignatureAction from "./homomemetus/actions/fetchTokenBySignature";
-import fetchTokensByCreatorsAction from "./homomemetus/actions/fetchTokensByCreators";
-import fetchTokensByDurationAction from "./homomemetus/actions/fetchTokensByDuration";
-import fetchTokensByInitializersAction from "./homomemetus/actions/fetchTokensByInitializers";
-import fetchTokensByMarketCapAction from "./homomemetus/actions/fetchTokensByMarketCap";
-import fetchTokensByMetadataAction from "./homomemetus/actions/fetchTokensByMetadata";
-import fetchTokensByMintsAction from "./homomemetus/actions/fetchTokensByMints";
-
 // Define and export the plugin
 const TokenPlugin = {
   name: "token",
@@ -143,18 +116,6 @@ const TokenPlugin = {
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
     spreadTokenUsingSolutiofi: spreadToken,
-    fetch_oldest_tokens,
-    fetch_recent_tokens,
-    fetch_token_by_creator,
-    fetch_token_by_initializer,
-    fetch_token_by_mint,
-    fetch_token_by_signature,
-    fetch_tokens_by_creators,
-    fetch_tokens_by_duration,
-    fetch_tokens_by_initializers,
-    fetch_tokens_by_market_cap,
-    fetch_tokens_by_metadata,
-    fetch_tokens_by_mints,
   },
 
   // Combine all actions
@@ -185,18 +146,6 @@ const TokenPlugin = {
     closeAccountsUsingSolutiofiAction,
     mergeTokensUsingSolutiofiAction,
     walletAddressAction,
-    fetchOldestTokensAction,
-    fetchRecentTokensAction,
-    fetchTokenByCreatorAction,
-    fetchTokenByInitializerAction,
-    fetchTokenByMintAction,
-    fetchTokenBySignatureAction,
-    fetchTokensByCreatorsAction,
-    fetchTokensByDurationAction,
-    fetchTokensByInitializersAction,
-    fetchTokensByMarketCapAction,
-    fetchTokensByMetadataAction,
-    fetchTokensByMintsAction,
   ],
 
   // Initialize function
