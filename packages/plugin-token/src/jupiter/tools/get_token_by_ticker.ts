@@ -9,7 +9,7 @@ export async function getTokenByTicker(
 ): Promise<JupiterTokenData> {
   try {
     const response = await fetch(
-      "https://api.jup.ag/tokens/v1/tagged/verified",
+      "https://lite-api.jup.ag/tokens/v2/tag?query=verified",
     );
 
     if (!response.ok) {
