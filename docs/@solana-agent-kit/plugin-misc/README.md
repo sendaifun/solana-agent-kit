@@ -66,6 +66,21 @@ This plugin provides a set of miscellaneous tools and actions for interacting wi
 ## Switchboard
 - `simulate_switchboard_feed` - Simulate a switchboard feed.
 
+### HomoMemetus
+- `fetch_oldest_tokens` - Fetch oldest token list in token list created in 24h
+- `fetch_recent_tokens` - Fetch recent token list in token list created in 24h
+- `fetch_token_by_creator` - Fetch tokens filter with created by a specific creator
+- `fetch_token_by_initializer` - Filter tokens initialized by a specific address
+- `fetch_token_by_mint` - Filter by a specific token address
+- `fetch_token_by_signature` - Filter by a specific transaction signature
+- `fetch_tokens_by_creators` - Filter tokens created by a specific creator address list
+- `fetch_tokens_by_initializers` - Filter tokens initialized by a specific address list
+- `fetch_tokens_by_duration` - Filter token list by creation time
+- `fetch_tokens_by_market_cap` - Filter token list by token market cap
+- `fetch_tokens_by_metadata` - Filter token list by token metadata
+- `fetch_tokens_by_mints` - Filter token list by mint address list
+
+
 ## Example Usage
 
 ### Register a Domain
