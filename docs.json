@@ -76,6 +76,10 @@
             ]
           },
           {
+            "group": "Devrel Agents",
+            "pages": ["docs/v2/devrel-agents/jito"]
+          },
+          {
             "group": "Integrations",
             "pages": [
               {
@@ -149,6 +153,10 @@
                   "docs/v2/integrations/non-financial/gibwork_bounties",
                   "docs/v2/integrations/non-financial/elfa_ai"
                 ]
+              },
+              {
+                "group": "Miscellaneous",
+                "pages": ["docs/v2/integrations/misc/crossmint"]
               }
             ]
           },

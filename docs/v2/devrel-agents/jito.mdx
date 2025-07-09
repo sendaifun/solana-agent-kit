@@ -1,0 +1,100 @@
+# Jito Devrel Agent Setup Guide
+
+The Jito Devrel agent provides access to comprehensive Jito documentation and helps developers integrate with Jito's restaking program, keeper bots, and other services.
+
+## Demo Video
+
+Watch the complete setup walkthrough:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/am9QN3R02HI" frameborder="0" allowfullscreen></iframe>
+
+*[Watch on YouTube](https://youtu.be/am9QN3R02HI)*
+
+## Setup Methods
+
+### Using Cursor
+
+1. **Open Cursor Settings**
+   - Open Cursor
+   - Navigate to Cursor Settings
+   - Go to Tools & Integrations
+
+2. **Add MCP Server**
+   - Click on "New MCP server"
+   - This opens a JSON configuration file
+   - Add the following code to the `mcpServers` object:
+
+```json
+"jito_devrel": {
+    "url": "https://jito-proxy.sendai.fun/mcp"
+}
+```
+
+3. **Verify Installation**
+   - Return to Tools & Integrations
+   - You should now see 2 tools available as shown below:
+
+   ![Jito Devrel Tools in Cursor](https://ik.imagekit.io/scriptscrypt/SendAI/Screenshot%202025-07-09%20at%2011.21.36.png)
+
+   - You can now ask questions like:
+     - "How do I set up and run a Jito keeper bot?"
+     - "What CLI commands are available for managing Jito restaking operations?"
+
+### Using MCP Inspector (Local Testing)
+
+If you want to test the MCP locally using the MCP Inspector tool:
+
+1. **Install and Run Inspector**
+   ```bash
+   npx @modelcontextprotocol/inspector
+   ```
+
+2. **Configure Transport**
+   - Select Transport type as "Streamable http"
+   - Set URL to: `https://jito-proxy.sendai.fun/mcp`
+
+3. **Access Tools**
+   - You can now see the search and fetch functions under Tools
+   - Test queries like: "How do I register as an operator in the Jito restaking program?"
+
+### Using Claude AI
+
+1. **Access Claude Integrations**
+   - Visit [claude.ai](https://claude.ai)
+   - Click on the Search and Tools icon (2nd icon)
+   - Select "Add integrations"
+
+2. **Add Jito Integration**
+   - In the integrations modal, give it a name like "Jito Devrel"
+   - Add the URL: `https://jito-proxy.sendai.fun/mcp`
+
+3. **Connect and Verify**
+   - The integration will show up in the list with a "Custom" tag
+   - Click "Connect"
+   - Optional: Click "more" icon > Tools and Settings > view tools and permissions
+
+4. **Start Using**
+   - Open a new chat
+   - Ask Jito-related questions like:
+     - "How does the Jito StakeNet program manage validator selection and rebalancing?"
+
+## Example Queries
+
+Once set up, you can ask questions about:
+
+- **Keeper Bots**: Setup, configuration, and management
+- **Restaking Operations**: CLI commands and program interactions
+- **Validator Selection**: How StakeNet manages validator selection and rebalancing
+- **Operator Registration**: Steps to register as an operator in the Jito restaking program
+- **General Jito Services**: Documentation and integration guides
+
+## Available Tools
+
+The Jito Devrel agent provides access to:
+- **Search Function**: Semantic search across Jito documentation
+- **Fetch Function**: Retrieve specific documentation sections
+- **Expert Guidance**: Detailed answers for Jito-related development questions
+
+## Support
+
+For additional support or questions about the Jito Devrel agent, refer to the official Jito documentation or reach out to the development team.

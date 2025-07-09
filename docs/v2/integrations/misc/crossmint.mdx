@@ -1,0 +1,378 @@
+---
+title: 'Crossmint'
+description: 'Purchase physical products from Amazon and Shopify using Solana USDC'
+---
+
+Solana Agent Kit provides integration with Crossmint for purchasing physical products from Amazon and Shopify using Solana USDC. The integration supports creating orders, managing shipping addresses, and confirming order status.
+
+## Key Features
+
+- **Physical Product Purchases**: Buy products from Amazon and Shopify
+- **Solana USDC Payments**: Pay with USDC on Solana blockchain
+- **Order Management**: Create, track, and confirm orders
+- **Shipping Integration**: Handle physical addresses and delivery
+- **Real-time Status**: Monitor order progress and payment status
+
+## Basic Usage
+
+### Create an Amazon Order
+
+```typescript
+const result = await agent.methods.executeAction("CROSSMINT_CHECKOUT", {
+  productLocator: "B08N5WRWNW",
+  shippingAddress: {
+    name: "John Doe",
+    line1: "123 Main St",
+    city: "New York",
+    state: "NY",
+    postalCode: "10001",
+    country: "US"
+  },
+  userEmail: "john@example.com"
+});
+```
+
+### Confirm Order Status
+
+```typescript
+const confirmation = await agent.methods.executeAction("CROSSMINT_CONFIRM_ORDER", {
+  orderId: "order_123",
+  retryUptoConfirmation: true
+});
+```
+
+## Parameters
+
+### Checkout Parameters
+
+```typescript
+interface CheckoutParams {
+  productLocator: string;        // Amazon ASIN or product URL
+  shippingAddress: {
+    name: string;                // Recipient name
+    line1: string;               // Address line 1
+    line2?: string;              // Address line 2 (optional)
+    city: string;                // City
+    state: string;               // State (required for US)
+    postalCode: string;          // Postal/ZIP code
+    country: string;             // Country code (default: "US")
+  };
+  userEmail: string;             // User's email address
+}
+```
+
+### Confirm Order Parameters
+
+```typescript
+interface ConfirmOrderParams {
+  orderId: string;               // Order ID to confirm
+  retryUptoConfirmation?: boolean; // Retry until confirmation (default: false)
+}
+```
+
+## Example Prompts
+
+### Natural Language Prompts
+```text
+"Buy this Amazon product B08N5WRWNW and ship it to John Doe in New York"
+
+"Order an Amazon item using USDC and confirm the purchase"
+
+"Create a Crossmint order for Amazon product with shipping address"
+
+"Check the status of my Crossmint order order_123"
+
+"Confirm my Amazon order and retry until completion"
+```
+
+### LangChain Tool Prompts
+
+#### Create Order
+```text
+{
+  "productLocator": "B08N5WRWNW",
+  "shippingAddress": {
+    "name": "John Doe",
+    "line1": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "10001",
+    "country": "US"
+  },
+  "userEmail": "john@example.com"
+}
+```
+
+#### Confirm Order
+```text
+{
+  "orderId": "order_abc123",
+  "retryUptoConfirmation": true
+}
+```
+
+## Implementation Details
+
+### Order Creation Flow
+```typescript
+// 1. Create order request
+const orderData = {
+  recipient: {
+    email: userEmail,
+    physicalAddress: shippingAddress
+  },
+  payment: {
+    method: "solana",
+    currency: "usdc",
+    payerAddress: agent.wallet.publicKey.toBase58()
+  },
+  lineItems: [
+    {
+      productLocator: `amazon:${productLocator}`
+    }
+  ]
+};
+
+// 2. Submit to Crossmint API
+const response = await fetch(`${CROSSMINT_PRODUCTION_API_URL}/orders`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-KEY": apiKey
+  },
+  body: JSON.stringify(orderData)
+});
+
+// 3. Sign and send transaction
+const tx = VersionedTransaction.deserialize(bs58.decode(serializedTransaction));
+const signedTx = await agent.wallet.signTransaction(tx);
+const signature = await agent.connection.sendTransaction(signedTx);
+```
+
+### Order Status Polling
+```typescript
+// Poll for order completion
+const pollInterval = setInterval(async () => {
+  const order = await checkOrderStatus();
+  
+  if (order.payment.status === "completed") {
+    clearInterval(pollInterval);
+    return { success: true, status: "completed", order };
+  }
+}, 3000); // Poll every 3 seconds
+
+// Timeout after 2 minutes
+setTimeout(() => {
+  clearInterval(pollInterval);
+  return { success: false, error: "Payment confirmation timeout" };
+}, 120000);
+```
+
+## Payment Methods
+
+### Supported Currencies
+- **USDC**: Primary payment method on Solana
+- **SOL**: Alternative payment option
+
+### Payment Flow
+1. **Quote Generation**: Get pricing in USDC
+2. **Transaction Creation**: Generate Solana transaction
+3. **Transaction Signing**: Sign with user wallet
+4. **Payment Execution**: Submit to Solana network
+5. **Order Confirmation**: Verify payment completion
+
+## Shipping Configuration
+
+### Supported Regions
+- **United States**: Full support with state validation
+- **International**: Limited support (check with Crossmint)
+
+### Address Validation
+```typescript
+const shippingAddress = {
+  name: "John Doe",           // Required
+  line1: "123 Main St",       // Required
+  line2: "Apt 4B",           // Optional
+  city: "New York",          // Required
+  state: "NY",               // Required for US
+  postalCode: "10001",       // Required
+  country: "US"              // Required
+};
+```
+
+## Error Handling
+
+```typescript
+try {
+  const result = await agent.methods.executeAction("CROSSMINT_CHECKOUT", {
+    productLocator,
+    shippingAddress,
+    userEmail
+  });
+} catch (error) {
+  if (error.message.includes("CROSSMINT_API_KEY")) {
+    // Handle missing API key
+  } else if (error.message.includes("insufficient funds")) {
+    // Handle insufficient USDC balance
+  } else if (error.message.includes("invalid address")) {
+    // Handle shipping address validation errors
+  }
+}
+```
+
+## Best Practices
+
+1. **API Key Management**
+   - Store API key securely in agent config
+   - Use environment variables for production
+   - Never expose API keys in client-side code
+
+2. **Address Validation**
+   - Validate shipping addresses before submission
+   - Include all required fields
+   - Use standardized country codes
+
+3. **Order Tracking**
+   - Store order IDs for future reference
+   - Implement polling for order confirmation
+   - Handle timeout scenarios gracefully
+
+4. **Payment Management**
+   - Verify USDC balance before ordering
+   - Handle transaction failures appropriately
+   - Monitor payment status regularly
+
+## Common Issues
+
+1. **API Configuration**
+   - Missing or invalid API key
+   - Incorrect API endpoint
+   - Authentication failures
+
+2. **Payment Issues**
+   - Insufficient USDC balance
+   - Transaction signing failures
+   - Network connectivity problems
+
+3. **Shipping Problems**
+   - Invalid shipping addresses
+   - Unsupported shipping regions
+   - Missing required address fields
+
+4. **Order Status**
+   - Payment confirmation delays
+   - Order processing timeouts
+   - Status polling failures
+
+## Response Formats
+
+### Successful Order Creation
+```typescript
+{
+  status: "success",
+  order: {
+    orderId: "order_abc123",
+    phase: "payment",
+    quote: {
+      totalPrice: {
+        amount: "29.99",
+        currency: "usdc"
+      }
+    },
+    payment: {
+      status: "completed",
+      method: "solana",
+      currency: "usdc"
+    }
+  },
+  message: "Order created successfully",
+  signature: "5UfgJ5vVZxUxefDGqzqkVLHzHxVTyYH9StYyHKgvHYmXJgqJKxEqy9k4Rz9LpXrHF9kUZB7"
+}
+```
+
+### Order Confirmation
+```typescript
+{
+  status: "success",
+  order: {
+    orderId: "order_abc123",
+    payment: {
+      status: "completed"
+    },
+    delivery: {
+      status: "in-progress"
+    }
+  },
+  message: "Order confirmed successfully"
+}
+```
+
+### Error Response
+```typescript
+{
+  status: "error",
+  message: "CROSSMINT_API_KEY is not set in agent config"
+}
+```
+
+## Order Lifecycle
+
+1. **Quote**: Initial price calculation
+2. **Payment**: USDC payment processing
+3. **Delivery**: Physical product fulfillment
+4. **Completed**: Order fulfilled and delivered
+
+## Configuration
+
+### Environment Setup
+```typescript
+const agent = new SolanaAgentKit(
+  wallet,
+  "YOUR_RPC_URL",
+  {
+    OTHER_API_KEYS: {
+      CROSSMINT_API_KEY: "your-crossmint-api-key"
+    }
+  }
+);
+```
+
+### API Endpoints
+```typescript
+// Production
+const CROSSMINT_PRODUCTION_API_URL = "https://www.crossmint.com/api/2022-06-09";
+
+// Staging
+const CROSSMINT_STAGING_API_URL = "https://staging.crossmint.com/api/2022-06-09";
+```
+
+## Product Locators
+
+### Amazon Products
+```typescript
+// Use ASIN (Amazon Standard Identification Number)
+productLocator: "B08N5WRWNW"
+
+// Or full Amazon URL
+productLocator: "https://www.amazon.com/dp/B08N5WRWNW"
+```
+
+### Shopify Products
+```typescript
+// Use URL with variant ID
+productLocator: "shopify:https://store.com/product:variant-id"
+```
+
+## Related Functions
+
+- `getBalance`: Check USDC balance
+- `transfer`: Transfer tokens
+- `trade`: Swap tokens for USDC
+- `fetchPrice`: Get current token prices
+
+## Resources
+
+- [Crossmint Documentation](https://docs.crossmint.com)
+- [Crossmint API Reference](https://docs.crossmint.com/api-reference)
+- [Solana Agent Kit Documentation](https://docs.sendai.fun)
+- [USDC on Solana](https://solana.com/usdc)
