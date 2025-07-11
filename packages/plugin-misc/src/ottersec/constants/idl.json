@@ -1,0 +1,152 @@
+{
+  "address": "verifycLy8mB96wd9wqq3WDXQwM4oU6r42Th37Db9fC",
+  "metadata": {
+    "name": "otter_verify",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "close",
+      "discriminator": [98, 165, 201, 177, 108, 65, 206, 96],
+      "accounts": [
+        {
+          "name": "data_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 116, 116, 101, 114, 95, 118, 101, 114, 105, 102, 121
+                ]
+              },
+              { "kind": "account", "path": "authority" },
+              { "kind": "account", "path": "program_address" }
+            ]
+          }
+        },
+        { "name": "authority", "writable": true, "signer": true },
+        { "name": "program_address" }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
+      "accounts": [
+        {
+          "name": "build_params",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 116, 116, 101, 114, 95, 118, 101, 114, 105, 102, 121
+                ]
+              },
+              { "kind": "account", "path": "authority" },
+              { "kind": "account", "path": "program_address" }
+            ]
+          }
+        },
+        { "name": "authority", "writable": true, "signer": true },
+        { "name": "program_address" },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        { "name": "params", "type": { "defined": { "name": "InputParams" } } }
+      ]
+    },
+    {
+      "name": "update",
+      "discriminator": [219, 200, 88, 176, 158, 63, 253, 127],
+      "accounts": [
+        {
+          "name": "build_params",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 116, 116, 101, 114, 95, 118, 101, 114, 105, 102, 121
+                ]
+              },
+              { "kind": "account", "path": "authority" },
+              { "kind": "account", "path": "program_address" }
+            ]
+          }
+        },
+        { "name": "authority", "writable": true, "signer": true },
+        { "name": "program_address" },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        { "name": "params", "type": { "defined": { "name": "InputParams" } } }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BuildParams",
+      "discriminator": [206, 101, 194, 136, 135, 113, 115, 12]
+    }
+  ],
+  "events": [
+    {
+      "name": "OtterVerifyEvent",
+      "discriminator": [53, 13, 101, 51, 166, 65, 192, 98]
+    }
+  ],
+  "types": [
+    {
+      "name": "BuildParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "address", "type": "pubkey" },
+          { "name": "signer", "type": "pubkey" },
+          { "name": "version", "type": "string" },
+          { "name": "git_url", "type": "string" },
+          { "name": "commit", "type": "string" },
+          { "name": "args", "type": { "vec": "string" } },
+          { "name": "deploy_slot", "type": "u64" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "InputParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "version", "type": "string" },
+          { "name": "git_url", "type": "string" },
+          { "name": "commit", "type": "string" },
+          { "name": "args", "type": { "vec": "string" } },
+          { "name": "deploy_slot", "type": "u64" }
+        ]
+      }
+    },
+    {
+      "name": "OtterVerifyEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "signer", "type": "pubkey" },
+          { "name": "program", "type": "pubkey" },
+          { "name": "params", "type": { "defined": { "name": "InputParams" } } }
+        ]
+      }
+    }
+  ]
+}
