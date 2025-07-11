@@ -160,6 +160,24 @@ import fetchTokensByMarketCapAction from "./homomemetus/actions/fetchTokensByMar
 import fetchTokensByMetadataAction from "./homomemetus/actions/fetchTokensByMetadata";
 import fetchTokensByMintsAction from "./homomemetus/actions/fetchTokensByMints";
 
+import {
+  create_verification_pda,
+  decode_verification_pda_data,
+  get_program_build_log,
+  get_program_verification_status,
+  get_verification_job_status,
+  get_verified_programs,
+  verify_program,
+} from "./ottersec/tools";
+
+import createVerificationPdaAction from "./ottersec/actions/createVerificationPda";
+import decodeVerificationPdaDataAction from "./ottersec/actions/decodeVerificationPdaData";
+import getProgramBuildLogAction from "./ottersec/actions/getProgramBuildLog";
+import getProgramVerificationStatusAction from "./ottersec/actions/getProgramVerificationStatus";
+import getVerificationJobStatusAction from "./ottersec/actions/getVerificationJobStatus";
+import getVerifiedProgramsAction from "./ottersec/actions/getVerifiedPrograms";
+import verifyProgramAction from "./ottersec/actions/verifyProgram";
+
 // Define and export the plugin
 const MiscPlugin = {
   name: "misc",
@@ -223,6 +241,13 @@ const MiscPlugin = {
     fetch_tokens_by_market_cap,
     fetch_tokens_by_metadata,
     fetch_tokens_by_mints,
+    create_verification_pda,
+    decode_verification_pda_data,
+    get_program_build_log,
+    get_program_verification_status,
+    get_verification_job_status,
+    get_verified_programs,
+    verify_program,
   },
 
   // Combine all actions
@@ -283,6 +308,13 @@ const MiscPlugin = {
     fetchTokensByMarketCapAction,
     fetchTokensByMetadataAction,
     fetchTokensByMintsAction,
+    createVerificationPdaAction,
+    decodeVerificationPdaDataAction,
+    getProgramBuildLogAction,
+    getProgramVerificationStatusAction,
+    getVerificationJobStatusAction,
+    getVerifiedProgramsAction,
+    verifyProgramAction,
   ],
 
   // Initialize function
