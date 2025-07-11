@@ -273,6 +273,9 @@ importers:
       '@bonfida/spl-name-service':
         specifier: ^3.0.8
         version: 3.0.8(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@coral-xyz/anchor':
+        specifier: ^0.31.1
+        version: 0.31.1(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@onsol/tldparser':
         specifier: ^0.6.7
         version: 0.6.7(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bn.js@5.2.2)(borsh@2.0.0)(buffer@6.0.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
@@ -1959,6 +1962,7 @@ packages:
   '@msgpack/msgpack@3.0.0-beta2':
     resolution: {integrity: sha512-y+l1PNV0XDyY8sM3YtuMLK5vE3/hkfId+Do8pLo/OPxfxuFAUwcGz3oiiUuV46/aBpwTzZ+mRWVMtlSKbradhw==}
     engines: {node: '>= 14'}
+    deprecated: too old
 
   '@mysten/bcs@1.3.0':
     resolution: {integrity: sha512-V3V9GwIXEiUS7y8hkCwH3oseWpxs75YOOtfy7xdfyAdSftlFpTYgj5elclwYx8pgHdzg7pHdy6no77LHYGQCaQ==}
