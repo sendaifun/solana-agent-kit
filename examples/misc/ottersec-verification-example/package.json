@@ -1,0 +1,26 @@
+{
+  "name": "ottersec-verification-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx ts-node -r tsconfig-paths/register ./index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.12",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.3.62",
+    "@langchain/langgraph": "^0.3.7",
+    "@langchain/openai": "^0.5.18",
+    "@solana/web3.js": "^1.98.2",
+    "bs58": "^6.0.0",
+    "dotenv": "^17.2.0"
+  }
+}
