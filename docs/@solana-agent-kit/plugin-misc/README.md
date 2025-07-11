@@ -80,6 +80,14 @@ This plugin provides a set of miscellaneous tools and actions for interacting wi
 - `fetch_tokens_by_metadata` - Filter token list by token metadata
 - `fetch_tokens_by_mints` - Filter token list by mint address list
 
+### OtterSec
+- `create_verification_pda` - Generate a PDA for program verification
+- `decode_verification_pda_data` - Decode the PDA data composed in hex
+- `get_program_build_log` - Get build logs for a solana program 
+- `get_program_verification_status` - Get program verification status
+- `get_verification_job_status` - Get status of an async verification job
+- `get_verified_programs` - Get list of all verified programs
+- `verify_program` - Verify a Solana program
 
 ## Example Usage
 
