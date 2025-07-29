@@ -24,7 +24,6 @@ export interface Config {
   ALLORA_API_KEY?: string;
   ALLORA_API_URL?: string;
   ALLORA_NETWORK?: string;
-  ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
   MESSARI_API_KEY?: string;

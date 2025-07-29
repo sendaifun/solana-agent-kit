@@ -1,345 +1,357 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
-  "name": "Solana Agent Kit",
-  "colors": {
-    "primary": "#9945FF",
-    "light": "#14F195",
-    "dark": "#9945FF"
-  },
-  "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude"]
-  },
-  "navigation": {
-    "versions": [
-      {
-        "version": "v2",
-        "groups": [
-          {
-            "group": "Introduction",
-            "pages": ["docs/v2/introduction"]
-          },
-          {
-            "group": "Quickstart",
-            "pages": [
-              "docs/v2/setup/quickstart",
-              "docs/v2/setup/embedded-wallets",
-              "docs/v2/setup/keypair",
-              "docs/v2/setup/react-native"
-            ]
-          },
-          {
-            "group": "Plugins",
-            "pages": [
-              {
-                "group": "Defi",
-                "pages": ["docs/v2/plugins/defi/defi-plugin-intro"]
-              },
-              {
-                "group": "Token",
-                "pages": ["docs/v2/plugins/token/token-plugin-intro"]
-              },
-              {
-                "group": "Blinks",
-                "pages": ["docs/v2/plugins/blinks/blinks-plugin-intro"]
-              },
-              {
-                "group": "NFT",
-                "pages": ["docs/v2/plugins/nft/nft-plugin-intro"]
-              },
-              {
-                "group": "Misc",
-                "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
-              }
-            ]
-          },
-          {
-            "group": "Adapters",
-            "pages": ["docs/v2/adapters/mcp/mcp-adapter-intro"]
-          },
-          {
-            "group": "Using LLMs",
-            "pages": ["docs/v2/using-llms/overview"]
-          },
-          {
-            "group": "Examples",
-            "root": "docs/v2/examples/examples-intro",
-            "pages": [
-              "docs/v2/examples/embedded-wallets/privy",
-              "docs/v2/examples/embedded-wallets/react-native",
-              "docs/v2/examples/embedded-wallets/turnkey",
-              "docs/v2/examples/embedded-wallets/privy-server-wallet",
-              "docs/v2/examples/embedded-wallets/phantom",
-              "docs/v2/examples/embedded-wallets/crossmint",
-              "docs/v2/examples/embedded-wallets/para",
-              "docs/v2/adapters/n8n/n8n-adapter-intro"
-            ]
-          },
-          {
-            "group": "Devrel Agents",
-            "pages": ["docs/v2/devrel-agents/jito"]
-          },
-          {
-            "group": "Integrations",
-            "pages": [
-              {
-                "group": "Token Operations",
-                "pages": [
-                  "docs/v2/integrations/token-operations/transfer_assets",
-                  "docs/v2/integrations/token-operations/stake_sol",
-                  "docs/v2/integrations/token-operations/deploy_spl_metaplex",
-                  "docs/v2/integrations/token-operations/balance_check",
-                  "docs/v2/integrations/token-operations/rugcheck_token_retrieval",
-                  "docs/v2/integrations/token-operations/tiplink_operations",
-                  "docs/v2/integrations/token-operations/coingecko"
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "maple",
+    "name": "Solana Agent Kit",
+    "colors": {
+        "primary": "#9945FF",
+        "light": "#14F195",
+        "dark": "#9945FF"
+    },
+    "contextual": {
+        "options": ["copy", "view", "chatgpt", "claude"]
+    },
+    "navigation": {
+        "versions": [
+            {
+                "version": "v2",
+                "groups": [
+                    {
+                        "group": "Introduction",
+                        "pages": ["docs/v2/introduction"]
+                    },
+                    {
+                        "group": "Quickstart",
+                        "pages": [
+                            "docs/v2/setup/quickstart",
+                            "docs/v2/setup/embedded-wallets",
+                            "docs/v2/setup/keypair",
+                            "docs/v2/setup/react-native"
+                        ]
+                    },
+                    {
+                        "group": "Plugins",
+                        "pages": [
+                            {
+                                "group": "Defi",
+                                "pages": [
+                                    "docs/v2/plugins/defi/defi-plugin-intro"
+                                ]
+                            },
+                            {
+                                "group": "Token",
+                                "pages": [
+                                    "docs/v2/plugins/token/token-plugin-intro"
+                                ]
+                            },
+                            {
+                                "group": "Blinks",
+                                "pages": [
+                                    "docs/v2/plugins/blinks/blinks-plugin-intro"
+                                ]
+                            },
+                            {
+                                "group": "NFT",
+                                "pages": [
+                                    "docs/v2/plugins/nft/nft-plugin-intro"
+                                ]
+                            },
+                            {
+                                "group": "Misc",
+                                "pages": [
+                                    "docs/v2/plugins/misc/misc-plugin-intro"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Adapters",
+                        "pages": ["docs/v2/adapters/mcp/mcp-adapter-intro"]
+                    },
+                    {
+                        "group": "Using LLMs",
+                        "pages": ["docs/v2/using-llms/overview"]
+                    },
+                    {
+                        "group": "Examples",
+                        "root": "docs/v2/examples/examples-intro",
+                        "pages": [
+                            "docs/v2/examples/embedded-wallets/privy",
+                            "docs/v2/examples/embedded-wallets/react-native",
+                            "docs/v2/examples/embedded-wallets/turnkey",
+                            "docs/v2/examples/embedded-wallets/privy-server-wallet",
+                            "docs/v2/examples/embedded-wallets/phantom",
+                            "docs/v2/examples/embedded-wallets/crossmint",
+                            "docs/v2/examples/embedded-wallets/para",
+                            "docs/v2/adapters/n8n/n8n-adapter-intro"
+                        ]
+                    },
+                    {
+                        "group": "Devrel Agents",
+                        "pages": ["docs/v2/devrel-agents/jito"]
+                    },
+                    {
+                        "group": "Integrations",
+                        "pages": [
+                            {
+                                "group": "Token Operations",
+                                "pages": [
+                                    "docs/v2/integrations/token-operations/transfer_assets",
+                                    "docs/v2/integrations/token-operations/stake_sol",
+                                    "docs/v2/integrations/token-operations/deploy_spl_metaplex",
+                                    "docs/v2/integrations/token-operations/balance_check",
+                                    "docs/v2/integrations/token-operations/rugcheck_token_retrieval",
+                                    "docs/v2/integrations/token-operations/tiplink_operations",
+                                    "docs/v2/integrations/token-operations/coingecko"
+                                ]
+                            },
+                            {
+                                "group": "NFT Management",
+                                "pages": [
+                                    "docs/v2/integrations/nft-management/deploy_collection",
+                                    "docs/v2/integrations/nft-management/mint_nft",
+                                    "docs/v2/integrations/nft-management/3land_create_manage",
+                                    "docs/v2/integrations/nft-management/tensor_nft",
+                                    "docs/v2/integrations/nft-management/magiceden"
+                                ]
+                            },
+                            {
+                                "group": "Defi Integrations",
+                                "pages": [
+                                    "docs/v2/integrations/defi-integration/jupiter_exchange_swaps",
+                                    "docs/v2/integrations/defi-integration/launch_pumpfun",
+                                    "docs/v2/integrations/defi-integration/raydium_pools",
+                                    "docs/v2/integrations/defi-integration/orca_whirlpool",
+                                    "docs/v2/integrations/defi-integration/manifest_market",
+                                    "docs/v2/integrations/defi-integration/openbook_market",
+                                    "docs/v2/integrations/defi-integration/sns",
+                                    "docs/v2/integrations/defi-integration/pyth",
+                                    "docs/v2/integrations/defi-integration/alldomains",
+                                    "docs/v2/integrations/defi-integration/adrena",
+                                    "docs/v2/integrations/defi-integration/flashtrade",
+                                    "docs/v2/integrations/defi-integration/drift",
+                                    "docs/v2/integrations/defi-integration/voltr",
+                                    "docs/v2/integrations/defi-integration/dexscreener",
+                                    "docs/v2/integrations/defi-integration/solutiofi",
+                                    "docs/v2/integrations/defi-integration/meteora",
+                                    "docs/v2/integrations/defi-integration/mayan",
+                                    "docs/v2/integrations/defi-integration/fluxbeam",
+                                    "docs/v2/integrations/defi-integration/debridge",
+                                    "docs/v2/integrations/defi-integration/allora",
+                                    "docs/v2/integrations/defi-integration/switchboard",
+                                    "docs/v2/integrations/defi-integration/okx",
+                                    "docs/v2/integrations/defi-integration/wormhole",
+                                    "docs/v2/integrations/defi-integration/sanctum",
+                                    "docs/v2/integrations/defi-integration/ranger"
+                                ]
+                            },
+                            {
+                                "group": "Squads Protocol Multisig",
+                                "pages": [
+                                    "docs/v2/integrations/squads/squads_operations"
+                                ]
+                            },
+                            {
+                                "group": "Solana Blinks",
+                                "pages": [
+                                    "docs/v2/integrations/solana-blinks/lulo",
+                                    "docs/v2/integrations/solana-blinks/send_arcade_rps",
+                                    "docs/v2/integrations/solana-blinks/jupsol_staking",
+                                    "docs/v2/integrations/solana-blinks/solayer_restaking"
+                                ]
+                            },
+                            {
+                                "group": "Non-Financial Actions",
+                                "pages": [
+                                    "docs/v2/integrations/non-financial/gibwork_bounties"
+                                ]
+                            },
+                            {
+                                "group": "Miscellaneous",
+                                "pages": ["docs/v2/integrations/misc/crossmint"]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "References",
+                        "pages": []
+                    }
                 ]
-              },
-              {
-                "group": "NFT Management",
-                "pages": [
-                  "docs/v2/integrations/nft-management/deploy_collection",
-                  "docs/v2/integrations/nft-management/mint_nft",
-                  "docs/v2/integrations/nft-management/3land_create_manage",
-                  "docs/v2/integrations/nft-management/tensor_nft",
-                  "docs/v2/integrations/nft-management/magiceden"
+            },
+            {
+                "version": "v1",
+                "groups": [
+                    {
+                        "group": "Getting Started",
+                        "pages": ["docs/v1/introduction", "docs/v1/quickstart"]
+                    },
+                    {
+                        "group": "Examples",
+                        "pages": [
+                            "docs/v1/examples/nextjs",
+                            "docs/v1/examples/telegram",
+                            "docs/v1/examples/persistent_agent",
+                            "docs/v1/examples/langgraph",
+                            "docs/v1/examples/market_maker",
+                            "docs/v1/examples/discord_agent",
+                            "docs/v1/examples/claude_mcp",
+                            "docs/v1/examples/orbofi",
+                            "docs/v1/examples/wormhole_agent",
+                            "docs/v1/examples/para_plugin",
+                            "docs/v1/examples/okx_dex"
+                        ]
+                    },
+                    {
+                        "group": "Guides",
+                        "pages": [
+                            "docs/v1/guides/add_your_own_tool",
+                            "docs/v1/guides/setup_locally",
+                            "docs/v1/guides/test_it_out"
+                        ],
+                        "icon": "book-open"
+                    },
+                    {
+                        "group": "v2-beta",
+                        "pages": ["docs/v1/v2-beta/getting_started"]
+                    },
+                    {
+                        "group": "Features",
+                        "pages": [
+                            {
+                                "group": "Token Operations",
+                                "pages": [
+                                    "docs/v1/features/token-operations/transfer_assets",
+                                    "docs/v1/features/token-operations/stake_sol",
+                                    "docs/v1/features/token-operations/deploy_spl_metaplex",
+                                    "docs/v1/features/token-operations/balance_check",
+                                    "docs/v1/features/token-operations/rugcheck_token_retrieval",
+                                    "docs/v1/features/token-operations/tiplink_operations",
+                                    "docs/v1/features/token-operations/coingecko"
+                                ]
+                            },
+                            {
+                                "group": "NFT Management",
+                                "pages": [
+                                    "docs/v1/features/nft-management/deploy_collection",
+                                    "docs/v1/features/nft-management/mint_nft",
+                                    "docs/v1/features/nft-management/3land_create_manage",
+                                    "docs/v1/features/nft-management/tensor_nft"
+                                ]
+                            },
+                            {
+                                "group": "Defi Integrations",
+                                "pages": [
+                                    "docs/v1/features/defi-integration/jupiter_exchange_swaps",
+                                    "docs/v1/features/defi-integration/launch_pumpfun",
+                                    "docs/v1/features/defi-integration/raydium_pools",
+                                    "docs/v1/features/defi-integration/orca_whirlpool",
+                                    "docs/v1/features/defi-integration/manifest_market",
+                                    "docs/v1/features/defi-integration/openbook_market",
+                                    "docs/v1/features/defi-integration/sns",
+                                    "docs/v1/features/defi-integration/pyth",
+                                    "docs/v1/features/defi-integration/alldomains",
+                                    "docs/v1/features/defi-integration/adrena",
+                                    "docs/v1/features/defi-integration/flashtrade",
+                                    "docs/v1/features/defi-integration/drift",
+                                    "docs/v1/features/defi-integration/voltr",
+                                    "docs/v1/features/defi-integration/dexscreener",
+                                    "docs/v1/features/defi-integration/solutiofi",
+                                    "docs/v1/features/defi-integration/meteora",
+                                    "docs/v1/features/defi-integration/mayan",
+                                    "docs/v1/features/defi-integration/fluxbeam",
+                                    "docs/v1/features/defi-integration/debridge",
+                                    "docs/v1/features/defi-integration/allora",
+                                    "docs/v1/features/defi-integration/switchboard",
+                                    "docs/v1/features/defi-integration/okx",
+                                    "docs/v1/features/defi-integration/wormhole"
+                                ]
+                            },
+                            {
+                                "group": "Squads Protocol Multisig",
+                                "pages": [
+                                    "docs/v1/features/squads/squads_operations"
+                                ]
+                            },
+                            {
+                                "group": "Solana Blinks",
+                                "pages": [
+                                    "docs/v1/features/solana-blinks/lulo",
+                                    "docs/v1/features/solana-blinks/send_arcade_rps",
+                                    "docs/v1/features/solana-blinks/jupsol_staking",
+                                    "docs/v1/features/solana-blinks/solayer_restaking"
+                                ]
+                            },
+                            {
+                                "group": "Non-Financial Actions",
+                                "pages": [
+                                    "docs/v1/features/non-financial/gibwork_bounties"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Utilities",
+                        "pages": []
+                    },
+                    {
+                        "group": "Classes",
+                        "pages": ["docs/v1/classes/SolanaAgentKit"],
+                        "icon": "cube"
+                    },
+                    {
+                        "group": "Functions",
+                        "pages": [
+                            "docs/v1/functions/createSolanaTools",
+                            "docs/v1/functions/createVercelAITools",
+                            "docs/v1/functions/executeAction",
+                            "docs/v1/functions/findAction",
+                            "docs/v1/functions/getActionExamples"
+                        ],
+                        "icon": "function"
+                    },
+                    {
+                        "group": "Interfaces",
+                        "pages": [
+                            "docs/v1/interfaces/Action",
+                            "docs/v1/interfaces/ActionExample",
+                            "docs/v1/interfaces/BatchOrderPattern",
+                            "docs/v1/interfaces/CollectionDeployment",
+                            "docs/v1/interfaces/CollectionOptions",
+                            "docs/v1/interfaces/Config",
+                            "docs/v1/interfaces/Creator",
+                            "docs/v1/interfaces/FetchPriceResponse",
+                            "docs/v1/interfaces/FlashCloseTradeParams",
+                            "docs/v1/interfaces/FlashTradeParams",
+                            "docs/v1/interfaces/GibworkCreateTaskReponse",
+                            "docs/v1/interfaces/JupiterTokenData",
+                            "docs/v1/interfaces/LuloAccountDetailsResponse",
+                            "docs/v1/interfaces/MintCollectionNFTResponse",
+                            "docs/v1/interfaces/OrderParams",
+                            "docs/v1/interfaces/PumpFunTokenOptions",
+                            "docs/v1/interfaces/PumpfunLaunchResponse",
+                            "docs/v1/interfaces/PythFetchPriceResponse",
+                            "docs/v1/interfaces/PythPriceFeedIDItem",
+                            "docs/v1/interfaces/PythPriceItem",
+                            "docs/v1/interfaces/TokenCheck"
+                        ],
+                        "icon": "brackets-curly"
+                    }
                 ]
-              },
-              {
-                "group": "Defi Integrations",
-                "pages": [
-                  "docs/v2/integrations/defi-integration/jupiter_exchange_swaps",
-                  "docs/v2/integrations/defi-integration/launch_pumpfun",
-                  "docs/v2/integrations/defi-integration/raydium_pools",
-                  "docs/v2/integrations/defi-integration/orca_whirlpool",
-                  "docs/v2/integrations/defi-integration/manifest_market",
-                  "docs/v2/integrations/defi-integration/openbook_market",
-                  "docs/v2/integrations/defi-integration/sns",
-                  "docs/v2/integrations/defi-integration/pyth",
-                  "docs/v2/integrations/defi-integration/alldomains",
-                  "docs/v2/integrations/defi-integration/adrena",
-                  "docs/v2/integrations/defi-integration/flashtrade",
-                  "docs/v2/integrations/defi-integration/drift",
-                  "docs/v2/integrations/defi-integration/voltr",
-                  "docs/v2/integrations/defi-integration/dexscreener",
-                  "docs/v2/integrations/defi-integration/solutiofi",
-                  "docs/v2/integrations/defi-integration/meteora",
-                  "docs/v2/integrations/defi-integration/mayan",
-                  "docs/v2/integrations/defi-integration/fluxbeam",
-                  "docs/v2/integrations/defi-integration/debridge",
-                  "docs/v2/integrations/defi-integration/allora",
-                  "docs/v2/integrations/defi-integration/switchboard",
-                  "docs/v2/integrations/defi-integration/okx",
-                  "docs/v2/integrations/defi-integration/wormhole",
-                  "docs/v2/integrations/defi-integration/sanctum",
-                  "docs/v2/integrations/defi-integration/ranger"
-                ]
-              },
-              {
-                "group": "Squads Protocol Multisig",
-                "pages": ["docs/v2/integrations/squads/squads_operations"]
-              },
-              {
-                "group": "Solana Blinks",
-                "pages": [
-                  "docs/v2/integrations/solana-blinks/lulo",
-                  "docs/v2/integrations/solana-blinks/send_arcade_rps",
-                  "docs/v2/integrations/solana-blinks/jupsol_staking",
-                  "docs/v2/integrations/solana-blinks/solayer_restaking"
-                ]
-              },
-              {
-                "group": "Non-Financial Actions",
-                "pages": [
-                  "docs/v2/integrations/non-financial/gibwork_bounties",
-                  "docs/v2/integrations/non-financial/elfa_ai"
-                ]
-              },
-              {
-                "group": "Miscellaneous",
-                "pages": ["docs/v2/integrations/misc/crossmint"]
-              }
-            ]
-          },
-          {
-            "group": "References",
-            "pages": []
-          }
+            }
         ]
-      },
-      {
-        "version": "v1",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": ["docs/v1/introduction", "docs/v1/quickstart"]
-          },
-          {
-            "group": "Examples",
-            "pages": [
-              "docs/v1/examples/nextjs",
-              "docs/v1/examples/telegram",
-              "docs/v1/examples/persistent_agent",
-              "docs/v1/examples/langgraph",
-              "docs/v1/examples/market_maker",
-              "docs/v1/examples/discord_agent",
-              "docs/v1/examples/claude_mcp",
-              "docs/v1/examples/orbofi",
-              "docs/v1/examples/wormhole_agent",
-              "docs/v1/examples/para_plugin",
-              "docs/v1/examples/okx_dex"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "docs/v1/guides/add_your_own_tool",
-              "docs/v1/guides/setup_locally",
-              "docs/v1/guides/test_it_out"
-            ],
-            "icon": "book-open"
-          },
-          {
-            "group": "v2-beta",
-            "pages": ["docs/v1/v2-beta/getting_started"]
-          },
-          {
-            "group": "Features",
-            "pages": [
-              {
-                "group": "Token Operations",
-                "pages": [
-                  "docs/v1/features/token-operations/transfer_assets",
-                  "docs/v1/features/token-operations/stake_sol",
-                  "docs/v1/features/token-operations/deploy_spl_metaplex",
-                  "docs/v1/features/token-operations/balance_check",
-                  "docs/v1/features/token-operations/rugcheck_token_retrieval",
-                  "docs/v1/features/token-operations/tiplink_operations",
-                  "docs/v1/features/token-operations/coingecko"
-                ]
-              },
-              {
-                "group": "NFT Management",
-                "pages": [
-                  "docs/v1/features/nft-management/deploy_collection",
-                  "docs/v1/features/nft-management/mint_nft",
-                  "docs/v1/features/nft-management/3land_create_manage",
-                  "docs/v1/features/nft-management/tensor_nft"
-                ]
-              },
-              {
-                "group": "Defi Integrations",
-                "pages": [
-                  "docs/v1/features/defi-integration/jupiter_exchange_swaps",
-                  "docs/v1/features/defi-integration/launch_pumpfun",
-                  "docs/v1/features/defi-integration/raydium_pools",
-                  "docs/v1/features/defi-integration/orca_whirlpool",
-                  "docs/v1/features/defi-integration/manifest_market",
-                  "docs/v1/features/defi-integration/openbook_market",
-                  "docs/v1/features/defi-integration/sns",
-                  "docs/v1/features/defi-integration/pyth",
-                  "docs/v1/features/defi-integration/alldomains",
-                  "docs/v1/features/defi-integration/adrena",
-                  "docs/v1/features/defi-integration/flashtrade",
-                  "docs/v1/features/defi-integration/drift",
-                  "docs/v1/features/defi-integration/voltr",
-                  "docs/v1/features/defi-integration/dexscreener",
-                  "docs/v1/features/defi-integration/solutiofi",
-                  "docs/v1/features/defi-integration/meteora",
-                  "docs/v1/features/defi-integration/mayan",
-                  "docs/v1/features/defi-integration/fluxbeam",
-                  "docs/v1/features/defi-integration/debridge",
-                  "docs/v1/features/defi-integration/allora",
-                  "docs/v1/features/defi-integration/switchboard",
-                  "docs/v1/features/defi-integration/okx",
-                  "docs/v1/features/defi-integration/wormhole"
-                ]
-              },
-              {
-                "group": "Squads Protocol Multisig",
-                "pages": ["docs/v1/features/squads/squads_operations"]
-              },
-              {
-                "group": "Solana Blinks",
-                "pages": [
-                  "docs/v1/features/solana-blinks/lulo",
-                  "docs/v1/features/solana-blinks/send_arcade_rps",
-                  "docs/v1/features/solana-blinks/jupsol_staking",
-                  "docs/v1/features/solana-blinks/solayer_restaking"
-                ]
-              },
-              {
-                "group": "Non-Financial Actions",
-                "pages": [
-                  "docs/v1/features/non-financial/gibwork_bounties",
-                  "docs/v1/features/non-financial/elfa_ai"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Utilities",
-            "pages": []
-          },
-          {
-            "group": "Classes",
-            "pages": ["docs/v1/classes/SolanaAgentKit"],
-            "icon": "cube"
-          },
-          {
-            "group": "Functions",
-            "pages": [
-              "docs/v1/functions/createSolanaTools",
-              "docs/v1/functions/createVercelAITools",
-              "docs/v1/functions/executeAction",
-              "docs/v1/functions/findAction",
-              "docs/v1/functions/getActionExamples"
-            ],
-            "icon": "function"
-          },
-          {
-            "group": "Interfaces",
-            "pages": [
-              "docs/v1/interfaces/Action",
-              "docs/v1/interfaces/ActionExample",
-              "docs/v1/interfaces/BatchOrderPattern",
-              "docs/v1/interfaces/CollectionDeployment",
-              "docs/v1/interfaces/CollectionOptions",
-              "docs/v1/interfaces/Config",
-              "docs/v1/interfaces/Creator",
-              "docs/v1/interfaces/FetchPriceResponse",
-              "docs/v1/interfaces/FlashCloseTradeParams",
-              "docs/v1/interfaces/FlashTradeParams",
-              "docs/v1/interfaces/GibworkCreateTaskReponse",
-              "docs/v1/interfaces/JupiterTokenData",
-              "docs/v1/interfaces/LuloAccountDetailsResponse",
-              "docs/v1/interfaces/MintCollectionNFTResponse",
-              "docs/v1/interfaces/OrderParams",
-              "docs/v1/interfaces/PumpFunTokenOptions",
-              "docs/v1/interfaces/PumpfunLaunchResponse",
-              "docs/v1/interfaces/PythFetchPriceResponse",
-              "docs/v1/interfaces/PythPriceFeedIDItem",
-              "docs/v1/interfaces/PythPriceItem",
-              "docs/v1/interfaces/TokenCheck"
-            ],
-            "icon": "brackets-curly"
-          }
-        ]
-      }
-    ]
-  },
-  "styling": {
-    "codeblocks": "system"
-  },
-  "logo": {
-    "light": "/public/logo/light.svg",
-    "dark": "/public/logo/dark.svg"
-  },
-  "background": {
-    "decoration": "windows"
-  },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/sendaifun/solana-agent-kit"
+    },
+    "styling": {
+        "codeblocks": "system"
+    },
+    "logo": {
+        "light": "/public/logo/light.svg",
+        "dark": "/public/logo/dark.svg"
+    },
+    "background": {
+        "decoration": "windows"
+    },
+    "footer": {
+        "socials": {
+            "github": "https://github.com/sendaifun/solana-agent-kit"
+        }
     }
-  }
 }
