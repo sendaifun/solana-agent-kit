@@ -404,20 +404,6 @@ Assets owned by the specified address
 
 `Promise`\<`any`\>
 
-#### methods.getElfaAiApiKeyStatus()
-
-> **methods.getElfaAiApiKeyStatus**: (`agent`) => `Promise`\<`any`\>
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-##### Returns
-
-`Promise`\<`any`\>
-
 #### methods.getHeliusWebhook()
 
 > **methods.getHeliusWebhook**: (`agent`, `webhookID`) => `Promise`\<`HeliusWebhookIdResponse`\>
@@ -595,110 +581,6 @@ A promise that resolves to the primary .sol domain as a string
 ##### Throws
 
 Error if the domain is stale or if the domain resolution fails
-
-#### methods.getSmartMentionsUsingElfaAi()
-
-> **methods.getSmartMentionsUsingElfaAi**: (`agent`, `limit`, `offset`) => `Promise`\<`any`\> = `getSmartMentions`
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-###### limit
-
-`number` = `100`
-
-###### offset
-
-`number` = `0`
-
-##### Returns
-
-`Promise`\<`any`\>
-
-#### methods.getSmartTwitterAccountStatsUsingElfaAi()
-
-> **methods.getSmartTwitterAccountStatsUsingElfaAi**: (`agent`, `username`) => `Promise`\<`any`\> = `getSmartTwitterAccountStats`
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-###### username
-
-`string`
-
-##### Returns
-
-`Promise`\<`any`\>
-
-#### methods.getTopMentionsByTickerUsingElfaAi()
-
-> **methods.getTopMentionsByTickerUsingElfaAi**: (`agent`, `ticker`, `timeWindow`, `page`, `pageSize`, `includeAccountDetails`) => `Promise`\<`any`\> = `getTopMentionsByTicker`
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-###### ticker
-
-`string`
-
-###### timeWindow
-
-`string` = `"1h"`
-
-###### page
-
-`number` = `1`
-
-###### pageSize
-
-`number` = `10`
-
-###### includeAccountDetails
-
-`boolean` = `false`
-
-##### Returns
-
-`Promise`\<`any`\>
-
-#### methods.getTrendingTokensUsingElfaAi()
-
-> **methods.getTrendingTokensUsingElfaAi**: (`agent`, `timeWindow`, `page`, `pageSize`, `minMentions`) => `Promise`\<`any`\>
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-###### timeWindow
-
-`string` = `"24h"`
-
-###### page
-
-`number` = `1`
-
-###### pageSize
-
-`number` = `50`
-
-###### minMentions
-
-`number` = `5`
-
-##### Returns
-
-`Promise`\<`any`\>
 
 #### methods.multisig\_approve\_proposal()
 
@@ -974,20 +856,6 @@ The transaction ID to parse
 
 Parsed transaction data
 
-#### methods.pingElfaAiApi()
-
-> **methods.pingElfaAiApi**: (`agent`) => `Promise`\<`any`\>
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-##### Returns
-
-`Promise`\<`any`\>
-
 #### methods.registerDomain()
 
 > **methods.registerDomain**: (`agent`, `name`, `spaceKB`) => `Promise`\<`string` \| `VersionedTransaction` \| `Transaction` \| `Transaction`[] \| `VersionedTransaction`[]\>
@@ -1079,40 +947,6 @@ A promise that resolves to the corresponding Solana PublicKey
 ##### Throws
 
 Error if the domain resolution fails
-
-#### methods.searchMentionsByKeywordsUsingElfaAi()
-
-> **methods.searchMentionsByKeywordsUsingElfaAi**: (`agent`, `keywords`, `from`, `to`, `limit`, `cursor?`) => `Promise`\<`any`\> = `searchMentionsByKeywords`
-
-##### Parameters
-
-###### agent
-
-`SolanaAgentKit`
-
-###### keywords
-
-`string`
-
-###### from
-
-`number`
-
-###### to
-
-`number`
-
-###### limit
-
-`number` = `20`
-
-###### cursor?
-
-`string`
-
-##### Returns
-
-`Promise`\<`any`\>
 
 #### methods.sendTransactionWithPriorityFee()
 

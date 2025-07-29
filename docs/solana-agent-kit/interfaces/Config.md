@@ -50,14 +50,6 @@ Defined in: [packages/core/src/types/index.ts:28](https://github.com/scriptscryp
 
 ***
 
-### ELFA\_AI\_API\_KEY?
-
-> `optional` **ELFA\_AI\_API\_KEY**: `string`
-
-Defined in: [packages/core/src/types/index.ts:27](https://github.com/scriptscrypt/solana-agent-kit/blob/8d48a57968ef71c6851a44a8efa685e80e815610/packages/core/src/types/index.ts#L27)
-
-***
-
 ### ETHEREUM\_PRIVATE\_KEY?
 
 > `optional` **ETHEREUM\_PRIVATE\_KEY**: `string`

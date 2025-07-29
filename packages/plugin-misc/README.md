@@ -55,15 +55,6 @@ This plugin provides a set of miscellaneous tools and actions for interacting wi
 - `getCoingeckoTokenPriceData` - Get token price data.
 - `getCoingeckoTrendingTokens` - Get trending tokens.
 
-### ElfaAi
-- `getElfaAiApiKeyStatus` - Check the status of an ElfaAi API key.
-- `getSmartMentions` - Get smart mentions using ElfaAi.
-- `getSmartTwitterAccountStats` - Get Twitter account stats using ElfaAi.
-- `getTopMentionsByTicker` - Get top mentions by ticker using ElfaAi.
-- `getTrendingTokensUsingElfaAi` - Get trending tokens using ElfaAi.
-- `pingElfaAiApi` - Ping the ElfaAi API.
-- `searchMentionsByKeywords` - Search mentions by keywords using ElfaAi.
-
 ## Switchboard
 - `simulate_switchboard_feed` - Simulate a switchboard feed.
 

@@ -150,8 +150,7 @@
               {
                 "group": "Non-Financial Actions",
                 "pages": [
-                  "docs/v2/integrations/non-financial/gibwork_bounties",
-                  "docs/v2/integrations/non-financial/elfa_ai"
+                  "docs/v2/integrations/non-financial/gibwork_bounties"
                 ]
               },
               {
@@ -270,8 +269,7 @@
               {
                 "group": "Non-Financial Actions",
                 "pages": [
-                  "docs/v1/features/non-financial/gibwork_bounties",
-                  "docs/v1/features/non-financial/elfa_ai"
+                  "docs/v1/features/non-financial/gibwork_bounties"
                 ]
               }
             ]

@@ -49,17 +49,6 @@ import getCoingeckoTopGainersAction from "./coingecko/actions/getCoingeckoTopGai
 import getCoingeckoTrendingPoolsAction from "./coingecko/actions/getCoingeckoTrendingPools";
 import getCoingeckoTrendingTokensAction from "./coingecko/actions/getCoingeckoTrendingTokens";
 
-// elfa ai
-import {
-  elfaApiKeyStatusAction,
-  elfaGetSmartMentionsAction,
-  elfaGetTopMentionsByTickerAction,
-  elfaPingAction,
-  elfaSearchMentionsByKeywordsAction,
-  elfaSmartTwitterAccountStats,
-  elfaTrendingTokensAction,
-} from "./elfaai/actions";
-
 // solanafm
 import parseAccountAction from "./solanafm/actions/parseAccount";
 import parseInstructionAction from "./solanafm/actions/parseInstruction";
@@ -87,15 +76,6 @@ import {
   getTrendingPools,
   getTrendingTokens,
 } from "./coingecko/tools";
-import {
-  getElfaAiApiKeyStatus,
-  getSmartMentions,
-  getSmartTwitterAccountStats,
-  getTopMentionsByTicker,
-  getTrendingTokensUsingElfaAi,
-  pingElfaAiApi,
-  searchMentionsByKeywords,
-} from "./elfaai/tools/elfa_ai_api";
 import { createGibworkTask } from "./gibwork/tools";
 import {
   create_HeliusWebhook,
@@ -217,13 +197,6 @@ const MiscPlugin = {
     getCoingeckoTrendingPools: getTrendingPools,
     getCoingeckoTokenPriceData: getTokenPriceData,
     getCoingeckoTrendingTokens: getTrendingTokens,
-    getElfaAiApiKeyStatus,
-    getSmartMentionsUsingElfaAi: getSmartMentions,
-    getSmartTwitterAccountStatsUsingElfaAi: getSmartTwitterAccountStats,
-    getTopMentionsByTickerUsingElfaAi: getTopMentionsByTicker,
-    getTrendingTokensUsingElfaAi,
-    pingElfaAiApi,
-    searchMentionsByKeywordsUsingElfaAi: searchMentionsByKeywords,
     parseAccountUsingSolanaFM,
     parseInstructionUsingSolanaFM,
     askMessariAi,
@@ -284,13 +257,6 @@ const MiscPlugin = {
     getCoingeckoTrendingPoolsAction,
     getCoingeckoTrendingTokensAction,
     getCoingeckoTokenPriceDataAction,
-    elfaApiKeyStatusAction,
-    elfaGetSmartMentionsAction,
-    elfaGetTopMentionsByTickerAction,
-    elfaPingAction,
-    elfaSearchMentionsByKeywordsAction,
-    elfaSmartTwitterAccountStats,
-    elfaTrendingTokensAction,
     parseAccountAction,
     parseInstructionAction,
     getMessariAiAction,
