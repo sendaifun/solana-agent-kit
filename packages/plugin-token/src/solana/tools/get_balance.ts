@@ -18,7 +18,9 @@ export async function get_balance(
     );
   }
 
+  const ata = await getAssociatedTokenAddress(token_address, agent.wallet.publicKey);
+
   const token_account =
-    await agent.connection.getTokenAccountBalance(token_address);
+    await agent.connection.getTokenAccountBalance(ata);
   return token_account.value.uiAmount || 0;
 }
