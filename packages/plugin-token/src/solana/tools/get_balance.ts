@@ -1,3 +1,4 @@
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { SolanaAgentKit } from "solana-agent-kit";
 
@@ -18,7 +19,9 @@ export async function get_balance(
     );
   }
 
+  const ata = await getAssociatedTokenAddress(token_address, agent.wallet.publicKey);
+
   const token_account =
-    await agent.connection.getTokenAccountBalance(token_address);
+    await agent.connection.getTokenAccountBalance(ata);
   return token_account.value.uiAmount || 0;
 }
