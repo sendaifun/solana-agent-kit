@@ -219,6 +219,24 @@ import {
   executeSwap,
 } from "./okx/tools";
 
+// Import Torch tools & actions
+import {
+  torchListTokens,
+  torchGetToken,
+  torchBuyToken,
+  torchSellToken,
+  torchVoteToken,
+  torchStarToken,
+} from "./torch/tools";
+import {
+  torchListTokensAction,
+  torchGetTokenAction,
+  torchBuyTokenAction,
+  torchSellTokenAction,
+  torchVoteTokenAction,
+  torchStarTokenAction,
+} from "./torch/actions";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -338,6 +356,14 @@ const DefiPlugin = {
     getLiquidity,
     getChainData,
     executeSwap,
+
+    // Torch methods
+    torchListTokens,
+    torchGetToken,
+    torchBuyToken,
+    torchSellToken,
+    torchVoteToken,
+    torchStarToken,
   },
 
   // Combine all actions
@@ -443,6 +469,14 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Torch actions
+    torchListTokensAction,
+    torchGetTokenAction,
+    torchBuyTokenAction,
+    torchSellTokenAction,
+    torchVoteTokenAction,
+    torchStarTokenAction,
   ],
 
   // Initialize function
