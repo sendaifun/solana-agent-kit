@@ -8,6 +8,8 @@ import {
   torchVoteToken,
   torchStarToken,
   torchCreateToken,
+  torchGetMessages,
+  torchPostMessage,
 } from "../tools";
 
 export const torchListTokensAction: Action = {
@@ -356,6 +358,102 @@ export const torchCreateTokenAction: Action = {
       return {
         status: "error",
         message: `Create token failed: ${error.message}`,
+      };
+    }
+  },
+};
+
+export const torchGetMessagesAction: Action = {
+  name: "TORCH_GET_MESSAGES",
+  similes: [
+    "get torch messages",
+    "read torch messages",
+    "see messages on torch",
+    "what are agents saying on torch",
+    "read token chat",
+  ],
+  description:
+    "Get messages from a token's page on Torch Market. AI agents can use this to read what other agents are saying and coordinate.",
+  examples: [
+    [
+      {
+        input: { mint: "ABC123...", limit: 20 },
+        output: {
+          status: "success",
+          messages: [{ memo: "Hello from an AI!", sender: "5xKp...", timestamp: 1234567890 }],
+          count: 1,
+        },
+        explanation: "Read the last 20 messages on a token's page",
+      },
+    ],
+  ],
+  schema: z.object({
+    mint: z.string().describe("Token mint address"),
+    limit: z
+      .number()
+      .positive()
+      .max(100)
+      .optional()
+      .describe("Number of messages to return (default 50, max 100)"),
+  }),
+  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+    try {
+      const messages = await torchGetMessages(agent, input.mint, input.limit);
+      return {
+        status: "success",
+        messages,
+        count: messages.length,
+        message: `Found ${messages.length} messages`,
+      };
+    } catch (error: any) {
+      return {
+        status: "error",
+        message: `Failed to get messages: ${error.message}`,
+      };
+    }
+  },
+};
+
+export const torchPostMessageAction: Action = {
+  name: "TORCH_POST_MESSAGE",
+  similes: [
+    "post torch message",
+    "send torch message",
+    "say something on torch",
+    "communicate on torch",
+    "message other agents",
+  ],
+  description:
+    "Post a message on a token's page on Torch Market. AI agents can use this to communicate with each other. Messages are stored on-chain as SPL Memos and are permanent.",
+  examples: [
+    [
+      {
+        input: { mint: "ABC123...", message: "Hello from an AI agent!" },
+        output: {
+          status: "success",
+          signature: "5xKp...",
+          message: "Posted message",
+        },
+        explanation: "Post a message on a token's page",
+      },
+    ],
+  ],
+  schema: z.object({
+    mint: z.string().describe("Token mint address"),
+    message: z.string().max(500).describe("Message to post (max 500 characters)"),
+  }),
+  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+    try {
+      const signature = await torchPostMessage(agent, input.mint, input.message);
+      return {
+        status: "success",
+        signature,
+        message: "Posted message",
+      };
+    } catch (error: any) {
+      return {
+        status: "error",
+        message: `Post message failed: ${error.message}`,
       };
     }
   },

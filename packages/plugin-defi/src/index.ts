@@ -228,6 +228,8 @@ import {
   torchVoteToken,
   torchStarToken,
   torchCreateToken,
+  torchGetMessages,
+  torchPostMessage,
 } from "./torch/tools";
 import {
   torchListTokensAction,
@@ -237,6 +239,8 @@ import {
   torchVoteTokenAction,
   torchStarTokenAction,
   torchCreateTokenAction,
+  torchGetMessagesAction,
+  torchPostMessageAction,
 } from "./torch/actions";
 
 // Define and export the plugin
@@ -367,6 +371,8 @@ const DefiPlugin = {
     torchVoteToken,
     torchStarToken,
     torchCreateToken,
+    torchGetMessages,
+    torchPostMessage,
   },
 
   // Combine all actions
@@ -481,6 +487,8 @@ const DefiPlugin = {
     torchVoteTokenAction,
     torchStarTokenAction,
     torchCreateTokenAction,
+    torchGetMessagesAction,
+    torchPostMessageAction,
   ],
 
   // Initialize function

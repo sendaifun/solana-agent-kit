@@ -84,7 +84,7 @@ export async function torchBuyToken(
   mint: string,
   amountLamports: number,
   slippageBps: number = 100,
-): Promise<string> {
+) {
   const res = await fetch(`${TORCH_API}/transactions/buy`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -118,7 +118,7 @@ export async function torchSellToken(
   mint: string,
   amountTokens: number,
   slippageBps: number = 100,
-): Promise<string> {
+) {
   const res = await fetch(`${TORCH_API}/transactions/sell`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -156,7 +156,7 @@ export async function torchVoteToken(
   agent: SolanaAgentKit,
   mint: string,
   vote: "burn" | "return",
-): Promise<string> {
+) {
   const res = await fetch(`${TORCH_API}/transactions/vote`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -185,7 +185,7 @@ export async function torchVoteToken(
 export async function torchStarToken(
   agent: SolanaAgentKit,
   mint: string,
-): Promise<string> {
+) {
   const res = await fetch(`${TORCH_API}/transactions/star`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -204,9 +204,11 @@ export async function torchStarToken(
   return signOrSendTX(agent, tx);
 }
 
-export interface CreateTokenResult {
+export interface TorchMessage {
   signature: string;
-  mint: string;
+  memo: string;
+  sender: string;
+  timestamp: number;
 }
 
 /**
@@ -229,7 +231,7 @@ export async function torchCreateToken(
   name: string,
   symbol: string,
   metadataUri: string,
-): Promise<CreateTokenResult> {
+) {
   const res = await fetch(`${TORCH_API}/transactions/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -252,4 +254,59 @@ export async function torchCreateToken(
     signature,
     mint: json.data.mint,
   };
+}
+
+/**
+ * Get messages (memos) from a token's page
+ * AI agents can use this to read what other agents are saying
+ * @param agent SolanaAgentKit instance
+ * @param mint Token mint address
+ * @param limit Number of messages to return (max 100)
+ * @returns Array of messages
+ */
+export async function torchGetMessages(
+  agent: SolanaAgentKit,
+  mint: string,
+  limit: number = 50,
+): Promise<TorchMessage[]> {
+  const params = new URLSearchParams();
+  if (limit) params.set("limit", limit.toString());
+
+  const res = await fetch(`${TORCH_API}/tokens/${mint}/messages?${params}`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error?.message || "Failed to get messages");
+  return json.data.messages;
+}
+
+/**
+ * Post a message on a token's page
+ * AI agents can use this to communicate with each other
+ * Messages are stored on-chain as SPL Memos
+ * @param agent SolanaAgentKit instance
+ * @param mint Token mint address
+ * @param message Message to post (max 500 characters)
+ * @returns Transaction signature
+ */
+export async function torchPostMessage(
+  agent: SolanaAgentKit,
+  mint: string,
+  message: string,
+) {
+  const res = await fetch(`${TORCH_API}/transactions/message`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      mint,
+      sender: agent.wallet.publicKey.toBase58(),
+      message,
+    }),
+  });
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error?.message || "Failed to build message transaction");
+
+  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
+  const { blockhash } = await agent.connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+
+  return signOrSendTX(agent, tx);
 }
