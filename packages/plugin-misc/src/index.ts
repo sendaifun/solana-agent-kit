@@ -168,6 +168,7 @@ import {
   get_verification_job_status,
   get_verified_programs,
   verify_program,
+  automated_verify_program,
 } from "./ottersec/tools";
 
 import createVerificationPdaAction from "./ottersec/actions/createVerificationPda";
@@ -177,6 +178,7 @@ import getProgramVerificationStatusAction from "./ottersec/actions/getProgramVer
 import getVerificationJobStatusAction from "./ottersec/actions/getVerificationJobStatus";
 import getVerifiedProgramsAction from "./ottersec/actions/getVerifiedPrograms";
 import verifyProgramAction from "./ottersec/actions/verifyProgram";
+import automatedVerifyProgramAction from "./ottersec/actions/automatedVerifyProgram";
 
 // Define and export the plugin
 const MiscPlugin = {
@@ -248,6 +250,7 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    automated_verify_program,
   },
 
   // Combine all actions
@@ -315,6 +318,7 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    automatedVerifyProgramAction,
   ],
 
   // Initialize function
