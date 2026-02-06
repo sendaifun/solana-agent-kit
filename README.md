@@ -851,7 +851,7 @@ Note: To use OKX DEX integration, you need to set up the following environment v
 
 ### LangGraph Multi-Agent System
 
-The repository includes an advanced example of building a multi-agent system using LangGraph and Solana Agent Kit. Located in `examples/agent-kit-langgraph`, this example demonstrates:
+The repository includes an advanced example of building a multi-agent system using LangGraph and Solana Agent Kit. Located in `examples/misc/agent-kit-langgraph`, this example demonstrates:
 
 - Multi-agent architecture using LangGraph's StateGraph
 - Specialized agents for different tasks:
@@ -862,7 +862,7 @@ The repository includes an advanced example of building a multi-agent system usi
 - Fully typed TypeScript implementation
 - Environment-based configuration
 
-Check out the [LangGraph example](examples/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
+Check out the [LangGraph example](examples/misc/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
 
 ## Dependencies
 
