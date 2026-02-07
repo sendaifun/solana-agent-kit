@@ -230,6 +230,12 @@ import {
   torchCreateToken,
   torchGetMessages,
   torchPostMessage,
+  torchConfirm,
+  torchGetLendingInfo,
+  torchGetLoanPosition,
+  torchBorrowToken,
+  torchRepayLoan,
+  torchLiquidateLoan,
 } from "./torch/tools";
 import {
   torchListTokensAction,
@@ -241,6 +247,12 @@ import {
   torchCreateTokenAction,
   torchGetMessagesAction,
   torchPostMessageAction,
+  torchConfirmAction,
+  torchGetLendingInfoAction,
+  torchGetLoanAction,
+  torchBorrowAction,
+  torchRepayAction,
+  torchLiquidateAction,
 } from "./torch/actions";
 
 // Define and export the plugin
@@ -373,6 +385,12 @@ const DefiPlugin = {
     torchCreateToken,
     torchGetMessages,
     torchPostMessage,
+    torchConfirm,
+    torchGetLendingInfo,
+    torchGetLoanPosition,
+    torchBorrowToken,
+    torchRepayLoan,
+    torchLiquidateLoan,
   },
 
   // Combine all actions
@@ -489,6 +507,12 @@ const DefiPlugin = {
     torchCreateTokenAction,
     torchGetMessagesAction,
     torchPostMessageAction,
+    torchConfirmAction,
+    torchGetLendingInfoAction,
+    torchGetLoanAction,
+    torchBorrowAction,
+    torchRepayAction,
+    torchLiquidateAction,
   ],
 
   // Initialize function
