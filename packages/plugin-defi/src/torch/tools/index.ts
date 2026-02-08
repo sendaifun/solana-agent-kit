@@ -1,44 +1,44 @@
-import { Transaction } from "@solana/web3.js";
+import { TransactionInstruction, PublicKey } from "@solana/web3.js";
 import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
+import {
+  getTokens,
+  getToken,
+  getMessages,
+  getLendingInfo,
+  getLoanPosition,
+  buildBuyTransaction,
+  buildSellTransaction,
+  buildCreateTokenTransaction,
+  buildVoteTransaction,
+  buildStarTransaction,
+  buildMessageTransaction,
+  buildBorrowTransaction,
+  buildRepayTransaction,
+  buildLiquidateTransaction,
+  confirmTransaction,
+} from "torchsdk";
+import type {
+  TokenSummary,
+  TokenDetail,
+  TokenMessage,
+  LendingInfo,
+  LoanPositionInfo,
+} from "torchsdk";
 
-const TORCH_API = "https://torch.market/api/v1";
+// Re-export SDK types with Torch-prefixed names for backwards compatibility
+export type TorchToken = TokenSummary;
+export type TorchTokenDetail = TokenDetail;
+export type TorchMessage = TokenMessage;
+export type TorchLendingInfo = LendingInfo;
+export type TorchLoanPosition = LoanPositionInfo;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ApiResponse = { success: boolean; data?: any; error?: { message: string } };
-
-export interface TorchToken {
-  mint: string;
-  name: string;
-  symbol: string;
-  status: "bonding" | "complete" | "migrated";
-  price_sol: number;
-  market_cap_sol: number;
-  progress_percent: number;
-  holders: number;
-  created_at: number;
+export interface TorchConfirmResult {
+  confirmed: boolean;
+  event_type: "token_launch" | "trade_complete" | "governance_vote" | "unknown";
+  feedback_sent: boolean;
 }
 
-export interface TorchTokenDetail extends TorchToken {
-  description?: string;
-  image?: string;
-  sol_raised: number;
-  sol_target: number;
-  total_supply: number;
-  circulating_supply: number;
-  treasury_sol_balance: number;
-  treasury_token_balance: number;
-  votes_return: number;
-  votes_burn: number;
-  creator: string;
-  stars: number;
-}
-
-export interface TorchMessage {
-  signature: string;
-  memo: string;
-  sender: string;
-  timestamp: number;
-}
+const SAID_API_URL = "https://api.saidprotocol.com/api";
 
 /**
  * List tokens on Torch Market
@@ -48,22 +48,19 @@ export interface TorchMessage {
  * @param limit Number of tokens to return (max 100)
  * @returns Array of token summaries
  */
-export async function torchListTokens(
+export const torchListTokens = async (
   agent: SolanaAgentKit,
   status?: "bonding" | "complete" | "migrated" | "all",
   sort?: "newest" | "volume" | "marketcap",
   limit?: number,
-): Promise<TorchToken[]> {
-  const params = new URLSearchParams();
-  if (status) params.set("status", status);
-  if (sort) params.set("sort", sort);
-  if (limit) params.set("limit", limit.toString());
-
-  const res = await fetch(`${TORCH_API}/tokens?${params}`);
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to list tokens");
-  return json.data.tokens;
-}
+): Promise<TorchToken[]> => {
+  const result = await getTokens(agent.connection, {
+    status: status || "all",
+    sort,
+    limit,
+  });
+  return result.tokens;
+};
 
 /**
  * Get detailed information about a token
@@ -71,15 +68,12 @@ export async function torchListTokens(
  * @param mint Token mint address
  * @returns Token details including treasury state and votes
  */
-export async function torchGetToken(
+export const torchGetToken = async (
   agent: SolanaAgentKit,
   mint: string,
-): Promise<TorchTokenDetail> {
-  const res = await fetch(`${TORCH_API}/tokens/${mint}`);
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Token not found");
-  return json.data;
-}
+): Promise<TorchTokenDetail> => {
+  return getToken(agent.connection, mint);
+};
 
 /**
  * Buy tokens on Torch Market bonding curve
@@ -92,46 +86,38 @@ export async function torchGetToken(
  * @param message Optional message to bundle with the trade (SPL Memo, max 500 chars)
  * @returns Transaction signature
  */
-export async function torchBuyToken(
+export const torchBuyToken = async (
   agent: SolanaAgentKit,
   mint: string,
   amountLamports: number,
   slippageBps: number = 100,
   vote?: "burn" | "return",
   message?: string,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/buy`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      buyer: agent.wallet.publicKey.toBase58(),
-      amount_sol: amountLamports,
-      slippage_bps: slippageBps,
-      ...(vote ? { vote } : {}),
-    }),
+) => {
+  const result = await buildBuyTransaction(agent.connection, {
+    mint,
+    buyer: agent.wallet.publicKey.toBase58(),
+    amount_sol: amountLamports,
+    slippage_bps: slippageBps,
+    ...(vote ? { vote } : {}),
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build buy transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
+  const tx = result.transaction;
 
   // Bundle message as SPL Memo if provided
   if (message) {
-    const { TransactionInstruction, PublicKey } = await import("@solana/web3.js");
     const MEMO_PROGRAM = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
-    tx.add(new TransactionInstruction({
-      programId: MEMO_PROGRAM,
-      keys: [{ pubkey: agent.wallet.publicKey, isSigner: true, isWritable: false }],
-      data: Buffer.from(message.slice(0, 500), "utf-8"),
-    }));
+    tx.add(
+      new TransactionInstruction({
+        programId: MEMO_PROGRAM,
+        keys: [{ pubkey: agent.wallet.publicKey, isSigner: true, isWritable: false }],
+        data: Buffer.from(message.slice(0, 500), "utf-8"),
+      }),
+    );
   }
 
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
   return signOrSendTX(agent, tx);
-}
+};
 
 /**
  * Sell tokens back to Torch Market bonding curve
@@ -141,31 +127,21 @@ export async function torchBuyToken(
  * @param slippageBps Slippage tolerance in basis points (default 100 = 1%)
  * @returns Transaction signature
  */
-export async function torchSellToken(
+export const torchSellToken = async (
   agent: SolanaAgentKit,
   mint: string,
   amountTokens: number,
   slippageBps: number = 100,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/sell`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      seller: agent.wallet.publicKey.toBase58(),
-      amount_tokens: amountTokens,
-      slippage_bps: slippageBps,
-    }),
+) => {
+  const result = await buildSellTransaction(agent.connection, {
+    mint,
+    seller: agent.wallet.publicKey.toBase58(),
+    amount_tokens: amountTokens,
+    slippage_bps: slippageBps,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build sell transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Vote on treasury outcome for a graduated token
@@ -180,29 +156,19 @@ export async function torchSellToken(
  * @param vote Vote choice: "burn" or "return"
  * @returns Transaction signature
  */
-export async function torchVoteToken(
+export const torchVoteToken = async (
   agent: SolanaAgentKit,
   mint: string,
   vote: "burn" | "return",
-) {
-  const res = await fetch(`${TORCH_API}/transactions/vote`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      voter: agent.wallet.publicKey.toBase58(),
-      vote,
-    }),
+) => {
+  const result = await buildVoteTransaction(agent.connection, {
+    mint,
+    voter: agent.wallet.publicKey.toBase58(),
+    vote,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build vote transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Star a token to show support (costs 0.05 SOL)
@@ -210,27 +176,14 @@ export async function torchVoteToken(
  * @param mint Token mint address
  * @returns Transaction signature
  */
-export async function torchStarToken(
-  agent: SolanaAgentKit,
-  mint: string,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/star`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      user: agent.wallet.publicKey.toBase58(),
-    }),
+export const torchStarToken = async (agent: SolanaAgentKit, mint: string) => {
+  const result = await buildStarTransaction(agent.connection, {
+    mint,
+    user: agent.wallet.publicKey.toBase58(),
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build star transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Create a new token on Torch Market with automatic bonding curve
@@ -247,35 +200,25 @@ export async function torchStarToken(
  * @param metadataUri URI pointing to token metadata JSON (Metaplex standard)
  * @returns Transaction signature and new token mint address
  */
-export async function torchCreateToken(
+export const torchCreateToken = async (
   agent: SolanaAgentKit,
   name: string,
   symbol: string,
   metadataUri: string,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/create`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      creator: agent.wallet.publicKey.toBase58(),
-      name,
-      symbol,
-      metadata_uri: metadataUri,
-    }),
+) => {
+  const result = await buildCreateTokenTransaction(agent.connection, {
+    creator: agent.wallet.publicKey.toBase58(),
+    name,
+    symbol,
+    metadata_uri: metadataUri,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build create transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  const signature = await signOrSendTX(agent, tx);
+  const signature = await signOrSendTX(agent, result.transaction);
   return {
     signature,
-    mint: json.data.mint as string,
+    mint: result.mint.toBase58(),
   };
-}
+};
 
 /**
  * Get messages (memos) from a token's page
@@ -285,19 +228,14 @@ export async function torchCreateToken(
  * @param limit Number of messages to return (max 100)
  * @returns Array of messages
  */
-export async function torchGetMessages(
+export const torchGetMessages = async (
   agent: SolanaAgentKit,
   mint: string,
   limit: number = 50,
-): Promise<TorchMessage[]> {
-  const params = new URLSearchParams();
-  if (limit) params.set("limit", limit.toString());
-
-  const res = await fetch(`${TORCH_API}/tokens/${mint}/messages?${params}`);
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to get messages");
-  return json.data.messages;
-}
+): Promise<TorchMessage[]> => {
+  const result = await getMessages(agent.connection, mint, limit);
+  return result.messages;
+};
 
 /**
  * Post a message on a token's page
@@ -308,53 +246,19 @@ export async function torchGetMessages(
  * @param message Message to post (max 500 characters)
  * @returns Transaction signature
  */
-export async function torchPostMessage(
-  agent: SolanaAgentKit,
-  mint: string,
-  message: string,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/message`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      sender: agent.wallet.publicKey.toBase58(),
-      message,
-    }),
+export const torchPostMessage = async (agent: SolanaAgentKit, mint: string, message: string) => {
+  const result = await buildMessageTransaction(agent.connection, {
+    mint,
+    sender: agent.wallet.publicKey.toBase58(),
+    message,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build message transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 // ============================================================================
-// Treasury Lending Tools (V2.4)
+// Treasury Lending Tools
 // ============================================================================
-
-export interface TorchLendingInfo {
-  interest_rate_bps: number;
-  max_ltv_bps: number;
-  liquidation_threshold_bps: number;
-  liquidation_bonus_bps: number;
-  total_sol_lent: number;
-  active_loans: number;
-  treasury_sol_available: number;
-}
-
-export interface TorchLoanPosition {
-  collateral_amount: number;
-  borrowed_amount: number;
-  accrued_interest: number;
-  total_owed: number;
-  collateral_value_sol: number;
-  current_ltv_bps: number;
-  health: "healthy" | "at_risk" | "liquidatable" | "none";
-}
 
 /**
  * Get lending configuration and state for a migrated token
@@ -362,15 +266,12 @@ export interface TorchLoanPosition {
  * @param mint Token mint address
  * @returns Lending info including rates, caps, and active loan stats
  */
-export async function torchGetLendingInfo(
+export const torchGetLendingInfo = async (
   agent: SolanaAgentKit,
   mint: string,
-): Promise<TorchLendingInfo> {
-  const res = await fetch(`${TORCH_API}/lending/${mint}/info`);
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to get lending info");
-  return json.data;
-}
+): Promise<TorchLendingInfo> => {
+  return getLendingInfo(agent.connection, mint);
+};
 
 /**
  * Get loan position for a wallet on a specific token
@@ -379,17 +280,14 @@ export async function torchGetLendingInfo(
  * @param wallet Wallet address to check (defaults to agent's wallet)
  * @returns Loan position details including collateral, debt, LTV, and health
  */
-export async function torchGetLoanPosition(
+export const torchGetLoanPosition = async (
   agent: SolanaAgentKit,
   mint: string,
   wallet?: string,
-): Promise<TorchLoanPosition> {
+): Promise<TorchLoanPosition> => {
   const w = wallet || agent.wallet.publicKey.toBase58();
-  const res = await fetch(`${TORCH_API}/lending/${mint}/position?wallet=${w}`);
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to get loan position");
-  return json.data;
-}
+  return getLoanPosition(agent.connection, mint, w);
+};
 
 /**
  * Borrow SOL from treasury using tokens as collateral
@@ -405,31 +303,21 @@ export async function torchGetLoanPosition(
  * @param solToBorrow SOL to borrow in lamports. Can be 0 if adding collateral only.
  * @returns Transaction signature
  */
-export async function torchBorrowToken(
+export const torchBorrowToken = async (
   agent: SolanaAgentKit,
   mint: string,
   collateralAmount: number,
   solToBorrow: number,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/borrow`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      borrower: agent.wallet.publicKey.toBase58(),
-      collateral_amount: collateralAmount,
-      sol_to_borrow: solToBorrow,
-    }),
+) => {
+  const result = await buildBorrowTransaction(agent.connection, {
+    mint,
+    borrower: agent.wallet.publicKey.toBase58(),
+    collateral_amount: collateralAmount,
+    sol_to_borrow: solToBorrow,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build borrow transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Repay borrowed SOL and receive collateral back
@@ -442,29 +330,15 @@ export async function torchBorrowToken(
  * @param solAmount SOL to repay in lamports
  * @returns Transaction signature
  */
-export async function torchRepayLoan(
-  agent: SolanaAgentKit,
-  mint: string,
-  solAmount: number,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/repay`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      borrower: agent.wallet.publicKey.toBase58(),
-      sol_amount: solAmount,
-    }),
+export const torchRepayLoan = async (agent: SolanaAgentKit, mint: string, solAmount: number) => {
+  const result = await buildRepayTransaction(agent.connection, {
+    mint,
+    borrower: agent.wallet.publicKey.toBase58(),
+    sol_amount: solAmount,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build repay transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Liquidate an underwater loan position
@@ -478,35 +352,15 @@ export async function torchRepayLoan(
  * @param borrower Wallet address of the borrower to liquidate
  * @returns Transaction signature
  */
-export async function torchLiquidateLoan(
-  agent: SolanaAgentKit,
-  mint: string,
-  borrower: string,
-) {
-  const res = await fetch(`${TORCH_API}/transactions/liquidate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      mint,
-      liquidator: agent.wallet.publicKey.toBase58(),
-      borrower,
-    }),
+export const torchLiquidateLoan = async (agent: SolanaAgentKit, mint: string, borrower: string) => {
+  const result = await buildLiquidateTransaction(agent.connection, {
+    mint,
+    liquidator: agent.wallet.publicKey.toBase58(),
+    borrower,
   });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to build liquidate transaction");
 
-  const tx = Transaction.from(Buffer.from(json.data.transaction, "base64"));
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-
-  return signOrSendTX(agent, tx);
-}
-
-export interface TorchConfirmResult {
-  confirmed: boolean;
-  event_type: "token_launch" | "trade_complete" | "governance_vote";
-  feedback_sent: boolean;
-}
+  return signOrSendTX(agent, result.transaction);
+};
 
 /**
  * Confirm a transaction with SAID Protocol for reputation
@@ -521,19 +375,36 @@ export interface TorchConfirmResult {
  * @param signature Transaction signature to confirm
  * @returns Confirmation result with event type and reputation feedback status
  */
-export async function torchConfirm(
+export const torchConfirm = async (
   agent: SolanaAgentKit,
   signature: string,
-): Promise<TorchConfirmResult> {
-  const res = await fetch(`${TORCH_API}/confirm`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      signature,
-      wallet: agent.wallet.publicKey.toBase58(),
-    }),
-  });
-  const json = await res.json() as ApiResponse;
-  if (!json.success) throw new Error(json.error?.message || "Failed to confirm transaction");
-  return json.data;
-}
+): Promise<TorchConfirmResult> => {
+  const wallet = agent.wallet.publicKey.toBase58();
+
+  // Confirm on-chain via SDK (reads RPC directly)
+  const result = await confirmTransaction(agent.connection, signature, wallet);
+
+  // Send feedback to SAID Protocol for reputation
+  let feedbackSent = false;
+  try {
+    const saidRes = await fetch(`${SAID_API_URL}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        wallet,
+        signature,
+        event_type: result.event_type,
+        success: true,
+      }),
+    });
+    feedbackSent = saidRes.ok;
+  } catch {
+    // SAID feedback is best-effort
+  }
+
+  return {
+    confirmed: result.confirmed,
+    event_type: result.event_type,
+    feedback_sent: feedbackSent,
+  };
+};

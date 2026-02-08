@@ -47,16 +47,8 @@ export const torchListTokensAction: Action = {
       .enum(["bonding", "complete", "migrated", "all"])
       .optional()
       .describe("Filter by token status"),
-    sort: z
-      .enum(["newest", "volume", "marketcap"])
-      .optional()
-      .describe("Sort order"),
-    limit: z
-      .number()
-      .positive()
-      .max(100)
-      .optional()
-      .describe("Number of tokens to return"),
+    sort: z.enum(["newest", "volume", "marketcap"]).optional().describe("Sort order"),
+    limit: z.number().positive().max(100).optional().describe("Number of tokens to return"),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
@@ -164,18 +156,29 @@ export const torchBuyTokenAction: Action = {
     vote: z
       .enum(["burn", "return"])
       .optional()
-      .describe("Treasury vote -- REQUIRED on first buy. 'burn' = destroy treasury tokens (deflationary), 'return' = add to Raydium LP"),
+      .describe(
+        "Treasury vote -- REQUIRED on first buy. 'burn' = destroy treasury tokens (deflationary), 'return' = add to Raydium LP",
+      ),
     message: z
       .string()
       .max(500)
       .optional()
-      .describe("Optional message to bundle as on-chain SPL Memo (max 500 chars). Skin-in-the-game: every message has a provable trade behind it."),
+      .describe(
+        "Optional message to bundle as on-chain SPL Memo (max 500 chars). Skin-in-the-game: every message has a provable trade behind it.",
+      ),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const lamports = Math.floor(input.amountSol * 1e9);
       const bps = input.slippagePercent ? Math.floor(input.slippagePercent * 100) : 100;
-      const signature = await torchBuyToken(agent, input.mint, lamports, bps, input.vote, input.message);
+      const signature = await torchBuyToken(
+        agent,
+        input.mint,
+        lamports,
+        bps,
+        input.vote,
+        input.message,
+      );
       const parts = [`Bought tokens for ${input.amountSol} SOL`];
       if (input.vote) parts.push(`(voted: ${input.vote})`);
       if (input.message) parts.push("with message");
@@ -195,11 +198,7 @@ export const torchBuyTokenAction: Action = {
 
 export const torchSellTokenAction: Action = {
   name: "TORCH_SELL_TOKEN",
-  similes: [
-    "sell token on torch",
-    "sell torch token",
-    "exit torch position",
-  ],
+  similes: ["sell token on torch", "sell torch token", "exit torch position"],
   description:
     "Sell tokens back to Torch Market bonding curve. No sell fees. Specify amount in tokens.",
   examples: [
@@ -246,12 +245,7 @@ export const torchSellTokenAction: Action = {
 
 export const torchVoteTokenAction: Action = {
   name: "TORCH_VOTE_TOKEN",
-  similes: [
-    "vote on torch token",
-    "torch treasury vote",
-    "vote burn torch",
-    "vote return torch",
-  ],
+  similes: ["vote on torch token", "torch treasury vote", "vote burn torch", "vote return torch"],
   description:
     "Vote on treasury outcome for a graduated Torch token. After reaching 200 SOL, holders vote: 'burn' destroys treasury tokens (reducing supply from 1B to 900M), 'return' adds them to the Raydium LP for deeper liquidity. One wallet, one vote. The result is binding and executed at migration.",
   examples: [
@@ -271,12 +265,17 @@ export const torchVoteTokenAction: Action = {
     mint: z.string().describe("Token mint address"),
     vote: z
       .enum(["burn", "return"])
-      .describe("'burn' = destroy treasury tokens (deflationary), 'return' = add to Raydium LP (deeper liquidity)"),
+      .describe(
+        "'burn' = destroy treasury tokens (deflationary), 'return' = add to Raydium LP (deeper liquidity)",
+      ),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const signature = await torchVoteToken(agent, input.mint, input.vote);
-      const desc = input.vote === "burn" ? "burn treasury tokens (reduce supply)" : "return tokens to LP (deepen liquidity)";
+      const desc =
+        input.vote === "burn"
+          ? "burn treasury tokens (reduce supply)"
+          : "return tokens to LP (deepen liquidity)";
       return {
         status: "success",
         signature,
@@ -294,11 +293,7 @@ export const torchVoteTokenAction: Action = {
 
 export const torchStarTokenAction: Action = {
   name: "TORCH_STAR_TOKEN",
-  similes: [
-    "star torch token",
-    "support torch token",
-    "like token on torch",
-  ],
+  similes: ["star torch token", "support torch token", "like token on torch"],
   description:
     "Star a token on Torch Market to signal sybil-resistant support (costs 0.05 SOL). When tokens reach 2000 stars, creators receive the accumulated ~100 SOL.",
   examples: [
@@ -367,16 +362,14 @@ export const torchCreateTokenAction: Action = {
   schema: z.object({
     name: z.string().max(32).describe("Token name (max 32 characters)"),
     symbol: z.string().max(10).describe("Token symbol (max 10 characters)"),
-    metadataUri: z.string().url().describe("URI pointing to token metadata JSON with name, symbol, description, and image"),
+    metadataUri: z
+      .string()
+      .url()
+      .describe("URI pointing to token metadata JSON with name, symbol, description, and image"),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
-      const result = await torchCreateToken(
-        agent,
-        input.name,
-        input.symbol,
-        input.metadataUri,
-      );
+      const result = await torchCreateToken(agent, input.name, input.symbol, input.metadataUri);
       return {
         status: "success",
         signature: result.signature,
@@ -541,7 +534,7 @@ export const torchConfirmAction: Action = {
 };
 
 // ============================================================================
-// V2.4: Treasury Lending Actions
+// Treasury Lending Actions
 // ============================================================================
 
 export const torchGetLendingInfoAction: Action = {
@@ -614,10 +607,7 @@ export const torchGetLoanAction: Action = {
   ],
   schema: z.object({
     mint: z.string().describe("Token mint address"),
-    wallet: z
-      .string()
-      .optional()
-      .describe("Wallet to check (defaults to your wallet)"),
+    wallet: z.string().optional().describe("Wallet to check (defaults to your wallet)"),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
@@ -671,17 +661,21 @@ export const torchBorrowAction: Action = {
     collateralTokens: z
       .number()
       .min(0)
-      .describe("Tokens to lock as collateral (in whole tokens, not base units). Can be 0 if adding debt to existing position."),
-    solToBorrow: z
-      .number()
-      .min(0)
-      .describe("SOL to borrow. Can be 0 if just adding collateral."),
+      .describe(
+        "Tokens to lock as collateral (in whole tokens, not base units). Can be 0 if adding debt to existing position.",
+      ),
+    solToBorrow: z.number().min(0).describe("SOL to borrow. Can be 0 if just adding collateral."),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const collateralBaseUnits = Math.floor(input.collateralTokens * 1e6);
       const borrowLamports = Math.floor(input.solToBorrow * 1e9);
-      const signature = await torchBorrowToken(agent, input.mint, collateralBaseUnits, borrowLamports);
+      const signature = await torchBorrowToken(
+        agent,
+        input.mint,
+        collateralBaseUnits,
+        borrowLamports,
+      );
       return {
         status: "success",
         signature,
@@ -743,11 +737,7 @@ export const torchRepayAction: Action = {
 
 export const torchLiquidateAction: Action = {
   name: "TORCH_LIQUIDATE",
-  similes: [
-    "liquidate torch loan",
-    "torch liquidation",
-    "liquidate underwater position torch",
-  ],
+  similes: ["liquidate torch loan", "torch liquidation", "liquidate underwater position torch"],
   description:
     "Liquidate an underwater loan position on Torch Market. Permissionless -- anyone can call when a borrower's LTV exceeds 65%. You pay SOL to the treasury and receive collateral tokens at a 10% bonus (profitable keeper operation).",
   examples: [
