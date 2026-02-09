@@ -1,4 +1,3 @@
-import { TransactionInstruction, PublicKey } from "@solana/web3.js";
 import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import {
   getTokens,
@@ -9,9 +8,7 @@ import {
   buildBuyTransaction,
   buildSellTransaction,
   buildCreateTokenTransaction,
-  buildVoteTransaction,
   buildStarTransaction,
-  buildMessageTransaction,
   buildBorrowTransaction,
   buildRepayTransaction,
   buildLiquidateTransaction,
@@ -100,23 +97,10 @@ export const torchBuyToken = async (
     amount_sol: amountLamports,
     slippage_bps: slippageBps,
     ...(vote ? { vote } : {}),
+    ...(message ? { message } : {}),
   });
 
-  const tx = result.transaction;
-
-  // Bundle message as SPL Memo if provided
-  if (message) {
-    const MEMO_PROGRAM = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
-    tx.add(
-      new TransactionInstruction({
-        programId: MEMO_PROGRAM,
-        keys: [{ pubkey: agent.wallet.publicKey, isSigner: true, isWritable: false }],
-        data: Buffer.from(message.slice(0, 500), "utf-8"),
-      }),
-    );
-  }
-
-  return signOrSendTX(agent, tx);
+  return signOrSendTX(agent, result.transaction);
 };
 
 /**
@@ -125,6 +109,7 @@ export const torchBuyToken = async (
  * @param mint Token mint address
  * @param amountTokens Amount of tokens in base units (6 decimals)
  * @param slippageBps Slippage tolerance in basis points (default 100 = 1%)
+ * @param message Optional message to bundle with the trade (SPL Memo, max 500 chars)
  * @returns Transaction signature
  */
 export const torchSellToken = async (
@@ -132,39 +117,14 @@ export const torchSellToken = async (
   mint: string,
   amountTokens: number,
   slippageBps: number = 100,
+  message?: string,
 ) => {
   const result = await buildSellTransaction(agent.connection, {
     mint,
     seller: agent.wallet.publicKey.toBase58(),
     amount_tokens: amountTokens,
     slippage_bps: slippageBps,
-  });
-
-  return signOrSendTX(agent, result.transaction);
-};
-
-/**
- * Vote on treasury outcome for a graduated token
- *
- * After a token reaches 200 SOL, it graduates and holders vote on the
- * community treasury (10% of all tokens bought):
- * - "burn": Destroy the tokens, reducing total supply from 1B to 900M
- * - "return": Add the tokens to Raydium LP for deeper liquidity
- *
- * @param agent SolanaAgentKit instance
- * @param mint Token mint address
- * @param vote Vote choice: "burn" or "return"
- * @returns Transaction signature
- */
-export const torchVoteToken = async (
-  agent: SolanaAgentKit,
-  mint: string,
-  vote: "burn" | "return",
-) => {
-  const result = await buildVoteTransaction(agent.connection, {
-    mint,
-    voter: agent.wallet.publicKey.toBase58(),
-    vote,
+    ...(message ? { message } : {}),
   });
 
   return signOrSendTX(agent, result.transaction);
@@ -235,25 +195,6 @@ export const torchGetMessages = async (
 ): Promise<TorchMessage[]> => {
   const result = await getMessages(agent.connection, mint, limit);
   return result.messages;
-};
-
-/**
- * Post a message on a token's page
- * Messages are bundled with buy/sell transactions as SPL Memos --
- * every message has a provable trade behind it
- * @param agent SolanaAgentKit instance
- * @param mint Token mint address
- * @param message Message to post (max 500 characters)
- * @returns Transaction signature
- */
-export const torchPostMessage = async (agent: SolanaAgentKit, mint: string, message: string) => {
-  const result = await buildMessageTransaction(agent.connection, {
-    mint,
-    sender: agent.wallet.publicKey.toBase58(),
-    message,
-  });
-
-  return signOrSendTX(agent, result.transaction);
 };
 
 // ============================================================================

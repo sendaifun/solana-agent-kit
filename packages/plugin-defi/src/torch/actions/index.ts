@@ -5,11 +5,9 @@ import {
   torchGetToken,
   torchBuyToken,
   torchSellToken,
-  torchVoteToken,
   torchStarToken,
   torchCreateToken,
   torchGetMessages,
-  torchPostMessage,
   torchConfirm,
   torchGetLendingInfo,
   torchGetLoanPosition,
@@ -200,7 +198,7 @@ export const torchSellTokenAction: Action = {
   name: "TORCH_SELL_TOKEN",
   similes: ["sell token on torch", "sell torch token", "exit torch position"],
   description:
-    "Sell tokens back to Torch Market bonding curve. No sell fees. Specify amount in tokens.",
+    "Sell tokens back to Torch Market bonding curve. No sell fees. Specify amount in tokens. You can optionally include a message (max 500 chars) which will be bundled as an on-chain SPL Memo -- skin-in-the-game communication.",
   examples: [
     [
       {
@@ -213,6 +211,17 @@ export const torchSellTokenAction: Action = {
         explanation: "Sell 1M tokens back to the bonding curve",
       },
     ],
+    [
+      {
+        input: { mint: "ABC123...", amountTokens: 500000, message: "Taking profits, gl everyone" },
+        output: {
+          status: "success",
+          signature: "5xKp...",
+          message: "Sold 500K tokens with message",
+        },
+        explanation: "Sell tokens with an on-chain message bundled in",
+      },
+    ],
   ],
   schema: z.object({
     mint: z.string().describe("Token mint address"),
@@ -223,69 +232,30 @@ export const torchSellTokenAction: Action = {
       .max(50)
       .optional()
       .describe("Slippage tolerance as percentage (default 1%)"),
+    message: z
+      .string()
+      .max(500)
+      .optional()
+      .describe(
+        "Optional message to bundle as on-chain SPL Memo (max 500 chars). Skin-in-the-game: every message has a provable trade behind it.",
+      ),
   }),
   handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const baseUnits = Math.floor(input.amountTokens * 1e6);
       const bps = input.slippagePercent ? Math.floor(input.slippagePercent * 100) : 100;
-      const signature = await torchSellToken(agent, input.mint, baseUnits, bps);
+      const signature = await torchSellToken(agent, input.mint, baseUnits, bps, input.message);
+      const parts = [`Sold ${input.amountTokens.toLocaleString()} tokens`];
+      if (input.message) parts.push("with message");
       return {
         status: "success",
         signature,
-        message: `Sold ${input.amountTokens.toLocaleString()} tokens`,
+        message: parts.join(" "),
       };
     } catch (error: any) {
       return {
         status: "error",
         message: `Sell failed: ${error.message}`,
-      };
-    }
-  },
-};
-
-export const torchVoteTokenAction: Action = {
-  name: "TORCH_VOTE_TOKEN",
-  similes: ["vote on torch token", "torch treasury vote", "vote burn torch", "vote return torch"],
-  description:
-    "Vote on treasury outcome for a graduated Torch token. After reaching 200 SOL, holders vote: 'burn' destroys treasury tokens (reducing supply from 1B to 900M), 'return' adds them to the Raydium LP for deeper liquidity. One wallet, one vote. The result is binding and executed at migration.",
-  examples: [
-    [
-      {
-        input: { mint: "ABC123...", vote: "burn" },
-        output: {
-          status: "success",
-          signature: "5xKp...",
-          message: "Voted to burn treasury tokens",
-        },
-        explanation: "Vote to burn the community treasury tokens",
-      },
-    ],
-  ],
-  schema: z.object({
-    mint: z.string().describe("Token mint address"),
-    vote: z
-      .enum(["burn", "return"])
-      .describe(
-        "'burn' = destroy treasury tokens (deflationary), 'return' = add to Raydium LP (deeper liquidity)",
-      ),
-  }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
-    try {
-      const signature = await torchVoteToken(agent, input.mint, input.vote);
-      const desc =
-        input.vote === "burn"
-          ? "burn treasury tokens (reduce supply)"
-          : "return tokens to LP (deepen liquidity)";
-      return {
-        status: "success",
-        signature,
-        vote: input.vote,
-        message: `Voted to ${desc}`,
-      };
-    } catch (error: any) {
-      return {
-        status: "error",
-        message: `Vote failed: ${error.message}`,
       };
     }
   },
@@ -431,51 +401,6 @@ export const torchGetMessagesAction: Action = {
       return {
         status: "error",
         message: `Failed to get messages: ${error.message}`,
-      };
-    }
-  },
-};
-
-export const torchPostMessageAction: Action = {
-  name: "TORCH_POST_MESSAGE",
-  similes: [
-    "post torch message",
-    "send torch message",
-    "say something on torch",
-    "communicate on torch",
-    "message other agents",
-  ],
-  description:
-    "Post a standalone message on a token's page on Torch Market. Prefer using the 'message' parameter on TORCH_BUY_TOKEN instead -- bundling a message with a trade is the preferred approach (skin-in-the-game). This standalone endpoint is for cases where you need to post without a trade.",
-  examples: [
-    [
-      {
-        input: { mint: "ABC123...", message: "Hello from an AI agent!" },
-        output: {
-          status: "success",
-          signature: "5xKp...",
-          message: "Posted message",
-        },
-        explanation: "Post a message on a token's page",
-      },
-    ],
-  ],
-  schema: z.object({
-    mint: z.string().describe("Token mint address"),
-    message: z.string().max(500).describe("Message to post (max 500 characters)"),
-  }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
-    try {
-      const signature = await torchPostMessage(agent, input.mint, input.message);
-      return {
-        status: "success",
-        signature,
-        message: "Posted message",
-      };
-    } catch (error: any) {
-      return {
-        status: "error",
-        message: `Post message failed: ${error.message}`,
       };
     }
   },
