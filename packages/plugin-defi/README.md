@@ -1,116 +1,53 @@
 # @solana-agent-kit/plugin-defi
 
-> **Note for npm users:** If you encounter "Cannot find module 'rpc-websockets/dist/lib/client'" error, see [NPM_TROUBLESHOOTING.md](./NPM_TROUBLESHOOTING.md) for solutions.
+DeFi plugin for Solana Agent Kit - enables swaps, lending, liquidity provision, and more.
 
-This plugin provides a comprehensive suite of tools and actions to interact with various DeFi protocols on the Solana blockchain. It enables users to perform a wide range of DeFi operations, including trading, lending, borrowing, and cross-chain bridging.
+## Installation
 
-## Tools Available
+```bash
+npm install @solana-agent-kit/plugin-defi
+```
 
-### Adrena
-- **`openPerpTradeLong`**: Open a long perpetual trade.
-- **`openPerpTradeShort`**: Open a short perpetual trade.
-- **`closePerpTradeLong`**: Close a long perpetual trade.
-- **`closePerpTradeShort`**: Close a short perpetual trade.
+## Supported Protocols
 
-### Flash
-- **`flashOpenTrade`**: Open a flash trade.
-- **`flashCloseTrade`**: Close a flash trade.
+- Jupiter (swap aggregator)
+- Raydium (AMM)
+- Orca Whirlpools (concentrated liquidity)
+- Meteora DLMM
+- Drift (perps & lending)
+- Flash (lending)
+- OKX DEX
+- Pump.fun swap
+- Manifest
+- Voltr vaults
 
-### Lulo
-- **`lendAsset`**: Lend an asset.
-- **`luloLend`**: Lend using Lulo.
-- **`luloWithdraw`**: Withdraw from Lulo.
+## Usage
 
-### Manifest
-- **`limitOrder`**: Create a limit order.
-- **`cancelAllOrders`**: Cancel all orders.
-- **`withdrawAll`**: Withdraw all assets.
-- **`manifestCreateMarket`**: Create a market on Manifest.
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import DefiPlugin from "@solana-agent-kit/plugin-defi";
 
-## Meteora
+const agent = new SolanaAgentKit(wallet, rpcUrl, options)
+  .use(DefiPlugin);
 
-- **`createMeteoraDLMMPool`**: Create a DLMMPool on Meteora.
-- **`createMeteoraDynamicAMMPool`**: Create a dynamic AMM pool on Meteora.
+// Now you can use DeFi methods
+await agent.swap(inputMint, outputMint, amount);
+```
 
-### Debridge
-- **`checkDebridgeTransactionStatus`**: Check the status of a Debridge transaction.
-- **`createDebridgeBridgeOrder`**: Create a bridge order.
-- **`executeDebridgeBridgeOrder`**: Execute a bridge order.
-- **`getBridgeQuote`**: Get a bridge quote.
-- **`getDebridgeSupportedChains`**: Get supported chains for Debridge.
-- **`getDebridgeTokensInfo`**: Get token information for Debridge.
+## Features
 
-### Drift
-- **`driftPerpTrade`**: Open a perpetual trade on Drift.
-- **`calculatePerpMarketFundingRate`**: Calculate the funding rate for a perpetual market.
-- **`createVault`**: Create a vault.
-- **`createDriftUserAccount`**: Create a Drift user account.
-- **`depositIntoVault`**: Deposit into a vault.
-- **`withdrawFromDriftVault`**: Withdraw from a Drift vault.
-- **`stakeToDriftInsuranceFund`**: Stake to the Drift insurance fund.
+- Token swaps across multiple DEXs
+- Liquidity provision and management
+- Lending and borrowing
+- Perpetual futures trading (Drift)
+- Vault strategies
 
-### Openbook
-- **`openbookCreateMarket`**: Create a market on the Openbook DEX.
+## Dependencies
 
-### Fluxbeam
-- **`fluxBeamCreatePool`**: Create a pool on FluxBeam.
+This plugin depends on:
+- `@solana/web3.js` (peer dependency)
+- Various Solana DeFi protocol SDKs
 
-### Orca
-- **`closeOrcaPosition`**: Close a position on Orca.
-- **`createOrcaCLMM`**: Create a CLMM on Orca.
-- **`openOrcaCenteredPositionWithLiquidity`**: Open a centered position with liquidity on Orca.
-- **`openOrcaSingleSidedPosition`**: Open a single-sided position on Orca.
-- **`fetchOrcaPositions`**: Fetch a wallet's positions on Orca.
-- **`createOrcaSingleSidedWhirlpool`**: Create a single-sided whirlpool on Orca.
+## License
 
-### Ranger
-- **`closePosition`**: Close a position on Ranger.
-- **`decreasePosition`**: Decrease a position on Ranger.
-- **`depositCollateral`**: Deposit collateral on Ranger.
-- **`getBorrowRatesAccumulated`**: Get accumulated borrow rates on Ranger.
-- **`getFundingRateArbs`**: Get funding rate arbitrage opportunities on Ranger.
-- **`getFundingRatesAccumulated`**: Get accumulated funding rates on Ranger.
-- **`getFundingRatesExtreme`**: Get extreme funding rates on Ranger.
-- **`getFundingRatesOiWeighted`**: Get OI weighted funding rates on Ranger.
-- **`getFundingRatesTrend`**: Get funding rate trends on Ranger.
-- **`getLiquidationsCapitulation`**: Get liquidation capitulation data on Ranger.
-- **`getLiquidationsHeatmap`**: Get a heatmap of liquidations on Ranger.
-- **`getLiquidationsLargest`**: Get the largest liquidations on Ranger.
-- **`getLiquidationsLatest`**: Get the latest liquidations on Ranger.
-- **`getLiquidationsTotals`**: Get total liquidations on Ranger.
-- **`getPositions`**: Get positions on Ranger.
-- **`getQuote`**: Get a quote for a trade on Ranger.
-- **`getTradeHistory`**: Get trade history on Ranger.
-- **`increasePosition`**: Increase a position on Ranger.
-- **`withdrawBalance`**: Withdraw balance from Ranger.
-- **`withdrawCollateral`**: Withdraw collateral from Ranger.
-### PumpFun
-- **`addLiquidity`**: Add liquidity to a PumpFun AMM pool (supports SOL or Base token input).
-- **`removeLiquidity`**: Remove liquidity from a PumpFun AMM pool.
-
-### Raydium
-### Raydium
-- **`raydiumCreateAmmV4`**: Create an AMM v4 on Raydium.
-- **`raydiumCreateClmm`**: Create a CLMM on Raydium.
-- **`raydiumCreateCpmm`**: Create a CPMM on Raydium.
-- **`raydiumCreateLaunchlabToken`**: Create a token on Raydium's Launchlab.
-
-## Solayer
-- **`stakeWithSolayer`**: Stake SOL with Solayer.
-
-### Voltr
-- **`voltrDepositStrategy`**: Deposit into a Voltr strategy.
-- **`voltrGetPositionValues`**: Get position values for Voltr.
-
-### Sanctum
-- **`sanctumSwapLST`**: Swap LSTs on Sanctum.
-- **`sanctumAddLiquidity`**: Add liquidity on Sanctum.
-- **`sanctumRemoveLiquidity`**: Remove liquidity on Sanctum.
-- **`sanctumGetLSTAPY`**: Get the APY for LSTs on Sanctum.
-- **`sanctumGetLSTPrice`**: Get the price of LSTs on Sanctum.
-- **`sanctumGetLSTTVL`**: Get the TVL for LSTs on Sanctum.
-- **`sanctumGetOwnedLST`**: Get owned LSTs on Sanctum.
-
-## Full Documentation
-
-For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
+MIT

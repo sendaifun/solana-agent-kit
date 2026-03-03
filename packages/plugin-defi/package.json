@@ -63,5 +63,13 @@
   "peerDependencies": {
     "@solana/web3.js": "^1.98.2",
     "solana-agent-kit": "2.0.7"
+  },
+  "overrides": {
+    "@drift-labs/sdk": {
+      "@solana/web3.js": "^1.95.0"
+    },
+    "jito-ts": {
+      "@solana/web3.js": "^1.95.0"
+    }
   }
 }
