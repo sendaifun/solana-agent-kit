@@ -1,5 +1,7 @@
 # @solana-agent-kit/plugin-defi
 
+> **Note for npm users:** If you encounter "Cannot find module 'rpc-websockets/dist/lib/client'" error, see [NPM_TROUBLESHOOTING.md](./NPM_TROUBLESHOOTING.md) for solutions.
+
 This plugin provides a comprehensive suite of tools and actions to interact with various DeFi protocols on the Solana blockchain. It enables users to perform a wide range of DeFi operations, including trading, lending, borrowing, and cross-chain bridging.
 
 ## Tools Available
