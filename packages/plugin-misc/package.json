@@ -45,6 +45,7 @@
     "@solanafm/explorer-kit-idls": "^1.1.4",
     "@sqds/multisig": "^2.1.3",
     "@switchboard-xyz/common": "^2.5.17",
+    "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "redaxios": "^0.5.1",
     "rpc-websockets": "^10.0.0",
@@ -54,5 +55,8 @@
   "peerDependencies": {
     "@solana/web3.js": "^1.98.2",
     "solana-agent-kit": "2.0.5"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6"
   }
 }
