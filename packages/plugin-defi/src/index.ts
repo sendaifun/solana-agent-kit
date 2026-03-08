@@ -62,7 +62,9 @@ import {
 
 // Import Fluxbeam tools & actions
 import fluxbeamCreatePoolAction from "./fluxbeam/actions/createPool";
+import fluxbeamSwapAction from "./fluxbeam/actions/swap";
 import { fluxBeamCreatePool } from "./fluxbeam/tools/create_pool";
+import { fluxbeamSwap } from "./fluxbeam/tools/swap";
 
 // Import Meteora actions & tools
 import createMeteoraDLMMPoolAction from "./meteora/actions/createMeteoraDLMMPool";
@@ -321,6 +323,7 @@ const DefiPlugin = {
 
     // Fluxbeam methods
     fluxBeamCreatePool,
+    fluxbeamSwap,
 
     // Sanctum methods
     sanctumSwapLST,
@@ -426,6 +429,7 @@ const DefiPlugin = {
 
     // Fluxbeam actions
     fluxbeamCreatePoolAction,
+    fluxbeamSwapAction,
 
     // Sanctum actions
     sanctumAddLiquidityAction,

@@ -1,0 +1,46 @@
+{
+  "name": "@solana-agent-kit/plugin-governance",
+  "version": "2.0.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
+    "build": "tsup src/index.ts --clean --format cjs,esm --out-dir dist",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "dependencies": {
+    "@solana/spl-governance": "^0.3.26",
+    "@solana/spl-token": "^0.4.9",
+    "bs58": "^6.0.0",
+    "solana-agent-kit": "workspace:*",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.7"
+  }
+}
