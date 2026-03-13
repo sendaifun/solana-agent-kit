@@ -127,6 +127,10 @@ You can choose to install any of the plugins listed below or you could choose to
 4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, coingecko token information, and domain registration.
 5. Blinks plugin (`@solana-agent-kit/plugin-blinks`): Blinks operations for Solana protocols such as arcade games and more soon to come.
 
+### Community Plugins
+
+- [PigeonHouse plugin](https://github.com/noegppgeon-boop/solana-agent-kit-plugin-pigeonhouse) (`solana-agent-kit-plugin-pigeonhouse`): Create tokens on bonding curves, buy/sell with multi-quote support (PIGEON/SOL/SKR), automatic PIGEON burn on every trade. OtterSec verified, open source. [941pigeon.fun](https://941pigeon.fun)
+
 ```bash
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
