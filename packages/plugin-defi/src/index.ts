@@ -122,6 +122,25 @@ import vaultInfoAction from "./drift/actions/vaultInfo";
 import withdrawFromDriftAccountAction from "./drift/actions/withdrawFromDriftAccount";
 import withdrawFromDriftVaultAction from "./drift/actions/withdrawFromVault";
 
+// Import Byreal actions
+import {
+  byrealListPoolsAction,
+  byrealGetPoolDetailAction,
+  byrealListTokensAction,
+  byrealGetTokenPricesAction,
+  byrealGetOverviewAction,
+  byrealListPositionsAction,
+  byrealGetPositionDetailAction,
+  byrealGetSwapQuoteAction,
+  byrealGetTopPositionsAction,
+  byrealGetKlinesAction,
+  byrealSwapAction,
+  byrealOpenPositionAction,
+  byrealClosePositionAction,
+  byrealClaimFeesAction,
+  byrealCopyPositionAction,
+} from "./byreal/actions";
+
 // Import Openbook tools
 import { openbookCreateMarket } from "./openbook/tools";
 
@@ -144,7 +163,11 @@ import {
 } from "./raydium";
 
 // Import Pumpfun tools
-import { addLiquidityWithQuote, addLiquidityWithBase, removeLiquidity } from "./pumpfunAmm/tools";
+import {
+  addLiquidityWithQuote,
+  addLiquidityWithBase,
+  removeLiquidity,
+} from "./pumpfunAmm/tools";
 
 // Import Solayer tools
 import { stakeWithSolayer } from "./solayer/tools";
@@ -218,6 +241,25 @@ import {
   getChainData,
   executeSwap,
 } from "./okx/tools";
+
+// Import Byreal tools
+import {
+  byrealListPools,
+  byrealGetPoolDetail,
+  byrealListTokens,
+  byrealGetTokenPrices,
+  byrealGetOverview,
+  byrealListPositions,
+  byrealGetPositionDetail,
+  byrealGetSwapQuote,
+  byrealGetTopPositions,
+  byrealGetKlines,
+  byrealSwap,
+  byrealOpenPosition,
+  byrealClosePosition,
+  byrealClaimFees,
+  byrealCopyPosition,
+} from "./byreal/tools";
 
 // Define and export the plugin
 const DefiPlugin = {
@@ -338,6 +380,23 @@ const DefiPlugin = {
     getLiquidity,
     getChainData,
     executeSwap,
+
+    // Byreal methods
+    byrealListPools,
+    byrealGetPoolDetail,
+    byrealListTokens,
+    byrealGetTokenPrices,
+    byrealGetOverview,
+    byrealListPositions,
+    byrealGetPositionDetail,
+    byrealGetSwapQuote,
+    byrealGetTopPositions,
+    byrealGetKlines,
+    byrealSwap,
+    byrealOpenPosition,
+    byrealClosePosition,
+    byrealClaimFees,
+    byrealCopyPosition,
   },
 
   // Combine all actions
@@ -443,6 +502,23 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Byreal actions
+    byrealListPoolsAction,
+    byrealGetPoolDetailAction,
+    byrealListTokensAction,
+    byrealGetTokenPricesAction,
+    byrealGetOverviewAction,
+    byrealListPositionsAction,
+    byrealGetPositionDetailAction,
+    byrealGetSwapQuoteAction,
+    byrealGetTopPositionsAction,
+    byrealGetKlinesAction,
+    byrealSwapAction,
+    byrealOpenPositionAction,
+    byrealClosePositionAction,
+    byrealClaimFeesAction,
+    byrealCopyPositionAction,
   ],
 
   // Initialize function
