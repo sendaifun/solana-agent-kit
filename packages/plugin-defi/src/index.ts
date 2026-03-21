@@ -64,6 +64,20 @@ import {
 import fluxbeamCreatePoolAction from "./fluxbeam/actions/createPool";
 import { fluxBeamCreatePool } from "./fluxbeam/tools/create_pool";
 
+// Import Orbit Finance actions & tools
+import orbitGetPriceAction from "./orbit/actions/orbitGetPrice";
+import orbitGetPoolInfoAction from "./orbit/actions/orbitGetPoolInfo";
+import orbitSwapAction from "./orbit/actions/orbitSwap";
+import orbitAddLiquidityAction from "./orbit/actions/orbitAddLiquidity";
+import orbitRemoveLiquidityAction from "./orbit/actions/orbitRemoveLiquidity";
+import {
+  orbitGetPrice,
+  orbitGetPoolInfo,
+  orbitSwap,
+  orbitAddLiquidity,
+  orbitRemoveLiquidity,
+} from "./orbit/tools";
+
 // Import Meteora actions & tools
 import createMeteoraDLMMPoolAction from "./meteora/actions/createMeteoraDLMMPool";
 import createMeteoraDynamicAMMPoolAction from "./meteora/actions/createMeteoraDynamicAMMPool";
@@ -246,6 +260,13 @@ const DefiPlugin = {
     withdrawAll,
     manifestCreateMarket,
 
+    // Orbit Finance methods
+    orbitGetPrice,
+    orbitGetPoolInfo,
+    orbitSwap,
+    orbitAddLiquidity,
+    orbitRemoveLiquidity,
+
     // Meteora methods
     createMeteoraDlmmPool,
     createMeteoraDynamicAMMPool,
@@ -362,6 +383,13 @@ const DefiPlugin = {
     limitOrderAction,
     cancelAllOrdersAction,
     manifestCreateMarketAction,
+
+    // Orbit Finance actions
+    orbitGetPriceAction,
+    orbitGetPoolInfoAction,
+    orbitSwapAction,
+    orbitAddLiquidityAction,
+    orbitRemoveLiquidityAction,
 
     // Meteora actions
     createMeteoraDLMMPoolAction,
