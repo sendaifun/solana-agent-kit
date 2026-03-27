@@ -1,4 +1,3 @@
-import type { Plugin } from "solana-agent-kit";
 import getMyIdentityAction from "./actions/getMyIdentity";
 import getUserInfoAction from "./actions/getUserInfo";
 import listConversationsAction from "./actions/listConversations";
@@ -15,27 +14,32 @@ import {
   searchAgents,
   sendMessage,
 } from "./shared";
+import type { MessagingPluginContract, PluginAction } from "./types";
 
-const MessagingPlugin = {
+const methods: Record<string, any> = {
+  sendMessage,
+  readMessages,
+  markRead,
+  listConversations,
+  getUserInfo,
+  getMyIdentity,
+  searchAgents,
+};
+
+const actions: PluginAction[] = [
+  sendMessageAction,
+  readMessagesAction,
+  markReadAction,
+  listConversationsAction,
+  getUserInfoAction,
+  getMyIdentityAction,
+  searchAgentsAction,
+];
+
+const MessagingPlugin: MessagingPluginContract = {
   name: "messaging",
-  methods: {
-    sendMessage,
-    readMessages,
-    markRead,
-    listConversations,
-    getUserInfo,
-    getMyIdentity,
-    searchAgents,
-  },
-  actions: [
-    sendMessageAction,
-    readMessagesAction,
-    markReadAction,
-    listConversationsAction,
-    getUserInfoAction,
-    getMyIdentityAction,
-    searchAgentsAction,
-  ],
+  methods,
+  actions,
   initialize: function (): void {
     for (const [methodName, method] of Object.entries(this.methods)) {
       if (typeof method === "function") {
@@ -43,7 +47,6 @@ const MessagingPlugin = {
       }
     }
   },
-} satisfies Plugin;
+};
 
-export type * from "./types";
 export default MessagingPlugin;

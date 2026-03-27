@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getUserInfo } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const getUserInfoAction: Action = {
+const getUserInfoAction: PluginAction = {
   name: "DESIDE_GET_USER_INFO",
   similes: [
     "get deside user info",
@@ -29,7 +29,7 @@ const getUserInfoAction: Action = {
   schema: z.object({
     wallet: z.string().describe("The wallet address to inspect on Deside."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const profile = await getUserInfo(agent, {
         wallet: input.wallet,

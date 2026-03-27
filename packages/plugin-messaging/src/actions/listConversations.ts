@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { listConversations } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const listConversationsAction: Action = {
+const listConversationsAction: PluginAction = {
   name: "DESIDE_LIST_CONVERSATIONS",
   similes: [
     "list my deside conversations",
@@ -28,7 +28,7 @@ const listConversationsAction: Action = {
     limit: z.number().int().positive().optional().describe("Maximum number of conversations to return."),
     cursor: z.string().optional().describe("Pagination cursor returned by a previous call."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const conversations = await listConversations(agent, {
         limit: input.limit,

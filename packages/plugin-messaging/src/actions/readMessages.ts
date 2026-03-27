@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { readMessages } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const readMessagesAction: Action = {
+const readMessagesAction: PluginAction = {
   name: "DESIDE_READ_MESSAGES",
   similes: [
     "read deside messages",
@@ -30,7 +30,7 @@ const readMessagesAction: Action = {
     limit: z.number().int().positive().optional().describe("Maximum number of messages to return."),
     beforeSeq: z.number().int().positive().optional().describe("Read messages older than this sequence number."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const messages = await readMessages(agent, {
         convId: input.convId,

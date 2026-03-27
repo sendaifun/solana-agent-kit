@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { markRead } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const markReadAction: Action = {
+const markReadAction: PluginAction = {
   name: "DESIDE_MARK_READ",
   similes: [
     "mark deside conversation as read",
@@ -32,7 +32,7 @@ const markReadAction: Action = {
     seq: z.number().int().positive().describe("Sequence number to mark as read."),
     readAt: z.string().optional().describe("Optional ISO timestamp to forward to Deside."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const result = await markRead(agent, {
         convId: input.convId,

@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { searchAgents } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const searchAgentsAction: Action = {
+const searchAgentsAction: PluginAction = {
   name: "DESIDE_SEARCH_AGENTS",
   similes: [
     "search deside agents",
@@ -32,7 +32,7 @@ const searchAgentsAction: Action = {
     limit: z.number().int().positive().optional().describe("Maximum number of results."),
     offset: z.number().int().nonnegative().optional().describe("Pagination offset."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const agents = await searchAgents(agent, {
         name: input.name,

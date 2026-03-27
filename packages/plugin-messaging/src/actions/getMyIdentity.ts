@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { getMyIdentity } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const getMyIdentityAction: Action = {
+const getMyIdentityAction: PluginAction = {
   name: "DESIDE_GET_MY_IDENTITY",
   similes: [
     "get my deside identity",
@@ -27,7 +27,7 @@ const getMyIdentityAction: Action = {
     ],
   ],
   schema: z.object({}),
-  handler: async (agent: SolanaAgentKit) => {
+  handler: async (agent: SolanaAgentLike) => {
     try {
       const identity = await getMyIdentity(agent);
       return {

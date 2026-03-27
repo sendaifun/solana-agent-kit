@@ -1,8 +1,8 @@
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { sendMessage } from "../shared";
+import type { PluginAction, SolanaAgentLike } from "../types";
 
-const sendMessageAction: Action = {
+const sendMessageAction: PluginAction = {
   name: "DESIDE_SEND_MESSAGE",
   similes: [
     "send deside message",
@@ -31,7 +31,7 @@ const sendMessageAction: Action = {
     toWallet: z.string().describe("Destination wallet address."),
     text: z.string().min(1).describe("Message body to send."),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentLike, input: Record<string, any>) => {
     try {
       const result = await sendMessage(agent, {
         toWallet: input.toWallet,

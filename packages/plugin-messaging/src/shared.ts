@@ -1,5 +1,4 @@
 import { DesideMcpSdk, type DesideSigner } from "@desideapp/mcp-sdk";
-import type { SolanaAgentKit } from "solana-agent-kit";
 import type {
   DesideMessagingConfig,
   GetUserInfoInput,
@@ -8,15 +7,16 @@ import type {
   ReadMessagesInput,
   SearchAgentsInput,
   SendMessageInput,
+  SolanaAgentLike,
 } from "./types";
 
-const sdkByAgent = new WeakMap<SolanaAgentKit, DesideMcpSdk>();
+const sdkByAgent = new WeakMap<SolanaAgentLike, DesideMcpSdk>();
 
-function getPluginConfig(agent: SolanaAgentKit): DesideMessagingConfig {
+function getPluginConfig(agent: SolanaAgentLike): DesideMessagingConfig {
   return agent.config as DesideMessagingConfig;
 }
 
-export function getDesideSdk(agent: SolanaAgentKit): DesideMcpSdk {
+export function getDesideSdk(agent: SolanaAgentLike): DesideMcpSdk {
   const existing = sdkByAgent.get(agent);
   if (existing) {
     return existing;
@@ -39,7 +39,7 @@ export function getDesideSdk(agent: SolanaAgentKit): DesideMcpSdk {
   return sdk;
 }
 
-export function getDesideSigner(agent: SolanaAgentKit): DesideSigner {
+export function getDesideSigner(agent: SolanaAgentLike): DesideSigner {
   return {
     getAddress: () => agent.wallet.publicKey.toBase58(),
     signMessage: async (message: string) => {
@@ -49,14 +49,19 @@ export function getDesideSigner(agent: SolanaAgentKit): DesideSigner {
   };
 }
 
-async function getReadyContext(agent: SolanaAgentKit) {
+async function getReadyContext(
+  agent: SolanaAgentLike,
+): Promise<{ sdk: DesideMcpSdk; signer: DesideSigner }> {
   const sdk = getDesideSdk(agent);
   const signer = getDesideSigner(agent);
   await sdk.connect(signer);
   return { sdk, signer };
 }
 
-export async function sendMessage(agent: SolanaAgentKit, input: SendMessageInput) {
+export async function sendMessage(
+  agent: SolanaAgentLike,
+  input: SendMessageInput,
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.sendDm(signer, {
     to_wallet: input.toWallet,
@@ -64,7 +69,10 @@ export async function sendMessage(agent: SolanaAgentKit, input: SendMessageInput
   });
 }
 
-export async function readMessages(agent: SolanaAgentKit, input: ReadMessagesInput) {
+export async function readMessages(
+  agent: SolanaAgentLike,
+  input: ReadMessagesInput,
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.readDms(signer, {
     conv_id: input.convId,
@@ -73,7 +81,10 @@ export async function readMessages(agent: SolanaAgentKit, input: ReadMessagesInp
   });
 }
 
-export async function markRead(agent: SolanaAgentKit, input: MarkReadInput) {
+export async function markRead(
+  agent: SolanaAgentLike,
+  input: MarkReadInput,
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.markDmRead(signer, {
     conv_id: input.convId,
@@ -83,26 +94,32 @@ export async function markRead(agent: SolanaAgentKit, input: MarkReadInput) {
 }
 
 export async function listConversations(
-  agent: SolanaAgentKit,
+  agent: SolanaAgentLike,
   input: ListConversationsInput = {},
-) {
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.listConversations(signer, input);
 }
 
-export async function getUserInfo(agent: SolanaAgentKit, input: GetUserInfoInput) {
+export async function getUserInfo(
+  agent: SolanaAgentLike,
+  input: GetUserInfoInput,
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.getUserInfo(signer, {
     wallet: input.wallet,
   });
 }
 
-export async function getMyIdentity(agent: SolanaAgentKit) {
+export async function getMyIdentity(agent: SolanaAgentLike): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.getMyIdentity(signer);
 }
 
-export async function searchAgents(agent: SolanaAgentKit, input: SearchAgentsInput) {
+export async function searchAgents(
+  agent: SolanaAgentLike,
+  input: SearchAgentsInput,
+): Promise<unknown> {
   const { sdk, signer } = await getReadyContext(agent);
   return sdk.searchAgents(signer, input);
 }
