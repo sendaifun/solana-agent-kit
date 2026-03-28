@@ -58,6 +58,7 @@
     "redaxios": "^0.5.1",
     "rpc-websockets": "^10.0.0",
     "solana-agent-kit": "workspace:*",
+    "torchsdk": "1.0.4",
     "zod": "^3.24.1"
   },
   "peerDependencies": {

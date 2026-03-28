@@ -219,6 +219,38 @@ import {
   executeSwap,
 } from "./okx/tools";
 
+// Import Torch tools & actions
+import {
+  torchListTokens,
+  torchGetToken,
+  torchBuyToken,
+  torchSellToken,
+  torchStarToken,
+  torchCreateToken,
+  torchGetMessages,
+  torchConfirm,
+  torchGetLendingInfo,
+  torchGetLoanPosition,
+  torchBorrowToken,
+  torchRepayLoan,
+  torchLiquidateLoan,
+} from "./torch/tools";
+import {
+  torchListTokensAction,
+  torchGetTokenAction,
+  torchBuyTokenAction,
+  torchSellTokenAction,
+  torchStarTokenAction,
+  torchCreateTokenAction,
+  torchGetMessagesAction,
+  torchConfirmAction,
+  torchGetLendingInfoAction,
+  torchGetLoanAction,
+  torchBorrowAction,
+  torchRepayAction,
+  torchLiquidateAction,
+} from "./torch/actions";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -338,6 +370,21 @@ const DefiPlugin = {
     getLiquidity,
     getChainData,
     executeSwap,
+
+    // Torch methods
+    torchListTokens,
+    torchGetToken,
+    torchBuyToken,
+    torchSellToken,
+    torchStarToken,
+    torchCreateToken,
+    torchGetMessages,
+    torchConfirm,
+    torchGetLendingInfo,
+    torchGetLoanPosition,
+    torchBorrowToken,
+    torchRepayLoan,
+    torchLiquidateLoan,
   },
 
   // Combine all actions
@@ -443,6 +490,21 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Torch actions
+    torchListTokensAction,
+    torchGetTokenAction,
+    torchBuyTokenAction,
+    torchSellTokenAction,
+    torchStarTokenAction,
+    torchCreateTokenAction,
+    torchGetMessagesAction,
+    torchConfirmAction,
+    torchGetLendingInfoAction,
+    torchGetLoanAction,
+    torchBorrowAction,
+    torchRepayAction,
+    torchLiquidateAction,
   ],
 
   // Initialize function
