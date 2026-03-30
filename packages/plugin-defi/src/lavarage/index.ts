@@ -10,6 +10,7 @@ export {
   lavarageAddCollateralAction,
   lavarageGetQuoteAction,
   lavarageTradeHistoryAction,
+  lavarageBorrowAction,
 } from "./actions";
 
 export {

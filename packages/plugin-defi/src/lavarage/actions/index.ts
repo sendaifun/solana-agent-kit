@@ -9,3 +9,4 @@ export { lavarageIncreaseBorrowAction } from "./increaseBorrow";
 export { lavarageAddCollateralAction } from "./addCollateral";
 export { lavarageGetQuoteAction } from "./getQuote";
 export { lavarageTradeHistoryAction } from "./tradeHistory";
+export { lavarageBorrowAction } from "./borrow";

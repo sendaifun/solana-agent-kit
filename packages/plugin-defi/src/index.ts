@@ -232,6 +232,7 @@ import {
   lavarageAddCollateralAction,
   lavarageGetQuoteAction,
   lavarageTradeHistoryAction,
+  lavarageBorrowAction,
   lavarageOpenPosition,
   lavarageClosePosition,
   lavarageGetPositions,
@@ -503,6 +504,7 @@ const DefiPlugin = {
     lavarageAddCollateralAction,
     lavarageGetQuoteAction,
     lavarageTradeHistoryAction,
+    lavarageBorrowAction,
   ],
 
   // Initialize function
