@@ -1,4 +1,4 @@
-import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
+import type { SolanaAgentKit } from "solana-agent-kit";
 import { VersionedTransaction } from "@solana/web3.js";
 import bs58 from "bs58";
 
@@ -32,13 +32,21 @@ async function buildSignAndSend(
 ): Promise<string> {
   const txBuffer = Buffer.from(bs58.decode(txBase58));
   const tx = VersionedTransaction.deserialize(txBuffer);
-  const result = await signOrSendTX(agent, tx);
-  if (typeof result === "string") return result;
-  // If signOrSendTX returned a Transaction/VersionedTransaction (sign-only mode),
-  // we need to send it ourselves
-  const signed = result as VersionedTransaction;
-  const sig = await agent.connection.sendRawTransaction(signed.serialize());
-  return sig;
+
+  // Sign and send directly — can't use signOrSendTX because its instanceof
+  // check fails when @solana/web3.js versions differ between plugin and core.
+  // This is the same pattern other plugins use for pre-built transactions.
+  if (agent.wallet.signAndSendTransaction) {
+    const { signature } = await agent.wallet.signAndSendTransaction(tx);
+    return signature;
+  }
+
+  // Fallback: sign then send separately
+  const signed = await agent.wallet.signTransaction(tx);
+  return await agent.connection.sendRawTransaction(
+    (signed as VersionedTransaction).serialize(),
+    { skipPreflight: true, maxRetries: 3 },
+  );
 }
 
 async function getTipAndBuild(
