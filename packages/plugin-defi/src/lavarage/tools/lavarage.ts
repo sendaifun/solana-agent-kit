@@ -32,7 +32,13 @@ async function buildSignAndSend(
 ): Promise<string> {
   const txBuffer = Buffer.from(bs58.decode(txBase58));
   const tx = VersionedTransaction.deserialize(txBuffer);
-  return await signOrSendTX(agent, tx);
+  const result = await signOrSendTX(agent, tx);
+  if (typeof result === "string") return result;
+  // If signOrSendTX returned a Transaction/VersionedTransaction (sign-only mode),
+  // we need to send it ourselves
+  const signed = result as VersionedTransaction;
+  const sig = await agent.connection.sendRawTransaction(signed.serialize());
+  return sig;
 }
 
 async function getTipAndBuild(
