@@ -1,0 +1,26 @@
+{
+  "name": "@solana-agent-kit/plugin-agentpass",
+  "version": "0.1.0",
+  "description": "AgentPass identity & credential verification plugin for Solana Agent Kit",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
+    "build": "tsup src/index.ts --dts --clean --format cjs,esm --out-dir dist",
+    "test": "jest"
+  },
+  "keywords": ["solana", "agent", "identity", "agentpass", "credentials", "mva"],
+  "license": "MIT",
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.5"
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
