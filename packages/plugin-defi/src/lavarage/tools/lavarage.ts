@@ -1,5 +1,5 @@
 import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
-import { VersionedTransaction, PublicKey } from "@solana/web3.js";
+import { VersionedTransaction } from "@solana/web3.js";
 import bs58 from "bs58";
 
 const API_BASE = "https://api.lavarage.xyz/api/v1";
@@ -26,9 +26,30 @@ async function lavaApi(
   return data;
 }
 
-/**
- * List available tokens for leverage trading with best offers.
- */
+async function buildSignAndSend(
+  agent: SolanaAgentKit,
+  txBase58: string,
+): Promise<string> {
+  const txBuffer = Buffer.from(bs58.decode(txBase58));
+  const tx = VersionedTransaction.deserialize(txBuffer);
+  return await signOrSendTX(agent, tx);
+}
+
+async function getTipAndBuild(
+  agent: SolanaAgentKit,
+  path: string,
+  body: any,
+): Promise<string> {
+  const { tipLamports } = await lavaApi("/bundle/tip");
+  const result = await lavaApi(path, {
+    method: "POST",
+    body: { ...body, astralaneTipLamports: tipLamports },
+  });
+  return await buildSignAndSend(agent, result.transaction);
+}
+
+// ── Market Data ──
+
 export async function lavarageListTokens(
   _agent: SolanaAgentKit,
   search: string,
@@ -44,9 +65,8 @@ export async function lavarageListTokens(
     if (
       !existing ||
       Number(o.availableForOpen ?? 0) > Number(existing.availableForOpen ?? 0)
-    ) {
+    )
       seen.set(mint, o);
-    }
   }
   return Array.from(seen.values())
     .slice(0, 20)
@@ -63,19 +83,12 @@ export async function lavarageListTokens(
     }));
 }
 
-/**
- * Get max leverage and available liquidity for a token.
- */
 export async function lavarageGetMaxLeverage(
   _agent: SolanaAgentKit,
   search: string,
   quoteCurrency?: string,
 ): Promise<any[]> {
-  const params = new URLSearchParams({
-    includeTokens: "true",
-    search,
-    limit: "10",
-  });
+  const params = new URLSearchParams({ includeTokens: "true", search, limit: "10" });
   if (quoteCurrency && quoteCurrency !== "all") {
     const quoteMap: Record<string, string> = {
       SOL: "So11111111111111111111111111111111111111112",
@@ -95,9 +108,8 @@ export async function lavarageGetMaxLeverage(
   }));
 }
 
-/**
- * Open a leveraged position. Builds TX via API, signs with agent wallet, submits.
- */
+// ── Trading ──
+
 export async function lavarageOpenPosition(
   agent: SolanaAgentKit,
   offerPublicKey: string,
@@ -105,61 +117,29 @@ export async function lavarageOpenPosition(
   leverage: number,
   slippageBps = 50,
 ): Promise<string> {
-  const wallet = agent.wallet.publicKey.toBase58();
-
-  // Get tip for MEV protection
-  const { tipLamports } = await lavaApi("/bundle/tip");
-
-  // Build the transaction
-  const result = await lavaApi("/positions/open", {
-    method: "POST",
-    body: {
-      offerPublicKey,
-      userPublicKey: wallet,
-      collateralAmount,
-      leverage,
-      slippageBps,
-      astralaneTipLamports: tipLamports,
-    },
+  return getTipAndBuild(agent, "/positions/open", {
+    offerPublicKey,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    collateralAmount,
+    leverage,
+    slippageBps,
   });
-
-  // Deserialize (API returns base58)
-  const txBuffer = Buffer.from(bs58.decode(result.transaction));
-  const tx = VersionedTransaction.deserialize(txBuffer);
-
-  // Sign and send via agent's wallet
-  return await signOrSendTX(agent, tx);
 }
 
-/**
- * Close a leveraged position.
- */
 export async function lavarageClosePosition(
   agent: SolanaAgentKit,
   positionAddress: string,
   slippageBps = 50,
 ): Promise<string> {
-  const wallet = agent.wallet.publicKey.toBase58();
-  const { tipLamports } = await lavaApi("/bundle/tip");
-
-  const result = await lavaApi("/positions/close", {
-    method: "POST",
-    body: {
-      positionAddress,
-      userPublicKey: wallet,
-      slippageBps,
-      astralaneTipLamports: tipLamports,
-    },
+  return getTipAndBuild(agent, "/positions/close", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    slippageBps,
   });
-
-  const txBuffer = Buffer.from(bs58.decode(result.transaction));
-  const tx = VersionedTransaction.deserialize(txBuffer);
-  return await signOrSendTX(agent, tx);
 }
 
-/**
- * List positions for the agent's wallet.
- */
+// ── Positions ──
+
 export async function lavarageGetPositions(
   agent: SolanaAgentKit,
   status = "OPEN",
@@ -168,20 +148,139 @@ export async function lavarageGetPositions(
   return lavaApi(`/positions?owner=${wallet}&status=${status}`);
 }
 
-/**
- * Get details for a specific position.
- */
 export async function lavarageGetPositionStatus(
   agent: SolanaAgentKit,
   positionAddress: string,
 ): Promise<any> {
   const wallet = agent.wallet.publicKey.toBase58();
-  const positions = await lavaApi(
-    `/positions?owner=${wallet}&limit=250`,
-  );
+  const positions = await lavaApi(`/positions?owner=${wallet}&limit=250`);
   const match = (Array.isArray(positions) ? positions : []).find(
     (p: any) => p.address === positionAddress,
   );
   if (!match) throw new Error(`Position ${positionAddress} not found`);
   return match;
+}
+
+// ── Borrow ──
+
+export async function lavarageRepay(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/repay", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+  });
+}
+
+export async function lavaragePartialRepay(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+  repaymentBps: number,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/partial-repay", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    repaymentBps,
+  });
+}
+
+export async function lavarageIncreaseBorrow(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+  additionalBorrowAmount: string,
+  mode: "withdraw" | "compound",
+  slippageBps = 50,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/increase-borrow", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    additionalBorrowAmount,
+    mode,
+    slippageBps,
+  });
+}
+
+// ── Position Management ──
+
+export async function lavarageAddCollateral(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+  collateralAmount: string,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/add-collateral", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    collateralAmount,
+  });
+}
+
+export async function lavarageSplitPosition(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+  splitRatioBps: number,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/split", {
+    positionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+    splitRatioBps,
+  });
+}
+
+export async function lavarageMergePositions(
+  agent: SolanaAgentKit,
+  firstPositionAddress: string,
+  secondPositionAddress: string,
+): Promise<string> {
+  return getTipAndBuild(agent, "/positions/merge", {
+    firstPositionAddress,
+    secondPositionAddress,
+    userPublicKey: agent.wallet.publicKey.toBase58(),
+  });
+}
+
+// ── Quotes ──
+
+export async function lavarageGetQuote(
+  agent: SolanaAgentKit,
+  offerPublicKey: string,
+  collateralAmount: string,
+  leverage: number,
+  slippageBps = 50,
+): Promise<any> {
+  return lavaApi("/positions/quote", {
+    method: "POST",
+    body: {
+      offerPublicKey,
+      userPublicKey: agent.wallet.publicKey.toBase58(),
+      collateralAmount,
+      leverage,
+      slippageBps,
+    },
+  });
+}
+
+export async function lavarageCloseQuote(
+  agent: SolanaAgentKit,
+  positionAddress: string,
+  slippageBps = 50,
+): Promise<any> {
+  return lavaApi("/positions/close-quote", {
+    method: "POST",
+    body: {
+      positionAddress,
+      userPublicKey: agent.wallet.publicKey.toBase58(),
+      slippageBps,
+    },
+  });
+}
+
+// ── History ──
+
+export async function lavarageTradeHistory(
+  agent: SolanaAgentKit,
+  limit = 20,
+): Promise<any> {
+  const wallet = agent.wallet.publicKey.toBase58();
+  return lavaApi(`/positions/trade-history?owner=${wallet}&limit=${limit}`);
 }

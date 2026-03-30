@@ -5,6 +5,11 @@ export {
   lavarageGetPositionStatusAction,
   lavarageListTokensAction,
   lavarageGetMaxLeverageAction,
+  lavarageRepayAction,
+  lavarageIncreaseBorrowAction,
+  lavarageAddCollateralAction,
+  lavarageGetQuoteAction,
+  lavarageTradeHistoryAction,
 } from "./actions";
 
 export {
@@ -14,4 +19,13 @@ export {
   lavarageGetPositionStatus,
   lavarageListTokens,
   lavarageGetMaxLeverage,
+  lavarageRepay,
+  lavaragePartialRepay,
+  lavarageIncreaseBorrow,
+  lavarageAddCollateral,
+  lavarageSplitPosition,
+  lavarageMergePositions,
+  lavarageGetQuote,
+  lavarageCloseQuote,
+  lavarageTradeHistory,
 } from "./tools";

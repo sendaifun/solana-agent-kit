@@ -227,12 +227,26 @@ import {
   lavarageGetPositionStatusAction,
   lavarageListTokensAction,
   lavarageGetMaxLeverageAction,
+  lavarageRepayAction,
+  lavarageIncreaseBorrowAction,
+  lavarageAddCollateralAction,
+  lavarageGetQuoteAction,
+  lavarageTradeHistoryAction,
   lavarageOpenPosition,
   lavarageClosePosition,
   lavarageGetPositions,
   lavarageGetPositionStatus,
   lavarageListTokens,
   lavarageGetMaxLeverage,
+  lavarageRepay,
+  lavaragePartialRepay,
+  lavarageIncreaseBorrow,
+  lavarageAddCollateral,
+  lavarageSplitPosition,
+  lavarageMergePositions,
+  lavarageGetQuote,
+  lavarageCloseQuote,
+  lavarageTradeHistory,
 } from "./lavarage";
 
 // Define and export the plugin
@@ -355,13 +369,22 @@ const DefiPlugin = {
     getChainData,
     executeSwap,
 
-    // Lavarage methods — spot margin leverage on any Solana token
+    // Lavarage methods — spot margin leverage + borrow on any Solana token
     lavarageOpenPosition,
     lavarageClosePosition,
     lavarageGetPositions,
     lavarageGetPositionStatus,
     lavarageListTokens,
     lavarageGetMaxLeverage,
+    lavarageRepay,
+    lavaragePartialRepay,
+    lavarageIncreaseBorrow,
+    lavarageAddCollateral,
+    lavarageSplitPosition,
+    lavarageMergePositions,
+    lavarageGetQuote,
+    lavarageCloseQuote,
+    lavarageTradeHistory,
   },
 
   // Combine all actions
@@ -468,13 +491,18 @@ const DefiPlugin = {
     getChainDataAction,
     executeSwapAction,
 
-    // Lavarage actions — spot margin leverage on any Solana token (up to 12x)
+    // Lavarage actions — spot margin leverage + borrow on any Solana token
     lavarageOpenPositionAction,
     lavarageClosePositionAction,
     lavarageGetPositionsAction,
     lavarageGetPositionStatusAction,
     lavarageListTokensAction,
     lavarageGetMaxLeverageAction,
+    lavarageRepayAction,
+    lavarageIncreaseBorrowAction,
+    lavarageAddCollateralAction,
+    lavarageGetQuoteAction,
+    lavarageTradeHistoryAction,
   ],
 
   // Initialize function

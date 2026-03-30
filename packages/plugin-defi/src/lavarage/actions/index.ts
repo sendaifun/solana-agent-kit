@@ -4,3 +4,8 @@ export { lavarageGetPositionsAction } from "./getPositions";
 export { lavarageGetPositionStatusAction } from "./getPositionStatus";
 export { lavarageListTokensAction } from "./listTokens";
 export { lavarageGetMaxLeverageAction } from "./getMaxLeverage";
+export { lavarageRepayAction } from "./repay";
+export { lavarageIncreaseBorrowAction } from "./increaseBorrow";
+export { lavarageAddCollateralAction } from "./addCollateral";
+export { lavarageGetQuoteAction } from "./getQuote";
+export { lavarageTradeHistoryAction } from "./tradeHistory";
