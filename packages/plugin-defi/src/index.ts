@@ -219,6 +219,22 @@ import {
   executeSwap,
 } from "./okx/tools";
 
+// Import Lavarage actions & tools
+import {
+  lavarageOpenPositionAction,
+  lavarageClosePositionAction,
+  lavarageGetPositionsAction,
+  lavarageGetPositionStatusAction,
+  lavarageListTokensAction,
+  lavarageGetMaxLeverageAction,
+  lavarageOpenPosition,
+  lavarageClosePosition,
+  lavarageGetPositions,
+  lavarageGetPositionStatus,
+  lavarageListTokens,
+  lavarageGetMaxLeverage,
+} from "./lavarage";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -338,6 +354,14 @@ const DefiPlugin = {
     getLiquidity,
     getChainData,
     executeSwap,
+
+    // Lavarage methods — spot margin leverage on any Solana token
+    lavarageOpenPosition,
+    lavarageClosePosition,
+    lavarageGetPositions,
+    lavarageGetPositionStatus,
+    lavarageListTokens,
+    lavarageGetMaxLeverage,
   },
 
   // Combine all actions
@@ -443,6 +467,14 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Lavarage actions — spot margin leverage on any Solana token (up to 12x)
+    lavarageOpenPositionAction,
+    lavarageClosePositionAction,
+    lavarageGetPositionsAction,
+    lavarageGetPositionStatusAction,
+    lavarageListTokensAction,
+    lavarageGetMaxLeverageAction,
   ],
 
   // Initialize function
