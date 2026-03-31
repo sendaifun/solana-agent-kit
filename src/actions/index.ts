@@ -104,6 +104,8 @@ import createDebridgeBridgeOrderAction from "./debridge/createBridgeOrder";
 import executeDebridgeBridgeOrderAction from "./debridge/executeBridgeOrder";
 import checkDebridgeTransactionStatusAction from "./debridge/checkTransactionStatus";
 import getCoingeckoLatestPoolsActions from "./coingecko/getCoingeckoLatestPools";
+import fetchIntmoltTokenReportAction from "./intmolt/fetchIntmoltTokenReport";
+import fetchIntmoltDeepAuditAction from "./intmolt/fetchIntmoltDeepAudit";
 import getCoingeckoTokenInfoAction from "./coingecko/getCoingeckoTokenInfo";
 import getCoingeckoTokenPriceDataAction from "./coingecko/getCoingeckoTokenPriceData";
 import getCoingeckoTopGainersAction from "./coingecko/getCoingeckoTopGainers";
@@ -270,6 +272,8 @@ export const ACTIONS = {
   SANCTUM_REMOVE_LIQUIDITY_ACTION: sanctumRemoveLiquidityAction,
   SANCTUM_GET_OWNED_LST_ACTION: sanctumGetOwnedLSTAction,
   SANCTUM_SWAP_LST_ACTION: sanctumSwapLSTAction,
+  FETCH_INTMOLT_TOKEN_REPORT_ACTION: fetchIntmoltTokenReportAction,
+  FETCH_INTMOLT_DEEP_AUDIT_ACTION: fetchIntmoltDeepAuditAction,
 };
 
 export type { Action, ActionExample, Handler } from "../types/action";

@@ -194,6 +194,45 @@ export interface TokenCheck {
   score: number;
 }
 
+/**
+ * integrity.molt token security report (standard scan).
+ * Source: https://intmolt.org — AI-native Solana security scanner.
+ */
+export interface IntmoltReport {
+  status: "complete" | "error";
+  address: string;
+  /** AI-generated security assessment text */
+  report: string;
+  /** Ed25519-signed envelope for off-chain verification */
+  signed: {
+    report: string;
+    signature: string;
+    public_key: string;
+    key_id: string;
+    signed_at: string;
+  } | null;
+  timestamp: string;
+}
+
+/**
+ * integrity.molt deep multi-agent audit report.
+ * Runs scanner → analyst → reputation → meta-scorecard swarm pipeline.
+ */
+export interface IntmoltDetailedReport extends IntmoltReport {
+  tier: "deep-audit";
+  pipeline: "swarm";
+  /** Overall risk decision: "PASS" | "WARN" | "FAIL" */
+  decision: string | null;
+  /** Aggregate risk score (0 = safest, 100 = most dangerous) */
+  aggregate_score: number | null;
+  /** Individual agent outputs */
+  agents: {
+    scanner?: { score: number; confidence: number; reason: string };
+    analyst?: { score: number; confidence: number; analysis: string };
+    reputation?: { score: number; confidence: number; flags: string[] };
+  } | null;
+}
+
 export interface PythPriceFeedIDItem {
   id: string;
   attributes: {

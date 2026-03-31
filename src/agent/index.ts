@@ -66,6 +66,8 @@ import {
   closeEmptyTokenAccounts,
   fetchTokenReportSummary,
   fetchTokenDetailedReport,
+  fetchIntmoltTokenReport,
+  fetchIntmoltDeepAudit,
   fetchPythPrice,
   fetchPythPriceFeedID,
   flashOpenTrade,
@@ -159,6 +161,8 @@ import {
 import {
   Config,
   TokenCheck,
+  IntmoltReport,
+  IntmoltDetailedReport,
   CollectionDeployment,
   CollectionOptions,
   GibworkCreateTaskReponse,
@@ -795,6 +799,16 @@ export class SolanaAgentKit {
 
   async fetchTokenDetailedReport(mint: string): Promise<TokenCheck> {
     return fetchTokenDetailedReport(mint);
+  }
+
+  async fetchIntmoltTokenReport(mint: string): Promise<IntmoltReport> {
+    const apiKey = process.env.INTMOLT_API_KEY;
+    return fetchIntmoltTokenReport(mint, apiKey);
+  }
+
+  async fetchIntmoltDeepAudit(mint: string): Promise<IntmoltDetailedReport> {
+    const apiKey = process.env.INTMOLT_API_KEY;
+    return fetchIntmoltDeepAudit(mint, apiKey);
   }
 
   /**
