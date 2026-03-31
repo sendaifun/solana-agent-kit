@@ -16,6 +16,7 @@ export * from "./pumpfun";
 export * from "./pyth";
 export * from "./raydium";
 export * from "./rugcheck";
+export * from "./intmolt";
 export * from "./drift";
 export * from "./sendarcade";
 export * from "./solayer";
