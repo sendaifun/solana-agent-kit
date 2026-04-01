@@ -14,6 +14,7 @@
     "build:plugin-defi": "turbo run build --filter=@solana-agent-kit/plugin-defi",
     "build:plugin-misc": "turbo run build --filter=@solana-agent-kit/plugin-misc",
     "build:plugin-blinks": "turbo run build --filter=@solana-agent-kit/plugin-blinks",
+    "build:plugin-vybes": "turbo run build --filter=@solana-agent-kit/plugin-vybes",
     "build:adapter-mcp": "turbo run build --filter=@solana-agent-kit/adapter-mcp",
     "test": "npx tsx test/index.ts",
     "docs": "typedoc",

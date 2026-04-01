@@ -50,6 +50,10 @@
               {
                 "group": "Misc",
                 "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
+              },
+              {
+                "group": "Vybes",
+                "pages": ["docs/v2/plugins/vybes/vybes-plugin-intro"]
               }
             ]
           },

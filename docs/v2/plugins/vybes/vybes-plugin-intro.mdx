@@ -1,0 +1,131 @@
+---
+title: 'Vybes Plugin'
+description: 'Launch meme tokens, generate AI logos, and create prediction markets on vybes.fun'
+icon: 'rocket'
+---
+
+# Vybes Plugin
+
+The `@solana-agent-kit/plugin-vybes` plugin integrates [vybes.fun](https://vybes.fun) into the Solana Agent Kit, enabling AI agents to launch meme tokens with bonding curves, generate AI logos, create prediction markets, and check earnings.
+
+## Installation
+
+Install the plugin alongside the core Solana Agent Kit:
+
+```bash
+npm install solana-agent-kit @solana-agent-kit/plugin-vybes
+```
+
+## Integration
+
+Add the Vybes plugin to your agent:
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import VybesPlugin from "@solana-agent-kit/plugin-vybes";
+
+const agent = new SolanaAgentKit(
+  wallet,
+  "YOUR_RPC_URL",
+  {}
+).use(VybesPlugin);
+```
+
+## Actions
+
+### LAUNCH_VYBES_TOKEN
+
+Launch a new Solana meme token on vybes.fun with a bonding curve and AI-generated logo. Free to launch (0 SOL creation fee). Tokens graduate to Meteora DEX at ~85 SOL raised.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| name | string | Yes | Token name (1-32 chars) |
+| symbol | string | Yes | Token ticker symbol (2-10 chars) |
+| description | string | No | Token description |
+| style | string | No | AI logo style: meme, cute, cool, hype, moon, pixel, anime, 3d, logo, degen |
+
+### GENERATE_VYBES_LOGO
+
+Generate an AI logo for a token using Workers AI (FLUX model). Free, no payment required. Returns a public URL to a 1024x1024 PNG. Rate limited to 20/hour.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| name | string | Yes | Token or project name |
+| symbol | string | Yes | Token ticker symbol |
+| style | string | No | Logo style (default: meme) |
+
+### CREATE_VYBES_PREDICTION
+
+Create a YES/NO prediction market on vybes.fun for a Solana token. Free to create. Others can bet with SOL. Markets are auto-resolved by cron.
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| tokenMint | string | Yes | Solana token mint address |
+| question | string | Yes | Prediction question (10-200 chars) |
+| templateType | string | Yes | graduation, market_cap_target, multiplier, ath_flip, holder_count, or volume_target |
+| duration | string | No | 24h, 48h, 7d, or 30d (default: 24h) |
+| metadata | object | No | Template-specific metadata |
+
+## Methods
+
+### launchTokenOnVybes
+
+Full launch flow: checks fees, generates AI logo, sends payment (if any), creates token.
+
+```typescript
+const token = await agent.methods.launchTokenOnVybes(agent, {
+  name: "Moon Dog",
+  symbol: "MDOG",
+  description: "The moon-iest dog token",
+  style: "meme",
+});
+// Returns: { tokenAddress, uuid, viewUrl, paymentTx, ... }
+```
+
+### generateVybesLogo
+
+Generate an AI logo with one of 10 styles.
+
+```typescript
+const logo = await agent.methods.generateVybesLogo({
+  name: "Moon Dog",
+  symbol: "MDOG",
+  style: "pixel",
+});
+// Returns: { imageUrl, style, ... }
+```
+
+### createVybesPrediction
+
+Create a prediction market using one of 6 template types.
+
+```typescript
+const prediction = await agent.methods.createVybesPrediction({
+  wallet: agent.wallet.publicKey.toBase58(),
+  tokenMint: "7nxQB...",
+  question: "Will this token graduate in 24h?",
+  templateType: "graduation",
+  duration: "24h",
+});
+// Returns: { marketId, viewUrl, endTime, ... }
+```
+
+### getVybesEarnings
+
+Check tokens launched, prediction bets, payouts, and net profit for any wallet.
+
+```typescript
+const earnings = await agent.methods.getVybesEarnings(
+  agent.wallet.publicKey.toBase58()
+);
+// Returns: { tokensLaunched, totalPredictions, netProfitLamports, ... }
+```
+
+## Links
+
+- [Vybes.fun](https://vybes.fun)
+- [Developer Docs](https://vybes.fun/developers)
+- [Plugin Source (GitHub)](https://github.com/AICre8dev/solana-agent-kit-vybes)
