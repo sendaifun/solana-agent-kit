@@ -219,6 +219,37 @@ import {
   executeSwap,
 } from "./okx/tools";
 
+// Import Lavarage actions & tools
+import {
+  lavarageOpenPositionAction,
+  lavarageClosePositionAction,
+  lavarageGetPositionsAction,
+  lavarageGetPositionStatusAction,
+  lavarageListTokensAction,
+  lavarageGetMaxLeverageAction,
+  lavarageRepayAction,
+  lavarageIncreaseBorrowAction,
+  lavarageAddCollateralAction,
+  lavarageGetQuoteAction,
+  lavarageTradeHistoryAction,
+  lavarageBorrowAction,
+  lavarageOpenPosition,
+  lavarageClosePosition,
+  lavarageGetPositions,
+  lavarageGetPositionStatus,
+  lavarageListTokens,
+  lavarageGetMaxLeverage,
+  lavarageRepay,
+  lavaragePartialRepay,
+  lavarageIncreaseBorrow,
+  lavarageAddCollateral,
+  lavarageSplitPosition,
+  lavarageMergePositions,
+  lavarageGetQuote,
+  lavarageCloseQuote,
+  lavarageTradeHistory,
+} from "./lavarage";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -338,6 +369,23 @@ const DefiPlugin = {
     getLiquidity,
     getChainData,
     executeSwap,
+
+    // Lavarage methods — spot margin leverage + borrow on any Solana token
+    lavarageOpenPosition,
+    lavarageClosePosition,
+    lavarageGetPositions,
+    lavarageGetPositionStatus,
+    lavarageListTokens,
+    lavarageGetMaxLeverage,
+    lavarageRepay,
+    lavaragePartialRepay,
+    lavarageIncreaseBorrow,
+    lavarageAddCollateral,
+    lavarageSplitPosition,
+    lavarageMergePositions,
+    lavarageGetQuote,
+    lavarageCloseQuote,
+    lavarageTradeHistory,
   },
 
   // Combine all actions
@@ -443,6 +491,20 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Lavarage actions — spot margin leverage + borrow on any Solana token
+    lavarageOpenPositionAction,
+    lavarageClosePositionAction,
+    lavarageGetPositionsAction,
+    lavarageGetPositionStatusAction,
+    lavarageListTokensAction,
+    lavarageGetMaxLeverageAction,
+    lavarageRepayAction,
+    lavarageIncreaseBorrowAction,
+    lavarageAddCollateralAction,
+    lavarageGetQuoteAction,
+    lavarageTradeHistoryAction,
+    lavarageBorrowAction,
   ],
 
   // Initialize function

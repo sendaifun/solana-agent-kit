@@ -1,3 +1,7 @@
+> [!TIP]
+> checkout [Suzi](https://suzi.trade) 🌸  by SendAI
+
+
 <div align="center">
 
 # Solana Agent Kit
