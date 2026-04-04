@@ -293,7 +293,7 @@ const MiscPlugin = {
     elfaTrendingTokensAction,
     parseAccountAction,
     parseInstructionAction,
-    getMessariAiAction,
+    getMessariAiActio
     checkoutAction,
     confirmOrderAction,
     fetchOldestTokensAction,
