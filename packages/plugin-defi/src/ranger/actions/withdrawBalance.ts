@@ -20,7 +20,7 @@ interface WithdrawBalanceContext {
 
 export const withdrawBalanceAction: Action = {
   name: "WITHDRAW_BALANCE",
-  similes: ["withdraw balance", "withdraw funds", "withdraw drift"],
+  similes: ["withdraw balance", "withdraw funds"],
   description:
     "Withdraw available balance from a Drift account using the Ranger SOR API.",
   examples: [

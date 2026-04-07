@@ -38,15 +38,6 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`getDebridgeSupportedChains`**: Get supported chains for Debridge.
 - **`getDebridgeTokensInfo`**: Get token information for Debridge.
 
-### Drift
-- **`driftPerpTrade`**: Open a perpetual trade on Drift.
-- **`calculatePerpMarketFundingRate`**: Calculate the funding rate for a perpetual market.
-- **`createVault`**: Create a vault.
-- **`createDriftUserAccount`**: Create a Drift user account.
-- **`depositIntoVault`**: Deposit into a vault.
-- **`withdrawFromDriftVault`**: Withdraw from a Drift vault.
-- **`stakeToDriftInsuranceFund`**: Stake to the Drift insurance fund.
-
 ### Openbook
 - **`openbookCreateMarket`**: Create a market on the Openbook DEX.
 

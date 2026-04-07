@@ -97,30 +97,6 @@ import depositVoltrStrategyAction from "./voltr/actions/depositStrategy";
 import getVoltrPositionValuesAction from "./voltr/actions/getPositionValues";
 import withdrawVoltrStrategyAction from "./voltr/actions/withdrawStrategy";
 
-// Import Drift actions
-import availableDriftMarketsAction from "./drift/actions/availableMarkets";
-import createDriftUserAccountAction from "./drift/actions/createDriftUserAccount";
-import createVaultAction from "./drift/actions/createVault";
-import depositIntoDriftVaultAction from "./drift/actions/depositIntoVault";
-import depositToDriftUserAccountAction from "./drift/actions/depositToDriftUserAccount";
-import deriveDriftVaultAddressAction from "./drift/actions/deriveVaultAddress";
-import doesUserHaveDriftAccountAction from "./drift/actions/doesUserHaveDriftAccount";
-import driftUserAccountInfoAction from "./drift/actions/driftUserAccountInfo";
-import entryQuoteOfDriftPerpTradeAction from "./drift/actions/entryQuoteOfPerpTrade";
-import getDriftLendAndBorrowAPYAction from "./drift/actions/getLendAndBorrowAPY";
-import driftPerpMarketFundingRateAction from "./drift/actions/perpMarketFundingRate";
-import requestUnstakeFromDriftInsuranceFundAction from "./drift/actions/requestUnstakeFromDriftInsuranceFund";
-import requestWithdrawalFromDriftVaultAction from "./drift/actions/requestWithdrawalFromVault";
-import stakeToDriftInsuranceFundAction from "./drift/actions/stakeToDriftInsuranceFund";
-import swapSpotTokenOnDriftAction from "./drift/actions/swapSpotToken";
-import tradeDelegatedDriftVaultAction from "./drift/actions/tradeDelegatedDriftVault";
-import tradeDriftPerpAccountAction from "./drift/actions/tradePerpAccount";
-import unstakeFromDriftInsuranceFundAction from "./drift/actions/unstakeFromDriftInsuranceFund";
-import updateDriftVaultDelegateAction from "./drift/actions/updateDriftVaultDelegate";
-import updateDriftVaultAction from "./drift/actions/updateVault";
-import vaultInfoAction from "./drift/actions/vaultInfo";
-import withdrawFromDriftAccountAction from "./drift/actions/withdrawFromDriftAccount";
-import withdrawFromDriftVaultAction from "./drift/actions/withdrawFromVault";
 
 // Import Openbook tools
 import { openbookCreateMarket } from "./openbook/tools";
@@ -156,38 +132,6 @@ import {
   voltrWithdrawStrategy,
 } from "./voltr/tools";
 
-// Import Drift tools
-import {
-  calculatePerpMarketFundingRate,
-  createDriftUserAccount,
-  createVault,
-  depositIntoVault,
-  depositToDriftUserAccount,
-  deriveDriftVaultAddress,
-  doesUserHaveDriftAccount,
-  driftPerpTrade,
-  driftUserAccountInfo,
-  getAvailableDriftPerpMarkets,
-  getAvailableDriftSpotMarkets,
-  getEntryQuoteOfPerpTrade,
-  getFundingRateAsPercentage,
-  getL2OrderBook,
-  getLendingAndBorrowAPY,
-  getMarketIndexAndType,
-  getVaultAddress,
-  getVaultInfo,
-  requestUnstakeFromDriftInsuranceFund,
-  requestWithdrawalFromVault,
-  stakeToDriftInsuranceFund,
-  swapSpotToken,
-  tradeDriftVault,
-  unstakeFromDriftInsuranceFund,
-  updateVault,
-  updateVaultDelegate,
-  validateAndEncodeAddress,
-  withdrawFromDriftUserAccount,
-  withdrawFromDriftVault,
-} from "./drift/tools";
 
 import {
   sanctumAddLiquidityAction,
@@ -311,37 +255,6 @@ const DefiPlugin = {
     voltrGetPositionValues,
     voltrWithdrawStrategy,
 
-    // Drift methods,
-    driftPerpTrade,
-    deriveDriftVaultAddress,
-    calculatePerpMarketFundingRate,
-    createDriftVault: createVault,
-    createDriftUserAccount,
-    depositIntoDriftVault: depositIntoVault,
-    depositToDriftUserAccount,
-    doesUserHaveDriftAccount,
-    driftUserAccountInfo,
-    getAvailableDriftPerpMarkets,
-    getAvailableDriftSpotMarkets,
-    getLendingAndBorrowAPY,
-    updateVault,
-    withdrawFromDriftVault,
-    withdrawFromDriftUserAccount,
-    requestWithdrawalFromVault,
-    updateDriftVaultDelegate: updateVaultDelegate,
-    getVaultInfo,
-    getVaultAddress,
-    tradeDriftVault,
-    swapSpotToken,
-    stakeToDriftInsuranceFund,
-    requestUnstakeFromDriftInsuranceFund,
-    unstakeFromDriftInsuranceFund,
-    getDriftMarketIndexAndType: getMarketIndexAndType,
-    getDriftFundingRateAsPercentage: getFundingRateAsPercentage,
-    getEntryQuoteOfDriftPerpTrade: getEntryQuoteOfPerpTrade,
-    validateAndEncodeDriftAddress: validateAndEncodeAddress,
-    getDriftL2OrderBook: getL2OrderBook,
-
     // Debridge methods,
     checkDebridgeTransactionStatus,
     createDebridgeBridgeOrder,
@@ -439,31 +352,6 @@ const DefiPlugin = {
     depositVoltrStrategyAction,
     getVoltrPositionValuesAction,
     withdrawVoltrStrategyAction,
-
-    // Drift actions
-    availableDriftMarketsAction,
-    createDriftUserAccountAction,
-    createVaultAction,
-    depositIntoDriftVaultAction,
-    depositToDriftUserAccountAction,
-    deriveDriftVaultAddressAction,
-    doesUserHaveDriftAccountAction,
-    driftUserAccountInfoAction,
-    entryQuoteOfDriftPerpTradeAction,
-    getDriftLendAndBorrowAPYAction,
-    driftPerpMarketFundingRateAction,
-    requestUnstakeFromDriftInsuranceFundAction,
-    vaultInfoAction,
-    withdrawFromDriftVaultAction,
-    withdrawFromDriftAccountAction,
-    updateDriftVaultAction,
-    updateDriftVaultDelegateAction,
-    unstakeFromDriftInsuranceFundAction,
-    tradeDriftPerpAccountAction,
-    tradeDelegatedDriftVaultAction,
-    swapSpotTokenOnDriftAction,
-    stakeToDriftInsuranceFundAction,
-    requestWithdrawalFromDriftVaultAction,
 
     // Debridge actions
     checkDebridgeTransactionStatusAction,
