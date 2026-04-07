@@ -25,9 +25,9 @@ export const getFundingRatesTrendAction: Action = {
   examples: [
     [
       {
-        input: { symbol: "BTC-PERP", platform: "Drift" },
+        input: { symbol: "BTC-PERP", platform: "Flash" },
         output: { trend: [] },
-        explanation: "Get funding rates trend for BTC-PERP on Drift.",
+        explanation: "Get funding rates trend for BTC-PERP on Flash.",
       },
     ],
   ],

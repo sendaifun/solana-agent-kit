@@ -3,7 +3,6 @@ export { getPositionsAction } from "./getPositions";
 export { increasePositionAction } from "./increasePosition";
 export { decreasePositionAction } from "./decreasePosition";
 export { closePositionAction } from "./closePosition";
-export { withdrawBalanceAction } from "./withdrawBalance";
 export { depositCollateralAction } from "./depositCollateral";
 export { withdrawCollateralAction } from "./withdrawCollateral";
 export { getTradeHistoryAction } from "./getTradeHistory";

@@ -22,7 +22,6 @@ This package provides a plugin implementation for the **Solana Agent Kit**, enab
   - `increasePosition`: Open or increase a position
   - `decreasePosition`: Decrease a position
   - `closePosition`: Close a position
-  - `withdrawBalance`: Withdraw available balance
   - `depositCollateral`: Deposit collateral to a position
   - `withdrawCollateral`: Withdraw collateral from a position
 

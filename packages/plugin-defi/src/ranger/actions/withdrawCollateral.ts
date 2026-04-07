@@ -13,7 +13,6 @@ export const withdrawCollateralSchema = z.object({
   adjustment_type: z.enum([
     "WithdrawCollateralFlash",
     "WithdrawCollateralJupiter",
-    "WithdrawCollateralDrift",
   ]),
 });
 

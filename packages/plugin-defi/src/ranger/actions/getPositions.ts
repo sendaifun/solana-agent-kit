@@ -4,7 +4,7 @@ import type { Action, SolanaAgentKit } from "solana-agent-kit";
 export const getPositionsSchema = z.object({
   public_key: z.string().describe("User's Solana wallet address."),
   platforms: z
-    .array(z.enum(["DRIFT", "FLASH", "JUPITER", "ADRENA"]))
+    .array(z.enum(["FLASH", "JUPITER", "ADRENA"]))
     .optional()
     .describe("Optional list of platforms to filter by."),
   symbols: z
@@ -54,7 +54,7 @@ export const getPositionsAction: Action = {
     const params = new URLSearchParams();
     params.set("public_key", input.public_key);
     if (input.platforms)
-      input.platforms.forEach((p: "DRIFT" | "FLASH" | "JUPITER" | "ADRENA") =>
+      input.platforms.forEach((p: "FLASH" | "JUPITER" | "ADRENA") =>
         params.append("platforms", p)
       );
     if (input.symbols)

@@ -204,51 +204,6 @@ export async function decreasePerpPositionRanger({
 }
 
 /**
- * Withdraw balance from Ranger (uses SOR API)
- */
-export async function withdrawBalanceRanger({
-  agent,
-  symbol,
-  amount,
-  apiKey,
-  ...rest
-}: {
-  agent: SolanaAgentKit;
-  symbol: string;
-  amount: number;
-  apiKey: string;
-  [key: string]: any;
-}) {
-  const body = {
-    fee_payer: agent.wallet.publicKey.toBase58(),
-    symbol,
-    amount,
-    adjustment_type: "WithdrawBalanceDrift", // TODO: Confirm adjustment_type for withdraw
-    ...rest,
-  };
-  const response = await fetch(`${RANGER_SOR_API_BASE}/v1/withdraw_balance`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`Withdraw balance request failed: ${error.message}`);
-  }
-  const data = await response.json();
-  const messageBase64 = data.message;
-  const messageBytes = base64js.toByteArray(messageBase64);
-  const transactionMessage = TransactionMessage.deserialize(messageBytes);
-  const transaction = new VersionedTransaction(transactionMessage);
-  const { blockhash } = await agent.connection.getLatestBlockhash();
-  transaction.message.recentBlockhash = blockhash;
-  return signOrSendTX(agent, transaction);
-}
-
-/**
  * Withdraw collateral from Ranger (uses SOR API)
  */
 export async function withdrawCollateralRanger({

@@ -25,17 +25,15 @@ export const getQuoteSchema = z.object({
       "Increase",
       "DecreaseFlash",
       "DecreaseJupiter",
-      "DecreaseDrift",
       "DecreaseAdrena",
       "CloseFlash",
       "CloseJupiter",
-      "CloseDrift",
       "CloseAdrena",
       "CloseAll",
     ])
     .describe("Type of position adjustment or quote context."),
   target_venues: z
-    .array(z.enum(["Jupiter", "Flash", "Drift"]).describe("Venue"))
+    .array(z.enum(["Jupiter", "Flash"]).describe("Venue"))
     .optional(),
   slippage_bps: z.number().int().optional(),
   priority_fee_micro_lamports: z.number().int().optional(),

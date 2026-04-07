@@ -3,7 +3,7 @@ title: 'Ranger Protocol'
 description: 'Learn how to interact with Ranger Protocol for perpetual trading operations'
 ---
 
-Interact with Ranger Protocol to execute perpetual trading operations on Solana. Ranger provides a Smart Order Router (SOR) API that allows users to open, close, increase, and decrease positions across various venues like Flash, Jupiter, Drift, and Adrena.
+Interact with Ranger Protocol to execute perpetual trading operations on Solana. Ranger provides a Smart Order Router (SOR) API that allows users to open, close, increase, and decrease positions across various venues like Flash, Jupiter, and Adrena.
 
 ## Usage
 
@@ -121,27 +121,6 @@ const signature = await agent.methods.decreasePerpPositionRanger({
 });
 ```
 
-### withdrawBalance
-
-Withdraw available balance from Ranger.
-
-#### Parameters
-
-| Parameter | Type | Required | Description |
-| --------- | ---- | -------- | ----------- |
-| symbol | string | Yes | Token symbol (e.g., "USDC") |
-| amount | number | Yes | Amount to withdraw |
-| apiKey | string | Yes | Ranger API key |
-
-#### Example
-```typescript
-const signature = await agent.methods.withdrawBalanceRanger({
-  symbol: "USDC",
-  amount: 10.0,
-  apiKey: "YOUR_API_KEY"
-});
-```
-
 ### withdrawCollateral
 
 Withdraw collateral from an existing position.
@@ -212,14 +191,6 @@ async function rangerOperations(agent: SolanaAgentKit) {
     });
     console.log("Close position transaction:", closeTx);
 
-    // Withdraw balance
-    const withdrawTx = await agent.methods.withdrawBalanceRanger({
-      symbol: "USDC",
-      amount: 10.0,
-      apiKey
-    });
-    console.log("Withdraw balance transaction:", withdrawTx);
-    
   } catch (error) {
     console.error("Ranger operations failed:", error);
   }
@@ -229,7 +200,7 @@ async function rangerOperations(agent: SolanaAgentKit) {
 ## Implementation Details
 
 - **Smart Order Router (SOR)**: Ranger's SOR optimizes trade execution across multiple venues.
-- **Multiple Venues**: Supports trading across various platforms including Flash, Jupiter, Drift, and Adrena.
+- **Multiple Venues**: Supports trading across various platforms including Flash, Jupiter, and Adrena.
 - **Position Management**: Complete toolkit for opening, closing, increasing, and decreasing perpetual positions.
 - **Collateral Management**: Functions for adding and withdrawing collateral from positions.
 - **Data Access**: Comprehensive data access for positions, quotes, trade history, and market metrics.

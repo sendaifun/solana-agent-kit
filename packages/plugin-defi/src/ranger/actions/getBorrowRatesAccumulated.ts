@@ -26,10 +26,10 @@ export const getBorrowRatesAccumulatedAction: Action = {
   examples: [
     [
       {
-        input: { symbol: "BTC-PERP", granularity: "1h", platform: "Drift" },
+        input: { symbol: "BTC-PERP", granularity: "1h", platform: "Flash" },
         output: { rates: [] },
         explanation:
-          "Get accumulated borrow rates for BTC-PERP on Drift with 1h granularity.",
+          "Get accumulated borrow rates for BTC-PERP on Flash with 1h granularity.",
       },
     ],
   ],

@@ -15,10 +15,9 @@ export const decreasePositionSchema = z.object({
   adjustment_type: z.enum([
     "DecreaseFlash",
     "DecreaseJupiter",
-    "DecreaseDrift",
     "DecreaseAdrena",
   ]),
-  target_venues: z.array(z.enum(["Jupiter", "Flash", "Drift"])).optional(),
+  target_venues: z.array(z.enum(["Jupiter", "Flash"])).optional(),
   slippage_bps: z.number().int().optional(),
   priority_fee_micro_lamports: z.number().int().optional(),
   expected_price: z.number().optional(),

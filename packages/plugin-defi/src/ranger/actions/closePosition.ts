@@ -11,7 +11,6 @@ export const closePositionSchema = z.object({
   adjustment_type: z.enum([
     "CloseFlash",
     "CloseJupiter",
-    "CloseDrift",
     "CloseAdrena",
     "CloseAll",
   ]),

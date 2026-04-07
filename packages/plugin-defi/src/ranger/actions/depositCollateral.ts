@@ -13,7 +13,6 @@ export const depositCollateralSchema = z.object({
   adjustment_type: z.enum([
     "DepositCollateralFlash",
     "DepositCollateralJupiter",
-    "DepositCollateralDrift",
   ]),
 });
 

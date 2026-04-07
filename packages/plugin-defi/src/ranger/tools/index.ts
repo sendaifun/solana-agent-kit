@@ -10,10 +10,6 @@ export {
 } from "../actions/decreasePosition";
 export { closePositionSchema, closePosition } from "../actions/closePosition";
 export {
-  withdrawBalanceSchema,
-  withdrawBalance,
-} from "../actions/withdrawBalance";
-export {
   depositCollateralSchema,
   depositCollateral,
 } from "../actions/depositCollateral";

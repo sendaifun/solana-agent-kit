@@ -16,7 +16,7 @@ export const lavarageOpenPositionAction: Action = {
   ],
   description: `Open a leveraged spot margin position on Lavarage — leverage trade ANY Solana token (not just perps on major pairs).
 
-Unlike perpetual protocols (Drift, Adrena) that only support ~20 pairs, Lavarage supports 2000+ tokens including memecoins, DeFi tokens, and LSTs. Up to 12x leverage on majors, 2-5x on long-tail tokens.
+Unlike perpetual protocols (Adrena) that only support ~20 pairs, Lavarage supports 2000+ tokens including memecoins, DeFi tokens, and LSTs. Up to 12x leverage on majors, 2-5x on long-tail tokens.
 
 Deposit SOL or USDC as collateral, borrow more from lending pools, and buy the token with leverage. Your position is a real spot holding — you own the actual tokens, not a derivative.
 

@@ -13,7 +13,7 @@ export const increasePositionSchema = z.object({
   size_denomination: z.string(),
   collateral_denomination: z.literal("USDC"),
   adjustment_type: z.literal("Increase"),
-  target_venues: z.array(z.enum(["Jupiter", "Flash", "Drift"])).optional(),
+  target_venues: z.array(z.enum(["Jupiter", "Flash"])).optional(),
   slippage_bps: z.number().int().optional(),
   priority_fee_micro_lamports: z.number().int().optional(),
   expected_price: z.number().optional(),
