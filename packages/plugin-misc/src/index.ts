@@ -178,6 +178,28 @@ import getVerificationJobStatusAction from "./ottersec/actions/getVerificationJo
 import getVerifiedProgramsAction from "./ottersec/actions/getVerifiedPrograms";
 import verifyProgramAction from "./ottersec/actions/verifyProgram";
 
+// quantoracle
+import priceOptionAction from "./quantoracle/actions/priceOption";
+import runFullRiskAnalysisAction from "./quantoracle/actions/runFullRiskAnalysis";
+import backtestStrategyAction from "./quantoracle/actions/backtestStrategy";
+import optimizeOptionsStrategyAction from "./quantoracle/actions/optimizeOptionsStrategy";
+import recommendHedgeAction from "./quantoracle/actions/recommendHedge";
+import planRebalanceAction from "./quantoracle/actions/planRebalance";
+import runMonteCarloAction from "./quantoracle/actions/runMonteCarlo";
+import computeImpermanentLossAction from "./quantoracle/actions/computeImpermanentLoss";
+import computeLiquidationPriceAction from "./quantoracle/actions/computeLiquidationPrice";
+import {
+  priceOption,
+  runFullRiskAnalysis,
+  backtestStrategy,
+  optimizeOptionsStrategy,
+  recommendHedge,
+  planRebalance,
+  runMonteCarlo,
+  computeImpermanentLoss,
+  computeLiquidationPrice,
+} from "./quantoracle/tools";
+
 // Define and export the plugin
 const MiscPlugin = {
   name: "misc",
@@ -248,6 +270,16 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    // QuantOracle
+    priceOption,
+    runFullRiskAnalysis,
+    backtestStrategy,
+    optimizeOptionsStrategy,
+    recommendHedge,
+    planRebalance,
+    runMonteCarlo,
+    computeImpermanentLoss,
+    computeLiquidationPrice,
   },
 
   // Combine all actions
