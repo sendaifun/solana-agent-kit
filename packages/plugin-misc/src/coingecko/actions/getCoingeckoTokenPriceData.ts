@@ -36,7 +36,7 @@ const getCoingeckoTokenPriceDataAction: Action = {
     try {
       return {
         status: "success",
-        result: getTokenPriceData(agent, input.tokenAddresses),
+        result: await getTokenPriceData(agent, input.tokenAddresses),
       };
     } catch (e) {
       return {
