@@ -1,6 +1,9 @@
 import type { Plugin } from "solana-agent-kit";
 import rockPaperScissorAction from "./sendarcade/actions/rockPaperScissors";
 import { rock_paper_scissor } from "./sendarcade/tools/rock_paper_scissor";
+import algovoiPayCheckoutAction from "./algovoi/actions/payCheckout";
+import algovoiGetCheckoutAction from "./algovoi/actions/getCheckout";
+import { algovoi_pay_checkout, algovoi_get_checkout } from "./algovoi/tools";
 
 // Define and export the plugin
 const BlinksPlugin = {
@@ -10,12 +13,18 @@ const BlinksPlugin = {
   methods: {
     // Sendarcade methods
     rock_paper_scissor,
+    // AlgoVoi methods (multi-chain payment facilitator; Solana flow)
+    algovoi_pay_checkout,
+    algovoi_get_checkout,
   },
 
   // Combine all actions
   actions: [
     // Sendarcade actions
     rockPaperScissorAction,
+    // AlgoVoi actions
+    algovoiPayCheckoutAction,
+    algovoiGetCheckoutAction,
   ],
 
   // Initialize function
