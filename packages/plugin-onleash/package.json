@@ -1,0 +1,49 @@
+{
+  "name": "@solana-agent-kit/plugin-onleash",
+  "version": "0.1.0",
+  "description": "Onleash Token-2022 transfer hook plugin — policy-protected mints for AI agent wallets",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
+    "build": "tsup src/index.ts --dts --clean --format cjs,esm --out-dir dist",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-onleash",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@onleash/sdk": "^0.1.0",
+    "@solana/spl-token": "^0.4.9",
+    "solana-agent-kit": "workspace:*",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.7"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  }
+}
