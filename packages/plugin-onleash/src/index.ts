@@ -1,6 +1,7 @@
 import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
 import deployProtectedMintAction from "./onleash/actions/deployProtectedMint";
 import getPolicyAction from "./onleash/actions/getPolicy";
+import payShProtectedPaymentAction from "./onleash/actions/payShProtectedPayment";
 import protectedTransferAction from "./onleash/actions/protectedTransfer";
 import updatePolicyAction from "./onleash/actions/updatePolicy";
 import {
@@ -36,6 +37,7 @@ const OnleashPlugin: Plugin = {
     updatePolicyAction,
     getPolicyAction,
     protectedTransferAction,
+    payShProtectedPaymentAction,  // pay.sh x402 protected payments
   ],
 
   initialize(_agent: SolanaAgentKit): void {

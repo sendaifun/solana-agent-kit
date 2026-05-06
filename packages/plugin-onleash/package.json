@@ -34,7 +34,7 @@
   "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-onleash",
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
-    "@onleash/sdk": "^0.1.0",
+    "@onleash/sdk": "github:amalia020/onleash#main",
     "@solana/spl-token": "^0.4.9",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"
