@@ -80,7 +80,7 @@ Follow these steps to set up and run the OKX DEX starter example:
 
     Then, edit the `.env` file and add your credentials:
     *   `SOLANA_PRIVATE_KEY`: Your Solana wallet private key (base58 encoded).
-    *   `RPC_URL`: Your Solana RPC endpoint (e.g., from QuickNode, Alchemy, or Helius).
+    *   `RPC_URL`: Your Solana RPC endpoint (e.g., Alchemy `https://solana-mainnet.g.alchemy.com/v2/<ALCHEMY_API_KEY>`, QuickNode, or Helius).
     *   `OPENAI_API_KEY`: Your OpenAI API key.
     *   `OKX_API_KEY`: Your OKX API key.
     *   `OKX_SECRET_KEY`: Your OKX API secret key.
@@ -139,4 +139,4 @@ The chat interface:
 -   The AI can use the tools derived from the `OkxPlugin` actions (like `OKX_DEX_SWAP`) to fetch quotes or prepare transactions.
 -   If a swap is executed, the `OkxDexSwapAction` calls the underlying `getOkxSwap` and `executeSwapTransaction` tools to interact with the OKX API and the Solana blockchain.
 
-This setup demonstrates a powerful way to combine AI language understanding with on-chain actions through the Solana Agent Kit. 
+This setup demonstrates a powerful way to combine AI language understanding with on-chain actions through the Solana Agent Kit.

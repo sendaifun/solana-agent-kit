@@ -29,6 +29,9 @@ const agent = new SolanaAgentKit(
   "YOUR_RPC_URL",
   {
     OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
+    ALCHEMY_API_KEY: "YOUR_ALCHEMY_API_KEY",
+    ALCHEMY_NOTIFY_AUTH_TOKEN: "YOUR_ALCHEMY_NOTIFY_AUTH_TOKEN",
+    // or use ALCHEMY_X402_SIWS_TOKEN for Alchemy x402 SIWS auth
   }
 ).use(MiscPlugin);
 ```
@@ -63,6 +66,25 @@ const agent = new SolanaAgentKit(
 | `getAssetsByOwner` | Get assets owned by a specific wallet |
 | `getWebhook` | Retrieve webhook details |
 | `parseTransaction` | Parse a Solana transaction |
+
+### Alchemy
+The Alchemy tools are additive to the existing Helius and RPC provider integrations. They do not replace any existing provider and intentionally do not include DAS/NFT asset tools.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `alchemySolanaRpcRequest` | Call Solana JSON-RPC through Alchemy |
+| `alchemyGetPriorityFeeEstimate` | Fetch Solana priority fee estimates through Alchemy |
+| `alchemyGetTokenPricesBySymbol` | Fetch current token prices by symbol |
+| `alchemyGetTokenPricesByAddress` | Fetch current token prices by network and token address |
+| `alchemyGetHistoricalTokenPrices` | Fetch historical token prices |
+| `alchemyGetPortfolioTokens` | Fetch wallet token balances, metadata, and prices |
+| `alchemyCreateAddressActivityWebhook` | Create a Solana Address Activity webhook |
+| `alchemyDeleteWebhook` | Delete an Alchemy Notify webhook |
+| `alchemyListWebhooks` | List team webhooks |
+| `alchemyUpdateWebhookAddresses` | Add or remove addresses from an Address Activity webhook |
+| `alchemyReplaceWebhookAddresses` | Replace the full address list for an Address Activity webhook |
+| `alchemyVerifyWebhookSignature` | Verify `X-Alchemy-Signature` webhook payloads |
+| `getAlchemySolanaEndpointInfo` | Get RPC, WebSocket, gRPC, and x402 endpoint templates |
 
 ### SNS
 | Tool Name | Description |

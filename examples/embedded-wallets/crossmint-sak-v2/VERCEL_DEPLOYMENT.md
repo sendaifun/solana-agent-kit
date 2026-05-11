@@ -5,7 +5,7 @@
 - A [Supabase account](https://supabase.com/) (for the PostgreSQL database)
 - [Privy account](https://privy.io/) for authentication
 - [OpenAI API key](https://platform.openai.com/)
-- [Solana RPC URL](https://docs.solana.com/cluster/rpc-endpoints) from providers like Helius, QuickNode, etc.
+- [Solana RPC URL](https://docs.solana.com/cluster/rpc-endpoints) from providers like Alchemy, Helius, QuickNode, etc.
 
 ## Step 1: Set Up Supabase Database
 1. Create a new Supabase project
@@ -71,12 +71,12 @@ Add these environment variables in Vercel:
 | VITE_PRIVY_APP_ID      | Privy app ID                      |
 | PRIVY_APP_SECRET       | Privy app secret                  |
 | POSTGRES_URL           | Supabase PostgreSQL connection URL |
-| VITE_RPC_URL           | Solana RPC URL (from Helius, QuickNode, etc.) |
+| VITE_RPC_URL           | Solana RPC URL (for example, Alchemy `https://solana-mainnet.g.alchemy.com/v2/<ALCHEMY_API_KEY>`, Helius, QuickNode, etc.) |
 
 ## Step 5: Solana-Specific Considerations
 1. **RPC Endpoint Configuration**:
    - Ensure your VITE_RPC_URL points to a reliable Solana RPC provider with sufficient rate limits
-   - For production, consider paid RPC providers like Helius, QuickNode, or Alchemy for better reliability
+   - For production, consider paid RPC providers like Alchemy, Helius, or QuickNode for better reliability
 
 2. **Node Polyfills**:
    - This project already has the necessary Node.js polyfills configured in app.config.ts
@@ -99,4 +99,4 @@ Add these environment variables in Vercel:
 - Ensure all environment variables are correctly set
 - Check that the database connection is working properly
 - Verify that your Privy and OpenAI configurations are correct
-- For Solana-specific issues, check browser console for any RPC connection errors 
+- For Solana-specific issues, check browser console for any RPC connection errors
