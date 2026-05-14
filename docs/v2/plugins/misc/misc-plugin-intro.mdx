@@ -29,9 +29,6 @@ const agent = new SolanaAgentKit(
   "YOUR_RPC_URL",
   {
     OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
-    ALCHEMY_API_KEY: "YOUR_ALCHEMY_API_KEY",
-    ALCHEMY_NOTIFY_AUTH_TOKEN: "YOUR_ALCHEMY_NOTIFY_AUTH_TOKEN",
-    // or use ALCHEMY_X402_SIWS_TOKEN for Alchemy x402 SIWS auth
   }
 ).use(MiscPlugin);
 ```
@@ -69,6 +66,8 @@ const agent = new SolanaAgentKit(
 
 ### Alchemy
 The Alchemy tools are additive to the existing Helius and RPC provider integrations. They do not replace any existing provider and intentionally do not include DAS/NFT asset tools.
+
+Configure Alchemy credentials only when using these tools. RPC, price, and portfolio helpers use `ALCHEMY_API_KEY`; Notify webhook helpers use `ALCHEMY_NOTIFY_AUTH_TOKEN`.
 
 | Tool Name | Description |
 |-----------|-------------|

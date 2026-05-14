@@ -30,9 +30,6 @@ npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-
   <Card title="DeFi Plugin" icon="chart-line" href="/docs/v2/plugins/defi/defi-plugin-intro">
     Swap tokens, provide liquidity, and interact with DeFi protocols using the DeFi Plugin.
   </Card>
-  <Card title="Misc Plugin" icon="toolbox" href="/docs/v2/plugins/misc/misc-plugin-intro">
-    Use Helius utilities, Alchemy RPC/data/webhook helpers, domains, price feeds, and other integrations.
-  </Card>
   <Card title="Blinks Plugin" icon="bolt" href="/docs/v2/plugins/blinks/blinks-plugin-intro">
     Execute fast and atomic transactions with the Blinks Plugin.
   </Card>
@@ -62,8 +59,6 @@ const agent = new SolanaAgentKit(
   "YOUR_RPC_URL",
   {
     OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
-    ALCHEMY_API_KEY: "YOUR_ALCHEMY_API_KEY",
-    // or use ALCHEMY_X402_SIWS_TOKEN for Alchemy x402 SIWS auth
   }
 ) 
   .use(TokenPlugin)
@@ -74,12 +69,6 @@ const agent = new SolanaAgentKit(
 
 // Create Vercel AI tools (or use createLangchainTools for LangChain)
 const tools = createVercelAITools(agent, agent.actions);
-```
-
-You can use any Solana RPC URL for `YOUR_RPC_URL`. With Alchemy, use:
-
-```text
-https://solana-mainnet.g.alchemy.com/v2/<ALCHEMY_API_KEY>
 ```
 
 ## Embedded Wallet Integration

@@ -128,7 +128,7 @@ You can choose to install any of the plugins listed below or you could choose to
 1. Token plugin (`@solana-agent-kit/plugin-token`): Token operations for SPL tokens such as transferring assets, swapping, bridging, and rug checking.
 2. NFT plugin (`@solana-agent-kit/plugin-nft`): NFT operations for Metaplex NFTs such as minting, listing, and metadata management.
 3. DeFi plugin (`@solana-agent-kit/plugin-defi`): DeFi operations for Solana protocols such as staking, lending, borrowing, and spot and perpetual trading.
-4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, Coingecko token information, domain registration, Helius utilities, and Alchemy RPC/data/webhook helpers.
+4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, coingecko token information, and domain registration.
 5. Blinks plugin (`@solana-agent-kit/plugin-blinks`): Blinks operations for Solana protocols such as arcade games and more soon to come.
 
 ```bash
@@ -156,8 +156,6 @@ const agent = new SolanaAgentKit(
   "YOUR_RPC_URL",
   {
     OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
-    ALCHEMY_API_KEY: "YOUR_ALCHEMY_API_KEY",
-    // or use ALCHEMY_X402_SIWS_TOKEN for Alchemy x402 SIWS auth
   }
 ) // Add the plugins you would like to use
   .use(TokenPlugin)
@@ -852,9 +850,6 @@ Note: To use OKX DEX integration, you need to set up the following environment v
 - `RPC_URL`
 - `SOLANA_PRIVATE_KEY`
 - `SOLANA_WALLET_ADDRESS`
-- `ALCHEMY_API_KEY` (Optional, for Alchemy tools in `@solana-agent-kit/plugin-misc`)
-- `ALCHEMY_X402_SIWS_TOKEN` (Optional, for Alchemy x402 SIWS auth)
-- `ALCHEMY_NOTIFY_AUTH_TOKEN` (Optional, for Alchemy Notify webhooks)
 
 ## Examples
 

@@ -80,7 +80,7 @@ Follow these steps to set up and run the OKX DEX starter example:
 
     Then, edit the `.env` file and add your credentials:
     *   `SOLANA_PRIVATE_KEY`: Your Solana wallet private key (base58 encoded).
-    *   `RPC_URL`: Your Solana RPC endpoint (e.g., Alchemy `https://solana-mainnet.g.alchemy.com/v2/<ALCHEMY_API_KEY>`, QuickNode, or Helius).
+    *   `RPC_URL`: Your Solana RPC endpoint (e.g., from QuickNode, Alchemy, or Helius).
     *   `OPENAI_API_KEY`: Your OpenAI API key.
     *   `OKX_API_KEY`: Your OKX API key.
     *   `OKX_SECRET_KEY`: Your OKX API secret key.
