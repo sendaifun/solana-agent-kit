@@ -45,7 +45,7 @@ const fetchOldestTokensAction: Action = {
   schema: z.object({
     limit: z.number().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { limit } = input;
 

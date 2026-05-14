@@ -46,7 +46,7 @@ const fetchTokenBySignatureAction: Action = {
   schema: z.object({
     signature: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { signature } = input;
 

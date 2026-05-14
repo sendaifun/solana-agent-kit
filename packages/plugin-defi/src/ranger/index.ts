@@ -13,11 +13,11 @@ function getEnvOrDefault(envKey: string, fallback: string): string {
 
 export const RANGER_SOR_API_BASE = getEnvOrDefault(
   "RANGER_SOR_API_BASE",
-  "https://staging-sor-api-437363704888.asia-northeast1.run.app"
+  "https://staging-sor-api-437363704888.asia-northeast1.run.app",
 );
 export const RANGER_DATA_API_BASE = getEnvOrDefault(
   "RANGER_DATA_API_BASE",
-  "https://data-api-staging-437363704888.asia-northeast1.run.app"
+  "https://data-api-staging-437363704888.asia-northeast1.run.app",
 );
 
 export * from "./actions";

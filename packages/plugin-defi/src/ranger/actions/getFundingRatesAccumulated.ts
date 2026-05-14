@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getFundingRatesAccumulatedSchema = z.object({
@@ -35,14 +35,20 @@ export const getFundingRatesAccumulatedAction: Action = {
   ],
   schema: getFundingRatesAccumulatedSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetFundingRatesAccumulatedInput,
-    { apiKey }: GetFundingRatesAccumulatedContext
+    { apiKey }: GetFundingRatesAccumulatedContext,
   ) => {
     const params = new URLSearchParams();
-    if (input.symbol) params.set("symbol", input.symbol);
-    if (input.granularity) params.set("granularity", input.granularity);
-    if (input.platform) params.set("platform", input.platform);
+    if (input.symbol) {
+      params.set("symbol", input.symbol);
+    }
+    if (input.granularity) {
+      params.set("granularity", input.granularity);
+    }
+    if (input.platform) {
+      params.set("platform", input.platform);
+    }
 
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/funding_rates/accumulated?${params.toString()}`,
@@ -52,12 +58,12 @@ export const getFundingRatesAccumulatedAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get funding rates accumulated request failed: ${error.message}`
+        `Get funding rates accumulated request failed: ${error.message}`,
       );
     }
     return response.json();

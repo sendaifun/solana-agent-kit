@@ -1,7 +1,7 @@
-import { z } from "zod";
 import type { Action } from "solana-agent-kit";
-import { RANGER_DATA_API_BASE } from "../index";
 import { SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
+import { RANGER_DATA_API_BASE } from "../index";
 
 export const getTradeHistorySchema = z.object({
   public_key: z.string(),
@@ -26,30 +26,45 @@ export const getTradeHistoryAction: Action = {
       {
         input: { public_key: "YOUR_PUBLIC_KEY" },
         output: { trades: [] },
-        explanation: "Get all trade history for a user."
-      }
-    ]
+        explanation: "Get all trade history for a user.",
+      },
+    ],
   ],
   schema: getTradeHistorySchema,
-  handler: async (agent: SolanaAgentKit, input: GetTradeHistoryInput, { apiKey }: GetTradeHistoryContext) => {
+  handler: async (
+    _agent: SolanaAgentKit,
+    input: GetTradeHistoryInput,
+    { apiKey }: GetTradeHistoryContext,
+  ) => {
     const params = new URLSearchParams();
     params.set("public_key", input.public_key);
-    if (input.platforms) input.platforms.forEach((p: string) => params.append("platforms", p));
-    if (input.symbols) input.symbols.forEach((s: string) => params.append("symbols", s));
-    if (input.start_time) params.set("start_time", input.start_time);
-    if (input.end_time) params.set("end_time", input.end_time);
+    if (input.platforms) {
+      input.platforms.forEach((p: string) => params.append("platforms", p));
+    }
+    if (input.symbols) {
+      input.symbols.forEach((s: string) => params.append("symbols", s));
+    }
+    if (input.start_time) {
+      params.set("start_time", input.start_time);
+    }
+    if (input.end_time) {
+      params.set("end_time", input.end_time);
+    }
 
-    const response = await fetch(`${RANGER_DATA_API_BASE}/v1/trade_history?${params.toString()}", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
+    const response = await fetch(
+      `${RANGER_DATA_API_BASE}/v1/trade_history?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+        },
       },
-    });
+    );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(`Get trade history request failed: ${error.message}`);
     }
     return response.json();
   },
-}; 
+};

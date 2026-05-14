@@ -1,4 +1,4 @@
-import { z, ZodTypeAny, ZodObject, ZodRawShape, ZodType } from "zod";
+import { ZodObject, ZodRawShape, ZodType, ZodTypeAny, z } from "zod";
 
 // --- INTERFACES (No changes needed here, but included for completeness) ---
 
@@ -71,7 +71,7 @@ function mapZodTypeToJsonSchema(zodType: ZodTypeAny): JSONSchemaProperty {
 
   // --- Part 3: Map the core Zod type to a JSON Schema type ---
   const typeName = coreType._def.typeName;
-  let jsonSchema: JSONSchemaProperty = { type: "string" }; // Default
+  const jsonSchema: JSONSchemaProperty = { type: "string" }; // Default
 
   switch (typeName) {
     case "ZodNullable":
@@ -112,7 +112,7 @@ function mapZodTypeToJsonSchema(zodType: ZodTypeAny): JSONSchemaProperty {
       jsonSchema.type = "array";
       jsonSchema.items = mapZodTypeToJsonSchema(coreType._def.type);
       break;
-    case "ZodObject":
+    case "ZodObject": {
       jsonSchema.type = "object";
       const shape = (coreType as ZodObject<any>).shape;
       jsonSchema.properties = {};
@@ -122,6 +122,7 @@ function mapZodTypeToJsonSchema(zodType: ZodTypeAny): JSONSchemaProperty {
       // CHANGE: Per the Agents API docs, 'required' must list ALL properties.
       jsonSchema.required = Object.keys(shape);
       break;
+    }
     default:
       throw new Error(`Unsupported Zod type: ${typeName}`);
   }

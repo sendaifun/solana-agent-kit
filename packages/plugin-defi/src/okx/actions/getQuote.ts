@@ -113,7 +113,7 @@ const getQuoteAction: Action = {
         fromTokenAddress,
         toTokenAddress,
         amount,
-        slippage
+        slippage,
       );
 
       return {

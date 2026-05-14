@@ -25,7 +25,7 @@ const getProgramBuildLog: Action = {
   schema: z.object({
     address: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { address } = input;
 

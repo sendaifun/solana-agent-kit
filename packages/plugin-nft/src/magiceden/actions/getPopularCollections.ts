@@ -1,6 +1,6 @@
 import { Action } from "solana-agent-kit";
-import { get_magiceden_popular_collections } from "../tools/get_popular_collections";
 import { z } from "zod";
+import { get_magiceden_popular_collections } from "../tools/get_popular_collections";
 
 const getPopularMagicEdenCollections: Action = {
   name: "GET_POPULAR_MAGICEDEN_COLLECTIONS",

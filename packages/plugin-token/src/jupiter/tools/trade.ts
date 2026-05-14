@@ -1,8 +1,8 @@
 import { PublicKey, VersionedTransaction } from "@solana/web3.js";
 import {
   type SolanaAgentKit,
-  signOrSendTX,
   getMintInfo,
+  signOrSendTX,
 } from "solana-agent-kit";
 import {
   DEFAULT_OPTIONS,

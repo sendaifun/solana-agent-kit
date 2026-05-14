@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getLiquidationsCapitulationSchema = z.object({
@@ -34,14 +34,17 @@ export const getLiquidationsCapitulationAction: Action = {
   ],
   schema: getLiquidationsCapitulationSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetLiquidationsCapitulationInput,
-    { apiKey }: GetLiquidationsCapitulationContext
+    { apiKey }: GetLiquidationsCapitulationContext,
   ) => {
     const params = new URLSearchParams();
-    if (input.granularity) params.set("granularity", input.granularity);
-    if (input.threshold !== undefined)
+    if (input.granularity) {
+      params.set("granularity", input.granularity);
+    }
+    if (input.threshold !== undefined) {
       params.set("threshold", input.threshold.toString());
+    }
 
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/liquidations/capitulation?${params.toString()}`,
@@ -51,12 +54,12 @@ export const getLiquidationsCapitulationAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get liquidations capitulation request failed: ${error.message}`
+        `Get liquidations capitulation request failed: ${error.message}`,
       );
     }
     return response.json();

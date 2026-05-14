@@ -35,7 +35,7 @@ const getVerificationJobStatus: Action = {
   schema: z.object({
     job_id: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { job_id } = input;
       const data = await get_verification_job_status({ job_id });

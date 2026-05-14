@@ -7,14 +7,10 @@ import { MemetusPumpfun, TokenResponse } from "@0xobedient/memetus-pumpfun-sdk";
  * @link        https://www.npmjs.com/package/@0xobedient/memetus-pumpfun-sdk
  */
 export async function fetch_token_by_mint(
-  address: string
+  address: string,
 ): Promise<TokenResponse> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchTokenByAddress(address);
+  const client = new MemetusPumpfun();
+  const result = await client.fetchTokenByAddress(address);
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

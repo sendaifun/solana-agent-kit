@@ -18,7 +18,7 @@ export async function getQuote(
   fromTokenAddress: string,
   toTokenAddress: string,
   amount: string,
-  slippage: string
+  slippage: string,
 ) {
   const okxClient: OKXDexClient = new OKXDexClient({
     apiKey: agent.config.OKX_API_KEY ?? "",

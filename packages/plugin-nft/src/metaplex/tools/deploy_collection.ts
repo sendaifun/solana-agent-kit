@@ -5,7 +5,7 @@ import {
   toWeb3JsKeypair,
   toWeb3JsPublicKey,
 } from "@metaplex-foundation/umi-web3js-adapters";
-import { Transaction, type PublicKey } from "@solana/web3.js";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 import { initUmi } from "../../utils";
 import type { CollectionOptions } from "../types";

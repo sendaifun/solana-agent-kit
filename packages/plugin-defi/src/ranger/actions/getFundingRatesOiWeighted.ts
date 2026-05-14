@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getFundingRatesOiWeightedSchema = z.object({});
@@ -31,9 +31,9 @@ export const getFundingRatesOiWeightedAction: Action = {
   ],
   schema: getFundingRatesOiWeightedSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     _input: GetFundingRatesOiWeightedInput,
-    { apiKey }: GetFundingRatesOiWeightedContext
+    { apiKey }: GetFundingRatesOiWeightedContext,
   ) => {
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/funding_rates/oi_weighted`,
@@ -43,12 +43,12 @@ export const getFundingRatesOiWeightedAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get funding rates oi weighted request failed: ${error.message}`
+        `Get funding rates oi weighted request failed: ${error.message}`,
       );
     }
     return response.json();

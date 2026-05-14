@@ -1,10 +1,9 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
 import { VersionedTransaction } from "@solana/web3.js";
 import bs58 from "bs58";
+import type { SolanaAgentKit } from "solana-agent-kit";
 
 const API_BASE = "https://api.lavarage.xyz/api/v1";
-const API_KEY =
-  "lv2_prod_f10d28b9ef5694e38b61eb614556ed85ab480585ef03c39c";
+const API_KEY = "lv2_prod_f10d28b9ef5694e38b61eb614556ed85ab480585ef03c39c";
 
 async function lavaApi(
   path: string,
@@ -19,10 +18,11 @@ async function lavaApi(
     body: opts?.body ? JSON.stringify(opts.body) : undefined,
   });
   const data = await res.json();
-  if (!res.ok)
+  if (!res.ok) {
     throw new Error(
       `Lavarage API ${res.status}: ${data?.message ?? JSON.stringify(data)}`,
     );
+  }
   return data;
 }
 
@@ -74,13 +74,16 @@ export async function lavarageListTokens(
   const seen = new Map<string, any>();
   for (const o of offers) {
     const mint = o.tradedTokenAddress ?? o.tokenMint;
-    if (!mint) continue;
+    if (!mint) {
+      continue;
+    }
     const existing = seen.get(mint);
     if (
       !existing ||
       Number(o.availableForOpen ?? 0) > Number(existing.availableForOpen ?? 0)
-    )
+    ) {
       seen.set(mint, o);
+    }
   }
   return Array.from(seen.values())
     .slice(0, 20)
@@ -102,13 +105,19 @@ export async function lavarageGetMaxLeverage(
   search: string,
   quoteCurrency?: string,
 ): Promise<any[]> {
-  const params = new URLSearchParams({ includeTokens: "true", search, limit: "10" });
+  const params = new URLSearchParams({
+    includeTokens: "true",
+    search,
+    limit: "10",
+  });
   if (quoteCurrency && quoteCurrency !== "all") {
     const quoteMap: Record<string, string> = {
       SOL: "So11111111111111111111111111111111111111112",
       USDC: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     };
-    if (quoteMap[quoteCurrency]) params.set("quoteToken", quoteMap[quoteCurrency]);
+    if (quoteMap[quoteCurrency]) {
+      params.set("quoteToken", quoteMap[quoteCurrency]);
+    }
   }
   const offers = await lavaApi(`/offers?${params}`);
   return (Array.isArray(offers) ? offers : []).map((o: any) => ({
@@ -171,7 +180,9 @@ export async function lavarageGetPositionStatus(
   const match = (Array.isArray(positions) ? positions : []).find(
     (p: any) => p.address === positionAddress,
   );
-  if (!match) throw new Error(`Position ${positionAddress} not found`);
+  if (!match) {
+    throw new Error(`Position ${positionAddress} not found`);
+  }
   return match;
 }
 

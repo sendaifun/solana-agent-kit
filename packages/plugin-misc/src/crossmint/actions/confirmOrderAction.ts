@@ -25,7 +25,8 @@ const confirmOrderAction: Action = {
           order: { orderId: "order_123" /* ... */ },
           message: "Order confirmed successfully",
         },
-        explanation: "Confirm the status of order order_123, retrying until confirmed.",
+        explanation:
+          "Confirm the status of order order_123, retrying until confirmed.",
       },
     ],
   ],

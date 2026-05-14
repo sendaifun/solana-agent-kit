@@ -13,19 +13,15 @@ export async function fetch_tokens_by_metadata(
   name?: string,
   symbol?: string,
   sort?: "asc" | "desc",
-  limit?: number
+  limit?: number,
 ): Promise<TokenResponse[]> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchTokensByMetadata({
-      name,
-      symbol,
-      sort,
-      limit,
-    });
+  const client = new MemetusPumpfun();
+  const result = await client.fetchTokensByMetadata({
+    name,
+    symbol,
+    sort,
+    limit,
+  });
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

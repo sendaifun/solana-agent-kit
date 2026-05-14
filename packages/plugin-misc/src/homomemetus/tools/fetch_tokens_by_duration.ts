@@ -13,19 +13,15 @@ export async function fetch_tokens_by_duration(
   start?: string,
   end?: string,
   sort?: "asc" | "desc",
-  limit?: number
+  limit?: number,
 ): Promise<TokenResponse[]> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchTokensByDuration({
-      start,
-      end,
-      sort,
-      limit,
-    });
+  const client = new MemetusPumpfun();
+  const result = await client.fetchTokensByDuration({
+    start,
+    end,
+    sort,
+    limit,
+  });
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

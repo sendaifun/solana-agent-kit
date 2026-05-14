@@ -8,7 +8,9 @@ import {
   swapFromEvm,
   swapFromSolana,
 } from "@mayanfinance/swap-sdk";
-import ERC20Permit_ABI from "@openzeppelin/contracts/build/contracts/ERC20Permit.json" with { type: "json" };
+import ERC20Permit_ABI from "@openzeppelin/contracts/build/contracts/ERC20Permit.json" with {
+  type: "json",
+};
 import {
   Contract,
   Signature,

@@ -1,8 +1,8 @@
+import { OnlinePumpAmmSdk, PUMP_AMM_SDK } from "@pump-fun/pump-swap-sdk";
 import { PublicKey } from "@solana/web3.js";
+import { BN } from "bn.js";
 import { sendTx } from "solana-agent-kit";
 import { SolanaAgentKit } from "solana-agent-kit";
-import { OnlinePumpAmmSdk, PUMP_AMM_SDK } from "@pump-fun/pump-swap-sdk";
-import { BN } from "bn.js";
 
 /**
  * Remove liquidity from a PumpFun AMM pool
@@ -12,43 +12,43 @@ import { BN } from "bn.js";
  * @param slippage Slippage tolerance in percentage
  */
 export async function removeLiquidity(
-    agent: SolanaAgentKit,
-    pool: string,
-    lpAmount: number,
-    slippage: number,
+  agent: SolanaAgentKit,
+  pool: string,
+  lpAmount: number,
+  slippage: number,
 ) {
-    const sdk = new OnlinePumpAmmSdk(agent.connection);
-    const poolKey = new PublicKey(pool);
+  const sdk = new OnlinePumpAmmSdk(agent.connection);
+  const poolKey = new PublicKey(pool);
 
-    const liquidityState = await sdk.liquiditySolanaState(
-        poolKey,
-        agent.wallet.publicKey,
-    );
+  const liquidityState = await sdk.liquiditySolanaState(
+    poolKey,
+    agent.wallet.publicKey,
+  );
 
-    const poolInfo = await sdk.fetchPool(poolKey);
-    const lpMint = poolInfo.lpMint;
+  const poolInfo = await sdk.fetchPool(poolKey);
+  const _lpMint = poolInfo.lpMint;
 
-    // Assuming 6 decimals for LP tokens
-    const lpAmountBN = new BN(lpAmount * 1e6);
+  // Assuming 6 decimals for LP tokens
+  const lpAmountBN = new BN(lpAmount * 1e6);
 
-    const result = PUMP_AMM_SDK.withdrawAutoCompleteBaseAndQuoteFromLpToken(
-        liquidityState,
-        lpAmountBN,
-        slippage,
-    );
+  const result = PUMP_AMM_SDK.withdrawAutoCompleteBaseAndQuoteFromLpToken(
+    liquidityState,
+    lpAmountBN,
+    slippage,
+  );
 
-    const instructions = await PUMP_AMM_SDK.withdrawInstructions(
-        liquidityState,
-        lpAmountBN,
-        slippage,
-    );
+  const instructions = await PUMP_AMM_SDK.withdrawInstructions(
+    liquidityState,
+    lpAmountBN,
+    slippage,
+  );
 
-    const tx = await sendTx(agent, instructions);
+  const tx = await sendTx(agent, instructions);
 
-    return {
-        status: "success",
-        signature: tx,
-        baseAmountOut: result.base.toString(),
-        quoteAmountOut: result.quote.toString(),
-    };
+  return {
+    status: "success",
+    signature: tx,
+    baseAmountOut: result.base.toString(),
+    quoteAmountOut: result.quote.toString(),
+  };
 }

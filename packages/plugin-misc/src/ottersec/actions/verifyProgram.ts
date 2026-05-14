@@ -33,7 +33,7 @@ const verifyProgram: Action = {
     repository: z.string(),
     commit_hash: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { program_id, repository, commit_hash } = input;
 

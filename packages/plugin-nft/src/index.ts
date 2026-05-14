@@ -19,12 +19,12 @@ import {
 // Import 3Land actions
 import create3LandCollectibleAction from "./3land/actions/create3LandCollectibleAction";
 
+import bidOnMagicEdenNFTAction from "./magiceden/actions/bidOnNFT";
+import getMagicEdenCollectionListingsAction from "./magiceden/actions/getCollectionListings";
 // Import Magic Eden actions
 import getMagicEdenCollectionStatsAction from "./magiceden/actions/getCollectionStats";
 import getMagicEdenPopularCollectionsAction from "./magiceden/actions/getPopularCollections";
 import listNFTOnMagicEdenAction from "./magiceden/actions/listNFT";
-import bidOnMagicEdenNFTAction from "./magiceden/actions/bidOnNFT";
-import getMagicEdenCollectionListingsAction from "./magiceden/actions/getCollectionListings";
 
 // Import Metaplex tools
 import {

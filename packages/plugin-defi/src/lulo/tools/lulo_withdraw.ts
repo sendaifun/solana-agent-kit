@@ -27,7 +27,6 @@ export async function luloWithdraw(
       },
     );
 
-
     const data = await response.json();
 
     // Deserialize the transaction

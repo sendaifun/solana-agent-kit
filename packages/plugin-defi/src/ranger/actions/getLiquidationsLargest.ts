@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getLiquidationsLargestSchema = z.object({
@@ -33,13 +33,17 @@ export const getLiquidationsLargestAction: Action = {
   ],
   schema: getLiquidationsLargestSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetLiquidationsLargestInput,
-    { apiKey }: GetLiquidationsLargestContext
+    { apiKey }: GetLiquidationsLargestContext,
   ) => {
     const params = new URLSearchParams();
-    if (input.granularity) params.set("granularity", input.granularity);
-    if (input.limit !== undefined) params.set("limit", input.limit.toString());
+    if (input.granularity) {
+      params.set("granularity", input.granularity);
+    }
+    if (input.limit !== undefined) {
+      params.set("limit", input.limit.toString());
+    }
 
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/liquidations/largest?${params.toString()}`,
@@ -49,12 +53,12 @@ export const getLiquidationsLargestAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get liquidations largest request failed: ${error.message}`
+        `Get liquidations largest request failed: ${error.message}`,
       );
     }
     return response.json();

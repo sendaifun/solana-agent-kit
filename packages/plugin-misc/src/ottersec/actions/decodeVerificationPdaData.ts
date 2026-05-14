@@ -33,7 +33,7 @@ const decodeVerificationPdaData: Action = {
   schema: z.object({
     hex: z.string(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { hex } = input;
 

@@ -1,6 +1,11 @@
-import { VersionedTransaction, TransactionMessage, PublicKey, Transaction } from "@solana/web3.js";
-import { SolanaAgentKit } from "solana-agent-kit";
 import { PumpSdk } from "@pump-fun/pump-sdk";
+import {
+  PublicKey,
+  Transaction,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { SolanaAgentKit } from "solana-agent-kit";
 import { signOrSendTX } from "solana-agent-kit";
 
 /**
@@ -8,7 +13,18 @@ import { signOrSendTX } from "solana-agent-kit";
  * @param agent - SolanaAgentKit instance
  * @returns - Signature of the transaction, mint address and metadata URI, if successful, else error
  */
-export default async function claimCreatorFee(agent: SolanaAgentKit): Promise<{ signedTransaction: string } | { txHash: string | VersionedTransaction | Transaction | string[] | Transaction[] | VersionedTransaction[] }> {
+export default async function claimCreatorFee(agent: SolanaAgentKit): Promise<
+  | { signedTransaction: string }
+  | {
+      txHash:
+        | string
+        | VersionedTransaction
+        | Transaction
+        | string[]
+        | Transaction[]
+        | VersionedTransaction[];
+    }
+> {
   try {
     const pumpSdk = new PumpSdk(agent.connection);
 
@@ -33,7 +49,9 @@ export default async function claimCreatorFee(agent: SolanaAgentKit): Promise<{ 
     if (agent.config.signOnly) {
       const agentSignedTx = await agent.wallet.signTransaction(tx);
       return {
-        signedTransaction: Buffer.from(agentSignedTx.serialize()).toString("base64"),
+        signedTransaction: Buffer.from(agentSignedTx.serialize()).toString(
+          "base64",
+        ),
       };
     } else {
       const txHash = await signOrSendTX(agent, tx);

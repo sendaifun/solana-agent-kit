@@ -1,6 +1,6 @@
 import { Action } from "solana-agent-kit";
-import { list_nft_on_magiceden } from "../tools/list_nft";
 import { z } from "zod";
+import { list_nft_on_magiceden } from "../tools/list_nft";
 
 const listMagicEdenNFTAction: Action = {
   name: "LIST_MAGICEDEN_NFT",

@@ -1,11 +1,11 @@
-import { SolanaAgentKit, createOpenAITools } from "solana-agent-kit";
-import { OpenAI } from "openai";
 import {
-  setDefaultOpenAIClient,
-  run,
   Agent,
   AgentInputItem,
+  run,
+  setDefaultOpenAIClient,
 } from "@openai/agents";
+import { OpenAI } from "openai";
+import { SolanaAgentKit, createOpenAITools } from "solana-agent-kit";
 import { question } from "../utils";
 
 export default async function (agent: SolanaAgentKit) {

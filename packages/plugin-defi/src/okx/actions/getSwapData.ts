@@ -138,7 +138,7 @@ const getSwapDataAction: Action = {
         toTokenAddress,
         userWalletAddress,
         amount,
-        slippage
+        slippage,
       );
 
       return {

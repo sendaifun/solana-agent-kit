@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getLiquidationsHeatmapSchema = z.object({
@@ -32,12 +32,14 @@ export const getLiquidationsHeatmapAction: Action = {
   ],
   schema: getLiquidationsHeatmapSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetLiquidationsHeatmapInput,
-    { apiKey }: GetLiquidationsHeatmapContext
+    { apiKey }: GetLiquidationsHeatmapContext,
   ) => {
     const params = new URLSearchParams();
-    if (input.granularity) params.set("granularity", input.granularity);
+    if (input.granularity) {
+      params.set("granularity", input.granularity);
+    }
 
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/liquidations/heatmap?${params.toString()}`,
@@ -47,12 +49,12 @@ export const getLiquidationsHeatmapAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get liquidations heatmap request failed: ${error.message}`
+        `Get liquidations heatmap request failed: ${error.message}`,
       );
     }
     return response.json();
