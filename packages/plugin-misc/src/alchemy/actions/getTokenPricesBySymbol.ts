@@ -14,7 +14,7 @@ const alchemyGetTokenPricesBySymbolAction: Action = {
     "price from alchemy",
   ],
   description:
-    "Fetches current token prices by symbol from Alchemy Prices API using API-key auth or x402 SIWS auth",
+    "Fetches current token prices by symbol from Alchemy Prices API using API-key auth",
   examples: [
     [
       {

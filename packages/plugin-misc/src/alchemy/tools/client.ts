@@ -47,13 +47,6 @@ export function getAlchemyApiKey(
   return override ?? agent.config?.ALCHEMY_API_KEY;
 }
 
-export function getAlchemySiwsToken(
-  agent: SolanaAgentKit,
-  override?: string,
-): string | undefined {
-  return override ?? agent.config?.ALCHEMY_X402_SIWS_TOKEN;
-}
-
 export function getAlchemyNotifyAuthToken(
   agent: SolanaAgentKit,
   override?: string,
@@ -76,33 +69,18 @@ export function resolveAlchemyAuth(
     return { mode: "api-key", apiKey };
   }
 
-  const siwsToken = getAlchemySiwsToken(agent, options.siwsToken);
-  if (siwsToken) {
-    return { mode: "x402-siws", siwsToken };
-  }
-
   throw new Error(
-    "Alchemy requests require either ALCHEMY_API_KEY or ALCHEMY_X402_SIWS_TOKEN",
+    "Alchemy requests require ALCHEMY_API_KEY. x402 requires a wallet payment flow and is not supported by passing a static token.",
   );
 }
 
 export function createAlchemyHeaders(
-  auth?: AlchemyAuth,
   headers: Record<string, string> = {},
 ): Record<string, string> {
-  const nextHeaders = {
+  return {
     "Content-Type": "application/json",
     ...headers,
   };
-
-  if (auth?.mode === "x402-siws" && auth.siwsToken) {
-    return {
-      ...nextHeaders,
-      Authorization: `SIWS ${auth.siwsToken}`,
-    };
-  }
-
-  return nextHeaders;
 }
 
 export async function fetchAlchemyJson<T>(
@@ -118,7 +96,9 @@ export async function fetchAlchemyJson<T>(
 
   if (!response.ok) {
     const paymentMessage =
-      response.status === 402 ? " x402 payment required." : "";
+      response.status === 402
+        ? " x402 payment is required, but this helper does not perform wallet payment retries."
+        : "";
     throw new AlchemyApiError(
       `Alchemy request failed with ${response.status} ${response.statusText}.${paymentMessage}`,
       {

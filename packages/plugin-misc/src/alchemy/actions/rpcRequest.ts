@@ -14,7 +14,7 @@ const alchemySolanaRpcRequestAction: Action = {
     "alchemy json rpc",
   ],
   description:
-    "Calls a Solana JSON-RPC method through Alchemy using either ALCHEMY_API_KEY or ALCHEMY_X402_SIWS_TOKEN",
+    "Calls a Solana JSON-RPC method through Alchemy using ALCHEMY_API_KEY",
   examples: [
     [
       {

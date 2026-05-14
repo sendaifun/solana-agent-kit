@@ -26,7 +26,6 @@ export interface Config {
   ALLORA_NETWORK?: string;
   ALCHEMY_API_KEY?: string;
   ALCHEMY_NOTIFY_AUTH_TOKEN?: string;
-  ALCHEMY_X402_SIWS_TOKEN?: string;
   ALCHEMY_SOLANA_NETWORK?: string;
   ALCHEMY_SOLANA_GRPC_URL?: string;
   ELFA_AI_API_KEY?: string;

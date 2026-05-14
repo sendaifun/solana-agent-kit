@@ -26,7 +26,7 @@ export async function alchemyGetTokenPricesBySymbol<T = unknown>(
 
   return fetchAlchemyJson<T>(url.toString(), {
     method: "GET",
-    headers: createAlchemyHeaders(auth),
+    headers: createAlchemyHeaders(),
   });
 }
 
@@ -44,7 +44,7 @@ export async function alchemyGetTokenPricesByAddress<T = unknown>(
 
   return fetchAlchemyJson<T>(`${baseUrl}/tokens/by-address`, {
     method: "POST",
-    headers: createAlchemyHeaders(auth),
+    headers: createAlchemyHeaders(),
     body: JSON.stringify({ addresses }),
   });
 }
@@ -59,7 +59,7 @@ export async function alchemyGetHistoricalTokenPrices<T = unknown>(
 
   return fetchAlchemyJson<T>(`${baseUrl}/tokens/historical`, {
     method: "POST",
-    headers: createAlchemyHeaders(auth),
+    headers: createAlchemyHeaders(),
     body: JSON.stringify(requestBody),
   });
 }

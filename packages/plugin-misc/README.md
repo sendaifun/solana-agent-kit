@@ -40,7 +40,7 @@ These tools are additive to the existing Helius and RPC provider integrations an
 - `alchemyUpdateWebhookAddresses` - Add or remove addresses from an Address Activity webhook.
 - `alchemyReplaceWebhookAddresses` - Replace the full address list for an Address Activity webhook.
 - `alchemyVerifyWebhookSignature` - Verify Alchemy webhook signatures.
-- `getAlchemySolanaEndpointInfo` - Get RPC, WebSocket, gRPC, and x402 endpoint templates.
+- `getAlchemySolanaEndpointInfo` - Get RPC, WebSocket, gRPC, and x402 reference endpoint templates.
 
 ### Messari
 - `askMessariAi` - Ask a question to Messari AI.

@@ -54,17 +54,11 @@ export function getAlchemyX402SolanaRpcUrl(
   return `https://x402.alchemy.com/${network}/v2`;
 }
 
-export function getAlchemyPricesBaseUrl(apiKey?: string): string {
-  if (!apiKey) {
-    return "https://x402.alchemy.com/prices/v1";
-  }
+export function getAlchemyPricesBaseUrl(apiKey: string): string {
   return `https://api.g.alchemy.com/prices/v1/${apiKey}`;
 }
 
-export function getAlchemyPortfolioBaseUrl(apiKey?: string): string {
-  if (!apiKey) {
-    return "https://x402.alchemy.com/data/v1";
-  }
+export function getAlchemyPortfolioBaseUrl(apiKey: string): string {
   return `https://api.g.alchemy.com/data/v1/${apiKey}`;
 }
 
@@ -84,6 +78,7 @@ export function getAlchemySolanaEndpointInfo(
     grpcUrl: getAlchemySolanaGrpcUrl(agent, { network }),
     grpcAuthHeader: "X-Token",
     x402RpcUrl: getAlchemyX402SolanaRpcUrl(agent, { network }),
-    x402AuthHeader: "Authorization: SIWS <token>",
+    x402PaymentFlow:
+      "Requires the full wallet-based x402 payment flow; this plugin does not authenticate x402 requests with a static token.",
   };
 }

@@ -24,7 +24,7 @@ export async function alchemyGetPortfolioTokens<T = unknown>(
 
   return fetchAlchemyJson<T>(`${baseUrl}/assets/tokens/by-address`, {
     method: "POST",
-    headers: createAlchemyHeaders(auth),
+    headers: createAlchemyHeaders(),
     body: JSON.stringify(requestBody),
   });
 }

@@ -3,7 +3,6 @@ import type { z } from "zod";
 export interface AlchemyAgentConfig {
   ALCHEMY_API_KEY?: string;
   ALCHEMY_NOTIFY_AUTH_TOKEN?: string;
-  ALCHEMY_X402_SIWS_TOKEN?: string;
   ALCHEMY_SOLANA_NETWORK?: string;
   ALCHEMY_SOLANA_GRPC_URL?: string;
 }
@@ -40,19 +39,17 @@ export type AlchemyNotifyNetwork =
   | "SOLANA_DEVNET"
   | (string & {});
 
-export type AlchemyAuthMode = "api-key" | "x402-siws";
+export type AlchemyAuthMode = "api-key";
 
 export interface AlchemyRequestOptions {
   apiKey?: string;
-  siwsToken?: string;
   network?: AlchemySolanaNetwork;
   id?: string | number;
 }
 
 export interface AlchemyAuth {
   mode: AlchemyAuthMode;
-  apiKey?: string;
-  siwsToken?: string;
+  apiKey: string;
 }
 
 export interface JsonRpcResponse<T = unknown> {
@@ -117,5 +114,5 @@ export interface AlchemyEndpointInfo {
   grpcUrl: string;
   grpcAuthHeader: "X-Token";
   x402RpcUrl: string;
-  x402AuthHeader: "Authorization: SIWS <token>";
+  x402PaymentFlow: string;
 }

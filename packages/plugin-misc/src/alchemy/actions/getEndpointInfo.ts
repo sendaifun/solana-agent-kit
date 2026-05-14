@@ -15,7 +15,7 @@ const alchemyGetEndpointInfoAction: Action = {
     "alchemy x402 solana endpoint",
   ],
   description:
-    "Returns Alchemy Solana RPC, WebSocket, Yellowstone gRPC, and x402 endpoint templates without exposing secrets",
+    "Returns Alchemy Solana RPC, WebSocket, Yellowstone gRPC, and x402 reference endpoint templates without exposing secrets",
   examples: [
     [
       {
@@ -32,12 +32,13 @@ const alchemyGetEndpointInfoAction: Action = {
             grpcUrl: "https://solana-mainnet.g.alchemy.com",
             grpcAuthHeader: "X-Token",
             x402RpcUrl: "https://x402.alchemy.com/solana-mainnet/v2",
-            x402AuthHeader: "Authorization: SIWS <token>",
+            x402PaymentFlow:
+              "Requires the full wallet-based x402 payment flow; this plugin does not authenticate x402 requests with a static token.",
           },
           message: "Alchemy Solana endpoint templates retrieved.",
         },
         explanation:
-          "Shows the endpoint templates to use for Alchemy Solana RPC, WebSocket, gRPC, and x402 SIWS requests.",
+          "Shows the endpoint templates to use for Alchemy Solana RPC, WebSocket, gRPC, and x402 wallet-payment flows.",
       },
     ],
   ],
