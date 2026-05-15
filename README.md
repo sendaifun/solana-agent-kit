@@ -868,6 +868,14 @@ The repository includes an advanced example of building a multi-agent system usi
 
 Check out the [LangGraph example](examples/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
 
+## 🔐 Community Wallet Providers
+
+Alternative wallet backends that plug into Solana Agent Kit.
+
+| Provider | npm | Description |
+|----------|-----|-------------|
+| [sak-agentwallet-adapter](https://www.npmjs.com/package/sak-agentwallet-adapter) | `sak-agentwallet-adapter` | Self-custodial wallet — agent holds its own keypair. No Privy, no Turnkey, no vendor dependency. Works as a drop-in `WalletAdapter` for SAK. |
+
 ## Dependencies
 
 The toolkit relies on several key Solana and Metaplex libraries:
