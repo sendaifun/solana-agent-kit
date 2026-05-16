@@ -135,6 +135,15 @@ You can choose to install any of the plugins listed below or you could choose to
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
 
+### Community Plugins
+
+Third-party plugins maintained by the community. Submit a PR to add yours.
+
+- **[MadeOnSol](https://madeonsol.com)** — `solana-agent-kit-plugin-madeonsol`: Real-time Solana memecoin intelligence — KOL wallet tracking (1,000+ wallets, <3s latency), Pump.fun deployer scoring, multi-KOL coordination signals, alpha-wallet intel, copy-trade rules. Free tier 200 req/day. [npm](https://www.npmjs.com/package/solana-agent-kit-plugin-madeonsol) · [Docs](https://madeonsol.com/api-docs)
+  ```bash
+  npm install solana-agent-kit-plugin-madeonsol
+  ```
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
