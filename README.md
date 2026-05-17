@@ -135,6 +135,16 @@ You can choose to install any of the plugins listed below or you could choose to
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
 
+## 🔌 Community Plugins
+
+Third-party plugins that extend Solana Agent Kit with additional capabilities:
+
+| Plugin | Description | Install |
+|--------|-------------|---------|
+| [piquesignal-solana-agent-plugin](https://github.com/piquesignal/piquesignal-solana-agent-plugin) | Live scored memecoin signals, on-chain safety profiles, AI reports, and track record metrics from [Pique Signal](https://piquesignal.xyz) | `npm install piquesignal-solana-agent-plugin` |
+
+> Want to list your plugin? Open a PR adding it to this table.
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
