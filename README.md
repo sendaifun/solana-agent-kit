@@ -135,6 +135,53 @@ You can choose to install any of the plugins listed below or you could choose to
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
 
+## 🌐 Community Plugins
+
+Third-party plugins that extend Solana Agent Kit with additional protocols and capabilities:
+
+### Trade Router (`@traderouter/trade-router-mcp`)
+
+Non-custodial Solana swap & limit-order MCP server. 21 tools (swap, limit, trailing, TWAP, DCA, and 4 combo orders) routed across Raydium, PumpSwap, Orca, and Meteora. Jito MEV-protected execution by default. Ed25519 server-message verification on order callbacks. Private key never leaves the agent.
+
+```bash
+# No SDK install required — Trade Router exposes tools through MCP.
+npx -y @traderouter/trade-router-mcp
+```
+
+```typescript
+// Pair Trade Router (writes) with SAK (reads + token launches).
+// SAK calls Trade Router via SAK's MCP-client adapter.
+import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
+import { createMCPClient } from "@solana-agent-kit/adapter-mcp";
+
+const agent = new SolanaAgentKit(wallet, rpcUrl, {});
+
+const traderouter = await createMCPClient({
+  command: "npx",
+  args: ["-y", "@traderouter/trade-router-mcp"],
+  env: { TRADEROUTER_PRIVATE_KEY: process.env.TRADEROUTER_PRIVATE_KEY },
+});
+
+// All 21 Trade Router tools registered as agent actions:
+// AUTO_SWAP, BUILD_SWAP, GET_HOLDINGS, GET_MCAP,
+// PLACE_LIMIT_ORDER, PLACE_TRAILING_ORDER, PLACE_TWAP_ORDER,
+// PLACE_LIMIT_TWAP_ORDER, PLACE_TRAILING_TWAP_ORDER,
+// PLACE_LIMIT_TRAILING_ORDER, PLACE_LIMIT_TRAILING_TWAP_ORDER,
+// CANCEL_ORDER, EXTEND_ORDER, LIST_ORDERS, CHECK_ORDER,
+// CONNECT_WEBSOCKET, GET_FILL_LOG, etc.
+
+// Programmatic API via the MCP client:
+await traderouter.callTool({
+  name: "auto_swap",
+  arguments: {
+    wallet_address: WALLET, token_address: TARGET_MINT,
+    action: "buy", amount: 100_000_000, slippage: 1500,
+  },
+});
+```
+
+Ideal for autonomous Solana trading agents that need limit / trailing / TWAP / DCA / combo orders with MEV-protected execution out of the box. Set `TRADEROUTER_DRY_RUN=true` to short-circuit every write tool for safe iteration. [GitHub](https://github.com/TradeRouter/trade-router-mcp) · [npm](https://www.npmjs.com/package/@traderouter/trade-router-mcp) · [docs](https://traderouter.ai) · [cookbook](https://github.com/TradeRouter/cookbook) (7 examples including `06-elizaos-agent` and `07-langchain-agent`)
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
