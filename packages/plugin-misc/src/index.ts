@@ -212,6 +212,18 @@ import getVerificationJobStatusAction from "./ottersec/actions/getVerificationJo
 import getVerifiedProgramsAction from "./ottersec/actions/getVerifiedPrograms";
 import verifyProgramAction from "./ottersec/actions/verifyProgram";
 
+// madeonsol
+import madeonsolKolFeedAction from "./madeonsol/actions/kolFeed";
+import madeonsolKolCoordinationAction from "./madeonsol/actions/kolCoordination";
+import madeonsolKolLeaderboardAction from "./madeonsol/actions/kolLeaderboard";
+import madeonsolDeployerAlertsAction from "./madeonsol/actions/deployerAlerts";
+import {
+  madeonsol_kol_feed,
+  madeonsol_kol_coordination,
+  madeonsol_kol_leaderboard,
+  madeonsol_deployer_alerts,
+} from "./madeonsol/tools";
+
 // Define and export the plugin
 const MiscPlugin = {
   name: "misc",
@@ -300,6 +312,10 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    madeonsol_kol_feed,
+    madeonsol_kol_coordination,
+    madeonsol_kol_leaderboard,
+    madeonsol_deployer_alerts,
   },
 
   // Combine all actions
@@ -379,6 +395,10 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    madeonsolKolFeedAction,
+    madeonsolKolCoordinationAction,
+    madeonsolKolLeaderboardAction,
+    madeonsolDeployerAlertsAction,
   ],
 
   // Initialize function
