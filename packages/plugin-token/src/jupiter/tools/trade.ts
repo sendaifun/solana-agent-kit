@@ -69,7 +69,7 @@ export async function trade(
     }
 
     const { swapTransaction } = await (
-      await fetch("https://quote-api.jup.ag/v6/swap", {
+      await fetch(`${JUP_API}/swap`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
