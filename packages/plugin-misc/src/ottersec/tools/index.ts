@@ -5,3 +5,4 @@ export * from "./get_program_verification_status";
 export * from "./get_verification_job_status";
 export * from "./get_verified_programs";
 export * from "./verify_program";
+export * from "./automated_verify_program";
