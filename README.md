@@ -135,6 +135,35 @@ You can choose to install any of the plugins listed below or you could choose to
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
 
+## 🌐 Community Plugins
+
+Third-party plugins that extend Solana Agent Kit with additional protocols and capabilities:
+
+### A2A-Swap (`@liqdlad/solana-agent-kit-plugin`)
+
+Agent-native constant-product AMM on Solana. Ultra-cheap swaps (~40k CU), fixed 0.020% protocol fee, pure PDA custody, auto-compounding LP fees, on-chain capability card for agent self-discovery.
+
+```bash
+npm install @liqdlad/solana-agent-kit-plugin
+```
+
+```typescript
+import A2ASwapPlugin from "@liqdlad/solana-agent-kit-plugin";
+
+const agent = new SolanaAgentKit(wallet, rpcUrl, {})
+  .use(A2ASwapPlugin);
+
+// 5 AI actions registered automatically:
+// A2A_SWAP, A2A_ADD_LIQUIDITY, A2A_REMOVE_LIQUIDITY,
+// A2A_GET_POOL_INFO, A2A_GET_CAPABILITY_CARD
+
+// Programmatic API:
+await agent.methods.a2aSwap(agent, SOL, USDC, 1_000_000_000n);
+await agent.methods.a2aPoolInfo(agent, SOL, USDC);
+```
+
+Ideal for autonomous agents and high-frequency execution. [GitHub](https://github.com/liqdlad-rgb/a2a-swap) · [npm](https://www.npmjs.com/package/@liqdlad/solana-agent-kit-plugin)
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
@@ -914,3 +943,4 @@ This toolkit handles transaction generation, signing and sending, using provided
 ## Attributions
 
 System prompt logic adapted from Coinbase AgentKit (Apache 2.0)
+
