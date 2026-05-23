@@ -866,7 +866,7 @@ The repository includes an advanced example of building a multi-agent system usi
 - Fully typed TypeScript implementation
 - Environment-based configuration
 
-Check out the [LangGraph example](examples/agent-kit-langgraph) for a complete implementation of an advanced Solana agent system.
+Check out the [LangGraph example](examples/mcp/agent-kit-mcp-server) for a complete implementation of an advanced Solana agent system.
 
 ## Dependencies
 
