@@ -112,3 +112,25 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 ## Full Documentation
 
 For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
+
+## Troubleshooting
+
+### npm Installation Issues (rpc-websockets)
+
+If you encounter the following error when installing via npm:
+
+```
+Error: Cannot find module 'rpc-websockets/dist/lib/client'
+```
+
+This is caused by a transitive dependency (`jito-ts`) bundling an older version of `@solana/web3.js`. The plugin includes an automatic runtime patch that should resolve this issue.
+
+**Workaround if patch doesn't apply:**
+
+```bash
+# Copy .cjs files to .js in node_modules
+cp node_modules/rpc-websockets/dist/lib/client.cjs node_modules/rpc-websockets/dist/lib/client.js
+cp node_modules/rpc-websockets/dist/lib/server.cjs node_modules/rpc-websockets/dist/lib/server.js
+```
+
+For more details, see [GitHub Issue #466](https://github.com/sendaifun/solana-agent-kit/issues/466).

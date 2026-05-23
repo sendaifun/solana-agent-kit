@@ -1,3 +1,7 @@
+// Apply runtime patch for jito-ts/rpc-websockets compatibility (issue #466)
+// Must be imported before any code that transitively uses jito-ts
+import "./runtime-patch.js";
+
 import { Plugin, SolanaAgentKit } from "solana-agent-kit";
 
 // Import Adrena actions & tools
