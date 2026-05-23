@@ -213,6 +213,22 @@ import {
   sanctumSwapLST,
 } from "./sanctum/tools";
 
+// Import Blueprint actions & tools
+import {
+  blueprintStakeAction,
+  blueprintUnstakeAction,
+  blueprintCheckAccountsAction,
+  blueprintGetValidatorAction,
+  blueprintDonateAction,
+} from "./blueprint/actions";
+import {
+  blueprintStake,
+  blueprintUnstake,
+  blueprintCheckAccounts,
+  blueprintGetValidator,
+  blueprintDonate,
+} from "./blueprint/tools";
+
 // Import OKX tools
 import {
   executeSwap,
@@ -390,6 +406,13 @@ const DefiPlugin = {
     lavarageGetQuote,
     lavarageCloseQuote,
     lavarageTradeHistory,
+
+    // Blueprint methods
+    blueprintStake,
+    blueprintUnstake,
+    blueprintCheckAccounts,
+    blueprintGetValidator,
+    blueprintDonate,
   },
 
   // Combine all actions
@@ -509,6 +532,13 @@ const DefiPlugin = {
     lavarageGetQuoteAction,
     lavarageTradeHistoryAction,
     lavarageBorrowAction,
+
+    // Blueprint actions
+    blueprintStakeAction,
+    blueprintUnstakeAction,
+    blueprintCheckAccountsAction,
+    blueprintGetValidatorAction,
+    blueprintDonateAction,
   ],
 
   // Initialize function
