@@ -341,7 +341,7 @@ importers:
         version: 1.0.4(@metaplex-foundation/umi@1.0.0)
       '@metaplex-foundation/mpl-core':
         specifier: ^1.2.0
-        version: 1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.7.2)
+        version: 1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.8.0)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.3.0
         version: 3.3.0(@metaplex-foundation/umi@1.0.0)
@@ -404,7 +404,7 @@ importers:
         version: 1.0.4(@metaplex-foundation/umi@1.0.0)
       '@metaplex-foundation/mpl-core':
         specifier: ^1.2.0
-        version: 1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.7.2)
+        version: 1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.8.0)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.3.0
         version: 3.3.0(@metaplex-foundation/umi@1.0.0)
@@ -473,8 +473,8 @@ importers:
         specifier: ^1.98.2
         version: 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@vdm-nexus/x402':
-        specifier: ^0.4.2
-        version: 0.4.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
+        specifier: ^0.4.4
+        version: 0.4.4(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63)
       solana-agent-kit:
         specifier: workspace:*
         version: link:../core
@@ -574,6 +574,9 @@ packages:
 
   '@adraffy/ens-normalize@1.10.1':
     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
+
+  '@adraffy/ens-normalize@1.11.1':
+    resolution: {integrity: sha512-nhCBV3quEgesuf7c7KYfperqSS14T8bYuvJ8PcLJp6znkZpFc0AuW4qBtr8eKVyPPe/8RSr7sglCWPU5eaxwKQ==}
 
   '@ai-sdk/openai@1.3.20':
     resolution: {integrity: sha512-/DflUy7ROG9k6n6YTXMBFPbujBKnbGY58f3CwvicLvDar9nDAloVnUWd3LUoOxpSVnX8vtQ7ngxF52SLWO6RwQ==}
@@ -2143,6 +2146,10 @@ packages:
     resolution: {integrity: sha512-rONPWMC7PeExE077uLE4oqWrZ1IvAfz3oH9LibVAcVCopJiA9R62uavnbEzdkVmJYI6M6Zgkbeb07+tWjlq2XA==}
     engines: {node: ^14.21.3 || >=16}
 
+  '@noble/ciphers@1.3.0':
+    resolution: {integrity: sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/curves@1.2.0':
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
 
@@ -2159,6 +2166,10 @@ packages:
 
   '@noble/curves@1.8.2':
     resolution: {integrity: sha512-vnI7V6lFNe0tLAuJMu+2sX+FcL14TaCWy1qiczg1VwRmPrpQCdq5ESXQMqUc2tluRNf6irBXrWbl1mGN8uaU/g==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/curves@1.9.1':
+    resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/ed25519@1.7.3':
@@ -2192,6 +2203,10 @@ packages:
 
   '@noble/hashes@1.7.2':
     resolution: {integrity: sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/secp256k1@1.7.1':
@@ -2566,11 +2581,17 @@ packages:
   '@scure/base@1.2.4':
     resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
 
+  '@scure/base@1.2.6':
+    resolution: {integrity: sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==}
+
   '@scure/bip32@1.4.0':
     resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
 
   '@scure/bip32@1.6.2':
     resolution: {integrity: sha512-t96EPDMbtGgtb7onKKqxRLfE5g05k7uHnHRM2xdE6BP/ZmxaLtPek4J4KfVn/90IQNrU1IOAqMgiDtUdtbe3nw==}
+
+  '@scure/bip32@1.7.0':
+    resolution: {integrity: sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw==}
 
   '@scure/bip39@1.1.0':
     resolution: {integrity: sha512-pwrPOS16VeTKg98dYXQyIjJEcWfz7/1YJIwxUEPFfQPtc86Ym/1sVgQ2RLoD43AazMk2l/unK4ITySSpW2+82w==}
@@ -2580,6 +2601,9 @@ packages:
 
   '@scure/bip39@1.5.4':
     resolution: {integrity: sha512-TFM4ni0vKvCfBpohoh+/lY05i9gRbSwXWngAsF4CABQxoaOHijxuaZ2R6cStDQ5CHtHO9aGJTr4ksVJASRRyMA==}
+
+  '@scure/bip39@1.6.0':
+    resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
   '@shikijs/core@1.29.1':
     resolution: {integrity: sha512-Mo1gGGkuOYjDu5H8YwzmOuly9vNr8KDVkqj9xiKhhhFS8jisAtDSEWB9hzqRHLVQgFdA310e8XRJcW4tYhRB2A==}
@@ -3472,8 +3496,8 @@ packages:
   '@vdm-nexus/sdk@0.2.1':
     resolution: {integrity: sha512-0peqNSpV1zlF0pMJxSLU+M2gu8+KzOoLzMYM21ihJqhz56B2E3qqN6EjSoYLiP7pCESfU4PRaxOd4NOSKWqgoA==}
 
-  '@vdm-nexus/x402@0.4.2':
-    resolution: {integrity: sha512-PcMukqIvHdG6K8KQgzthXDU7BnVs+iq+ARXvky5oi1DrSRdLab03vHBL/1tc7hNjN0hYdVqcD3SOa8FYxVXLoA==}
+  '@vdm-nexus/x402@0.4.4':
+    resolution: {integrity: sha512-rZAHb5gIwFig3W+1IUWpiObUJWHxHCz3BN1Cf+uE7tFRjvFd9Um/kFGnwhxUmutlmhP7P7ndBBPL3B190znqoA==}
 
   '@voltr/vault-sdk@0.1.2':
     resolution: {integrity: sha512-reWar7HqI4HZ651OhnMWcr9HGU2lg3arFVNoFZIOTUuwxoqv/UiJobSdq2iaZD+4qh2Xp5Xsf6Gx+o506RUOvw==}
@@ -3488,6 +3512,9 @@ packages:
 
   '@x402/core@2.13.0':
     resolution: {integrity: sha512-wZjjYZ9UxXZh8O2uP/x0u4M4Dvuw5hHdN7uzEseoS4V9fkMewi+VAx9Wd98PdU9VegvG24+ES88fgFB4C5QVUw==}
+
+  '@x402/evm@2.13.0':
+    resolution: {integrity: sha512-EA1nXu5brkzWhpDX2OSKES30i/H6rNnqWSoEI/KXQ3OVz5vbW1bH8jd0tRHjx+w7kEkVl4Wr680Td0JCDCfocQ==}
 
   '@x402/svm@2.13.0':
     resolution: {integrity: sha512-qgR7GY+A8mZ+y/6iDRIHG11S415OFw7dp4QQHP08cu8wrSENZPCKfl62OGWTZGfAAR9jnaWK2w4/HUarOqTS4A==}
@@ -3510,6 +3537,17 @@ packages:
       typescript: '>=4.9.4'
       zod: ^3 >=3.19.1
     peerDependenciesMeta:
+      zod:
+        optional: true
+
+  abitype@1.2.3:
+    resolution: {integrity: sha512-Ofer5QUnuUdTFsBRwARMoWKOH1ND5ehwYhJ3OJ/BQO+StkwQjHw0XyVh4vDttzHB7QOFhPHa/o413PJ82gU/Tg==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3.22.0 || ^4.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
       zod:
         optional: true
 
@@ -5165,6 +5203,11 @@ packages:
     peerDependencies:
       ws: '*'
 
+  isows@1.0.7:
+    resolution: {integrity: sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==}
+    peerDependencies:
+      ws: '*'
+
   iterate-object@1.3.4:
     resolution: {integrity: sha512-4dG1D1x/7g8PwHS9aK6QV5V94+ZvyP4+d19qDv43EzImmrndysIl4prmJ1hWWIGCqrZHyaHBm6BSEWHOLnpoNw==}
 
@@ -5778,6 +5821,14 @@ packages:
 
   outdent@0.5.0:
     resolution: {integrity: sha512-/jHxFIzoMXdqPzTaCpFzAAWhpkSjZPF4Vsn6jAfNpmbH/ymsmd7Qc6VE9BGn0L6YMj6uwpQLxCECpus4ukKS9Q==}
+
+  ox@0.14.22:
+    resolution: {integrity: sha512-nb5msL8qWbPglhIfZbGJAfw3cqiJjFMiWmACt7kgyWtLib12tcctbHufMT9Hb0Lr6Pt4k9I3dbpueTpbhvbqvA==}
+    peerDependencies:
+      typescript: '>=5.4.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   p-cancelable@2.1.1:
     resolution: {integrity: sha512-BZOr3nRQHOntUjTrH8+Lh54smKHoHyur8We1V8DSMVrl5A2malOOwuJRnKRDjSnkoeBh4at6BwEnb5I7Jl31wg==}
@@ -7043,6 +7094,14 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
+  viem@2.50.4:
+    resolution: {integrity: sha512-rf98F4s3Vlb+uJZEKfay3IbBw3CNCbVtx5Y3UIljlO2tSX420g/J0WQSYsjzBSasUFgxgsXabji14O9kGbiqgg==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   vlq@2.0.4:
     resolution: {integrity: sha512-aodjPa2wPQFkra1G8CzJBTHXhgk3EVSwxSWXNPr1fgdFLUb8kvLV1iEb6rFgasIsjP82HWI6dsb5Io26DDnasA==}
 
@@ -7240,6 +7299,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.20.1:
+    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   ws@8.21.0:
     resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
@@ -7353,6 +7424,8 @@ snapshots:
       - utf-8-validate
 
   '@adraffy/ens-normalize@1.10.1': {}
+
+  '@adraffy/ens-normalize@1.11.1': {}
 
   '@ai-sdk/openai@1.3.20(zod@3.25.63)':
     dependencies:
@@ -9487,11 +9560,11 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@metaplex-foundation/mpl-core@1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.7.2)':
+  '@metaplex-foundation/mpl-core@1.2.0(@metaplex-foundation/umi@1.0.0)(@noble/hashes@1.8.0)':
     dependencies:
       '@metaplex-foundation/umi': 1.0.0
       '@msgpack/msgpack': 3.0.0-beta2
-      '@noble/hashes': 1.7.2
+      '@noble/hashes': 1.8.0
 
   '@metaplex-foundation/mpl-token-metadata@2.13.0(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(utf-8-validate@5.0.10)':
     dependencies:
@@ -9900,6 +9973,8 @@ snapshots:
 
   '@noble/ciphers@1.2.1': {}
 
+  '@noble/ciphers@1.3.0': {}
+
   '@noble/curves@1.2.0':
     dependencies:
       '@noble/hashes': 1.3.2
@@ -9920,6 +9995,10 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.7.2
 
+  '@noble/curves@1.9.1':
+    dependencies:
+      '@noble/hashes': 1.8.0
+
   '@noble/ed25519@1.7.3': {}
 
   '@noble/hashes@1.0.0': {}
@@ -9937,6 +10016,8 @@ snapshots:
   '@noble/hashes@1.7.1': {}
 
   '@noble/hashes@1.7.2': {}
+
+  '@noble/hashes@1.8.0': {}
 
   '@noble/secp256k1@1.7.1': {}
 
@@ -10684,6 +10765,8 @@ snapshots:
 
   '@scure/base@1.2.4': {}
 
+  '@scure/base@1.2.6': {}
+
   '@scure/bip32@1.4.0':
     dependencies:
       '@noble/curves': 1.4.2
@@ -10695,6 +10778,12 @@ snapshots:
       '@noble/curves': 1.8.2
       '@noble/hashes': 1.7.2
       '@scure/base': 1.2.4
+
+  '@scure/bip32@1.7.0':
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
 
   '@scure/bip39@1.1.0':
     dependencies:
@@ -10710,6 +10799,11 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.7.2
       '@scure/base': 1.2.4
+
+  '@scure/bip39@1.6.0':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
 
   '@shikijs/core@1.29.1':
     dependencies:
@@ -11183,30 +11277,30 @@ snapshots:
 
   '@solana/errors@2.0.0-preview.2':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
 
   '@solana/errors@2.0.0-rc.1(typescript@4.9.5)':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
       typescript: 4.9.5
 
   '@solana/errors@2.0.0-rc.1(typescript@5.6.3)':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
       typescript: 5.6.3
 
   '@solana/errors@2.0.0-rc.1(typescript@5.7.2)':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
       typescript: 5.7.2
 
   '@solana/errors@2.0.0-rc.1(typescript@5.8.3)':
     dependencies:
-      chalk: 5.4.1
+      chalk: 5.6.2
       commander: 12.1.0
       typescript: 5.8.3
 
@@ -12672,20 +12766,23 @@ snapshots:
       bs58: 6.0.0
       tweetnacl: 1.0.3
 
-  '@vdm-nexus/x402@0.4.2(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)':
+  '@vdm-nexus/x402@0.4.4(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63)':
     dependencies:
       '@solana/kit': 5.5.1(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@vdm-nexus/sdk': 0.2.1
       '@x402/core': 2.13.0
+      '@x402/evm': 2.13.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@x402/svm': 2.13.0(@solana/kit@5.5.1(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))
       bs58: 6.0.0
       tweetnacl: 1.0.3
+      viem: 2.50.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63)
     transitivePeerDependencies:
       - '@solana/sysvars'
       - bufferutil
       - fastestsmallesttextencoderdecoder
       - typescript
       - utf-8-validate
+      - zod
 
   '@voltr/vault-sdk@0.1.2(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)':
     dependencies:
@@ -12708,6 +12805,16 @@ snapshots:
   '@x402/core@2.13.0':
     dependencies:
       zod: 3.25.63
+
+  '@x402/evm@2.13.0(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@x402/core': 2.13.0
+      viem: 2.50.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63)
+      zod: 3.25.63
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
 
   '@x402/svm@2.13.0(@solana/kit@5.5.1(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/sysvars@5.5.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3))':
     dependencies:
@@ -12734,6 +12841,11 @@ snapshots:
       typescript: 5.8.3
     optionalDependencies:
       zod: 3.24.1
+
+  abitype@1.2.3(typescript@5.8.3)(zod@3.25.63):
+    optionalDependencies:
+      typescript: 5.8.3
+      zod: 3.25.63
 
   abort-controller@3.0.0:
     dependencies:
@@ -14797,6 +14909,10 @@ snapshots:
     dependencies:
       ws: 8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
 
+  isows@1.0.7(ws@8.20.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)):
+    dependencies:
+      ws: 8.20.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+
   iterate-object@1.3.4: {}
 
   jackspeak@3.4.3:
@@ -15437,6 +15553,21 @@ snapshots:
   os-tmpdir@1.0.2: {}
 
   outdent@0.5.0: {}
+
+  ox@0.14.22(typescript@5.8.3)(zod@3.25.63):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.8.3)(zod@3.25.63)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - zod
 
   p-cancelable@2.1.1: {}
 
@@ -16835,6 +16966,23 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
+  viem@2.50.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.63):
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.8.3)(zod@3.25.63)
+      isows: 1.0.7(ws@8.20.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      ox: 0.14.22(typescript@5.8.3)(zod@3.25.63)
+      ws: 8.20.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+    optionalDependencies:
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
   vlq@2.0.4: {}
 
   w-json@1.3.10: {}
@@ -17169,6 +17317,11 @@ snapshots:
       utf-8-validate: 5.0.10
 
   ws@8.18.1(bufferutil@4.0.9)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.0.9
+      utf-8-validate: 5.0.10
+
+  ws@8.20.1(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     optionalDependencies:
       bufferutil: 4.0.9
       utf-8-validate: 5.0.10

@@ -105,8 +105,21 @@ export function buildNexusChatAction(config: ResolvedConfig) {
     ): Promise<Record<string, unknown>> => {
       try {
         const args = NexusChatSchema.parse(input);
+        const isEvmNetwork = args.network?.startsWith("eip155:") ?? false;
 
-        if (!config.signerSecretKey) {
+        if (isEvmNetwork && !config.evmPrivateKey) {
+          return {
+            status: "error",
+            error: "missing_evm_private_key",
+            detail:
+              "VdmNexusPlugin config is missing `evmPrivateKey` but the " +
+              `request targets ${args.network}. Pass a 0x-prefixed hex ` +
+              "secp256k1 private key via configure({ evmPrivateKey }) to " +
+              "settle on Base mainnet or Base Sepolia.",
+          };
+        }
+
+        if (!isEvmNetwork && !config.signerSecretKey) {
           return {
             status: "error",
             error: "missing_signer_secret_key",
@@ -119,21 +132,37 @@ export function buildNexusChatAction(config: ResolvedConfig) {
           };
         }
 
-        // Agent identity guard — the SendAI wallet pubkey MUST match the
-        // pubkey of the x402 signer secret. If they diverge, the on-chain
-        // payment will land from a different address than the wallet the
-        // SendAI agent thinks it owns, which breaks the audit trail.
-        const agentWalletPubkey = agent.wallet.publicKey.toBase58();
-        const x402 = X402Agent.fromBase58(config.signerSecretKey);
-        if (x402.pubkey !== agentWalletPubkey) {
-          return {
-            status: "error",
-            error: "wallet_signer_mismatch",
-            detail:
-              `Configured x402 signerSecretKey corresponds to ${x402.pubkey} ` +
-              `but the SolanaAgentKit wallet is ${agentWalletPubkey}. ` +
-              "Pass the same secret you used to construct your KeypairWallet.",
-          };
+        // For Solana settlement we still need a signer secret to build the
+        // X402Agent — even when the EVM key is also set, the agent's
+        // primary identity is the Solana one. Fall back to a fresh
+        // ephemeral keypair for EVM-only callers; it's only used as the
+        // X402Agent's Solana identity slot and never lands on chain
+        // because all calls go through the EVM scheme.
+        const x402 = config.signerSecretKey
+          ? X402Agent.fromBase58(config.signerSecretKey, {
+              ...(config.evmPrivateKey
+                ? { evmPrivateKey: config.evmPrivateKey }
+                : {}),
+            })
+          : X402Agent.generate({ evmPrivateKey: config.evmPrivateKey });
+
+        // Agent identity guard is only meaningful for Solana settlement —
+        // the SendAI wallet IS the Solana keypair, so the x402 signer
+        // must match. For EVM settlement the payer is a separate
+        // secp256k1 keypair and the SendAI Solana wallet plays no role
+        // in the on-chain payment; skip the guard.
+        if (!isEvmNetwork && config.signerSecretKey) {
+          const agentWalletPubkey = agent.wallet.publicKey.toBase58();
+          if (x402.pubkey !== agentWalletPubkey) {
+            return {
+              status: "error",
+              error: "wallet_signer_mismatch",
+              detail:
+                `Configured x402 signerSecretKey corresponds to ${x402.pubkey} ` +
+                `but the SolanaAgentKit wallet is ${agentWalletPubkey}. ` +
+                "Pass the same secret you used to construct your KeypairWallet.",
+            };
+          }
         }
 
         const result = await x402.payAndInfer(config.endpoint, {
@@ -147,6 +176,7 @@ export function buildNexusChatAction(config: ResolvedConfig) {
           openai: result.openai,
           receipt: result.receipt,
           payment: result.payment,
+          ...(isEvmNetwork ? { evm_payer: x402.evmPayer } : {}),
         };
       } catch (error) {
         return {

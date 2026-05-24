@@ -30,12 +30,30 @@ export interface VdmNexusPluginConfig {
 
   /**
    * Base58-encoded 64-byte tweetnacl secretKey used to sign x402
-   * payment payloads. Must correspond to the same pubkey as the
-   * SolanaAgentKit wallet, otherwise NEXUS_CHAT returns a
-   * `wallet_signer_mismatch` error. Required for NEXUS_CHAT; optional
-   * for NEXUS_VERIFY_RECEIPT and NEXUS_GET_DEPOSIT_ADDRESS.
+   * payment payloads on Solana (`solana:*` networks). Must correspond
+   * to the same pubkey as the SolanaAgentKit wallet, otherwise
+   * NEXUS_CHAT returns a `wallet_signer_mismatch` error. Required
+   * when calling NEXUS_CHAT with a Solana network (or no network
+   * override, since the server defaults to Solana). Optional for
+   * NEXUS_VERIFY_RECEIPT and NEXUS_GET_DEPOSIT_ADDRESS.
    */
   signerSecretKey?: string;
+
+  /**
+   * Optional 0x-prefixed hex secp256k1 private key used to sign x402
+   * payment payloads on Base / other EVM networks (`eip155:*`). When
+   * NEXUS_CHAT is called with `network: "eip155:8453"` or
+   * `network: "eip155:84532"`, this key signs the ERC-3009
+   * `transferWithAuthorization` against USDC.
+   *
+   * The EVM payer is **different** from the SolanaAgentKit wallet —
+   * the on-chain payment lands from this EVM address, not from the
+   * SendAI agent's Solana pubkey. Receipts for EVM-network calls
+   * carry the EVM address as `agent_pubkey` / `payment.payer`. This
+   * is intentional and matches how x402 works on EVM chains; the
+   * `wallet_signer_mismatch` guard is **not** applied for EVM calls.
+   */
+  evmPrivateKey?: string;
 }
 
 export interface ResolvedConfig {
@@ -47,6 +65,11 @@ export interface ResolvedConfig {
    * actions ignore this field.
    */
   signerSecretKey: string;
+  /**
+   * Empty string when not configured. `NEXUS_CHAT` reports a clear
+   * error when an `eip155:*` network is requested without this key.
+   */
+  evmPrivateKey: string;
 }
 
 export function resolveConfig(config?: VdmNexusPluginConfig): ResolvedConfig {
@@ -54,5 +77,6 @@ export function resolveConfig(config?: VdmNexusPluginConfig): ResolvedConfig {
     endpoint: (config?.endpoint ?? DEFAULT_ENDPOINT).replace(/\/$/, ""),
     operatorKey: config?.operatorKey,
     signerSecretKey: config?.signerSecretKey ?? "",
+    evmPrivateKey: config?.evmPrivateKey ?? "",
   };
 }

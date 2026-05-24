@@ -57,7 +57,7 @@
     "base"
   ],
   "dependencies": {
-    "@vdm-nexus/x402": "^0.4.2",
+    "@vdm-nexus/x402": "^0.4.4",
     "solana-agent-kit": "workspace:*",
     "zod": "^3.24.1"
   },
