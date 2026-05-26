@@ -1,20 +1,20 @@
 import { Action } from "solana-agent-kit";
 import { z } from "zod";
-import { fetchTokenReportSummary } from "../tools";
+import { fetchTokenDetailedReport } from "../tools";
 
 // Strict Base58 Solana address regex
 const SOLANA_ADDRESS_REGEX = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 
-const rugcheckAction: Action = {
-  name: "RUGCHECK",
+const rugcheckDetailedAction: Action = {
+  name: "RUGCHECK_DETAILED",
   description:
-    "Check if a token is a rug pull and fetch a safety summary report.",
+    "Get a detailed token safety, risk analysis, and rug check report including full owner, liquidity, and risk audit logs.",
   similes: [
-    "check rug pull",
-    "rug pull check",
-    "rug pull detector",
-    "rug pull scanner",
-    "rug pull alert",
+    "detailed rug pull check",
+    "get detailed token safety report",
+    "check token risk details",
+    "detailed rug check",
+    "audit token safety",
   ],
   examples: [
     [
@@ -27,9 +27,9 @@ const rugcheckAction: Action = {
           score: 0,
           riskLevel: "Good",
           message:
-            "🛡️ **Token Safety Summary**\nMint: `JUPyiwrYJFsk...`\nRisk Level: **Good** (Score: 0)\n\n✅ No critical or warning risks detected.",
+            "🛡️ **Detailed Token Safety Audit**\nMint: `JUPyiwrYJFsk...`\nRisk Level: **Good** (Score: 0)\n\n✅ No critical or warning risks detected.",
         },
-        explanation: "Check whether JUP is a rugpull",
+        explanation: "Fetch the detailed safety and risk report for JUP",
       },
     ],
   ],
@@ -41,13 +41,14 @@ const rugcheckAction: Action = {
         SOLANA_ADDRESS_REGEX,
         "Invalid Solana mint address format (must be Base58 and 32-44 characters)",
       )
-      .describe("The token mint address to check"),
+      .describe("The token mint address to audit"),
   }),
   handler: async (_agent, input) => {
     try {
       const mint = input.mint as string;
-      const report = await fetchTokenReportSummary(mint);
+      const report = await fetchTokenDetailedReport(mint);
 
+      // Calculate risk classification
       let riskLevel: "Good" | "Warning" | "Danger" = "Good";
       if (report.score >= 3000) {
         riskLevel = "Danger";
@@ -61,14 +62,15 @@ const rugcheckAction: Action = {
       const warnings = report.risks.filter((r) => r.level === "warning");
       const dangers = report.risks.filter((r) => r.level === "danger");
 
-      let message = `${emoji} **Token Safety Summary**\n`;
+      let message = `${emoji} **Detailed Token Safety Audit**\n`;
       message += `Mint Address: \`${mint}\`\n`;
-      message += `Risk Level: **${riskLevel}** (Score: ${report.score})\n\n`;
+      message += `Risk Level: **${riskLevel}** (Score: ${report.score})\n`;
+      message += `Token Program: \`${report.tokenProgram}\` | Type: \`${report.tokenType}\`\n\n`;
 
       if (dangers.length > 0) {
         message += "🔴 **CRITICAL RISKS DETECTED:**\n";
         for (const r of dangers) {
-          message += `- **${r.name}**\n`;
+          message += `- **${r.name}** (Score: ${r.score}): ${r.description}\n`;
         }
         message += "\n";
       }
@@ -76,7 +78,7 @@ const rugcheckAction: Action = {
       if (warnings.length > 0) {
         message += "🟡 **WARNINGS DETECTED:**\n";
         for (const r of warnings) {
-          message += `- **${r.name}**\n`;
+          message += `- **${r.name}** (Score: ${r.score}): ${r.description}\n`;
         }
         message += "\n";
       }
@@ -91,16 +93,19 @@ const rugcheckAction: Action = {
         score: report.score,
         riskLevel,
         risks: report.risks,
+        tokenProgram: report.tokenProgram,
+        tokenType: report.tokenType,
         message,
       };
     } catch (error: any) {
+      // Sanitize paths in error messages
       const safeErrorMsg = error.message.replace(/\/home\/[^/]+/g, "~");
       return {
         status: "error",
-        message: `Rugcheck failed: ${safeErrorMsg}`,
+        message: `Detailed Rugcheck audit failed: ${safeErrorMsg}`,
       };
     }
   },
 };
 
-export default rugcheckAction;
+export default rugcheckDetailedAction;

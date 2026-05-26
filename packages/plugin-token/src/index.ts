@@ -36,7 +36,7 @@ import launchPumpfunTokenAction from "./pumpfun/actions/launchPumpfunToken";
 import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 
 // rugcheck
-import rugcheckAction from "./rugcheck/actions/rugcheck";
+import { rugcheckAction, rugcheckDetailedAction } from "./rugcheck/actions";
 
 // solutiofi
 import burnTokensUsingSolutiofiAction from "./solutiofi/actions/burnTokens";
@@ -141,6 +141,7 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    rugcheckDetailedAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,
