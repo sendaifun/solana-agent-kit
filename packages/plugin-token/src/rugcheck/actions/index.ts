@@ -1,2 +1,4 @@
-// TODO: Add actions here
-export {};
+import rugcheckAction from "./rugcheck";
+import rugcheckDetailedAction from "./rugcheckDetailed";
+
+export { rugcheckAction, rugcheckDetailedAction };
