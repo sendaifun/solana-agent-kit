@@ -49,6 +49,7 @@
     "@types/bn.js": "^5.1.6",
     "@types/decimal.js": "^7.4.3",
     "@voltr/vault-sdk": "^0.1.2",
+    "@agent-fuel/sdk": "^0.1.1",
     "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "decimal.js": "^10.5.0",
