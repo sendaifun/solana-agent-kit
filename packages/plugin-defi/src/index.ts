@@ -254,6 +254,10 @@ import {
   lavarageTradeHistoryAction,
 } from "./lavarage";
 
+// Import Agent Fuel actions & tools
+import agentFuelSpendAction from "./agent_fuel/actions/spend";
+import { agentFuelSpend } from "./agent_fuel/tools";
+
 // Define and export the plugin
 const DefiPlugin = {
   name: "defi",
@@ -390,6 +394,9 @@ const DefiPlugin = {
     lavarageGetQuote,
     lavarageCloseQuote,
     lavarageTradeHistory,
+
+    // Agent Fuel methods
+    agentFuelSpend,
   },
 
   // Combine all actions
@@ -509,6 +516,9 @@ const DefiPlugin = {
     lavarageGetQuoteAction,
     lavarageTradeHistoryAction,
     lavarageBorrowAction,
+
+    // Agent Fuel actions
+    agentFuelSpendAction,
   ],
 
   // Initialize function
