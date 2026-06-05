@@ -59,7 +59,7 @@
           },
           {
             "group": "Using LLMs",
-            "pages": ["docs/v2/using-llms/overview"]
+            "pages": ["docs/v2/using-llms/overview", "docs/v2/using-llms/codex"]
           },
           {
             "group": "Examples",

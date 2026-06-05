@@ -5,7 +5,7 @@ This utility provides a framework for creating a Model Context Protocol (MCP) se
 ## Features
 
 - Supports all actions from the Solana Agent Kit
-- MCP server implementation for standardized interactions
+- MCP server implementation for standardized interactions with MCP clients such as Claude Desktop and Codex
 - Environment-based configuration
 
 ## Prerequisites
@@ -30,7 +30,7 @@ SOLANA_PRIVATE_KEY=your_private_key_here
 RPC_URL=your_solana_rpc_url_here
 ```
 
-2. Change the Claude Desktop MCP server settings:
+2. Change the MCP client settings. For Claude Desktop:
 
 For MacOS:
 ```bash
@@ -62,6 +62,33 @@ The final configuration should look like the following (replace the path with yo
 ```
 
 Note: Make sure to restart Claude Desktop after updating the configuration and building the project.
+
+For Codex, add the same server to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.solana-agent]
+command = "node"
+args = ["/ABSOLUTE/PATH/TO/YOUR/MCP/PROJECT/FILE"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.solana-agent.env]
+RPC_URL = "your_solana_rpc_url_here"
+SOLANA_PRIVATE_KEY = "your_private_key_here"
+OPENAI_API_KEY = "your_openai_api_key_here"
+```
+
+You can also register it with the Codex CLI:
+
+```bash
+codex mcp add solana-agent \
+  --env RPC_URL=your_solana_rpc_url_here \
+  --env SOLANA_PRIVATE_KEY=your_private_key_here \
+  --env OPENAI_API_KEY=your_openai_api_key_here \
+  -- node /ABSOLUTE/PATH/TO/YOUR/MCP/PROJECT/FILE
+```
+
+Restart Codex after editing `config.toml`, then run `/mcp` in Codex to confirm the server is active.
 
 ## Building the Project
 
