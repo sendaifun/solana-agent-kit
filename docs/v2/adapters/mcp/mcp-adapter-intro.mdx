@@ -19,7 +19,7 @@ npm install solana-agent-kit @solana-agent-kit/adapter-mcp @solana-agent-kit/plu
 ## Features
 
 - Supports all actions from the Solana Agent Kit
-- MCP server implementation for standardized interactions with Claude Desktop
+- MCP server implementation for standardized interactions with MCP clients such as Claude Desktop and Codex
 - Environment-based configuration
 - Selective action exposure
 
@@ -29,7 +29,7 @@ npm install solana-agent-kit @solana-agent-kit/adapter-mcp @solana-agent-kit/plu
 - pnpm, yarn, or npm
 - Solana wallet with private key
 - Solana RPC URL
-- Claude Desktop application
+- An MCP client such as Claude Desktop or Codex CLI
 
 ## Basic Setup
 
@@ -141,9 +141,40 @@ Update your `package.json` to add the `type` field:
 
 3. Restart Claude Desktop after updating the configuration.
 
+## Codex Configuration
+
+Codex can load the same MCP server through `~/.codex/config.toml` or the Codex CLI.
+
+Add the server with the CLI:
+
+```bash
+codex mcp add solana-agent \
+  --env RPC_URL=your_solana_rpc_url_here \
+  --env SOLANA_PRIVATE_KEY=your_private_key_here \
+  --env OPENAI_API_KEY=your_openai_api_key_here \
+  -- node /ABSOLUTE/PATH/TO/YOUR/solana-agent-mcp/index.js
+```
+
+Or configure it in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.solana-agent]
+command = "node"
+args = ["/ABSOLUTE/PATH/TO/YOUR/solana-agent-mcp/index.js"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.solana-agent.env]
+RPC_URL = "your_solana_rpc_url_here"
+SOLANA_PRIVATE_KEY = "your_private_key_here"
+OPENAI_API_KEY = "your_openai_api_key_here"
+```
+
+Restart Codex after editing `config.toml`, then run `/mcp` in Codex to confirm that the server is active.
+
 ## Customizing Available Actions
 
-You can customize which actions are available to Claude by modifying the `finalActions` object:
+You can customize which actions are available to the MCP client by modifying the `finalActions` object:
 
 ```javascript
 // Example of adding more actions from different plugins
@@ -168,12 +199,12 @@ const finalActions = {
    node index.js
    ```
 
-2. Open Claude Desktop and ask questions about Solana, like:
+2. Open your MCP client and ask questions about Solana, like:
    - "What's my SOL balance?"
    - "Show me my token balances"
    - "What's my wallet address?"
 
-Claude will use your MCP server to interact with the Solana blockchain and provide responses based on the available actions.
+The client will use your MCP server to interact with the Solana blockchain and provide responses based on the available actions.
 
 For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
 
@@ -182,11 +213,11 @@ For more detailed information, please refer to the full documentation at [docs.s
 [![npm version](https://badge.fury.io/js/solana-mcp.svg)](https://www.npmjs.com/package/solana-mcp)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-A Model Context Protocol (MCP) server that provides onchain tools for Claude AI, allowing it to interact with the Solana blockchain through a standardized interface. This implementation is based on the Solana Agent Kit and enables AI agents to perform blockchain operations seamlessly.
+A Model Context Protocol (MCP) server that provides onchain tools for MCP clients such as Claude Desktop and Codex, allowing them to interact with the Solana blockchain through a standardized interface. This implementation is based on the Solana Agent Kit and enables AI agents to perform blockchain operations seamlessly.
 
 ### Overview
 
-This MCP server extends Claude's capabilities by providing tools to:
+This MCP server extends compatible MCP clients by providing tools to:
 
 * Interact with Solana blockchain
 * Execute transactions

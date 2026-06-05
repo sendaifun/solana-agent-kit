@@ -1,0 +1,132 @@
+---
+title: 'Codex MCP Integration'
+description: 'Connect Codex to Solana Agent Kit actions through the MCP adapter'
+icon: 'code'
+---
+
+# Codex MCP Integration
+
+Codex can use Solana Agent Kit through the Model Context Protocol (MCP). The `@solana-agent-kit/adapter-mcp` package exposes selected Solana Agent Kit actions as MCP tools, and Codex can load that server from its MCP configuration.
+
+Codex does not need a separate `createCodexTools` helper in `solana-agent-kit`. Use the MCP adapter when Codex should call Solana tools, and use the Codex SDK only when another application needs to control Codex sessions programmatically.
+
+## Prerequisites
+
+- Codex CLI installed and authenticated
+- Node.js 22 or higher
+- A Solana wallet private key for the environment you want to target
+- A Solana RPC URL
+- A small Solana Agent Kit MCP project
+
+## Create the MCP Server
+
+Create a project for the MCP server:
+
+```bash
+mkdir solana-agent-mcp
+cd solana-agent-mcp
+npm init -y
+npm install solana-agent-kit @solana-agent-kit/adapter-mcp @solana-agent-kit/plugin-token dotenv
+```
+
+Add environment variables:
+
+```env
+SOLANA_PRIVATE_KEY=your_private_key_here
+RPC_URL=your_solana_rpc_url_here
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Create `index.js`:
+
+```javascript
+import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
+import { startMcpServer } from "@solana-agent-kit/adapter-mcp";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const wallet = new KeypairWallet(process.env.SOLANA_PRIVATE_KEY);
+
+const agent = new SolanaAgentKit(wallet, process.env.RPC_URL, {
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+}).use(TokenPlugin);
+
+const actionNames = [
+  "BALANCE_ACTION",
+  "TOKEN_BALANCE_ACTION",
+  "GET_WALLET_ADDRESS_ACTION",
+];
+
+const finalActions = Object.fromEntries(
+  actionNames
+    .map((name) => [name, agent.actions.find((action) => action.name === name)])
+    .filter(([, action]) => Boolean(action)),
+);
+
+startMcpServer(finalActions, agent, {
+  name: "solana-agent",
+  version: "0.0.1",
+});
+```
+
+Set the package to ESM:
+
+```json
+{
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
+```
+
+## Add the Server to Codex
+
+You can register the server with the Codex CLI:
+
+```bash
+codex mcp add solana-agent \
+  --env RPC_URL=your_solana_rpc_url_here \
+  --env SOLANA_PRIVATE_KEY=your_private_key_here \
+  --env OPENAI_API_KEY=your_openai_api_key_here \
+  -- node /ABSOLUTE/PATH/TO/solana-agent-mcp/index.js
+```
+
+Or edit `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.solana-agent]
+command = "node"
+args = ["/ABSOLUTE/PATH/TO/solana-agent-mcp/index.js"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.solana-agent.env]
+RPC_URL = "your_solana_rpc_url_here"
+SOLANA_PRIVATE_KEY = "your_private_key_here"
+OPENAI_API_KEY = "your_openai_api_key_here"
+```
+
+Restart Codex after editing `config.toml`.
+
+## Verify the Integration
+
+Open Codex from a trusted project and run `/mcp` to confirm that the `solana-agent` server is active.
+
+Then ask Codex to use the server:
+
+```text
+Use the solana-agent MCP server to show my wallet address.
+```
+
+For a low-risk first test, expose only read-only actions such as wallet address and balance checks. Add transfer, swap, or mint actions only after you have confirmed the target network, wallet, and approval flow.
+
+## Security Notes
+
+- Do not commit `SOLANA_PRIVATE_KEY`, RPC credentials, or API keys.
+- Use a dedicated wallet for Codex MCP experiments.
+- Prefer devnet while validating setup.
+- Expose the smallest useful action set in `finalActions`.
+- Review prompts carefully before enabling transaction-producing actions.
