@@ -152,3 +152,17 @@ export async function computeLiquidationPrice(
 ) {
   return callQuantOracle(agent, "/v1/crypto/liquidation-price", input);
 }
+
+export async function getLiveVolatility(
+  agent: SolanaAgentKit,
+  input: { asset: string }
+) {
+  return callQuantOracle(agent, "/v1/live/volatility", input);
+}
+
+export async function getLiveFundingRate(
+  agent: SolanaAgentKit,
+  input: { asset: string }
+) {
+  return callQuantOracle(agent, "/v1/live/funding-rates", input);
+}

@@ -188,6 +188,8 @@ import planRebalanceAction from "./quantoracle/actions/planRebalance";
 import runMonteCarloAction from "./quantoracle/actions/runMonteCarlo";
 import computeImpermanentLossAction from "./quantoracle/actions/computeImpermanentLoss";
 import computeLiquidationPriceAction from "./quantoracle/actions/computeLiquidationPrice";
+import getLiveVolatilityAction from "./quantoracle/actions/getLiveVolatility";
+import getLiveFundingRateAction from "./quantoracle/actions/getLiveFundingRate";
 import {
   priceOption,
   runFullRiskAnalysis,
@@ -198,6 +200,8 @@ import {
   runMonteCarlo,
   computeImpermanentLoss,
   computeLiquidationPrice,
+  getLiveVolatility,
+  getLiveFundingRate,
 } from "./quantoracle/tools";
 
 // Define and export the plugin
@@ -280,6 +284,8 @@ const MiscPlugin = {
     runMonteCarlo,
     computeImpermanentLoss,
     computeLiquidationPrice,
+    getLiveVolatility,
+    getLiveFundingRate,
   },
 
   // Combine all actions
@@ -347,6 +353,18 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    // QuantOracle
+    priceOptionAction,
+    runFullRiskAnalysisAction,
+    backtestStrategyAction,
+    optimizeOptionsStrategyAction,
+    recommendHedgeAction,
+    planRebalanceAction,
+    runMonteCarloAction,
+    computeImpermanentLossAction,
+    computeLiquidationPriceAction,
+    getLiveVolatilityAction,
+    getLiveFundingRateAction,
   ],
 
   // Initialize function
