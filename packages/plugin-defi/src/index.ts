@@ -45,6 +45,10 @@ import getSwapDataAction from "./okx/actions/getSwapData";
 // Import OKX actions
 import getTokensAction from "./okx/actions/getTokens";
 
+// Import Bhairab actions & tools — pre-trade token risk scan
+import scanTokenAction from "./bhairab/actions/scanToken";
+import { scanToken } from "./bhairab/tools";
+
 // Import Debridge tools & actions
 import checkDebridgeTransactionStatusAction from "./debridge/actions/checkTransactionStatus";
 import createDebridgeBridgeOrderAction from "./debridge/actions/createBridgeOrder";
@@ -390,6 +394,9 @@ const DefiPlugin = {
     lavarageGetQuote,
     lavarageCloseQuote,
     lavarageTradeHistory,
+
+    // Bhairab methods
+    scanToken,
   },
 
   // Combine all actions
@@ -495,6 +502,9 @@ const DefiPlugin = {
     getLiquidityAction,
     getChainDataAction,
     executeSwapAction,
+
+    // Bhairab actions — pre-trade token risk scan
+    scanTokenAction,
 
     // Lavarage actions — spot margin leverage + borrow on any Solana token
     lavarageOpenPositionAction,
