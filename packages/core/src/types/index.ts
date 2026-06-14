@@ -40,6 +40,7 @@ export interface Config {
   PINATA_GATEWAY?: string;
   PUMP_FUN_REFERRAL_WALLET?: string;
   MAGIC_EDEN_API_KEY?: string;
+  BHAIRAB_API_KEY?: string;
   OTHER_API_KEYS?: Record<string, string>;
 }
 
