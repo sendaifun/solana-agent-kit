@@ -168,5 +168,12 @@ Configure Alchemy credentials only when using these tools. RPC, price, and portf
 | `get_verified_programs` | Get list of all verified programs |
 | `verify_program` | Verify a Solana program |
 
+### TxGuard
+| Tool Name | Description |
+|-----------|-------------|
+| `checkTransactionSafety` | Deterministically screen a decoded transaction for drain/seizure patterns before signing (`allow`/`warn`/`halt`) |
+| `checkTransactionFromRpc` | Run the safety check on a `getParsedTransaction` RPC result |
+| `checkTransactionBySignature` | Fetch a confirmed transaction by signature and screen it (read-only) |
+
 
 For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
