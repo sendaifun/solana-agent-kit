@@ -212,6 +212,10 @@ import getVerificationJobStatusAction from "./ottersec/actions/getVerificationJo
 import getVerifiedProgramsAction from "./ottersec/actions/getVerifiedPrograms";
 import verifyProgramAction from "./ottersec/actions/verifyProgram";
 
+import { checkDestination, checkDestinationOnChain } from "./txdest/tools";
+
+import { checkDestinationAction } from "./txdest/actions";
+
 // Define and export the plugin
 const MiscPlugin = {
   name: "misc",
@@ -300,6 +304,8 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    checkDestination,
+    checkDestinationOnChain,
   },
 
   // Combine all actions
@@ -379,6 +385,7 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    checkDestinationAction,
   ],
 
   // Initialize function
