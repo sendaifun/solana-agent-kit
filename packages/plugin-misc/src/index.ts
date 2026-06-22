@@ -162,6 +162,14 @@ import {
 } from "./squads/tools";
 import { simulate_switchboard_feed } from "./switchboard/tools";
 
+import { checkTransactionSafetyAction } from "./txguard/actions";
+// txguard
+import {
+  checkTransactionBySignature,
+  checkTransactionFromRpc,
+  checkTransactionSafety,
+} from "./txguard/tools";
+
 // crossmint
 import checkoutAction from "./crossmint/actions/checkoutAction";
 import confirmOrderAction from "./crossmint/actions/confirmOrderAction";
@@ -300,6 +308,9 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    checkTransactionSafety,
+    checkTransactionFromRpc,
+    checkTransactionBySignature,
   },
 
   // Combine all actions
@@ -379,6 +390,7 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    checkTransactionSafetyAction,
   ],
 
   // Initialize function
