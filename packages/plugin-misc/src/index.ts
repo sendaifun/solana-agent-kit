@@ -204,6 +204,10 @@ import {
   verify_program,
 } from "./ottersec/tools";
 
+import { simulateTransactionPreflight } from "./txsim/tools";
+
+import { simulateTransactionAction } from "./txsim/actions";
+
 import createVerificationPdaAction from "./ottersec/actions/createVerificationPda";
 import decodeVerificationPdaDataAction from "./ottersec/actions/decodeVerificationPdaData";
 import getProgramBuildLogAction from "./ottersec/actions/getProgramBuildLog";
@@ -300,6 +304,7 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    simulateTransactionPreflight,
   },
 
   // Combine all actions
@@ -379,6 +384,7 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    simulateTransactionAction,
   ],
 
   // Initialize function
