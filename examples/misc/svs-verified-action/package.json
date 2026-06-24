@@ -1,0 +1,15 @@
+{
+  "name": "svs-solana-agent-kit-verified-action-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PR-ready Solana Agent Kit example for routing agent actions through SVS human approval and proof verification.",
+  "scripts": {
+    "validate": "node ./validate.mjs",
+    "demo": "node ./svs-verified-action.mjs"
+  },
+  "dependencies": {
+    "@svsprotocol/solana": "^0.1.0",
+    "solana-agent-kit": "^2.0.10"
+  }
+}
