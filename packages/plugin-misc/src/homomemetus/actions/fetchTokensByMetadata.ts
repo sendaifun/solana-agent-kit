@@ -53,7 +53,7 @@ const fetchTokensByMetadataAction: Action = {
     sort: z.union([z.literal("asc"), z.literal("desc")]).optional(),
     limit: z.number().optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { name, symbol, sort, limit } = input;
 

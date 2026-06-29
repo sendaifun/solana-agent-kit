@@ -1,6 +1,6 @@
 import { Action, SolanaAgentKit } from "solana-agent-kit";
-import { getChainData } from "../tools/get_chain_data";
 import { z } from "zod";
+import { getChainData } from "../tools/get_chain_data";
 
 const getChainDataAction: Action = {
   name: "OKX_GET_CHAIN_DATA",

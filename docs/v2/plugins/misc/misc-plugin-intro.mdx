@@ -64,6 +64,27 @@ const agent = new SolanaAgentKit(
 | `getWebhook` | Retrieve webhook details |
 | `parseTransaction` | Parse a Solana transaction |
 
+### Alchemy
+The Alchemy tools are additive to the existing Helius and RPC provider integrations. They do not replace any existing provider and intentionally do not include DAS/NFT asset tools.
+
+Configure Alchemy credentials only when using these tools. RPC, price, and portfolio helpers use `ALCHEMY_API_KEY`; Notify webhook helpers use `ALCHEMY_NOTIFY_AUTH_TOKEN`.
+
+| Tool Name | Description |
+|-----------|-------------|
+| `alchemySolanaRpcRequest` | Call Solana JSON-RPC through Alchemy |
+| `alchemyGetPriorityFeeEstimate` | Fetch Solana priority fee estimates through Alchemy |
+| `alchemyGetTokenPricesBySymbol` | Fetch current token prices by symbol |
+| `alchemyGetTokenPricesByAddress` | Fetch current token prices by network and token address |
+| `alchemyGetHistoricalTokenPrices` | Fetch historical token prices |
+| `alchemyGetPortfolioTokens` | Fetch wallet token balances, metadata, and prices |
+| `alchemyCreateAddressActivityWebhook` | Create a Solana Address Activity webhook |
+| `alchemyDeleteWebhook` | Delete an Alchemy Notify webhook |
+| `alchemyListWebhooks` | List team webhooks |
+| `alchemyUpdateWebhookAddresses` | Add or remove addresses from an Address Activity webhook |
+| `alchemyReplaceWebhookAddresses` | Replace the full address list for an Address Activity webhook |
+| `alchemyVerifyWebhookSignature` | Verify `X-Alchemy-Signature` webhook payloads |
+| `getAlchemySolanaEndpointInfo` | Get RPC, WebSocket, gRPC, and x402 reference endpoint templates |
+
 ### SNS
 | Tool Name | Description |
 |-----------|-------------|

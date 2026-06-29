@@ -8,14 +8,10 @@ import { MemetusPumpfun, TokenResponse } from "@0xobedient/memetus-pumpfun-sdk";
  */
 
 export async function fetch_oldest_tokens(
-  limit?: number
+  limit?: number,
 ): Promise<TokenResponse[]> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchOldestTokens({ limit });
+  const client = new MemetusPumpfun();
+  const result = await client.fetchOldestTokens({ limit });
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

@@ -1,7 +1,7 @@
-import type { SolanaAgentKit } from "solana-agent-kit";
-import { signOrSendTX } from "solana-agent-kit";
 import { TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import base64js from "base64-js";
+import type { SolanaAgentKit } from "solana-agent-kit";
+import { signOrSendTX } from "solana-agent-kit";
 import { RANGER_SOR_API_BASE } from "../index";
 
 /**
@@ -284,7 +284,7 @@ export async function withdrawCollateralRanger({
         "x-api-key": apiKey,
       },
       body: JSON.stringify(body),
-    }
+    },
   );
   if (!response.ok) {
     const error = await response.json();

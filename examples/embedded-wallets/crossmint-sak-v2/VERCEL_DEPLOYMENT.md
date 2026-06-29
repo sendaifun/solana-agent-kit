@@ -99,4 +99,4 @@ Add these environment variables in Vercel:
 - Ensure all environment variables are correctly set
 - Check that the database connection is working properly
 - Verify that your Privy and OpenAI configurations are correct
-- For Solana-specific issues, check browser console for any RPC connection errors 
+- For Solana-specific issues, check browser console for any RPC connection errors

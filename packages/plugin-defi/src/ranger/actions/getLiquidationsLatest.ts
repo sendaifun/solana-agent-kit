@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getLiquidationsLatestSchema = z.object({});
@@ -30,9 +30,9 @@ export const getLiquidationsLatestAction: Action = {
   ],
   schema: getLiquidationsLatestSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     _input: GetLiquidationsLatestInput,
-    { apiKey }: GetLiquidationsLatestContext
+    { apiKey }: GetLiquidationsLatestContext,
   ) => {
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/liquidations/latest`,
@@ -42,12 +42,12 @@ export const getLiquidationsLatestAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
       throw new Error(
-        `Get liquidations latest request failed: ${error.message}`
+        `Get liquidations latest request failed: ${error.message}`,
       );
     }
     return response.json();

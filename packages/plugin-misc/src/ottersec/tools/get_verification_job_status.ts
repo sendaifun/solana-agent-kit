@@ -8,18 +8,14 @@ import { GetVerificationJobStatusParams } from "../types";
  */
 
 export async function get_verification_job_status(
-  jobStatusParams: GetVerificationJobStatusParams
+  jobStatusParams: GetVerificationJobStatusParams,
 ) {
-  try {
-    const { job_id } = jobStatusParams;
-    const response = await fetch(
-      OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_VERIFICATION_JOB_STATUS + job_id
-    );
+  const { job_id } = jobStatusParams;
+  const response = await fetch(
+    OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_VERIFICATION_JOB_STATUS + job_id,
+  );
 
-    const data = await response.json();
+  const data = await response.json();
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return data;
 }

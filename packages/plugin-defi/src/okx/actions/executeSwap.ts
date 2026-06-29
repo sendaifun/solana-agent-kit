@@ -67,7 +67,7 @@ const executeSwapAction: Action = {
         toTokenAddress,
         userWalletAddress,
         amount,
-        slippage
+        slippage,
       );
 
       return {

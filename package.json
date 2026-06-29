@@ -2,9 +2,7 @@
   "name": "solana-agent-kit",
   "description": "connect any ai agents to solana protocols",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "clean": "turbo run clean",
     "build": "turbo run build",
@@ -29,13 +27,7 @@
     "node": ">=22.0.0",
     "pnpm": ">=8.0.0"
   },
-  "keywords": [
-    "solana",
-    "agent",
-    "ai",
-    "solana agent kit",
-    "sendai"
-  ],
+  "keywords": ["solana", "agent", "ai", "solana agent kit", "sendai"],
   "author": "sendaifun",
   "license": "Apache-2.0",
   "devDependencies": {

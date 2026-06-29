@@ -24,6 +24,10 @@ export interface Config {
   ALLORA_API_KEY?: string;
   ALLORA_API_URL?: string;
   ALLORA_NETWORK?: string;
+  ALCHEMY_API_KEY?: string;
+  ALCHEMY_NOTIFY_AUTH_TOKEN?: string;
+  ALCHEMY_SOLANA_NETWORK?: string;
+  ALCHEMY_SOLANA_GRPC_URL?: string;
   ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;

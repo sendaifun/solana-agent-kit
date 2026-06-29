@@ -24,7 +24,7 @@ const claimCreatorFeeAction: Action = {
     ],
   ],
   schema: z.object({}), // No specific input needed for claiming fee beyond agent context
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (agent: SolanaAgentKit, _input: Record<string, any>) => {
     try {
       const result = await claimCreatorFee(agent);
 
@@ -32,7 +32,8 @@ const claimCreatorFeeAction: Action = {
         return {
           status: "success",
           transaction: result.signedTransaction,
-          message: "Successfully prepared transaction to claim creator fee on Pump.fun. Please sign and send.",
+          message:
+            "Successfully prepared transaction to claim creator fee on Pump.fun. Please sign and send.",
         };
       } else if ("txHash" in result) {
         return {
@@ -43,9 +44,10 @@ const claimCreatorFeeAction: Action = {
       } else {
         // Should not happen based on current claimCreatorFee tool implementation
         return {
-            status: "error",
-            message: "Claim creator fee action did not return a transaction or a hash."
-        }
+          status: "error",
+          message:
+            "Claim creator fee action did not return a transaction or a hash.",
+        };
       }
     } catch (error: any) {
       return {

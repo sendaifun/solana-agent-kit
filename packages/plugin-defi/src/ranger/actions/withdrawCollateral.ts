@@ -1,8 +1,8 @@
-import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
-import { RANGER_SOR_API_BASE } from "../index";
 import { TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import base64js from "base64-js";
+import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
+import { RANGER_SOR_API_BASE } from "../index";
 
 export const withdrawCollateralSchema = z.object({
   fee_payer: z.string(),
@@ -49,7 +49,7 @@ export const withdrawCollateralAction: Action = {
   handler: async (
     agent: SolanaAgentKit,
     input: WithdrawCollateralInput,
-    { apiKey }: WithdrawCollateralContext
+    { apiKey }: WithdrawCollateralContext,
   ) => {
     const response = await fetch(
       `${RANGER_SOR_API_BASE}/v1/withdraw_collateral`,
@@ -60,7 +60,7 @@ export const withdrawCollateralAction: Action = {
           "x-api-key": apiKey,
         },
         body: JSON.stringify(input),
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
@@ -75,7 +75,7 @@ export const withdrawCollateralAction: Action = {
     transaction.message.recentBlockhash = blockhash;
     const signature = await agent.wallet.signAndSendTransaction(
       transaction,
-      agent.connection
+      agent.connection,
     );
     return { signature, meta: data.meta };
   },

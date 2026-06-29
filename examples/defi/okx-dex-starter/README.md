@@ -139,4 +139,4 @@ The chat interface:
 -   The AI can use the tools derived from the `OkxPlugin` actions (like `OKX_DEX_SWAP`) to fetch quotes or prepare transactions.
 -   If a swap is executed, the `OkxDexSwapAction` calls the underlying `getOkxSwap` and `executeSwapTransaction` tools to interact with the OKX API and the Solana blockchain.
 
-This setup demonstrates a powerful way to combine AI language understanding with on-chain actions through the Solana Agent Kit. 
+This setup demonstrates a powerful way to combine AI language understanding with on-chain actions through the Solana Agent Kit.

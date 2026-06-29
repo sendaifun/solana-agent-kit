@@ -1,8 +1,8 @@
-import { z } from "zod";
-import type { Action, SolanaAgentKit } from "solana-agent-kit";
-import { RANGER_SOR_API_BASE } from "../index";
 import { TransactionMessage, VersionedTransaction } from "@solana/web3.js";
 import base64js from "base64-js";
+import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
+import { RANGER_SOR_API_BASE } from "../index";
 
 export const increasePositionSchema = z.object({
   fee_payer: z.string(),
@@ -51,7 +51,7 @@ export const increasePositionAction: Action = {
   handler: async (
     agent: SolanaAgentKit,
     input: IncreasePositionInput,
-    { apiKey }: IncreasePositionContext
+    { apiKey }: IncreasePositionContext,
   ) => {
     const response = await fetch(
       `${RANGER_SOR_API_BASE}/v1/increase_position`,
@@ -62,7 +62,7 @@ export const increasePositionAction: Action = {
           "x-api-key": apiKey,
         },
         body: JSON.stringify(input),
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();
@@ -77,7 +77,7 @@ export const increasePositionAction: Action = {
     transaction.message.recentBlockhash = blockhash;
     const signature = await agent.wallet.signAndSendTransaction(
       transaction,
-      agent.connection
+      agent.connection,
     );
     return { signature, meta: data.meta };
   },

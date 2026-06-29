@@ -76,7 +76,7 @@ const fetchTokensByMintsAction: Action = {
   schema: z.object({
     addresses: z.string().array(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { addresses } = input;
 

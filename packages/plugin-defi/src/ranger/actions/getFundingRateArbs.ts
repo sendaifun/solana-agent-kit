@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 import { RANGER_DATA_API_BASE } from "../index";
 
 export const getFundingRateArbsSchema = z.object({
@@ -32,13 +32,14 @@ export const getFundingRateArbsAction: Action = {
   ],
   schema: getFundingRateArbsSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetFundingRateArbsInput,
-    { apiKey }: GetFundingRateArbsContext
+    { apiKey }: GetFundingRateArbsContext,
   ) => {
     const params = new URLSearchParams();
-    if (input.min_diff !== undefined)
+    if (input.min_diff !== undefined) {
       params.set("min_diff", input.min_diff.toString());
+    }
 
     const response = await fetch(
       `${RANGER_DATA_API_BASE}/v1/funding_rates/arbs?${params.toString()}`,
@@ -48,7 +49,7 @@ export const getFundingRateArbsAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();

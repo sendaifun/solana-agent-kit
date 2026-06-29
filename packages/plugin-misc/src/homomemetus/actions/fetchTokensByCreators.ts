@@ -93,7 +93,7 @@ const fetchTokensByCreatorsAction: Action = {
     addresses: z.string().array(),
     sort: z.union([z.literal("asc"), z.literal("desc")]).optional(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { addresses, sort } = input;
 

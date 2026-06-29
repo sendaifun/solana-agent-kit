@@ -1,8 +1,8 @@
+import { OnlinePumpAmmSdk, PUMP_AMM_SDK } from "@pump-fun/pump-swap-sdk";
 import { PublicKey } from "@solana/web3.js";
+import { BN } from "bn.js";
 import { sendTx } from "solana-agent-kit";
 import { SolanaAgentKit } from "solana-agent-kit";
-import { OnlinePumpAmmSdk, PUMP_AMM_SDK } from "@pump-fun/pump-swap-sdk";
-import { BN } from "bn.js";
 
 /**
  * Add liquidity to a PumpFun AMM pool using SOL (Quote)
@@ -12,41 +12,41 @@ import { BN } from "bn.js";
  * @param slippage Slippage tolerance in percentage
  */
 export async function addLiquidityWithQuote(
-    agent: SolanaAgentKit,
-    pool: string,
-    amount: number,
-    slippage: number,
+  agent: SolanaAgentKit,
+  pool: string,
+  amount: number,
+  slippage: number,
 ) {
-    const sdk = new OnlinePumpAmmSdk(agent.connection);
-    const poolKey = new PublicKey(pool);
+  const sdk = new OnlinePumpAmmSdk(agent.connection);
+  const poolKey = new PublicKey(pool);
 
-    const liquidityState = await sdk.liquiditySolanaState(
-        poolKey,
-        agent.wallet.publicKey,
-    );
+  const liquidityState = await sdk.liquiditySolanaState(
+    poolKey,
+    agent.wallet.publicKey,
+  );
 
-    const quoteAmountBN = new BN(amount * 1e9); // SOL has 9 decimals
+  const quoteAmountBN = new BN(amount * 1e9); // SOL has 9 decimals
 
-    const result = PUMP_AMM_SDK.depositAutocompleteBaseAndLpTokenFromQuote(
-        liquidityState,
-        quoteAmountBN,
-        slippage,
-    );
+  const result = PUMP_AMM_SDK.depositAutocompleteBaseAndLpTokenFromQuote(
+    liquidityState,
+    quoteAmountBN,
+    slippage,
+  );
 
-    const instructions = await PUMP_AMM_SDK.depositInstructions(
-        liquidityState,
-        result.lpToken,
-        slippage,
-    );
+  const instructions = await PUMP_AMM_SDK.depositInstructions(
+    liquidityState,
+    result.lpToken,
+    slippage,
+  );
 
-    const tx = await sendTx(agent, instructions);
+  const tx = await sendTx(agent, instructions);
 
-    return {
-        status: "success",
-        signature: tx,
-        pool: pool,
-        lpAmount: result.lpToken.toString(),
-        baseAmount: result.base.toString(),
-        quoteAmount: quoteAmountBN.toString(),
-    };
+  return {
+    status: "success",
+    signature: tx,
+    pool: pool,
+    lpAmount: result.lpToken.toString(),
+    baseAmount: result.base.toString(),
+    quoteAmount: quoteAmountBN.toString(),
+  };
 }

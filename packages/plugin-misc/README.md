@@ -25,6 +25,23 @@ This plugin provides a set of miscellaneous tools and actions for interacting wi
 - `getWebhook` - Retrieve webhook details.
 - `parseTransaction` - Parse a Solana transaction.
 
+### Alchemy
+These tools are additive to the existing Helius and RPC provider integrations and do not include DAS/NFT asset tools.
+
+- `alchemySolanaRpcRequest` - Call Solana JSON-RPC through Alchemy.
+- `alchemyGetPriorityFeeEstimate` - Fetch Solana priority fee estimates through Alchemy.
+- `alchemyGetTokenPricesBySymbol` - Fetch current token prices by symbol.
+- `alchemyGetTokenPricesByAddress` - Fetch current token prices by network and token address.
+- `alchemyGetHistoricalTokenPrices` - Fetch historical token prices.
+- `alchemyGetPortfolioTokens` - Fetch wallet token balances, metadata, and prices.
+- `alchemyCreateAddressActivityWebhook` - Create a Solana Address Activity webhook.
+- `alchemyDeleteWebhook` - Delete an Alchemy Notify webhook.
+- `alchemyListWebhooks` - List team webhooks.
+- `alchemyUpdateWebhookAddresses` - Add or remove addresses from an Address Activity webhook.
+- `alchemyReplaceWebhookAddresses` - Replace the full address list for an Address Activity webhook.
+- `alchemyVerifyWebhookSignature` - Verify Alchemy webhook signatures.
+- `getAlchemySolanaEndpointInfo` - Get RPC, WebSocket, gRPC, and x402 reference endpoint templates.
+
 ### Messari
 - `askMessariAi` - Ask a question to Messari AI.
 

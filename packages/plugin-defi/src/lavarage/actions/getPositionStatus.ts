@@ -38,7 +38,9 @@ Get the positionAddress from LAVARAGE_GET_POSITIONS first.`,
   schema: z.object({
     positionAddress: z
       .string()
-      .describe("Position account address (base58) — get from LAVARAGE_GET_POSITIONS"),
+      .describe(
+        "Position account address (base58) — get from LAVARAGE_GET_POSITIONS",
+      ),
   }),
   handler: async (agent, input) => {
     try {

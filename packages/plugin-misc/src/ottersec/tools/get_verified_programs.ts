@@ -8,18 +8,14 @@ import { GetVerifiedProgramsParams } from "../types";
  */
 
 export async function get_verified_programs(
-  pageParams: GetVerifiedProgramsParams
+  pageParams: GetVerifiedProgramsParams,
 ) {
-  try {
-    const { page } = pageParams;
-    const response = await fetch(
-      OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_VERIFIED_PROGRAM + page
-    );
+  const { page } = pageParams;
+  const response = await fetch(
+    OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_VERIFIED_PROGRAM + page,
+  );
 
-    const data = await response.json();
+  const data = await response.json();
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return data;
 }

@@ -1,8 +1,8 @@
 import { createCollectionImp, createSingleImp } from "@3land/listings-sdk";
 import type {
   CreateCollectionOptions,
-  StoreInitOptions,
   CreateSingleOptions,
+  StoreInitOptions,
 } from "../types";
 
 /**

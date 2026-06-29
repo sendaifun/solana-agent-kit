@@ -33,9 +33,11 @@ const checkoutAction: Action = {
           status: "success",
           order: { orderId: "order_123" /* ... */ },
           message: "Order created successfully",
-          signature: "5UfgJ5vVZxUxefDGqzqkVLHzHxVTyYH9StYyHKgvHYmXJgqJKxEqy9k4Rz9LpXrHF9kUZB7",
+          signature:
+            "5UfgJ5vVZxUxefDGqzqkVLHzHxVTyYH9StYyHKgvHYmXJgqJKxEqy9k4Rz9LpXrHF9kUZB7",
         },
-        explanation: "Create an Amazon order for product B08N5WRWNW shipped to John Doe.",
+        explanation:
+          "Create an Amazon order for product B08N5WRWNW shipped to John Doe.",
       },
     ],
   ],
@@ -60,7 +62,7 @@ const checkoutAction: Action = {
         agent,
         productLocator,
         shippingAddress as PhysicalAddress,
-        userEmail
+        userEmail,
       );
       return { status: "success", ...result };
     } catch (error: any) {

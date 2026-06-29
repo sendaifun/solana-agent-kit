@@ -93,7 +93,8 @@ const launchPumpfunTokenAction: Action = {
         return {
           status: "success",
           transaction: result.signedTransaction,
-          message: "Successfully prepared transaction to launch token on Pump.fun. Please sign and send.",
+          message:
+            "Successfully prepared transaction to launch token on Pump.fun. Please sign and send.",
         };
       } else if ("txHash" in result) {
         return {

@@ -51,12 +51,16 @@ First call LAVARAGE_LIST_TOKENS to find the borrow offer, then use the offerPubl
       .describe("Borrow offer public key — get from LAVARAGE_LIST_TOKENS"),
     collateralAmount: z
       .string()
-      .describe("Collateral in quote token smallest units (lamports for SOL, 1e6 for USDC)"),
+      .describe(
+        "Collateral in quote token smallest units (lamports for SOL, 1e6 for USDC)",
+      ),
     leverage: z
       .number()
       .min(1.1)
       .max(10)
-      .describe("Borrow ratio — 2x = borrow equal to collateral, 3x = borrow 2x collateral"),
+      .describe(
+        "Borrow ratio — 2x = borrow equal to collateral, 3x = borrow 2x collateral",
+      ),
     slippageBps: z
       .number()
       .optional()

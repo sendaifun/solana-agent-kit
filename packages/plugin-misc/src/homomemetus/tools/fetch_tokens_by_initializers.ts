@@ -9,14 +9,10 @@ import { MemetusPumpfun, TokenResponse } from "@0xobedient/memetus-pumpfun-sdk";
  */
 export async function fetch_tokens_by_initializers(
   addresses: string[],
-  sort?: "asc" | "desc"
+  sort?: "asc" | "desc",
 ): Promise<TokenResponse[]> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchTokensByInitializers({ addresses, sort });
+  const client = new MemetusPumpfun();
+  const result = await client.fetchTokensByInitializers({ addresses, sort });
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

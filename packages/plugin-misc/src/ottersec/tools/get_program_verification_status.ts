@@ -8,18 +8,14 @@ import { GetProgramVerificationStatusParams } from "../types";
  */
 
 export async function get_program_verification_status(
-  verificationStatusParams: GetProgramVerificationStatusParams
+  verificationStatusParams: GetProgramVerificationStatusParams,
 ) {
   const { address } = verificationStatusParams;
-  try {
-    const response = await fetch(
-      OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_PROGRAM_VERIFICATION_STATUS + address
-    );
+  const response = await fetch(
+    OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_PROGRAM_VERIFICATION_STATUS + address,
+  );
 
-    const data = await response.json();
+  const data = await response.json();
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return data;
 }

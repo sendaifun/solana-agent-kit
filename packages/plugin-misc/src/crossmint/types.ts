@@ -177,7 +177,11 @@ export interface DeliveryInfo {
   recipient?: DeliveryRecipient;
 }
 
-export type DeliveryStatus = "awaiting-payment" | "in-progress" | "completed" | "failed";
+export type DeliveryStatus =
+  | "awaiting-payment"
+  | "in-progress"
+  | "completed"
+  | "failed";
 
 export interface DeliveryRecipient {
   locator: string; // e.g., "solana:<wallet-address>"

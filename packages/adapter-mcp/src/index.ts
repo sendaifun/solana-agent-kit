@@ -4,8 +4,7 @@ import { type Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 
 // Define the raw shape type that MCP tools expect
-type MinimalZodSchema =
-  Pick<z.ZodTypeAny, "parse" | "optional" | "_def">;
+type MinimalZodSchema = Pick<z.ZodTypeAny, "parse" | "optional" | "_def">;
 
 export type MCPSchemaShape = {
   [key: string]: MinimalZodSchema;

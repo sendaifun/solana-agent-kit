@@ -8,18 +8,14 @@ import { GetProgramBuildLogParams } from "../types";
  */
 
 export async function get_program_build_log(
-  buildLogParams: GetProgramBuildLogParams
+  buildLogParams: GetProgramBuildLogParams,
 ) {
-  try {
-    const { address } = buildLogParams;
-    const response = await fetch(
-      OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_PROGRAM_BUILD_LOG + address
-    );
+  const { address } = buildLogParams;
+  const response = await fetch(
+    OSEC_ENDPOINT_URI + OSEC_ROUTER.GET_PROGRAM_BUILD_LOG + address,
+  );
 
-    const data = await response.json();
+  const data = await response.json();
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  return data;
 }

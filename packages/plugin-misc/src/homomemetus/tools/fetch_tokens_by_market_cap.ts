@@ -13,19 +13,15 @@ export async function fetch_tokens_by_market_cap(
   min?: string,
   max?: string,
   sort?: "asc" | "desc",
-  limit?: number
+  limit?: number,
 ): Promise<TokenResponse[]> {
-  try {
-    const client = new MemetusPumpfun();
-    const result = await client.fetchTokensByMarketCap({
-      min,
-      max,
-      sort,
-      limit,
-    });
+  const client = new MemetusPumpfun();
+  const result = await client.fetchTokensByMarketCap({
+    min,
+    max,
+    sort,
+    limit,
+  });
 
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  return result;
 }

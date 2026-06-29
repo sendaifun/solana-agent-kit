@@ -1,5 +1,5 @@
-import { z } from "zod";
 import type { Action, SolanaAgentKit } from "solana-agent-kit";
+import { z } from "zod";
 
 export const getPositionsSchema = z.object({
   public_key: z.string().describe("User's Solana wallet address."),
@@ -11,14 +11,14 @@ export const getPositionsSchema = z.object({
     .array(z.string())
     .optional()
     .describe(
-      "Optional list of symbols to filter by (e.g., ['SOL-PERP', 'BTC-PERP'])."
+      "Optional list of symbols to filter by (e.g., ['SOL-PERP', 'BTC-PERP']).",
     ),
   from: z
     .string()
     .datetime()
     .optional()
     .describe(
-      "Optional earliest position date (ISO 8601 format) to fetch (defaults to 2 days ago in API)."
+      "Optional earliest position date (ISO 8601 format) to fetch (defaults to 2 days ago in API).",
     ),
 });
 
@@ -44,22 +44,26 @@ export const getPositionsAction: Action = {
   ],
   schema: getPositionsSchema,
   handler: async (
-    agent: SolanaAgentKit,
+    _agent: SolanaAgentKit,
     input: GetPositionsInput,
     {
       apiKey,
       baseUrl = "https://data-api-staging-437363704888.asia-northeast1.run.app",
-    }: GetPositionsContext
+    }: GetPositionsContext,
   ) => {
     const params = new URLSearchParams();
     params.set("public_key", input.public_key);
-    if (input.platforms)
+    if (input.platforms) {
       input.platforms.forEach((p: "DRIFT" | "FLASH" | "JUPITER" | "ADRENA") =>
-        params.append("platforms", p)
+        params.append("platforms", p),
       );
-    if (input.symbols)
+    }
+    if (input.symbols) {
       input.symbols.forEach((s: string) => params.append("symbols", s));
-    if (input.from) params.set("from", input.from);
+    }
+    if (input.from) {
+      params.set("from", input.from);
+    }
 
     const response = await fetch(
       `${baseUrl}/v1/positions?${params.toString()}`,
@@ -69,7 +73,7 @@ export const getPositionsAction: Action = {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
-      }
+      },
     );
     if (!response.ok) {
       const error = await response.json();

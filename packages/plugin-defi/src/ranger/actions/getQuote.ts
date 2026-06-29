@@ -1,6 +1,6 @@
+import { Action, SolanaAgentKit } from "solana-agent-kit";
 import { z } from "zod";
 import { RANGER_SOR_API_BASE } from "../index";
-import { Action, SolanaAgentKit } from "solana-agent-kit";
 
 export const getQuoteSchema = z.object({
   fee_payer: z.string().describe("The public key of the fee payer account."),
@@ -72,7 +72,7 @@ export const getQuoteAction: Action = {
     ],
   ],
   schema: getQuoteSchema,
-  handler: async (agent: SolanaAgentKit, input, { apiKey }) => {
+  handler: async (_agent: SolanaAgentKit, input, { apiKey }) => {
     const response = await fetch(`${RANGER_SOR_API_BASE}/v1/order_metadata`, {
       method: "POST",
       headers: {

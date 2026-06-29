@@ -5,10 +5,10 @@ import {
   getMint,
 } from "@solana/spl-token";
 import {
+  LAMPORTS_PER_SOL,
   type PublicKey,
   SystemProgram,
   Transaction,
-  LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import * as multisig from "@sqds/multisig";
 import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";

@@ -1,6 +1,6 @@
 import { Keypair } from "@solana/web3.js";
-import { KeypairWallet } from "./keypairWallet";
 import type { BaseWallet } from "../types/wallet";
+import { KeypairWallet } from "./keypairWallet";
 
 /**
  * Create a KeypairWallet from an OWS (Open Wallet Standard) encrypted vault.
@@ -23,15 +23,6 @@ import type { BaseWallet } from "../types/wallet";
  */
 export function owsWallet(walletNameOrId: string, rpcUrl: string): BaseWallet {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { signMessage } = require("@open-wallet-standard/core") as {
-    signMessage: (
-      wallet: string,
-      chain: string,
-      message: string,
-      passphrase?: string,
-      encoding?: string,
-    ) => { signature: string };
-  };
   const { exportWallet } = require("@open-wallet-standard/core") as {
     exportWallet: (nameOrId: string) => string;
   };
@@ -43,15 +34,11 @@ export function owsWallet(walletNameOrId: string, rpcUrl: string): BaseWallet {
     const keys = JSON.parse(exported);
     const hex = keys.ed25519 ?? "";
     secretKey = Uint8Array.from(
-      (hex.startsWith("0x") ? hex.slice(2) : hex).match(/.{2}/g)!.map((b: string) => parseInt(b, 16)),
+      (hex.startsWith("0x") ? hex.slice(2) : hex)
+        .match(/.{2}/g)!
+        .map((b: string) => parseInt(b, 16)),
     );
   } catch {
-    // Mnemonic — derive Solana key
-    const { deriveAddress } = require("@open-wallet-standard/core") as {
-      deriveAddress: (mnemonic: string, chain: string) => { address: string };
-    };
-    // For mnemonic wallets, we need the full keypair — use signMessage to verify
-    // then reconstruct from the vault
     throw new Error(
       "OWS mnemonic wallets require exportWallet to return key material. " +
         "Use an imported private key wallet instead.",

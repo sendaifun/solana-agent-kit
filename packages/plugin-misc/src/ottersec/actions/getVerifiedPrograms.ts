@@ -56,7 +56,7 @@ const getVerifiedPrograms: Action = {
   schema: z.object({
     page: z.number(),
   }),
-  handler: async (agent: SolanaAgentKit, input: Record<string, any>) => {
+  handler: async (_agent: SolanaAgentKit, input: Record<string, any>) => {
     try {
       const { page } = input;
 

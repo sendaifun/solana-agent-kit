@@ -1,18 +1,18 @@
 import {
-  Keypair,
-  VersionedTransaction,
-  TransactionMessage,
-  PublicKey,
-  Transaction,
-} from "@solana/web3.js";
-import { BN } from "bn.js";
-import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
-import {
-  PumpSdk,
   BondingCurve,
+  PumpSdk,
   getBuySolAmountFromTokenAmount,
 } from "@pump-fun/pump-sdk";
+import {
+  Keypair,
+  PublicKey,
+  Transaction,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { BN } from "bn.js";
 import { PinataSDK } from "pinata";
+import { SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
 
 /**
  * Launch a token on Pump.fun
@@ -37,9 +37,21 @@ export default async function launchPumpFunToken(
   twitter?: string,
   telegram?: string,
   website?: string,
-): Promise<{ signedTransaction: string } | { txHash: string | VersionedTransaction | Transaction | string[] | Transaction[] | VersionedTransaction[], mint: string, metadataUri: string }> {
+): Promise<
+  | { signedTransaction: string }
+  | {
+      txHash:
+        | string
+        | VersionedTransaction
+        | Transaction
+        | string[]
+        | Transaction[]
+        | VersionedTransaction[];
+      mint: string;
+      metadataUri: string;
+    }
+> {
   try {
-
     if (!agent.config.PINATA_JWT) {
       throw new Error("PINATA_JWT is not set");
     }
@@ -120,7 +132,9 @@ export default async function launchPumpFunToken(
     if (agent.config.signOnly) {
       const agentSignedTx = await agent.wallet.signTransaction(tx);
       return {
-        signedTransaction: Buffer.from(agentSignedTx.serialize()).toString("base64"),
+        signedTransaction: Buffer.from(agentSignedTx.serialize()).toString(
+          "base64",
+        ),
       };
     } else {
       const txHash = await signOrSendTX(agent, tx);
@@ -164,11 +178,6 @@ export async function uploadJsonToPinata(
   agent: SolanaAgentKit,
   json: Record<string, any>,
 ): Promise<string> {
-  console.table({
-    pinataJwt: agent.config.PINATA_JWT!,
-    pinataGateway:
-      agent.config.PINATA_GATEWAY || "example-gateway.mypinata.cloud",
-  });
   const pinata = new PinataSDK({
     pinataJwt: agent.config.PINATA_JWT!,
     pinataGateway:

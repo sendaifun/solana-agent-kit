@@ -1,10 +1,15 @@
 import { VersionedTransaction } from "@solana/web3.js";
+import bs58 from "bs58";
+import axios from "redaxios";
 import { SolanaAgentKit } from "solana-agent-kit";
 import { CROSSMINT_PRODUCTION_API_URL } from "../constants";
-import { CreateOrderRequest, CreateOrderResponse, Order, PhysicalAddress } from "../types";
+import {
+  CreateOrderRequest,
+  CreateOrderResponse,
+  Order,
+  PhysicalAddress,
+} from "../types";
 import confirmOrder from "./confirm-order";
-import bs58 from 'bs58';
-import axios from 'redaxios';
 
 /**
  * Create an Amazon order via Crossmint API
@@ -19,7 +24,7 @@ export default async function checkout(
   agent: SolanaAgentKit,
   productLocator: string,
   shippingAddress: PhysicalAddress,
-  userEmail: string
+  userEmail: string,
 ): Promise<{
   order: Order;
   message: string;
@@ -57,11 +62,15 @@ export default async function checkout(
   };
 
   try {
-    const response = await axios.post(`${CROSSMINT_PRODUCTION_API_URL}/orders`, orderData, {
-      headers: {
-        "X-API-KEY": apiKey,
+    const response = await axios.post(
+      `${CROSSMINT_PRODUCTION_API_URL}/orders`,
+      orderData,
+      {
+        headers: {
+          "X-API-KEY": apiKey,
+        },
       },
-    });
+    );
 
     const order: CreateOrderResponse = response.data;
 
@@ -71,7 +80,8 @@ export default async function checkout(
 
     const orderResponse = {
       orderId: order.order.orderId,
-      serializedTransaction: order.order.payment.preparation?.serializedTransaction || null,
+      serializedTransaction:
+        order.order.payment.preparation?.serializedTransaction || null,
       totalPrice: order.order.quote.totalPrice,
     };
 
@@ -79,7 +89,9 @@ export default async function checkout(
       throw new Error("No serialized transaction found");
     }
 
-    const tx = VersionedTransaction.deserialize(bs58.decode(orderResponse.serializedTransaction));
+    const tx = VersionedTransaction.deserialize(
+      bs58.decode(orderResponse.serializedTransaction),
+    );
 
     tx.message.recentBlockhash = (
       await agent.connection.getLatestBlockhash({
@@ -93,7 +105,11 @@ export default async function checkout(
       skipPreflight: true,
     });
 
-    const orderConfirmation = await confirmOrder(agent, orderResponse.orderId, true);
+    const orderConfirmation = await confirmOrder(
+      agent,
+      orderResponse.orderId,
+      true,
+    );
 
     if (!orderConfirmation.order) {
       return {

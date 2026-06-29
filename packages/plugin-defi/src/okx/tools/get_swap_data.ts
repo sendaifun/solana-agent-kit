@@ -20,7 +20,7 @@ export async function getSwapData(
   toTokenAddress: string,
   userWalletAddress: string,
   amount: string,
-  slippage: string
+  slippage: string,
 ) {
   const okxClient: OKXDexClient = new OKXDexClient({
     apiKey: agent.config.OKX_API_KEY ?? "",

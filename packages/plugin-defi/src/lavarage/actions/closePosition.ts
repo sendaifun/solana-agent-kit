@@ -26,14 +26,17 @@ Get the positionAddress from LAVARAGE_GET_POSITIONS first.`,
           signature: "4RQjfHW6jEbKxzYM...",
           message: "Position closed",
         },
-        explanation: "Close a leveraged position and receive remaining collateral.",
+        explanation:
+          "Close a leveraged position and receive remaining collateral.",
       },
     ],
   ],
   schema: z.object({
     positionAddress: z
       .string()
-      .describe("Position account address (base58) — get from LAVARAGE_GET_POSITIONS"),
+      .describe(
+        "Position account address (base58) — get from LAVARAGE_GET_POSITIONS",
+      ),
     slippageBps: z
       .number()
       .optional()

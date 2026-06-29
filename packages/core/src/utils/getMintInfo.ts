@@ -1,8 +1,8 @@
 import {
-  getMint,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TokenInvalidAccountOwnerError,
+  getMint,
 } from "@solana/spl-token";
 import { Commitment, Connection, PublicKey } from "@solana/web3.js";
 
