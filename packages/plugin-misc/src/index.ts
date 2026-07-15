@@ -81,6 +81,11 @@ import parseInstructionAction from "./solanafm/actions/parseInstruction";
 // messari
 import getMessariAiAction from "./messari/actions/askMessariAi";
 
+// wealthville
+import getWealthvillePoolScoreAction from "./wealthville/actions/getWealthvillePoolScore";
+import getWealthvilleTopPoolsAction from "./wealthville/actions/getWealthvilleTopPools";
+import getWealthvilleTrackRecordAction from "./wealthville/actions/getWealthvilleTrackRecord";
+
 import {
   alchemyCreateAddressActivityWebhook,
   alchemyCreateWebhook,
@@ -140,6 +145,11 @@ import {
   sendTransactionWithPriorityFee,
 } from "./helius/tools";
 import { askMessariAi } from "./messari/tools";
+import {
+  getWealthvillePoolScore,
+  getWealthvilleTopPools,
+  getWealthvilleTrackRecord,
+} from "./wealthville/tools";
 import {
   getAllRegisteredAllDomains,
   getMainAllDomainsDomain,
@@ -279,6 +289,9 @@ const MiscPlugin = {
     parseAccountUsingSolanaFM,
     parseInstructionUsingSolanaFM,
     askMessariAi,
+    getWealthvillePoolScore,
+    getWealthvilleTopPools,
+    getWealthvilleTrackRecord,
     checkout,
     confirmOrder,
     fetch_oldest_tokens,
@@ -358,6 +371,9 @@ const MiscPlugin = {
     parseAccountAction,
     parseInstructionAction,
     getMessariAiAction,
+    getWealthvillePoolScoreAction,
+    getWealthvilleTopPoolsAction,
+    getWealthvilleTrackRecordAction,
     checkoutAction,
     confirmOrderAction,
     fetchOldestTokensAction,

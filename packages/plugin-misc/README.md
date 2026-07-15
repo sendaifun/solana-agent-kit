@@ -56,6 +56,13 @@ These tools are additive to the existing Helius and RPC provider integrations an
 - `parseAccount` - Parse a Solana account.
 - `parseInstruction` - Parse a Solana instruction.
 
+### Wealthville
+- `getWealthvillePoolScore` - Enter/Hold/Exit verdict + 0-100 scores for one liquidity pool (Solana or EVM).
+- `getWealthvilleTopPools` - Pools ranked by composite Wealthville Score.
+- `getWealthvilleTrackRecord` - Live signal hit rates and IL-adjusted PnL, misses included.
+
+Optional config: set `OTHER_API_KEYS.WEALTHVILLE_API_KEY` for a higher rate limit (free partner keys at [wealthville.net/developers](https://wealthville.net/developers)); anonymous access works at 60 req/min.
+
 ### Squads
 - `transferFromMultisigTreasury` - Transfer funds from a multisig treasury.
 - `rejectMultisigProposal` - Reject a multisig proposal.
