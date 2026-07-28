@@ -11,7 +11,7 @@
     "@ai-sdk/openai": "^1.3.10",
     "@anthropic-ai/sdk": "^0.39.0",
     "zod-to-json-schema": "^3.24.1",
-    "@langchain/core": "^0.3.44",
+    "@langchain/core": "^0.3.80",
     "@langchain/langgraph": "^0.2.63",
     "@langchain/openai": "^0.5.5",
     "@openai/agents": "^0.0.7",
