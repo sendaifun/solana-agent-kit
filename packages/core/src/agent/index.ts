@@ -1,6 +1,7 @@
 import { Connection } from "@solana/web3.js";
 import type { Action, Config, Plugin } from "../types";
 import { BaseWallet, EvmWallet } from "../types/wallet";
+import { wrapWallet } from "../utils/wrapWallet";
 
 /**
  * Defines a type that merges all plugin methods into the `methods` object
@@ -64,7 +65,11 @@ export class SolanaAgentKit<TPlugins = Record<string, never>> {
     evmWallet?: EvmWallet,
   ) {
     this.connection = new Connection(rpc_url);
-    this.wallet = wallet;
+    // Refuse-before-sign seat: wrap at construction so plugin direct wallet
+    // calls (signAndSendTransaction etc.) cannot bypass the policy.
+    this.wallet = config?.beforeSign
+      ? wrapWallet(wallet, config.beforeSign)
+      : wallet;
     this.config = config;
     this.evmWallet = evmWallet;
   }

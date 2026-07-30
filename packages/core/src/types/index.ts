@@ -1,6 +1,7 @@
 import type { Transaction, VersionedTransaction } from "@solana/web3.js";
 import type { z } from "zod";
 import type { SolanaAgentKit } from "../agent";
+import type { BeforeSign } from "../utils/wrapWallet";
 
 export interface Plugin {
   name: string;
@@ -11,6 +12,14 @@ export interface Plugin {
 
 export interface Config {
   signOnly?: boolean;
+  /**
+   * Optional pre-sign policy. When set, SolanaAgentKit wraps the provided
+   * BaseWallet so every sign / signAndSend / send path invokes this hook first.
+   * Throw or reject to refuse the signature. Default (unset) = no-op.
+   *
+   * Policy is pluggable — not a vendor or network dependency of core.
+   */
+  beforeSign?: BeforeSign;
   OPENAI_API_KEY?: string;
   PERPLEXITY_API_KEY?: string;
   JUPITER_REFERRAL_ACCOUNT?: string;

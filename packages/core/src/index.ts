@@ -20,3 +20,4 @@ export * from "./utils/send_tx";
 export * from "./utils/keypairWallet";
 export * from "./utils/owsWallet";
 export * from "./utils/getMintInfo";
+export * from "./utils/wrapWallet";
