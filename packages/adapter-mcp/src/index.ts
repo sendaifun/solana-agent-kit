@@ -11,10 +11,6 @@ export type MCPSchemaShape = {
 };
 
 // Type guards for Zod schema types
-function isZodOptional(schema: z.ZodTypeAny): schema is z.ZodOptional<any> {
-  return schema instanceof z.ZodOptional;
-}
-
 function isZodObject(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
   // Check both instanceof and the typeName property
   return (
@@ -40,7 +36,11 @@ export function zodToMCPShape(schema: z.ZodTypeAny): {
   const result: MCPSchemaShape = {};
 
   for (const [key, value] of Object.entries(shape)) {
-    result[key] = isZodOptional(value) ? value.unwrap() : value;
+    // Keep the schema as authored. Calling .unwrap() on a ZodOptional returns the
+    // inner type, which drops the optionality: z.string().optional() would become
+    // z.string(), and the tool would advertise an optional argument as required.
+    // MCP accepts ZodOptional in a raw shape, so no unwrapping is needed.
+    result[key] = value;
   }
 
   return {
@@ -114,12 +114,21 @@ export function createMcpServer(
             .describe("Example index to show (number)"),
         },
         (args) => {
-          const showIndex = args.showIndex
-            ? parseInt(args.showIndex)
-            : undefined;
           const examples = action.examples.flat();
-          const selectedExamples =
-            typeof showIndex === "number" ? [examples[showIndex]] : examples;
+          const requestedIndex = args.showIndex
+            ? Number.parseInt(args.showIndex, 10)
+            : undefined;
+          // parseInt("abc") is NaN, and typeof NaN === "number", so a plain
+          // typeof check let bad input through and produced [undefined] —
+          // rendering "Input: undefined". Fall back to showing every example.
+          const isValidIndex =
+            requestedIndex !== undefined &&
+            Number.isInteger(requestedIndex) &&
+            requestedIndex >= 0 &&
+            requestedIndex < examples.length;
+          const selectedExamples = isValidIndex
+            ? [examples[requestedIndex]]
+            : examples;
 
           const exampleText = selectedExamples
             .map(
