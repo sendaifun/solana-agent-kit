@@ -25,9 +25,7 @@ export type BeforeSignContext = {
   mode: BeforeSignMode;
 };
 
-export type BeforeSign = (
-  ctx: BeforeSignContext,
-) => void | Promise<void>;
+export type BeforeSign = (ctx: BeforeSignContext) => void | Promise<void>;
 
 /**
  * Wrap a BaseWallet so every sign / send path runs `beforeSign` first.

@@ -15,7 +15,7 @@ import {
 } from "@solana/web3.js";
 import { SolanaAgentKit } from "../agent";
 import type { BaseWallet } from "../types/wallet";
-import { wrapWallet, type BeforeSignContext } from "./wrapWallet";
+import { type BeforeSignContext, wrapWallet } from "./wrapWallet";
 
 function mockWallet(publicKey: PublicKey): BaseWallet & {
   signCalls: number;
@@ -43,7 +43,7 @@ function mockWallet(publicKey: PublicKey): BaseWallet & {
       state.signCalls += txs.length;
       return txs;
     },
-    async signAndSendTransaction(tx) {
+    async signAndSendTransaction(_tx) {
       state.signCalls += 1;
       state.sendCalls += 1;
       return { signature: "mock-sig" };
