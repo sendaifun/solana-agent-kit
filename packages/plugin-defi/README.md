@@ -109,6 +109,28 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`sanctumGetLSTTVL`**: Get the TVL for LSTs on Sanctum.
 - **`sanctumGetOwnedLST`**: Get owned LSTs on Sanctum.
 
+## Dependency note: `jito-ts` / `rpc-websockets`
+
+Drift pulls `jito-ts`, which nests an old `@solana/web3.js` that deep-imports
+`rpc-websockets/dist/lib/client`. With npm, that path often resolves to the
+plugin's `rpc-websockets@10` and fails with `ERR_PACKAGE_PATH_NOT_EXPORTED`.
+
+This monorepo forces a newer web3.js under `jito-ts` via `pnpm.overrides`.
+If you install with npm in your own app, add the same pin at the app root:
+
+```json
+{
+  "overrides": {
+    "jito-ts": {
+      "@solana/web3.js": "^1.98.2"
+    }
+  }
+}
+```
+
+Then reinstall. `require("@solana-agent-kit/plugin-defi")` should load without
+the missing `dist/lib/client` error.
+
 ## Full Documentation
 
 For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
