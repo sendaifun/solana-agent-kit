@@ -1,0 +1,30 @@
+{
+  "id": "x402-text-cleanup",
+  "name": "X402 Digital Vending Machine",
+  "version": "1.0.0",
+  "description": "Pay-per-call, Solana-settled text normalization tool powered by x402 v2.",
+  "category": "agent-tool",
+  "tags": ["x402", "solana", "usdc", "text-cleaning", "agent-commerce"],
+  "entry": "src/actions/x402CleanAction.ts",
+  "action": "x402CleanAction",
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "string",
+        "description": "Raw text to normalize/clean"
+      }
+    },
+    "required": ["text"]
+  },
+  "x402": {
+    "protocol": "x402",
+    "version": "2.0",
+    "resource": "https://x402digitalvendingmachine.store/v1/clean",
+    "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+    "payTo": "E2PxHWFSwzt6a3osZRQeT16tsb7BPLfXEMuDfjnZuhFD",
+    "amount": "0.002",
+    "asset": "USDC",
+    "asset_contract": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  }
+}
