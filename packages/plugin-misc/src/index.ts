@@ -15,6 +15,16 @@ import getPriceInferenceAction from "./allora/actions/getPriceInference";
 // gibwork
 import createGibworkTaskAction from "./gibwork/actions/createGibworkTask";
 
+// bounty radar
+import bountyRadarFeedAction from "./bountyradar/actions/bountyRadarFeed";
+import {
+  fetchBountyRadarFeed,
+  normalizeBountyRadarUrl,
+} from "./bountyradar/feed";
+import { configureBountyRadar as configureBountyRadarPlugin } from "./bountyradar/plugin";
+export { normalizeBountyRadarUrl };
+export type { BountyRadarOpportunity } from "./bountyradar/types";
+
 // helius
 import createWebhookAction from "./helius/actions/createWebhook";
 import deleteWebhookAction from "./helius/actions/deleteWebhook";
@@ -226,6 +236,7 @@ const MiscPlugin = {
     getInferenceByTopicId,
     getPriceInference,
     createGibworkTask,
+    fetchBountyRadarFeed,
     create_HeliusWebhook,
     deleteHeliusWebhook,
     sendTransactionWithPriorityFee,
@@ -312,6 +323,7 @@ const MiscPlugin = {
     getInferenceByTopicIdAction,
     getPriceInferenceAction,
     createGibworkTaskAction,
+    bountyRadarFeedAction,
     createWebhookAction,
     deleteWebhookAction,
     getAssetsByOwnerAction,
@@ -391,6 +403,11 @@ const MiscPlugin = {
     });
   },
 } satisfies Plugin;
+
+/** Configure the process-wide Bounty Radar A2A fallback endpoint. */
+export function configureBountyRadar(url: string): void {
+  configureBountyRadarPlugin({ bountyRadarUrl: url });
+}
 
 // Default export for convenience
 export default MiscPlugin;
