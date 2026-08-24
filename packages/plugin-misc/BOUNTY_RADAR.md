@@ -36,16 +36,24 @@ Both base URL and direct A2A endpoint forms are accepted:
 
 ```typescript
 import { SolanaAgentKit } from "solana-agent-kit";
-import BountyRadarPlugin from "@solana-agent-kit/plugin-misc/bountyradar";
+import MiscPlugin, {
+  configureBountyRadar,
+} from "@solana-agent-kit/plugin-misc";
 
-const agent = new SolanaAgentKit(wallet, rpcUrl, config).use(BountyRadarPlugin);
+configureBountyRadar("https://your-radar.example.com"); // optional if env/config is set
+const agent = new SolanaAgentKit(wallet, rpcUrl, config).use(MiscPlugin);
 
 // via AI action (BOUNTY_RADAR_FEED):
 // "find agent bounties" / "check bounty radar" / "find agent-eligible opportunities"
 
 // programmatically:
-const { count, opportunities } = await agent.methods.bountyRadarFeed();
+const opportunities = await agent.methods.fetchBountyRadarFeed(
+  "https://your-radar.example.com",
+);
 ```
+
+> **Multi-tenant note:** `configureBountyRadar()` sets a process-wide fallback.
+> Prefer `config.BOUNTY_RADAR_URL` when agents in one process use different endpoints.
 
 Each returned opportunity follows the Bounty Radar Opportunity Contract:
 
