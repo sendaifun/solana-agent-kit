@@ -19,6 +19,7 @@ import createGibworkTaskAction from "./gibwork/actions/createGibworkTask";
 import createWebhookAction from "./helius/actions/createWebhook";
 import deleteWebhookAction from "./helius/actions/deleteWebhook";
 import getAssetsByOwnerAction from "./helius/actions/getAssetsbyOwner";
+import getWalletIntelligenceAction from "./helius/actions/getWalletIntelligence";
 import getWebhookAction from "./helius/actions/getWebhook";
 import parseSolanaTransactionAction from "./helius/actions/parseTransaction";
 
@@ -135,9 +136,11 @@ import {
   create_HeliusWebhook,
   deleteHeliusWebhook,
   getAssetsByOwner,
+  getWalletEnhancedTransactions,
   getHeliusWebhook,
   parseTransaction,
   sendTransactionWithPriorityFee,
+  summarizeWalletIntelligence,
 } from "./helius/tools";
 import { askMessariAi } from "./messari/tools";
 import {
@@ -230,6 +233,8 @@ const MiscPlugin = {
     deleteHeliusWebhook,
     sendTransactionWithPriorityFee,
     getAssetsByOwner,
+    getWalletEnhancedTransactions,
+    summarizeWalletIntelligence,
     getHeliusWebhook,
     parseTransaction,
     alchemySolanaRpcRequest,
@@ -315,6 +320,7 @@ const MiscPlugin = {
     createWebhookAction,
     deleteWebhookAction,
     getAssetsByOwnerAction,
+    getWalletIntelligenceAction,
     getWebhookAction,
     parseSolanaTransactionAction,
     alchemyGetEndpointInfoAction,
