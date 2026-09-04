@@ -753,7 +753,7 @@ export async function swapSpotToken(
       const fromAmount = numberToSafeBN(params.fromAmount, fromToken.precision);
       const res = await (
         await fetch(
-          `https://quote-api.jup.ag/v6/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${fromAmount.toNumber()}&slippageBps=${(params.slippage ?? 0.5) * 100}&swapMode=ExactIn`,
+          `https://lite-api.jup.ag/swap/v1/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${fromAmount.toNumber()}&slippageBps=${(params.slippage ?? 0.5) * 100}&swapMode=ExactIn`,
         )
       ).json();
       const signature = await driftClient.swap({
@@ -778,7 +778,7 @@ export async function swapSpotToken(
       const toAmount = numberToSafeBN(params.toAmount, toToken.precision);
       const res = await (
         await fetch(
-          `https://quote-api.jup.ag/v6/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${toAmount.toNumber()}&slippageBps=${(params.slippage ?? 0.5) * 100}&swapMode=ExactOut`,
+          `https://lite-api.jup.ag/swap/v1/quote?inputMint=${fromToken.mint}&outputMint=${toToken.mint}&amount=${toAmount.toNumber()}&slippageBps=${(params.slippage ?? 0.5) * 100}&swapMode=ExactOut`,
         )
       ).json();
       const signature = await driftClient.swap({

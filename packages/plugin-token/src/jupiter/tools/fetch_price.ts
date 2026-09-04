@@ -1,4 +1,5 @@
 import type { PublicKey } from "@solana/web3.js";
+import { JUP_PRICE_API } from "./utils/constants";
 
 /**
  * Fetch the price of a given token quoted in USDC using Jupiter API
@@ -7,9 +8,8 @@ import type { PublicKey } from "@solana/web3.js";
  */
 export async function fetchPrice(tokenId: PublicKey): Promise<string> {
   try {
-    const response = await fetch(
-      `https://api.jup.ag/price/v2?ids=${tokenId.toBase58()}`,
-    );
+    const mint = tokenId.toBase58();
+    const response = await fetch(`${JUP_PRICE_API}?ids=${mint}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch price: ${response.statusText}`);
@@ -17,13 +17,14 @@ export async function fetchPrice(tokenId: PublicKey): Promise<string> {
 
     const data = await response.json();
 
-    const price = data.data[tokenId.toBase58()]?.price;
+    // Price API v3 keys results by mint and renamed `price` to `usdPrice`.
+    const price = data[mint]?.usdPrice;
 
     if (!price) {
       throw new Error("Price data not available for the given token.");
     }
 
-    return price;
+    return price.toString();
   } catch (error: any) {
     throw new Error(`Price fetch failed: ${error.message}`);
   }

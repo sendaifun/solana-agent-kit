@@ -1,3 +1,24 @@
+/**
+ * Shape returned by the Jupiter Token API v2 (`/tokens/v2/*`).
+ * Differs from the retired v1 shape: `id` not `address`, `icon` not `logoURI`,
+ * and authority flags moved under `audit`.
+ */
+export interface JupiterTokenV2 {
+  id: string;
+  name: string;
+  symbol: string;
+  icon?: string;
+  decimals: number;
+  tags?: string[];
+  usdPrice?: number;
+  isVerified?: boolean;
+  audit?: {
+    mintAuthorityDisabled?: boolean;
+    freezeAuthorityDisabled?: boolean;
+  };
+  stats24h?: { buyVolume?: number; sellVolume?: number };
+}
+
 export interface JupiterTokenData {
   address: string;
   name: string;

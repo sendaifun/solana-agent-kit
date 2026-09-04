@@ -23,9 +23,15 @@ export const DEFAULT_OPTIONS = {
 } as const;
 
 /**
- * Jupiter API URL
+ * Jupiter API URLs.
+ *
+ * `quote-api.jup.ag` and `tokens.jup.ag` were retired and no longer resolve;
+ * the free-tier equivalents live under `lite-api.jup.ag`. Swap the host for
+ * `https://api.jup.ag` if you have a Jupiter API key.
  */
-export const JUP_API = "https://quote-api.jup.ag/v6";
+export const JUP_API = "https://lite-api.jup.ag/swap/v1";
+export const JUP_PRICE_API = "https://lite-api.jup.ag/price/v3";
+export const JUP_TOKEN_API = "https://lite-api.jup.ag/tokens/v2";
 export const JUP_REFERRAL_ADDRESS =
   "REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3";
 

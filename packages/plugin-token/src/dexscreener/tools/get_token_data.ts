@@ -1,5 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
-import type { JupiterTokenData } from "../../jupiter/types";
+import { JUP_TOKEN_API } from "../../jupiter/tools/utils/constants";
+import { toJupiterTokenData } from "../../jupiter/tools/utils/token";
+import type { JupiterTokenData, JupiterTokenV2 } from "../../jupiter/types";
 
 export async function getTokenDataByAddress(
   mint: PublicKey,
@@ -9,15 +11,25 @@ export async function getTokenDataByAddress(
       throw new Error("Mint address is required");
     }
 
-    const response = await fetch(`https://tokens.jup.ag/token/${mint}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${JUP_TOKEN_API}/search?query=${mint.toBase58()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
-    const token = (await response.json()) as JupiterTokenData;
-    return token;
+    if (!response.ok) {
+      throw new Error(`Failed to fetch token data: ${response.statusText}`);
+    }
+
+    // /search returns an array; an unknown mint yields an empty one.
+    const results = (await response.json()) as JupiterTokenV2[];
+    const token = results.find((t) => t.id === mint.toBase58());
+
+    return token ? toJupiterTokenData(token) : undefined;
   } catch (error: any) {
     throw new Error(`Error fetching token data: ${error.message}`);
   }
