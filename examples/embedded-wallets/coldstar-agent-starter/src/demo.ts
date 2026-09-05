@@ -18,7 +18,7 @@ import {
   type PublicKey,
   type VersionedTransaction,
 } from "@solana/web3.js";
-import { ColdstarEscalation, ColdstarRejected } from "@coldstar/agent-signer";
+import { ColdstarEscalation, ColdstarRejected } from "coldstar-agent-signer";
 import { ALLOWED_RECIPIENT, BLOCKED_RECIPIENT, RPC_URL, makeWallet, session } from "./wallet.js";
 
 const DRY = process.argv.includes("--dry-run");

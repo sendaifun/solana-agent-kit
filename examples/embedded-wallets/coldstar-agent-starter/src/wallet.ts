@@ -17,7 +17,7 @@ import {
   type EscalationHandler,
   type Policy,
   type Verdict,
-} from "@coldstar/agent-signer";
+} from "coldstar-agent-signer";
 
 export const RPC_URL = process.env.RPC_URL ?? "https://api.devnet.solana.com";
 if (/mainnet/i.test(RPC_URL)) {

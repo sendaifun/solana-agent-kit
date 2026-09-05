@@ -14,7 +14,7 @@
 import "dotenv/config";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { Keypair } from "@solana/web3.js";
-import { signPolicyEnvelope, parsePolicy } from "@coldstar/agent-signer";
+import { signPolicyEnvelope, parsePolicy } from "coldstar-agent-signer";
 import { ALLOWED_RECIPIENT, BLOCKED_RECIPIENT, session } from "./wallet.js";
 
 function rootKeypair(): Keypair {

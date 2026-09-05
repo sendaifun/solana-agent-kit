@@ -58,7 +58,7 @@ With an OpenAI key, `npm run chat` puts an LLM in front of the same wallet. Ask 
 ```ts
 import { SolanaAgentKit } from "solana-agent-kit";
 import TokenPlugin from "@solana-agent-kit/plugin-token";
-import { ColdstarWallet } from "@coldstar/agent-signer";
+import { ColdstarWallet } from "coldstar-agent-signer";
 
 const wallet = new ColdstarWallet({
   policy,                 // coldstar.policy.json
