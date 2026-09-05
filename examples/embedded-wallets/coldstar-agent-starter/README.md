@@ -85,6 +85,7 @@ Nothing above the wallet changes. Every plugin and framework adapter keeps worki
 - **Allowlisted programs are trusted.** A swap through an allowlisted program cannot be statically decoded to a SOL amount, so this release trusts the program allowlist for non-System programs. Keep `allowPrograms` short. Details in the [agent-signer README](https://github.com/ExpertVagabond/coldstar-agent-signer#posture-on-non-system-programs-read-this).
 - **The escalation handler here declines.** In a real deployment it returns the transaction after a human approves it on the offline device; the demo prints the QR and returns `null` so you can see the `ColdstarEscalation` path.
 - `signMessage` is disabled unless you opt in, because off-chain signatures can authorise things the transaction policy never sees.
+- **Why `signOnly: true`.** The kit's default send path (`signOrSendTX` → `sendTx`) signs a transaction, discards it, then builds and signs a second one with a fresh blockhash. Both signatures are real, so a policy wallet correctly counts the transfer twice against the daily cap. With `signOnly` the kit signs once and returns the transaction; the demo broadcasts it. If you use the default path with a policy wallet, size `dailySol` accordingly.
 
 ## Links
 

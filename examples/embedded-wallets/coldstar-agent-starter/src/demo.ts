@@ -16,13 +16,18 @@ import {
   SystemProgram,
   Transaction,
   type PublicKey,
+  type VersionedTransaction,
 } from "@solana/web3.js";
 import { ColdstarEscalation, ColdstarRejected } from "@coldstar/agent-signer";
 import { ALLOWED_RECIPIENT, BLOCKED_RECIPIENT, RPC_URL, makeWallet, session } from "./wallet.js";
 
 const DRY = process.argv.includes("--dry-run");
 const wallet = makeWallet();
-const agent = new SolanaAgentKit(wallet, RPC_URL, {}).use(TokenPlugin);
+// signOnly: the kit's default send path (signOrSendTX -> sendTx) signs a transaction,
+// discards it, and signs a second one with a fresh blockhash. Two real signatures
+// per transfer means the policy ledger counts the amount twice. With signOnly the
+// kit signs once and hands the transaction back; we broadcast it ourselves.
+const agent = new SolanaAgentKit(wallet, RPC_URL, { signOnly: true }).use(TokenPlugin);
 const connection = new Connection(RPC_URL, "confirmed");
 
 console.log(`session wallet  ${session.publicKey.toBase58()}`);
@@ -78,7 +83,9 @@ await scenario(1, "AUTO_SIGN — 0.01 SOL to an allowlisted recipient", async ()
     return;
   }
   // The same call any Solana Agent Kit tool makes; the wallet gates it.
-  const sig = await agent.methods.transfer(agent, ALLOWED_RECIPIENT, 0.01);
+  const signed = (await agent.methods.transfer(agent, ALLOWED_RECIPIENT, 0.01)) as VersionedTransaction;
+  const sig = await connection.sendTransaction(signed, { skipPreflight: false });
+  await connection.confirmTransaction(sig, "confirmed");
   console.log(`  -> signed by the session key and broadcast: https://explorer.solana.com/tx/${sig}?cluster=devnet`);
 });
 
