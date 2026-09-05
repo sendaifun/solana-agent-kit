@@ -74,7 +74,7 @@ Nothing above the wallet changes. Every plugin and framework adapter keeps worki
 
 | File | Purpose |
 |---|---|
-| `coldstar.policy.json` | The policy. `$ALLOWED_RECIPIENT` and `$BLOCKED_RECIPIENT` are filled from `.env` (or generated per run). |
+| `coldstar.policy.json` | The policy. `$ALLOWED_RECIPIENT` and `$BLOCKED_RECIPIENT` are filled from `.env` (or generated per run). Allowlists the System and ComputeBudget programs; the kit prepends ComputeBudget (priority fee) instructions to every transfer, and a policy that omits it escalates everything. |
 | `src/wallet.ts` | Builds the `ColdstarWallet`: session key, policy, the QR escalation handler. |
 | `src/demo.ts` | The three scenarios. |
 | `src/chat.ts` | Optional LLM REPL via `createVercelAITools`. |

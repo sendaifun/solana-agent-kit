@@ -56,11 +56,15 @@ async function scenario(n: number, title: string, run: () => Promise<void>) {
   try {
     await run();
   } catch (e) {
-    if (e instanceof ColdstarRejected) {
-      console.log(`  -> ${e.name}: ${e.reason}`);
+    // Solana Agent Kit tools re-throw as `new Error("Transfer failed: " + message)`,
+    // so the class is lost but the message keeps the decision. Match on both.
+    const msg = (e as Error).message ?? String(e);
+    if (e instanceof ColdstarRejected || /Coldstar policy REJECT/.test(msg)) {
+      console.log(`  -> REJECT: ${e instanceof ColdstarRejected ? e.reason : msg.split("REJECT: ")[1]}`);
       console.log("  -> no signature was produced. This is the compromised-agent guardrail.");
-    } else if (e instanceof ColdstarEscalation) {
-      console.log(`  -> ${e.name}: waiting for a human on the air-gapped side (payload ${e.unsignedTxBase64.length} chars b64)`);
+    } else if (e instanceof ColdstarEscalation || /Coldstar policy ESCALATE/.test(msg)) {
+      const detail = e instanceof ColdstarEscalation ? `payload ${e.unsignedTxBase64.length} chars b64` : msg.split("ESCALATE: ")[1];
+      console.log(`  -> ESCALATE: waiting for a human on the air-gapped side (${detail})`);
     } else {
       throw e;
     }

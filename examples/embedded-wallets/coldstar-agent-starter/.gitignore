@@ -3,3 +3,4 @@ node_modules
 .session.json
 *.log
 .DS_Store
+.coldstar-ledger.json

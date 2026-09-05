@@ -13,6 +13,7 @@ import bs58 from "bs58";
 import qrcode from "qrcode-terminal";
 import {
   ColdstarWallet,
+  FileSpendLedger,
   type EscalationHandler,
   type Policy,
   type Verdict,
@@ -84,6 +85,8 @@ export function makeWallet(): ColdstarWallet {
     rpcUrl: RPC_URL,
     onEscalate: printQrAndDecline,
     onDecision: logDecision,
+    // The daily cap survives restarts: a crashing-and-relaunching agent does not get a fresh 0.
+    ledger: new FileSpendLedger(".coldstar-ledger.json"),
     // Off-chain message signing stays off: SIWS / order signatures can authorise
     // things the transaction policy never sees.
     allowMessageSigning: false,
