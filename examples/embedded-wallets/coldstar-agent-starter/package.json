@@ -1,0 +1,34 @@
+{
+  "name": "coldstar-agent-starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Solana Agent Kit + Coldstar: a policy-gated wallet where the agent never holds the root key. Three devnet scenarios: auto-sign, escalate to a human, reject.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "demo:dry": "tsx src/demo.ts --dry-run",
+    "chat": "tsx src/chat.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.3.0",
+    "@coldstar/agent-signer": "github:ExpertVagabond/coldstar-agent-signer",
+    "@solana-agent-kit/plugin-token": "^2.0.9",
+    "@solana/web3.js": "^1.98.4",
+    "ai": "^4.1.5",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "qrcode-terminal": "^0.12.0",
+    "solana-agent-kit": "^2.0.10",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/qrcode-terminal": "^0.12.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

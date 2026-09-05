@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "limits": { "perTxSol": 0.05, "dailySol": 0.2 },
+  "allowPrograms": ["11111111111111111111111111111111"],
+  "allowRecipients": ["$ALLOWED_RECIPIENT"],
+  "allowTokens": ["SOL"],
+  "blockRecipients": ["$BLOCKED_RECIPIENT"],
+  "escalateAboveSol": 0.05
+}
