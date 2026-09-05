@@ -39,12 +39,23 @@ function sessionKeypair(): Keypair {
 
 export const session = sessionKeypair();
 
-export const ALLOWED_RECIPIENT = new PublicKey(
-  process.env.ALLOWED_RECIPIENT ?? Keypair.generate().publicKey.toBase58(),
-);
-export const BLOCKED_RECIPIENT = new PublicKey(
-  process.env.BLOCKED_RECIPIENT ?? Keypair.generate().publicKey.toBase58(),
-);
+// Demo recipients. The root signs a policy naming SPECIFIC addresses, so they
+// must be stable across runs: from .env if set, otherwise generated once and
+// kept in .demo-recipients.json (gitignored).
+function demoRecipients(): { allowed: string; blocked: string } {
+  if (process.env.ALLOWED_RECIPIENT && process.env.BLOCKED_RECIPIENT) {
+    return { allowed: process.env.ALLOWED_RECIPIENT, blocked: process.env.BLOCKED_RECIPIENT };
+  }
+  if (existsSync(".demo-recipients.json")) {
+    return JSON.parse(readFileSync(".demo-recipients.json", "utf8"));
+  }
+  const r = { allowed: Keypair.generate().publicKey.toBase58(), blocked: Keypair.generate().publicKey.toBase58() };
+  writeFileSync(".demo-recipients.json", JSON.stringify(r, null, 2) + "\n");
+  return r;
+}
+const recipients = demoRecipients();
+export const ALLOWED_RECIPIENT = new PublicKey(recipients.allowed);
+export const BLOCKED_RECIPIENT = new PublicKey(recipients.blocked);
 
 /** coldstar.policy.json with $ENV placeholders filled in. */
 export function loadPolicy(): Policy {
@@ -79,8 +90,7 @@ export function logDecision(v: Verdict): void {
 }
 
 export function makeWallet(): ColdstarWallet {
-  return new ColdstarWallet({
-    policy: loadPolicy(),
+  const common = {
     session,
     rpcUrl: RPC_URL,
     onEscalate: printQrAndDecline,
@@ -90,5 +100,20 @@ export function makeWallet(): ColdstarWallet {
     // Off-chain message signing stays off: SIWS / order signatures can authorise
     // things the transaction policy never sees.
     allowMessageSigning: false,
-  });
+  };
+
+  // Preferred: a policy the ROOT signed (see src/cold.ts / `npm run sign-policy`).
+  // The wallet refuses to start if the envelope was edited, names another session
+  // key, expired, or was signed by a root other than the one we pin.
+  if (existsSync("envelope.json")) {
+    const envelope = JSON.parse(readFileSync("envelope.json", "utf8")) as { rootPubkey: string };
+    const expectedRoot = process.env.COLDSTAR_ROOT_PUBKEY ?? envelope.rootPubkey; // pin from env in anything real
+    const w = ColdstarWallet.fromEnvelope({ ...common, envelope, expectedRoot });
+    console.log(`policy: root-signed envelope from ${w.envelope?.rootPubkey}${w.envelope?.expiresAt ? `, valid until ${w.envelope.expiresAt}` : ""}`);
+    return w;
+  }
+
+  // Fallback for a first run: the bare, unsigned policy. Fine on devnet; say so.
+  console.log("policy: UNSIGNED coldstar.policy.json (run `npm run sign-policy` to have the root sign it)");
+  return new ColdstarWallet({ ...common, policy: loadPolicy() });
 }

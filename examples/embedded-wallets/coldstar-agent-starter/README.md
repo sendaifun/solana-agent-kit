@@ -25,9 +25,12 @@ The policy is a short, ordered rule list evaluated locally, first match wins: bl
 ```bash
 cp .env.example .env
 npm install
+npm run sign-policy # the ROOT signs the policy for the session key -> envelope.json (demo root generated locally)
 npm run demo        # airdrops to a throwaway session key, then runs the three scenarios
 npm run demo:dry    # verdicts only; no funds needed
 ```
+
+`sign-policy` is the cold side. In production it runs on the air-gapped Coldstar device; here a demo root keypair is generated into `.root.json` so you can see the whole flow. The online side then refuses to start unless `envelope.json` verifies against that root and names the session key it holds. Skip the step and the demo runs on the bare, unsigned policy and says so.
 
 Expected output, abbreviated:
 
@@ -75,7 +78,8 @@ Nothing above the wallet changes. Every plugin and framework adapter keeps worki
 | File | Purpose |
 |---|---|
 | `coldstar.policy.json` | The policy. `$ALLOWED_RECIPIENT` and `$BLOCKED_RECIPIENT` are filled from `.env` (or generated per run). Allowlists the System and ComputeBudget programs; the kit prepends ComputeBudget (priority fee) instructions to every transfer, and a policy that omits it escalates everything. |
-| `src/wallet.ts` | Builds the `ColdstarWallet`: session key, policy, the QR escalation handler. |
+| `src/cold.ts` | The cold side: root signs the policy for the session key (`npm run sign-policy`). |
+| `src/wallet.ts` | Builds the `ColdstarWallet` from the root-signed envelope (or the bare policy), with the QR escalation handler and a persistent ledger. |
 | `src/demo.ts` | The three scenarios. |
 | `src/chat.ts` | Optional LLM REPL via `createVercelAITools`. |
 

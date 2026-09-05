@@ -4,3 +4,6 @@ node_modules
 *.log
 .DS_Store
 .coldstar-ledger.json
+.root.json
+envelope.json
+.demo-recipients.json
