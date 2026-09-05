@@ -1,0 +1,9 @@
+node_modules
+.env
+.session.json
+*.log
+.DS_Store
+.coldstar-ledger.json
+.root.json
+envelope.json
+.demo-recipients.json
