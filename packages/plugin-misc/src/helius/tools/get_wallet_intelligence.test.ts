@@ -1,10 +1,12 @@
+import assert from "node:assert/strict";
 import {
   getWalletEnhancedTransactions,
   summarizeWalletIntelligence,
 } from "./get_wallet_intelligence";
 
-describe("summarizeWalletIntelligence", () => {
-  it("extracts swaps, venues and signals from enhanced transactions", () => {
+async function main() {
+  // 1. extracts swaps, venues and signals from enhanced transactions
+  {
     const txs = [
       {
         source: "JUPITER",
@@ -36,18 +38,22 @@ describe("summarizeWalletIntelligence", () => {
 
     const result = summarizeWalletIntelligence("walletA", txs);
 
-    expect(result.transactionsAnalyzed).toBe(2);
-    expect(result.totalSwapCount).toBe(1);
-    expect(result.topProtocols).toContain("JUPITER");
-    expect(result.topProtocols).toContain("PUMP_AMM");
-    expect(result.recentSwaps[0].dex).toBe("JUPITER");
-    expect(result.recentSwaps[0].tokenIn.amount).toBeCloseTo(0.425);
-    expect(result.recentSwaps[0].tokenOut.amount).toBeCloseTo(15.75350499);
-    expect(result.lastActiveAt).toBe(1787933918);
-    expect(result.signals.join(" ")).toContain("DEX swap");
-  });
+    assert.equal(result.transactionsAnalyzed, 2);
+    assert.equal(result.totalSwapCount, 1);
+    assert.ok(result.topProtocols.includes("JUPITER"));
+    assert.ok(result.topProtocols.includes("PUMP_AMM"));
+    assert.equal(result.recentSwaps[0].dex, "JUPITER");
+    assert.ok(Math.abs(result.recentSwaps[0].tokenIn.amount - 0.425) < 1e-9);
+    assert.ok(
+      Math.abs(result.recentSwaps[0].tokenOut.amount - 15753.50499) < 1e-6,
+    );
+    assert.equal(result.lastActiveAt, 1787933918);
+    assert.ok(result.signals.join(" ").includes("DEX swap"));
+    process.stdout.write("ok 1 - extracts swaps, venues and signals\n");
+  }
 
-  it("resolves native (SOL) swap legs", () => {
+  // 2. resolves native (SOL) swap legs
+  {
     const txs = [
       {
         source: "RAYDIUM",
@@ -69,26 +75,33 @@ describe("summarizeWalletIntelligence", () => {
 
     const result = summarizeWalletIntelligence("walletB", txs);
 
-    expect(result.recentSwaps[0].tokenIn.amount).toBeCloseTo(1);
-    expect(result.recentSwaps[0].tokenOut.amount).toBeCloseTo(100);
-  });
+    assert.ok(Math.abs(result.recentSwaps[0].tokenIn.amount - 1) < 1e-9);
+    assert.ok(Math.abs(result.recentSwaps[0].tokenOut.amount - 100) < 1e-9);
+    process.stdout.write("ok 2 - resolves native (SOL) swap legs\n");
+  }
 
-  it("handles an empty transaction list", () => {
+  // 3. handles an empty transaction list
+  {
     const result = summarizeWalletIntelligence("walletC", []);
 
-    expect(result.transactionsAnalyzed).toBe(0);
-    expect(result.totalSwapCount).toBe(0);
-    expect(result.lastActiveAt).toBeNull();
-    expect(result.signals.join(" ")).toContain("No DEX swaps");
-  });
-});
+    assert.equal(result.transactionsAnalyzed, 0);
+    assert.equal(result.totalSwapCount, 0);
+    assert.equal(result.lastActiveAt, null);
+    assert.ok(result.signals.join(" ").includes("No DEX swaps"));
+    process.stdout.write("ok 3 - handles an empty transaction list\n");
+  }
 
-describe("getWalletEnhancedTransactions", () => {
-  it("throws when HELIUS_API_KEY is missing", async () => {
-    const agent = { config: {} } as any;
+  // 4. throws when HELIUS_API_KEY is missing
+  await assert.rejects(
+    getWalletEnhancedTransactions({ config: {} } as any, "walletD", 5),
+    /HELIUS_API_KEY/,
+  );
+  process.stdout.write("ok 4 - throws when HELIUS_API_KEY is missing\n");
 
-    await expect(
-      getWalletEnhancedTransactions(agent, "walletD", 5),
-    ).rejects.toThrow(/HELIUS_API_KEY/);
-  });
+  process.stdout.write("\nget_wallet_intelligence: 4 tests passed\n");
+}
+
+main().catch((e) => {
+  console.error("TESTS FAILED:", e);
+  process.exit(1);
 });
