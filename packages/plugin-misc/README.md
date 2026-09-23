@@ -81,6 +81,11 @@ These tools are additive to the existing Helius and RPC provider integrations an
 - `pingElfaAiApi` - Ping the ElfaAi API.
 - `searchMentionsByKeywords` - Search mentions by keywords using ElfaAi.
 
+### TxWhy
+Repair failing transactions inside the send loop. No API key. Rebuilt transactions are verified locally before the wallet ever sees them. Handles legacy, v0 and version 1 (SIMD-0385) transactions and durable nonces.
+- `txwhyRepairTransaction` - Diagnose a transaction (base64, or the signature of one that failed on chain) and get back a rebuilt, unsigned transaction with a simulation proof.
+- `txwhySendWithRepair` - Simulate, repair if it would fail, verify locally, sign and send.
+
 ## Switchboard
 - `simulate_switchboard_feed` - Simulate a switchboard feed.
 

@@ -78,6 +78,10 @@ import {
 import parseAccountAction from "./solanafm/actions/parseAccount";
 import parseInstructionAction from "./solanafm/actions/parseInstruction";
 
+// txwhy
+import repairTransactionAction from "./txwhy/actions/repairTransaction";
+import sendWithRepairAction from "./txwhy/actions/sendWithRepair";
+
 // messari
 import getMessariAiAction from "./messari/actions/askMessariAi";
 
@@ -161,6 +165,7 @@ import {
   multisig_transfer_from_treasury,
 } from "./squads/tools";
 import { simulate_switchboard_feed } from "./switchboard/tools";
+import { txwhyRepairTransaction, txwhySendWithRepair } from "./txwhy/tools";
 
 // crossmint
 import checkoutAction from "./crossmint/actions/checkoutAction";
@@ -232,6 +237,8 @@ const MiscPlugin = {
     getAssetsByOwner,
     getHeliusWebhook,
     parseTransaction,
+    txwhyRepairTransaction,
+    txwhySendWithRepair,
     alchemySolanaRpcRequest,
     alchemyGetPriorityFeeEstimate,
     alchemyGetTokenPricesBySymbol,
@@ -357,6 +364,8 @@ const MiscPlugin = {
     elfaTrendingTokensAction,
     parseAccountAction,
     parseInstructionAction,
+    repairTransactionAction,
+    sendWithRepairAction,
     getMessariAiAction,
     checkoutAction,
     confirmOrderAction,
