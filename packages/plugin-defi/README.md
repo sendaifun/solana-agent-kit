@@ -109,6 +109,60 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`sanctumGetLSTTVL`**: Get the TVL for LSTs on Sanctum.
 - **`sanctumGetOwnedLST`**: Get owned LSTs on Sanctum.
 
+## Troubleshooting: `jito-ts` / `rpc-websockets` load failure
+
+If importing this plugin fails with:
+
+```
+Error: Cannot find module 'rpc-websockets/dist/lib/client'
+```
+
+the cause is a stale nested dependency: `jito-ts` (pulled in via `@drift-labs/sdk` → `@pythnetwork/pyth-solana-receiver` → `@pythnetwork/solana-utils`) nests `@solana/web3.js@1.77.x`, which deep-imports `rpc-websockets/dist/lib/client` — a path that no longer exists in `rpc-websockets@7.11+`. Newer `@solana/web3.js` (`>=1.95.0`) imports the package root instead, so forcing the nested copy up fixes the load.
+
+Pin it at your app root (this only affects `jito-ts`'s copy, nothing else):
+
+**npm** (`package.json`):
+```json
+{
+  "overrides": {
+    "jito-ts": {
+      "@solana/web3.js": "^1.95.0"
+    }
+  }
+}
+```
+
+**pnpm** (`package.json`):
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "jito-ts>@solana/web3.js": "^1.95.0"
+    }
+  }
+}
+```
+
+**yarn** (`package.json`):
+```json
+{
+  "resolutions": {
+    "jito-ts/@solana/web3.js": "^1.95.0"
+  }
+}
+```
+
+**bun** (`package.json`):
+```json
+{
+  "overrides": {
+    "jito-ts>@solana/web3.js": "^1.95.0"
+  }
+}
+```
+
+Then reinstall (`rm -rf node_modules package-lock.json && npm install`, or the equivalent for your manager). `require("@solana-agent-kit/plugin-defi")` should then load without the missing-module error.
+
 ## Full Documentation
 
 For more detailed information, please refer to the full documentation at [docs.sendai.fun](https://docs.sendai.fun).
