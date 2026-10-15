@@ -1,0 +1,18 @@
+{
+  "name": "agentkit-payonce-receipt-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "verify": "node verify-receipt.mjs",
+    "verify:offline": "node verify-receipt.mjs --offline",
+    "test": "node --test verify-receipt.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@kairos_elpis/payonce-solana-prototype": "0.0.1",
+    "@solana/web3.js": "1.99.0"
+  }
+}

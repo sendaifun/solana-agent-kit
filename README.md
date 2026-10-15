@@ -135,6 +135,55 @@ You can choose to install any of the plugins listed below or you could choose to
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
 ```
 
+### Optional community plugin: stored SOL jobs (devnet prototype)
+
+[PayOnce](https://github.com/KairosElpis/payonce-prototype/blob/main/NPM.md)
+provides an independently maintained, optional plugin tested with
+`solana-agent-kit@2.0.10`. It accepts a stored job ID and uses the host's authorized,
+immutable payment terms, so retries can reuse the same lane and sequence.
+
+```bash
+npm install solana-agent-kit@2.0.10 @kairos_elpis/payonce-agent-kit-prototype@0.0.1
+```
+
+```typescript
+import { createPayOncePlugin } from "@kairos_elpis/payonce-agent-kit-prototype";
+
+// agent is an existing SolanaAgentKit instance connected to devnet.
+// jobStore is the host's authorized, durable storage; see the plugin README.
+const withPayments = agent.use(createPayOncePlugin({
+  cluster: "devnet",
+  loadAuthorizedJob: async (jobId) => jobStore.readAuthorizedImmutableJob(jobId),
+}));
+
+const result = await withPayments.methods.payStoredSolJob(withPayments, {
+  jobId: "invoice-42",
+});
+```
+
+This is a devnet/localnet test prototype, restricted to a separately deployed
+executable test program and initialized lane. The host supplies the wallet,
+authorization policy, durable job storage and RPC. A successful payment charges
+5,000 lamports in protocol fees plus network fees; lane initialization also funds
+rent. Reconcile the original finalized transaction and exact terms after an
+ambiguous response: a returned signature or rejected replay alone is not proof
+of payment. See the [installation and retry boundaries](https://github.com/KairosElpis/payonce-prototype/blob/main/NPM.md)
+and the [reproducible devnet walkthrough](https://github.com/KairosElpis/payonce-prototype/blob/main/DEVNET.md).
+
+Verify the recorded AgentKit payment without a wallet or test SOL using the
+[standalone receipt example](./examples/payonce-stored-job):
+
+```bash
+cd examples/payonce-stored-job
+npm ci --ignore-scripts --no-audit --no-fund
+npm test
+npm run verify
+```
+
+This makes two read-only devnet RPC requests and checks the exact saved job terms
+and balance changes. The explicitly selected offline mode uses a saved fixture;
+it never substitutes for an unavailable live transaction.
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
