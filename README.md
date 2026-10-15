@@ -167,7 +167,8 @@ authorization policy, durable job storage and RPC. A successful payment charges
 5,000 lamports in protocol fees plus network fees; lane initialization also funds
 rent. Reconcile the original finalized transaction and exact terms after an
 ambiguous response: a returned signature or rejected replay alone is not proof
-of payment. See the [installation and retry boundaries](https://github.com/KairosElpis/payonce-prototype/blob/main/NPM.md).
+of payment. See the [installation and retry boundaries](https://github.com/KairosElpis/payonce-prototype/blob/main/NPM.md)
+and the [reproducible devnet walkthrough](https://github.com/KairosElpis/payonce-prototype/blob/main/DEVNET.md).
 
 ## Quick Start
 
