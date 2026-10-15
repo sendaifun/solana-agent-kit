@@ -170,6 +170,20 @@ ambiguous response: a returned signature or rejected replay alone is not proof
 of payment. See the [installation and retry boundaries](https://github.com/KairosElpis/payonce-prototype/blob/main/NPM.md)
 and the [reproducible devnet walkthrough](https://github.com/KairosElpis/payonce-prototype/blob/main/DEVNET.md).
 
+Verify the recorded AgentKit payment without a wallet or test SOL using the
+[standalone receipt example](./examples/payonce-stored-job):
+
+```bash
+cd examples/payonce-stored-job
+npm ci --ignore-scripts --no-audit --no-fund
+npm test
+npm run verify
+```
+
+This makes two read-only devnet RPC requests and checks the exact saved job terms
+and balance changes. The explicitly selected offline mode uses a saved fixture;
+it never substitutes for an unavailable live transaction.
+
 ## Quick Start
 
 Initializing the wallet interface and agent with plugins:
