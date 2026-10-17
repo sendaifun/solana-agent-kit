@@ -25,24 +25,27 @@ export async function closeEmptyTokenAccounts(agent: SolanaAgentKit) {
     );
     const transaction = new Transaction();
 
-    const MAX_INSTRUCTIONS = 40; // 40 instructions can be processed in a single transaction without failing
-
-    for (let i = 0; i < Math.min(MAX_INSTRUCTIONS, spl_token.length); i++) {
-      transaction.add(spl_token[i]);
-    }
-
-    for (let i = 0; i < Math.max(0, MAX_INSTRUCTIONS - spl_token.length); i++) {
-      transaction.add(token_2022[i]);
-    }
-
-    const size = spl_token.length + token_2022.length;
-
-    if (size === 0) {
+    if (spl_token.length === 0 && token_2022.length === 0) {
       return {
         signature: "",
         size: 0,
       };
     }
+
+    const MAX_INSTRUCTIONS = 40; // 40 instructions can be processed in a single transaction without failing
+
+    const splCount = Math.min(MAX_INSTRUCTIONS, spl_token.length);
+    for (let i = 0; i < splCount; i++) {
+      transaction.add(spl_token[i]);
+    }
+
+    const remainingSlots = MAX_INSTRUCTIONS - splCount;
+    const token2022Count = Math.min(remainingSlots, token_2022.length);
+    for (let i = 0; i < token2022Count; i++) {
+      transaction.add(token_2022[i]);
+    }
+
+    const size = splCount + token2022Count;
 
     if (agent.config.signOnly) {
       return {
