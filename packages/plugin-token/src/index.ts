@@ -35,6 +35,12 @@ import launchPumpfunTokenAction from "./pumpfun/actions/launchPumpfunToken";
 // pyth
 import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 
+// crewpay
+import {
+  getCrewpayLaunchesAction,
+  launchCrewpayTokenAction,
+  previewCrewpayLaunchAction,
+} from "./crewpay/actions";
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
@@ -44,6 +50,12 @@ import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts
 import mergeTokensUsingSolutiofiAction from "./solutiofi/actions/mergeTokens";
 import spreadTokenUsingSolutiofiAction from "./solutiofi/actions/spreadToken";
 
+import {
+  buildCrewpayUnsignedLaunch,
+  getCrewpayLaunches,
+  launchCrewpayToken,
+  previewCrewpayLaunch,
+} from "./crewpay/tools";
 // Import all tools
 import {
   getTokenAddressFromTicker,
@@ -108,6 +120,10 @@ const TokenPlugin = {
     swap,
     launchPumpFunToken,
     claimCreatorFee,
+    previewCrewpayLaunch,
+    buildCrewpayUnsignedLaunch,
+    launchCrewpayToken,
+    getCrewpayLaunches,
     fetchPythPrice,
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
@@ -139,6 +155,9 @@ const TokenPlugin = {
     mayanSwapAction,
     launchPumpfunTokenAction,
     claimCreatorFeeAction,
+    previewCrewpayLaunchAction,
+    launchCrewpayTokenAction,
+    getCrewpayLaunchesAction,
     pythFetchPriceAction,
     rugcheckAction,
     burnTokensUsingSolutiofiAction,

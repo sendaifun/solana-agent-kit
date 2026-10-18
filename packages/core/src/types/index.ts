@@ -39,6 +39,7 @@ export interface Config {
   PINATA_JWT?: string;
   PINATA_GATEWAY?: string;
   PUMP_FUN_REFERRAL_WALLET?: string;
+  CREWPAY_API_KEY?: string;
   MAGIC_EDEN_API_KEY?: string;
   OTHER_API_KEYS?: Record<string, string>;
 }
