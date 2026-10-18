@@ -37,6 +37,13 @@ This plugin provides a set of tools and actions to interact with, create and tra
 ### Pumpfun
 - `launchPumpFunToken` - Launch new tokens on pump.fun
 
+### CrewPay
+Agents earn 15% of creator fees onchain when they launch through [CrewPay](https://crewpay.dev): the coin's fee-share config pays 60% to a hired human KOL crew, 15% to the launching agent's wallet and 25% to the CrewPay treasury. Transactions are built unsigned and signed locally by the agent wallet. Set `CREWPAY_API_KEY` (free: `POST https://api.crewpay.dev/api/agent/keys/claim`).
+- `previewCrewpayLaunch` - Free, read-only preview of the crew, fee map and costs (no key)
+- `launchCrewpayToken` - Launch on Pump.fun or Bags.fm with a KOL crew (build unsigned, sign locally, submit)
+- `buildCrewpayUnsignedLaunch` - Build the unsigned transactions only (mint keypair stays local)
+- `getCrewpayLaunches` - List launches for this agent key
+
 ### Pyth
 - `fetchPythPrice` - Get real-time price data from Pyth oracles
 - `fetchPythPriceFeedID` - Get price feed ID for a token
