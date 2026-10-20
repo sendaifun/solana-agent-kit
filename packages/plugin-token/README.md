@@ -41,6 +41,11 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchPythPrice` - Get real-time price data from Pyth oracles
 - `fetchPythPriceFeedID` - Get price feed ID for a token
 
+### Dexra
+- `dexraLaunchCheck` - Verdict and reasons for fresh launches (authorities, liquidity lock, creator history, first-buyer funding)
+- `dexraTokenDeepCheck` - Verdict and reasons from linked top holders and holder history
+- `dexraSwapPreflight` - Verdict and reasons for a swap before sending it
+
 ### Rugcheck
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report

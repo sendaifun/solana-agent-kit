@@ -35,6 +35,11 @@ import launchPumpfunTokenAction from "./pumpfun/actions/launchPumpfunToken";
 // pyth
 import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 
+// dexra
+import dexraLaunchCheckAction from "./dexra/actions/launchCheck";
+import dexraSwapPreflightAction from "./dexra/actions/swapPreflight";
+import dexraTokenDeepCheckAction from "./dexra/actions/tokenDeepCheck";
+
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
@@ -44,6 +49,11 @@ import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts
 import mergeTokensUsingSolutiofiAction from "./solutiofi/actions/mergeTokens";
 import spreadTokenUsingSolutiofiAction from "./solutiofi/actions/spreadToken";
 
+import {
+  dexraLaunchCheck,
+  dexraSwapPreflight,
+  dexraTokenDeepCheck,
+} from "./dexra";
 // Import all tools
 import {
   getTokenAddressFromTicker,
@@ -112,6 +122,9 @@ const TokenPlugin = {
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
     fetchTokenReportSummary,
+    dexraLaunchCheck,
+    dexraTokenDeepCheck,
+    dexraSwapPreflight,
     burnTokensUsingSolutiofi: burnTokens,
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
@@ -141,6 +154,9 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    dexraLaunchCheckAction,
+    dexraTokenDeepCheckAction,
+    dexraSwapPreflightAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,

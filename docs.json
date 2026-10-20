@@ -94,6 +94,7 @@
                   "docs/v2/integrations/token-operations/deploy_spl_metaplex",
                   "docs/v2/integrations/token-operations/balance_check",
                   "docs/v2/integrations/token-operations/rugcheck_token_retrieval",
+                  "docs/v2/integrations/token-operations/dexra",
                   "docs/v2/integrations/token-operations/tiplink_operations",
                   "docs/v2/integrations/token-operations/coingecko"
                 ]

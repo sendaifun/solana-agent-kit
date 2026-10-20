@@ -31,6 +31,7 @@ export interface Config {
   ELFA_AI_API_KEY?: string;
   COINGECKO_PRO_API_KEY?: string;
   COINGECKO_DEMO_API_KEY?: string;
+  DEXRA_API_KEY?: string;
   MESSARI_API_KEY?: string;
   OKX_API_KEY?: string;
   OKX_SECRET_KEY?: string;

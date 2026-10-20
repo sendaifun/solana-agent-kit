@@ -1,0 +1,79 @@
+---
+title: 'Dexra Risk Checks'
+description: 'Check fresh launches, token holders and swaps with Dexra before the agent buys'
+---
+
+[Dexra](https://dexra.dev) is a Solana risk API that answers with a verdict (`ok`, `caution`, `avoid`, or `unknown` while data is missing) and the reasons behind it, worst first. The token plugin exposes three of its checks, which an agent runs before it buys.
+
+## Setup
+
+Create a free key at [dexra.dev/app/keys](https://dexra.dev/app/keys) (100 credits a day) and pass it in the agent config:
+
+```typescript
+const agent = new SolanaAgentKit(wallet, rpcUrl, {
+  DEXRA_API_KEY: process.env.DEXRA_API_KEY,
+}).use(TokenPlugin);
+```
+
+Without a key the API answers `402` with an x402 payment challenge, and the actions return an error that says so.
+
+## Methods
+
+### Check fresh launches
+
+pump.fun, LetsBonk, PumpSwap, Raydium and Meteora launches: mint and freeze authority, liquidity and its lock, the creator's earlier launches and how many collapsed, and who funded the first buyers.
+
+```typescript
+const { results } = await agent.methods.dexraLaunchCheck(agent, [mint]);
+for (const { mint, found, launches } of results) {
+  for (const launch of launches) {
+    console.log(mint, launch.platform, launch.verdict, launch.reasons);
+  }
+}
+```
+
+Up to 5 mints per call on a free key. A launch seconds old is often `unknown` until its first buyers are analyzed; check again shortly rather than treating it as `ok`.
+
+### Check who holds a token
+
+Top holders funded from the same address, concentration after merging linked wallets, holder and liquidity history, blacklist proximity, and authorities and Token-2022 extensions.
+
+```typescript
+const check = await agent.methods.dexraTokenDeepCheck(agent, mint);
+console.log(check.verdict, check.summary, check.reasons);
+```
+
+### Check a swap before sending it
+
+Price impact on the best route, sandwich share on the pool, Token-2022 transfer fees, hooks and permanent delegate, and mint and freeze authority.
+
+```typescript
+const check = await agent.methods.dexraSwapPreflight(agent, mint, "buy", 0.5);
+if (check.verdict !== "ok") {
+  console.log("Not swapping:", check.reasons);
+}
+```
+
+## Actions
+
+| Action | Use |
+|---|---|
+| `DEXRA_LAUNCH_CHECK` | "Is this new pump.fun coin a rug?" |
+| `DEXRA_TOKEN_DEEP_CHECK` | "Who really holds this token?" |
+| `DEXRA_SWAP_PREFLIGHT` | "Is it safe to swap 1 SOL into this?" |
+
+## Example prompts
+
+```text
+"Check this pump.fun coin before I buy it: <mint>"
+
+"Are the top holders of <mint> linked to each other?"
+
+"Is it safe to buy 0.5 SOL of <mint> right now?"
+```
+
+## Notes
+
+- `ok` means none of the checked risks were found. It is not a price prediction.
+- Holder checks answer `400` for tokens with millions of holders such as USDC.
+- Dexra also has a hosted MCP server at `https://api.dexra.dev/mcp` and further checks for wallets, pools and perp venues; see the [docs](https://dexra.dev/docs).
