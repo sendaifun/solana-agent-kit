@@ -1,0 +1,41 @@
+---
+title: 'pumpdata Plugin'
+description: 'pump.fun history for agents, paid per call in USDC over x402'
+icon: 'database'
+---
+
+# pumpdata Plugin
+
+The `@solana-agent-kit/plugin-pumpdata` plugin lets your agent read pump.fun history from [pumpdata.fun](https://pumpdata.fun): Every pump.fun trade, ever. Paid calls are paid per call in USDC on Solana over x402, signed by the agent's own wallet. No account and no API key.
+
+## Installation
+
+```bash
+npm install solana-agent-kit @solana-agent-kit/plugin-pumpdata
+```
+
+## Integration
+
+```javascript
+import { SolanaAgentKit } from "solana-agent-kit";
+import PumpDataPlugin from "@solana-agent-kit/plugin-pumpdata";
+
+const agent = new SolanaAgentKit(wallet, "YOUR_MAINNET_RPC_URL", {}).use(
+  PumpDataPlugin,
+);
+```
+
+## Available Tools
+
+| Tool Name | Price | Description |
+|-----------|-------|-------------|
+| `pumpdataGetStats` | free | One UTC day on pump.fun: launches, graduations, volume, top coins and deployers |
+| `pumpdataGetLaunch` | $0.005 | A launch's deployer record, bundle, insiders' share, curve progress, and how similar launches went |
+| `pumpdataGetWallets` | $0.01 | Up to 50 wallets' records: rule-based class, SOL in and out, coins, first seen |
+| `pumpdataGetDeployer` | $0.005 | A deployer's launches, graduations, best run and last 90 days |
+| `pumpdataGetSimilar` | $0.005 | The past launches most like this one and how each went over its next 24 h |
+| `pumpdataGetBaseRate` | $0.005 | The share of coins crossing a market cap band that reached 2x, 5x, 10x, 20x within 3 h |
+
+## Payment
+
+A paid call first gets a `402` with an x402 offer. The plugin builds the USDC transfer with `@x402/svm`, the agent's wallet signs it (it does not send it; the facilitator pays the fee and lands it), and `@x402/fetch` retries with the `PAYMENT-SIGNATURE` header. Each call pays at most its listed price; any other offer is refused before signing. The wallet needs USDC on Solana mainnet, and the agent needs a mainnet RPC URL.

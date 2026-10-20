@@ -50,6 +50,10 @@
               {
                 "group": "Misc",
                 "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
+              },
+              {
+                "group": "pumpdata",
+                "pages": ["docs/v2/plugins/pumpdata/pumpdata-plugin-intro"]
               }
             ]
           },

@@ -130,6 +130,7 @@ You can choose to install any of the plugins listed below or you could choose to
 3. DeFi plugin (`@solana-agent-kit/plugin-defi`): DeFi operations for Solana protocols such as staking, lending, borrowing, and spot and perpetual trading.
 4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, coingecko token information, and domain registration.
 5. Blinks plugin (`@solana-agent-kit/plugin-blinks`): Blinks operations for Solana protocols such as arcade games and more soon to come.
+6. pumpdata plugin (`@solana-agent-kit/plugin-pumpdata`): pump.fun history from pumpdata.fun (launches, deployers, wallets, base rates), paid per call in USDC over x402 from the agent's wallet.
 
 ```bash
 npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks

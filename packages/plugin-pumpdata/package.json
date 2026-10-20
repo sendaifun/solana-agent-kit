@@ -1,0 +1,49 @@
+{
+  "name": "@solana-agent-kit/plugin-pumpdata",
+  "version": "2.0.0",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
+    "build": "tsup src/index.ts --dts --clean --format cjs,esm --out-dir dist",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-pumpdata",
+  "dependencies": {
+    "@solana/kit": "^5.5.1",
+    "@x402/core": "~2.28.0",
+    "@x402/fetch": "~2.28.0",
+    "@x402/svm": "~2.28.0",
+    "solana-agent-kit": "workspace:*",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.10"
+  }
+}
