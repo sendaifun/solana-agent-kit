@@ -45,6 +45,15 @@ import getSwapDataAction from "./okx/actions/getSwapData";
 // Import OKX actions
 import getTokensAction from "./okx/actions/getTokens";
 
+// Import SwapChan tools & actions
+import swapchanQuoteAction from "./swapchan/actions/swapchanQuote";
+import swapchanSwapAction from "./swapchan/actions/swapchanSwap";
+import {
+  swapchanBuildSwap,
+  swapchanGetQuote,
+  swapchanSwap,
+} from "./swapchan/tools";
+
 // Import Debridge tools & actions
 import checkDebridgeTransactionStatusAction from "./debridge/actions/checkTransactionStatus";
 import createDebridgeBridgeOrderAction from "./debridge/actions/createBridgeOrder";
@@ -346,6 +355,11 @@ const DefiPlugin = {
     validateAndEncodeDriftAddress: validateAndEncodeAddress,
     getDriftL2OrderBook: getL2OrderBook,
 
+    // SwapChan methods
+    swapchanGetQuote,
+    swapchanBuildSwap,
+    swapchanSwap,
+
     // Debridge methods,
     checkDebridgeTransactionStatus,
     createDebridgeBridgeOrder,
@@ -509,6 +523,10 @@ const DefiPlugin = {
     lavarageGetQuoteAction,
     lavarageTradeHistoryAction,
     lavarageBorrowAction,
+
+    // SwapChan actions
+    swapchanQuoteAction,
+    swapchanSwapAction,
   ],
 
   // Initialize function
