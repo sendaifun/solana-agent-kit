@@ -38,6 +38,9 @@ import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
+// mosn
+import mosnTokenCheckAction from "./mosn/actions/mosnTokenCheck";
+
 // solutiofi
 import burnTokensUsingSolutiofiAction from "./solutiofi/actions/burnTokens";
 import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts";
@@ -60,6 +63,7 @@ import {
 } from "./jupiter/tools";
 import { sendCompressedAirdrop } from "./lightprotocol/tools";
 import { swap } from "./mayan/tools";
+import { fetchMosnTokenCheck } from "./mosn";
 import claimCreatorFee from "./pumpfun/tools/claimCreatorFee";
 import launchPumpFunToken from "./pumpfun/tools/launchPumpfunToken";
 import { fetchPythPrice, fetchPythPriceFeedID } from "./pyth/tools";
@@ -112,6 +116,7 @@ const TokenPlugin = {
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
     fetchTokenReportSummary,
+    fetchMosnTokenCheck,
     burnTokensUsingSolutiofi: burnTokens,
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
@@ -141,6 +146,7 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    mosnTokenCheckAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,
