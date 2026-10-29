@@ -1,4 +1,6 @@
 import type { Plugin, SolanaAgentKit } from "solana-agent-kit";
+import verifySpendingMandateAction from "./aegis/actions/verifySpendingMandate";
+import { verifySpendingMandate } from "./aegis/tools/verify_spending_mandate";
 
 // Import all actions
 // alldomains
@@ -218,6 +220,7 @@ const MiscPlugin = {
 
   // Combine all tools
   methods: {
+    verifySpendingMandate,
     getAllDomainsTLDs,
     getOwnedAllDomains,
     getOwnedDomainsForTLD,
@@ -304,6 +307,7 @@ const MiscPlugin = {
 
   // Combine all actions
   actions: [
+    verifySpendingMandateAction,
     getAllDomainsTLDsAction,
     getOwnedAllDomainsAction,
     getOwnedDomainsForTLDAction,
