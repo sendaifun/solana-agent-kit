@@ -35,6 +35,9 @@ import launchPumpfunTokenAction from "./pumpfun/actions/launchPumpfunToken";
 // pyth
 import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 
+// gl1tch
+import gl1tchScanTokenAction from "./gl1tch/actions/scanToken";
+
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
@@ -49,6 +52,7 @@ import {
   getTokenAddressFromTicker,
   getTokenDataByAddress,
 } from "./dexscreener/tools";
+import { gl1tchTokenScan } from "./gl1tch";
 import {
   cancelLimitOrders as cancelJupiterLimitOrders,
   createLimitOrder as createJupiterLimitOrder,
@@ -112,6 +116,7 @@ const TokenPlugin = {
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
     fetchTokenReportSummary,
+    gl1tchTokenScan,
     burnTokensUsingSolutiofi: burnTokens,
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
@@ -141,6 +146,7 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    gl1tchScanTokenAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,
