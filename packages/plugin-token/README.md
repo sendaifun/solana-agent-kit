@@ -41,6 +41,9 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchPythPrice` - Get real-time price data from Pyth oracles
 - `fetchPythPriceFeedID` - Get price feed ID for a token
 
+### GL1TCH
+- gl1tchTokenScan - Multi-vector pre-trade token safety scan, honeypot detection, rug radar, and deployer reputation
+
 ### Rugcheck
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report
@@ -90,6 +93,13 @@ const trade = await agent.methods.trade(
 
 ### Token Security
 ```typescript
+// Scan token safety with GL1TCH multi-vector risk engine
+const gl1tchScan = await agent.methods.gl1tchTokenScan(
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+);
+console.log("GL1TCH Verdict:", gl1tchScan.verdict);
+console.log("GL1TCH Score:", gl1tchScan.score);
+
 // Check if a token might be a rugpull
 const report = await agent.methods.fetchTokenDetailedReport(
   "TokenMintAddress123"
