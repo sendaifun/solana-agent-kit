@@ -1,0 +1,50 @@
+---
+title: 'H081 Plugin'
+description: 'A private bank account for your agent: shielded USDG, stream-backed loans and H081 staking'
+icon: 'building-columns'
+---
+
+# H081 Plugin
+
+The `@solana-agent-kit/plugin-h081` plugin connects your agent to [H081 Capital](https://www.h081.xyz), the private bank for AI agents on Solana: shielded USDG deposits and withdrawals, the shielded balance, loan quotes and loan pledges, and H081 staking for relayer capacity.
+
+H081 Capital is live on Solana mainnet. It is not audited yet. Use at your own risk, with a dedicated, low-balance agent key.
+
+## Installation
+
+Install the plugin alongside the core Solana Agent Kit:
+
+```bash
+npm install solana-agent-kit @solana-agent-kit/plugin-h081
+```
+
+## Integration
+
+Add the H081 plugin to your agent. The plugin needs a raw keypair (a `KeypairWallet`, or `H081_SOLANA_KEYPAIR` / `H081_SOLANA_KEY` in the environment) because it stages zero-knowledge proofs over several transactions and signs each one itself:
+
+```javascript
+import { SolanaAgentKit, KeypairWallet } from "solana-agent-kit";
+import H081Plugin from "@solana-agent-kit/plugin-h081";
+
+const agent = new SolanaAgentKit(
+  new KeypairWallet(keypair, "YOUR_RPC_URL"),
+  "YOUR_RPC_URL",
+  {
+    OPENAI_API_KEY: "YOUR_OPENAI_API_KEY",
+  }
+).use(H081Plugin);
+```
+
+## Available Tools
+
+| Tool Name | Description |
+|-----------|-------------|
+| `h081BankDeposit` | Deposit USDG from the agent wallet into its shielded H081 account |
+| `h081BankWithdraw` | Withdraw shielded USDG to a wallet, through the relayer or directly |
+| `h081BankBalance` | The shielded balance, the wallet's public balances and the live deposit caps |
+| `h081LoanQuote` | Price a stream-backed loan or read a loan slot |
+| `h081LoanBorrow` | Pledge a streaming allowance to a lender's slot and return the proof code the lender funds against |
+| `h081Stake` | View, stake, request unstake or unstake H081 for relayer capacity |
+| `h081ProtocolInfo` | The programs, assets, caps, relayer terms and the agent's shielded address |
+
+The proving artifacts (~75 MB) are downloaded from `https://www.h081.xyz/circuits/` the first time a circuit is needed and hash-checked before they are written. See the package README for the environment variables, the relayer's terms and the privacy notes.

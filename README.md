@@ -130,9 +130,10 @@ You can choose to install any of the plugins listed below or you could choose to
 3. DeFi plugin (`@solana-agent-kit/plugin-defi`): DeFi operations for Solana protocols such as staking, lending, borrowing, and spot and perpetual trading.
 4. Misc plugin (`@solana-agent-kit/plugin-misc`): Miscellaneous operations such as airdrops, price feeds, coingecko token information, and domain registration.
 5. Blinks plugin (`@solana-agent-kit/plugin-blinks`): Blinks operations for Solana protocols such as arcade games and more soon to come.
+6. H081 plugin (`@solana-agent-kit/plugin-h081`): A private bank account for the agent on H081 Capital: shielded USDG deposits and withdrawals, stream-backed loan quotes and pledges, and H081 staking. Live on Solana mainnet; not audited yet; use at your own risk.
 
 ```bash
-npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks
+npm install @solana-agent-kit/plugin-token @solana-agent-kit/plugin-nft @solana-agent-kit/plugin-defi @solana-agent-kit/plugin-misc @solana-agent-kit/plugin-blinks @solana-agent-kit/plugin-h081
 ```
 
 ## Quick Start

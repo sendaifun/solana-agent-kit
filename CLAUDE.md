@@ -18,6 +18,7 @@ pnpm run build:plugin-defi       # DeFi plugin
 pnpm run build:plugin-nft        # NFT plugin
 pnpm run build:plugin-misc       # Misc plugin
 pnpm run build:plugin-blinks     # Blinks plugin
+pnpm run build:plugin-h081       # H081 plugin
 pnpm run build:adapter-mcp       # MCP adapter
 
 # Lint and format
@@ -50,6 +51,7 @@ packages/
 ├── plugin-nft/     # NFT operations (Metaplex, 3Land)
 ├── plugin-misc/    # Utilities (CoinGecko, Allora, domains, webhooks)
 ├── plugin-blinks/  # Solana Blinks (arcade games)
+├── plugin-h081/    # H081 Capital private bank (shielded USDG, loans, H081 staking)
 └── adapter-mcp/    # Model Context Protocol server adapter
 ```
 
