@@ -1,0 +1,66 @@
+{
+  "name": "@solana-agent-kit/plugin-h081",
+  "version": "2.0.0",
+  "description": "Solana Agent Kit plugin for H081 Capital, the private bank for AI agents on Solana: shielded USDG deposits and withdrawals, balance, loan quotes and pledges, H081 staking. Live on Solana mainnet; not audited yet; use at your own risk.",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist .turbo node_modules",
+    "build": "tsup src/index.ts --dts --clean --format cjs,esm --out-dir dist",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sendaifun/solana-agent-kit.git"
+  },
+  "homepage": "https://github.com/sendaifun/solana-agent-kit/tree/v2/packages/plugin-h081",
+  "keywords": [
+    "h081",
+    "solana",
+    "solana-agent-kit",
+    "ai-agents",
+    "private-bank",
+    "usdg",
+    "zero-knowledge",
+    "plugin"
+  ],
+  "engines": {
+    "node": ">=20.11"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^1.3.0",
+    "@noble/curves": "^1.9.2",
+    "@noble/hashes": "^1.8.0",
+    "@solana/spl-token": "^0.4.13",
+    "bs58": "^6.0.0",
+    "circomlibjs": "^0.1.7",
+    "snarkjs": "^0.7.5",
+    "solana-agent-kit": "workspace:*",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.2",
+    "solana-agent-kit": "2.0.10"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  }
+}
