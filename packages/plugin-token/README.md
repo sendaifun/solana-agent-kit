@@ -41,6 +41,9 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchPythPrice` - Get real-time price data from Pyth oracles
 - `fetchPythPriceFeedID` - Get price feed ID for a token
 
+### Haris Guardian
+- `checkTokenRiskWithHaris` - Solana token scam / rug-pull risk check (0-100 score, higher = riskier, with plain-English red flags)
+
 ### Rugcheck
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report
