@@ -38,6 +38,9 @@ import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
+// haris guardian
+import checkTokenRiskAction from "./haris/actions/checkTokenRisk";
+
 // solutiofi
 import burnTokensUsingSolutiofiAction from "./solutiofi/actions/burnTokens";
 import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts";
@@ -49,6 +52,7 @@ import {
   getTokenAddressFromTicker,
   getTokenDataByAddress,
 } from "./dexscreener/tools";
+import { checkTokenRiskWithHaris } from "./haris/tools";
 import {
   cancelLimitOrders as cancelJupiterLimitOrders,
   createLimitOrder as createJupiterLimitOrder,
@@ -112,6 +116,7 @@ const TokenPlugin = {
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
     fetchTokenReportSummary,
+    checkTokenRiskWithHaris,
     burnTokensUsingSolutiofi: burnTokens,
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
@@ -141,6 +146,7 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    checkTokenRiskAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,

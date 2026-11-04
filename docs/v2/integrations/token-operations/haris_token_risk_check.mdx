@@ -1,0 +1,67 @@
+---
+title: 'Token Risk Check (Haris Guardian)'
+description: 'Check a Solana token for scam and rug-pull red flags before trading'
+---
+
+Check any Solana token by mint address with the [Haris Guardian API](https://haris-api.vercel.app/docs). The check returns a 0-100 risk score, where **higher means riskier**, a level and plain-English red flags. Agents can run it before a swap and decide whether to buy.
+
+## Core Features
+
+1. **On-chain authority checks**
+   - Mint and freeze authority
+   - Token-2022 extensions: permanent delegate, transfer hook, transfer fee, pausable, default account state
+   - Mutable metadata
+
+2. **Market checks**
+   - Holder concentration (pools and programs excluded)
+   - Liquidity and pool age
+   - LP lock/burn and Streamflow locks
+   - Simulated buy and sell (honeypot detection)
+
+## Usage
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+
+const agent = new SolanaAgentKit(wallet, RPC_URL, {}).use(TokenPlugin);
+
+const report = await agent.methods.checkTokenRiskWithHaris(
+  agent,
+  "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+);
+
+console.log(report.score, report.level, report.verdict);
+// 5 "low" "Low risk: no major red flags found."
+```
+
+### Example Prompts
+
+- "Is DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263 safe to buy?"
+- "Run a risk check on this token before swapping: \<mint\>"
+
+## Response
+
+```typescript
+interface HarisRiskReport {
+  mint: string;
+  name?: string | null;
+  score: number;      // 0-100, higher = riskier
+  level: "low" | "medium" | "high" | "critical";
+  verdict: string;
+  flags: { id: string; weight: number; reason: string }[];
+  positives?: string[];
+  not_checked?: string[];
+  checked_at?: string;
+}
+```
+
+## Pricing
+
+No API key is needed. The free tier allows a few checks per day per IP. After that the API returns HTTP 402, and further checks cost $0.01 USDC on Solana through [x402](https://x402.org) at `POST /v1/paid/check`. This integration only calls the free endpoint and never signs payments.
+
+Optional config: `HARIS_API_BASE_URL` overrides the API URL.
+
+<Note>
+Results are automated on-chain signals, not guarantees and not financial advice.
+</Note>
