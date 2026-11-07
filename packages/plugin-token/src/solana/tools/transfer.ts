@@ -17,13 +17,42 @@ import { type SolanaAgentKit, signOrSendTX } from "solana-agent-kit";
  * @param mint Optional mint address for SPL tokens
  * @returns Transaction signature
  */
+// ─── DACS-Standard Guardrail (§9.5.7 & §14.4) ─────────────────────────────
+
+export interface DacsMandateMeta {
+  dacsMandate?: string;
+  dacsSessionId?: string;
+  dacsMaxAmount?: number | bigint | string;
+}
+
+export function assertDacsSpendMandate(
+  requestedAmount: number | bigint | string,
+  meta?: DacsMandateMeta
+): void {
+  if (!meta?.dacsMandate && !meta?.dacsSessionId) return;
+
+  const req = typeof requestedAmount === 'bigint' ? requestedAmount : BigInt(Math.floor(Number(requestedAmount)));
+  const max = meta.dacsMaxAmount !== undefined
+    ? (typeof meta.dacsMaxAmount === 'bigint' ? meta.dacsMaxAmount : BigInt(Math.floor(Number(meta.dacsMaxAmount))))
+    : 0n;
+
+  if (meta.dacsMaxAmount !== undefined && req > max) {
+    throw new Error(
+      `[DACS-Standard §9.5.7] Agent action aborted: requested spend (${req}) exceeds authorized mandate ceiling (${max}).`
+    );
+  }
+}
 export async function transfer(
   agent: SolanaAgentKit,
   to: PublicKey,
   amount: number,
   mint?: PublicKey,
+  dacsMeta?: DacsMandateMeta,
 ): Promise<Awaited<ReturnType<typeof signOrSendTX>>> {
   try {
+    // DACS-Standard (§9.5.7) Pre-Flight Mandate Enforcement
+    assertDacsSpendMandate(amount, dacsMeta);
+
     let tx: Awaited<ReturnType<typeof signOrSendTX>>;
 
     if (!mint) {
