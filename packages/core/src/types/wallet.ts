@@ -3,7 +3,7 @@ import {
   type PublicKey,
   type SendOptions,
   type Signer,
-  Transaction,
+  type Transaction,
   type TransactionInstruction,
   TransactionMessage,
   type TransactionSignature,
@@ -101,6 +101,26 @@ export interface EvmWallet {
   ) => Promise<string>;
 }
 
+/**
+ * Check whether a value is a `Transaction` or `VersionedTransaction` (as opposed
+ * to a `TransactionInstruction`).
+ *
+ * Uses a structural check rather than `instanceof`: when a plugin and core
+ * resolve different copies of `@solana/web3.js`, `instanceof` returns false for
+ * real transactions, and they would be treated as an instruction list.
+ * Instructions have no `serialize` method; both transaction types do.
+ */
+export function isTransaction(
+  value: unknown,
+): value is Transaction | VersionedTransaction {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { serialize?: unknown }).serialize === "function" &&
+    "signatures" in value
+  );
+}
+
 export async function signOrSendTX(
   agent: SolanaAgentKit,
   instructionsOrTransaction:
@@ -121,8 +141,7 @@ export async function signOrSendTX(
 > {
   if (
     Array.isArray(instructionsOrTransaction) &&
-    (instructionsOrTransaction[0] instanceof Transaction ||
-      instructionsOrTransaction[0] instanceof VersionedTransaction)
+    isTransaction(instructionsOrTransaction[0])
   ) {
     if (agent.config.signOnly) {
       return await agent.wallet.signAllTransactions(
@@ -130,26 +149,24 @@ export async function signOrSendTX(
       );
     }
 
-    const txSigs: string[] = [];
-    for (const tx of instructionsOrTransaction) {
-      if (agent.wallet.signAndSendTransaction) {
-        const { signature } = await agent.wallet.signAndSendTransaction(
-          tx as Transaction,
-        );
-        txSigs.push(signature);
-      }
+    if (!agent.wallet.signAndSendTransaction) {
       throw new Error(
         "Wallet does not support signAndSendTransaction please implement it manually or use the signOnly option",
       );
     }
 
+    const txSigs: string[] = [];
+    for (const tx of instructionsOrTransaction) {
+      const { signature } = await agent.wallet.signAndSendTransaction(
+        tx as Transaction,
+      );
+      txSigs.push(signature);
+    }
+
     return txSigs;
   }
 
-  if (
-    instructionsOrTransaction instanceof Transaction ||
-    instructionsOrTransaction instanceof VersionedTransaction
-  ) {
+  if (isTransaction(instructionsOrTransaction)) {
     if (agent.config.signOnly) {
       return await agent.wallet.signTransaction(instructionsOrTransaction);
     }
