@@ -63,6 +63,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
   - Perpetuals Trading with Adrena Protocol
   - Drift Vaults, Perps, Lending and Borrowing
   - Cross-chain bridging via deBridge DLN
+  - Cross-chain swaps from Solana to 20+ chains via SODAX
   - Cross chain bridging via Wormhole
 
 - **Solana Blinks**
@@ -638,6 +639,48 @@ const value = await agent.methods.simulateSwitchboardFeed(
       "9wcBMATS8bGLQ2UcRuYjsRAD7TPqB1CMhqfueBx78Uj2", // TRUMP/USD
       "http://crossbar.switchboard.xyz");;
 console.log("Simulation resulted in the following value:", value);
+
+### Cross-Chain Swap via SODAX
+
+SODAX swaps tokens from Solana to Solana or to 20+ other chains (Base, Arbitrum, Ethereum, BNB Chain, Sonic, Optimism, Polygon, Avalanche and more). The agent only signs a Solana transaction; solvers on the destination chain fill the swap.
+
+1. Get supported tokens (all chains, or one chain key such as `"solana"` or `"0x2105.base"`):
+```typescript
+const tokens = await agent.methods.getSodaxTokens("solana");
+console.log("Solana tokens:", tokens);
+```
+
+2. Get a quote (1 SOL -> USDC on Base):
+```typescript
+const quote = await agent.methods.getSodaxQuote({
+  tokenSrc: "11111111111111111111111111111111", // Native SOL
+  tokenSrcChainKey: "solana",
+  tokenDst: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
+  tokenDstChainKey: "0x2105.base",
+  amount: "1000000000", // 1 SOL (9 decimals)
+});
+console.log("Quoted output:", quote.quotedAmount); // in output token decimals
+```
+
+3. Swap:
+```typescript
+const result = await agent.methods.sodaxSwap(agent, {
+  srcChainKey: "solana",
+  dstChainKey: "0x2105.base",
+  inputTokenAddress: "11111111111111111111111111111111",
+  outputTokenAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  inputAmount: "1000000000",
+  srcAddress: agent.wallet.publicKey.toBase58(),
+  dstAddress: "0x23C279e58ddF1018C3B9D0C224534fA2a83fb1d2", // recipient on Base
+  slippageBps: 100, // optional
+});
+console.log(result.status, result.txHash); // "solved" | "failed" | "timeout"
+```
+
+Notes:
+- `sodaxSwap` needs to broadcast and relay, so it does not work in `signOnly` mode. Use `buildSodaxIntent` instead: it returns the unsigned `VersionedTransaction` plus the `intent` and `relayData` to submit after signing.
+- Swaps below the pair's minimum (around 0.01 SOL) return `Input amount too low`.
+- If SODAX starts requiring API keys, set `SODAX_API_KEY` in the agent config and it is sent as `x-api-key`.
 
 ### Cross-Chain Bridge via deBridge
 

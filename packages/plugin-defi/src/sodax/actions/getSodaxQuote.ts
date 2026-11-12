@@ -94,7 +94,7 @@ const getSodaxQuoteAction: Action = {
       return {
         status: "success",
         quote,
-        message: `SODAX quote received: ${quote.amount} ${input.tokenSrcChainKey} → ${quote.quotedAmount} on ${input.tokenDstChainKey}`,
+        message: `SODAX quote received: ${input.amount} (${input.tokenSrcChainKey}) → ${quote.quotedAmount} (${input.tokenDstChainKey}), in base units of each token`,
       };
     } catch (error: any) {
       return {

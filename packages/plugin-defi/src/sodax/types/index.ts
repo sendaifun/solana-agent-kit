@@ -21,13 +21,8 @@ export interface SodaxQuoteInput {
 }
 
 export interface SodaxQuoteResponse {
+  /** Output amount in the destination token's base units. The API returns only this field. */
   quotedAmount: string;
-  quoteType: string;
-  tokenSrc: string;
-  tokenSrcChainKey: string;
-  tokenDst: string;
-  tokenDstChainKey: string;
-  amount: string;
 }
 
 export interface SodaxIntent {
