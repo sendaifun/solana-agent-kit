@@ -38,6 +38,12 @@ This plugin provides a comprehensive suite of tools and actions to interact with
 - **`getDebridgeSupportedChains`**: Get supported chains for Debridge.
 - **`getDebridgeTokensInfo`**: Get token information for Debridge.
 
+### SODAX
+- **`getSodaxTokens`**: Get the tokens SODAX supports, for all chains or one chain.
+- **`getSodaxQuote`**: Get a quote for a cross-chain swap.
+- **`sodaxSwap`**: Swap from Solana to Solana or another chain (Base, Arbitrum, Ethereum, BNB Chain, Sonic and more), sign with the agent wallet, and wait for the fill.
+- **`buildSodaxIntent`**: Build the unsigned Solana swap transaction for an external signer (use this in `signOnly` mode).
+
 ### Drift
 - **`driftPerpTrade`**: Open a perpetual trade on Drift.
 - **`calculatePerpMarketFundingRate`**: Calculate the funding rate for a perpetual market.

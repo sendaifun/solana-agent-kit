@@ -12,7 +12,11 @@ import nacl from "tweetnacl";
 import type { BaseWallet } from "../types/wallet";
 
 /**
- * Check if a transaction object is a VersionedTransaction or not
+ * Check if a transaction object is a VersionedTransaction or not.
+ *
+ * Uses a structural check rather than `instanceof`, so it also works when the
+ * transaction was built with a different copy of `@solana/web3.js` (common in
+ * monorepos and with duplicated dependencies).
  *
  * @param tx
  * @returns bool
@@ -76,7 +80,7 @@ export class KeypairWallet implements BaseWallet {
   ): Promise<string> {
     const connection = new Connection(this.rpcUrl);
 
-    if (transaction instanceof VersionedTransaction) {
+    if (isVersionedTransaction(transaction)) {
       transaction.sign([this.payer]);
     } else {
       transaction.partialSign(this.payer);
@@ -95,7 +99,7 @@ export class KeypairWallet implements BaseWallet {
     options?: SendOptions,
   ): Promise<{ signature: TransactionSignature }> {
     const connection = new Connection(this.rpcUrl);
-    if (transaction instanceof VersionedTransaction) {
+    if (isVersionedTransaction(transaction)) {
       transaction.sign([this.payer]);
     } else {
       transaction.partialSign(this.payer);
