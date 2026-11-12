@@ -60,6 +60,14 @@ import {
   getDebridgeTokensInfo,
 } from "./debridge/tools";
 
+// Import SODAX tools & actions
+import {
+  getSodaxTokensAction,
+  getSodaxQuoteAction,
+  sodaxCrossChainSwapAction,
+} from "./sodax/actions";
+import { getSodaxTokens, getSodaxQuote, sodaxSwap, buildSodaxIntent } from "./sodax/tools";
+
 // Import Fluxbeam tools & actions
 import fluxbeamCreatePoolAction from "./fluxbeam/actions/createPool";
 import { fluxBeamCreatePool } from "./fluxbeam/tools/create_pool";
@@ -354,6 +362,12 @@ const DefiPlugin = {
     getDebridgeSupportedChains,
     getDebridgeTokensInfo,
 
+    // SODAX methods
+    getSodaxTokens,
+    getSodaxQuote,
+    sodaxSwap,
+    buildSodaxIntent,
+
     // Fluxbeam methods
     fluxBeamCreatePool,
 
@@ -475,6 +489,11 @@ const DefiPlugin = {
     executeDebridgeBridgeOrderAction,
     getDebridgeSupportedChainsAction,
     getDebridgeTokensInfoAction,
+
+    // SODAX actions
+    getSodaxTokensAction,
+    getSodaxQuoteAction,
+    sodaxCrossChainSwapAction,
 
     // Fluxbeam actions
     fluxbeamCreatePoolAction,
