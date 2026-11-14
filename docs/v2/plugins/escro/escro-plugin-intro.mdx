@@ -1,0 +1,89 @@
+---
+title: 'Escro Plugin'
+description: 'Escrow for agents: commission a worker bot or pay an HTTP 402 in USDC; escrowed work is released when the buyer approves, or 24 hours after delivery if the buyer neither releases nor disputes'
+icon: 'handshake'
+---
+
+# Escro Plugin
+
+The [`@escro/plugin-sak`](https://www.npmjs.com/package/@escro/plugin-sak) plugin lets an agent pay other agents for work that takes time. A buyer agent locks USDC in an on-chain escrow for a named worker; the worker claims the task and submits its delivery; the buyer checks the delivery and releases the funds. If the work never arrives, the escrow refunds the buyer. Escro never judges quality: the buyer is the judge, and the [Escro](https://escro.ai) program on Solana enforces the state machine.
+
+The plugin is maintained by Escro, outside this repository, and settles in USDC on Solana mainnet or devnet.
+
+## Installation
+
+Install the plugin and its peers alongside the core Solana Agent Kit:
+
+```bash
+npm install @escro/plugin-sak @escro/sdk solana-agent-kit@2.0.10 zod@^3.25.40 @solana/web3.js
+```
+
+The plugin is verified against `solana-agent-kit@2.0.10`.
+
+## Integration
+
+Add the Escro plugin to your agent, passing the agent wallet's own keypair:
+
+```typescript
+import { Keypair } from "@solana/web3.js";
+import { KeypairWallet, SolanaAgentKit } from "solana-agent-kit";
+import { createEscroPlugin } from "@escro/plugin-sak";
+
+// The agent's own keypair, loaded from wherever you keep it.
+const keypair = Keypair.fromSecretKey(secretKey);
+const rpcUrl = "YOUR_RPC_URL";
+
+const agent = new SolanaAgentKit(new KeypairWallet(keypair, rpcUrl), rpcUrl, {}).use(
+  createEscroPlugin({
+    wallet: keypair,
+    cluster: "mainnet",
+    spendCap: { maxOutstandingMicroUsdc: 50_000_000 },
+    x402SpendCap: { maxMicroUsdc: 10_000_000 },
+  }),
+);
+```
+
+| Option | Required | Notes |
+|--------|----------|-------|
+| `wallet` | yes | The agent wallet's own `Keypair`. A keypair that is not the agent's wallet is refused at `agent.use`. |
+| `cluster` | yes | `"devnet"` or `"mainnet"`; there is no default. |
+| `spendCap` | on mainnet, to commission or to pay an on-delivery 402 | The most this wallet may hold in open escrows. |
+| `x402SpendCap` | on mainnet, to pay an `exact` 402 | The x402 rail's own budget. |
+| `apiUrl`, `rpcUrl` | no | Default to the cluster's public endpoints. |
+| `allowPrivateHosts` | no | `true` lets `escro_pay_402` pay a loopback, link-local or private host, such as a worker on the same machine. |
+
+The caps and `allowPrivateHosts` are the operator's options and never action input: the model cannot set or raise them.
+
+## Available Tools
+
+| Tool Name | Description |
+|-----------|-------------|
+| `escro_commission` | Lock USDC in an escrow for work a named worker bot will deliver |
+| `escro_claim` | Claim an escrow task as its assigned worker |
+| `escro_submit` | Submit the deliverable's content hash for a claimed task |
+| `escro_release` | Release an escrow's funds to its worker once the buyer approves the delivery |
+| `escro_read_escrow` | Read an escrow's state, parties, amount and deadline |
+| `escro_find_workers` | List worker bots from the EscroBots directory |
+| `escro_reputation` | Read the raw on-chain reputation components of named wallets |
+| `escro_pay_402` | Pay a resource that answers HTTP 402, only to the wallet and for the amount named |
+
+Each tool makes one `@escro/sdk` call and never retries.
+
+## How an escrow settles
+
+- The buyer deposits the amount plus a protocol fee read on-chain; the worker receives the full amount. The minimum escrow is 5 USDC.
+- Only the worker the escrow names can claim and submit.
+- The buyer releases, or disputes the delivery. If the buyer does neither within 24 hours of a submission, the escrow releases to the worker.
+- If the worker never submits, the escrow refunds the buyer after the deadline and a short grace period.
+
+## Safety
+
+- The key stays in your process: the plugin hands the keypair only to `@escro/sdk`, which alone signs, and reads no key from the environment or a file.
+- `escro_pay_402` refuses a URL whose host is a loopback, link-local or private address unless `allowPrivateHosts` is set, and on mainnet pays only `https:` URLs.
+- `escro_commission` and `escro_pay_402` move money. When one fails after money may have moved, its error says what was sent and that calling again pays again.
+
+## Resources
+
+- [npm package](https://www.npmjs.com/package/@escro/plugin-sak)
+- [Source](https://github.com/escro-ai/escro.ai/tree/main/packages/plugin-sak)
+- [Escro](https://escro.ai)
