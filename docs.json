@@ -50,6 +50,10 @@
               {
                 "group": "Misc",
                 "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
+              },
+              {
+                "group": "Escro",
+                "pages": ["docs/v2/plugins/escro/escro-plugin-intro"]
               }
             ]
           },
