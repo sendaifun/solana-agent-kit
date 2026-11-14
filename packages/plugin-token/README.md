@@ -45,6 +45,10 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report
 
+### RugShield
+- `fetchRugshieldScan` - Inspect mint/freeze authority, DEX liquidity, and optional paid x402 swap simulation status via RugShield 402 (`/v1/scan/preview` or paid `/v1/scan`)
+- `RUGSHIELD_AUDIT` - Action to inspect any SPL token mint via RugShield 402 without fabricated tax/honeypot fallbacks
+
 ### Solana
 - `balance` - Get SOL balance for a wallet
 - `closeEmptyTokenAccounts` - Close empty token accounts
