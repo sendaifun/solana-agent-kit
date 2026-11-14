@@ -46,8 +46,8 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchTokenReportSummary` - Get summarized token security report
 
 ### RugShield
-- `fetchRugshieldScan` - Simulate pre-trade swaps, detect honeypots, compute buy/sell tax, and verify LP lock and Sybil holder clusters via RugShield 402
-- `RUGSHIELD_AUDIT` - Action to audit any SPL token mint for honeypot traps and liquidation restrictions before swapping
+- `fetchRugshieldScan` - Inspect mint/freeze authority, DEX liquidity, and optional paid x402 swap simulation status via RugShield 402 (`/v1/scan/preview` or paid `/v1/scan`)
+- `RUGSHIELD_AUDIT` - Action to inspect any SPL token mint via RugShield 402 without fabricated tax/honeypot fallbacks
 
 ### Solana
 - `balance` - Get SOL balance for a wallet

@@ -5,14 +5,14 @@ import { fetchRugshieldScan } from "../tools";
 const rugshieldAction: Action = {
   name: "RUGSHIELD_AUDIT",
   description:
-    "Audit any Solana SPL token mint for honeypot traps, simulation sell restrictions, buy/sell tax, liquidity health, and sybil dev-clusters via RugShield 402.",
+    "Inspect any Solana SPL token mint (or Base contract) for mint/freeze authority, DEX liquidity, and paid x402 swap simulation status via RugShield 402.",
   similes: [
     "audit token safety",
     "rugshield scan",
     "simulate token sell",
     "check honeypot tax",
     "pre trade audit",
-    "verify token liquidity lock",
+    "verify token authority",
     "check token rug pull",
   ],
   examples: [
@@ -23,22 +23,42 @@ const rugshieldAction: Action = {
         },
         output: {
           status: "success",
-          is_honeypot: false,
-          recommendation: "SAFE_TO_SWAP",
-          message:
-            "Token passed RugShield pre-trade simulation with 0% tax and healthy liquidity.",
+          response: {
+            status: "not_performed",
+            token_address: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            chain: "solana",
+            is_honeypot: null,
+            recommendation: "INCONCLUSIVE_REQUIRES_SWAP_SIMULATION",
+            payment_mode: "free_preview",
+          },
         },
         explanation:
-          "Audit USDC SPL token mint before executing a swap or transfer.",
+          "Inspect an SPL token mint using RugShield free preview before swapping or upgrade to paid /v1/scan with paymentSignature.",
       },
     ],
   ],
   schema: z.object({
-    mint: z.string().min(1).describe("The SPL token mint address to audit"),
+    mint: z
+      .string()
+      .min(1)
+      .describe("The SPL token mint (or Base token) address to audit"),
+    chain: z
+      .enum(["solana", "base"])
+      .optional()
+      .describe("Blockchain network (defaults to solana)"),
+    paymentSignature: z
+      .string()
+      .optional()
+      .describe(
+        "Optional Base64 x402 v2 PAYMENT-SIGNATURE header to invoke paid /v1/scan instead of free /v1/scan/preview",
+      ),
   }),
   handler: async (_agent, input) => {
     try {
-      const res = await fetchRugshieldScan(input.mint);
+      const res = await fetchRugshieldScan(input.mint, {
+        chain: input.chain,
+        paymentSignature: input.paymentSignature,
+      });
       return {
         status: "success",
         response: res,
@@ -46,7 +66,7 @@ const rugshieldAction: Action = {
     } catch (error: any) {
       return {
         status: "error",
-        message: error.message,
+        message: error?.message ?? String(error),
       };
     }
   },
