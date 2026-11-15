@@ -50,6 +50,10 @@
               {
                 "group": "Misc",
                 "pages": ["docs/v2/plugins/misc/misc-plugin-intro"]
+              },
+              {
+                "group": "Trading Signals",
+                "pages": ["docs/v2/plugins/trading-signals/trading-signals-plugin-intro"]
               }
             ]
           },

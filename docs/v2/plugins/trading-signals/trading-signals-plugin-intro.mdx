@@ -1,0 +1,50 @@
+---
+title: 'Trading Signals Plugin'
+description: 'Pay-per-call token risk verdict, pre-trade GO / CAUTION / STOP pack and whale flow, paid over x402 from the agent wallet'
+icon: 'shield-check'
+---
+
+# Trading Signals Plugin
+
+[`@gdietsch/solana-agent-kit-plugin-trading-signals`](https://www.npmjs.com/package/@gdietsch/solana-agent-kit-plugin-trading-signals) is a third-party plugin that gives your agent pre-trade due diligence on Solana (and Base) tokens from the [Trading Signals Toolkit](https://signals.incomefather.com). Each call is paid per request over [x402](https://www.x402.org/) in USDC from the agent's own Solana wallet, so there is no API key or account to set up.
+
+## Installation
+
+```bash
+npm install solana-agent-kit @gdietsch/solana-agent-kit-plugin-trading-signals
+```
+
+## Integration
+
+```javascript
+import { SolanaAgentKit, createLangchainTools } from "solana-agent-kit";
+import TradingSignalsPlugin from "@gdietsch/solana-agent-kit-plugin-trading-signals";
+
+const agent = new SolanaAgentKit(wallet, "YOUR_RPC_URL", {}).use(TradingSignalsPlugin);
+
+// The three actions are registered on agent.actions for any adapter
+const tools = createLangchainTools(agent, agent.actions);
+
+// Or call the methods directly
+const verdict = await agent.methods.tokenRiskVerdict(agent, "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263");
+```
+
+The agent wallet needs a small USDC balance on Solana mainnet. The x402 facilitator pays the network fee. Payments are restricted to USDC and capped at 0.05 USDC per call and 1.00 USDC per day by default; change the caps with `createTradingSignalsPlugin({ maxUsdPerCall, maxUsdPerDay })`.
+
+## Available Tools
+
+| Tool Name | Price | Description |
+|-----------|-------|-------------|
+| `tokenRiskVerdict` | 0.01 USDC | `safe` / `caution` / `avoid` verdict with an A-F grade and reasons (mint and freeze authority, honeypot or sell test, LP lock, holder concentration, sniper and bundled wallets) |
+| `tokenPreTradePack` | 0.015 USDC | One `GO` / `CAUTION` / `STOP` decision combining the token verdict, an OFAC sanctions screen of the token's authorities and an optional counterparty wallet, and that wallet's USDC pay-readiness |
+| `tokenWhaleFlow` | 0.02 USDC | Large-wallet DEX buys vs sells over 1-24h, net flow and % of liquidity, accumulation / distribution signal, largest trades and top wallets |
+
+## Available Actions
+
+| Action Name | Description |
+|-------------|-------------|
+| `TOKEN_RISK_VERDICT` | Check whether a token is safe before buying, swapping into, or accepting it |
+| `TOKEN_PRE_TRADE_PACK` | Get a single go / no-go answer before a trade or payment |
+| `TOKEN_WHALE_FLOW` | See whether whales are accumulating or dumping a token |
+
+Results are heuristic risk signals and market data, not financial advice.
