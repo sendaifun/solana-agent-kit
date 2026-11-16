@@ -52,6 +52,11 @@ import rejectMultisigProposalAction from "./squads/actions/rejectMultisigProposa
 // squads
 import transferFromMultisigTreasuryAction from "./squads/actions/transferFromMultisigTreasury";
 
+// rugradar
+import rugradarCheckTokenAction from "./rugradar/actions/checkTokenRisk";
+import rugradarScanLinkAction from "./rugradar/actions/scanLink";
+import rugradarScanWalletAction from "./rugradar/actions/scanWallet";
+
 // switchboard
 import simulateFeedAction from "./switchboard/actions/simulateFeed";
 
@@ -140,6 +145,11 @@ import {
   sendTransactionWithPriorityFee,
 } from "./helius/tools";
 import { askMessariAi } from "./messari/tools";
+import {
+  rugradarCheckToken,
+  rugradarScanLink,
+  rugradarScanWallet,
+} from "./rugradar/tools";
 import {
   getAllRegisteredAllDomains,
   getMainAllDomainsDomain,
@@ -300,6 +310,9 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    rugradarCheckToken,
+    rugradarScanWallet,
+    rugradarScanLink,
   },
 
   // Combine all actions
@@ -379,6 +392,9 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    rugradarCheckTokenAction,
+    rugradarScanWalletAction,
+    rugradarScanLinkAction,
   ],
 
   // Initialize function
