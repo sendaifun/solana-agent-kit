@@ -11,10 +11,6 @@ export type MCPSchemaShape = {
 };
 
 // Type guards for Zod schema types
-function isZodOptional(schema: z.ZodTypeAny): schema is z.ZodOptional<any> {
-  return schema instanceof z.ZodOptional;
-}
-
 function isZodObject(schema: z.ZodTypeAny): schema is z.ZodObject<any> {
   // Check both instanceof and the typeName property
   return (
@@ -40,7 +36,9 @@ export function zodToMCPShape(schema: z.ZodTypeAny): {
   const result: MCPSchemaShape = {};
 
   for (const [key, value] of Object.entries(shape)) {
-    result[key] = isZodOptional(value) ? value.unwrap() : value;
+    // Preserve the schema as-is: MCP accepts a raw shape containing ZodOptional,
+    // and unwrapping it here would advertise optional params as required.
+    result[key] = value;
   }
 
   return {
