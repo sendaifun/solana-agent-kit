@@ -81,6 +81,10 @@ import parseInstructionAction from "./solanafm/actions/parseInstruction";
 // messari
 import getMessariAiAction from "./messari/actions/askMessariAi";
 
+// rentshield
+import rentshieldCheckTokenAction from "./rentshield/actions/checkTokenRugShield";
+import rentshieldScanWalletAction from "./rentshield/actions/scanWalletRent";
+
 import {
   alchemyCreateAddressActivityWebhook,
   alchemyCreateWebhook,
@@ -140,6 +144,7 @@ import {
   sendTransactionWithPriorityFee,
 } from "./helius/tools";
 import { askMessariAi } from "./messari/tools";
+import { rentshieldCheckToken, rentshieldScanWallet } from "./rentshield/tools";
 import {
   getAllRegisteredAllDomains,
   getMainAllDomainsDomain,
@@ -300,6 +305,8 @@ const MiscPlugin = {
     get_verification_job_status,
     get_verified_programs,
     verify_program,
+    rentshieldCheckToken,
+    rentshieldScanWallet,
   },
 
   // Combine all actions
@@ -379,6 +386,8 @@ const MiscPlugin = {
     getVerificationJobStatusAction,
     getVerifiedProgramsAction,
     verifyProgramAction,
+    rentshieldCheckTokenAction,
+    rentshieldScanWalletAction,
   ],
 
   // Initialize function
