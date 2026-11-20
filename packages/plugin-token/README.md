@@ -45,6 +45,10 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `fetchTokenDetailedReport` - Get detailed token security analysis
 - `fetchTokenReportSummary` - Get summarized token security report
 
+### NullClear Pre-Execution Firewall
+- `scanSolanaTokenWithNullClear` - Audit SPL & Token-2022 mints for hidden `TransferHook`, `PermanentDelegate`, active `MintAuthority` / `FreezeAuthority`, liquidity depth, and rug flags (`EXECUTE_SAFE` | `CAUTION_HIGH_RISK` | `ABORT_CRITICAL_TRAP`)
+- `guardSolanaTxWithNullClear` - 1-call pre-sign Solana transaction & mint firewall (`POST /v1/guard`): decodes serialized wire instructions, runs `simulateTransaction` preflight, and scans touched SPL / Token-2022 mints before signing
+
 ### Solana
 - `balance` - Get SOL balance for a wallet
 - `closeEmptyTokenAccounts` - Close empty token accounts

@@ -38,6 +38,12 @@ import pythFetchPriceAction from "./pyth/actions/pythFetchPrice";
 // rugcheck
 import rugcheckAction from "./rugcheck/actions/rugcheck";
 
+// nullclear
+import {
+  nullclearGuardTxAction,
+  nullclearScanTokenAction,
+} from "./nullclear/actions";
+
 // solutiofi
 import burnTokensUsingSolutiofiAction from "./solutiofi/actions/burnTokens";
 import closeAccountsUsingSolutiofiAction from "./solutiofi/actions/closeAccounts";
@@ -64,6 +70,10 @@ import claimCreatorFee from "./pumpfun/tools/claimCreatorFee";
 import launchPumpFunToken from "./pumpfun/tools/launchPumpfunToken";
 import { fetchPythPrice, fetchPythPriceFeedID } from "./pyth/tools";
 import { fetchTokenDetailedReport, fetchTokenReportSummary } from "./rugcheck";
+import {
+  guardSolanaTxWithNullClear,
+  scanSolanaTokenWithNullClear,
+} from "./nullclear/tools";
 import {
   closeEmptyTokenAccounts,
   getTPS,
@@ -112,6 +122,8 @@ const TokenPlugin = {
     fetchPythPriceFeedID,
     fetchTokenDetailedReport,
     fetchTokenReportSummary,
+    scanSolanaTokenWithNullClear,
+    guardSolanaTxWithNullClear,
     burnTokensUsingSolutiofi: burnTokens,
     closeAccountsUsingSolutiofi: closeAccounts,
     mergeTokensUsingSolutiofi: mergeTokens,
@@ -141,6 +153,8 @@ const TokenPlugin = {
     claimCreatorFeeAction,
     pythFetchPriceAction,
     rugcheckAction,
+    nullclearScanTokenAction,
+    nullclearGuardTxAction,
     burnTokensUsingSolutiofiAction,
     spreadTokenUsingSolutiofiAction,
     closeAccountsUsingSolutiofiAction,
