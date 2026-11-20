@@ -1,0 +1,57 @@
+---
+title: 'Pre-Sign Token & Transaction Firewall (NullClear)'
+description: 'Audit SPL & Token-2022 mints and simulate Solana wire transactions before signing swaps or transfers'
+---
+
+Screen any Solana token mint or base64 wire transaction with the [NullClear Pre-Execution Firewall](https://nullclear.dev) before your agent signs a Jupiter swap or token transfer. NullClear returns a deterministic `recommendedAgentAction` (`EXECUTE_SAFE`, `CAUTION_HIGH_RISK`, `ABORT_CRITICAL_TRAP`, `ABORT_DRAINER_APPROVAL`, or `ABORT_WILL_REVERT`) along with Token-2022 extension forensics and `simulateTransaction` results.
+
+## Core Features
+
+1. **SPL & Token-2022 Mint Forensics (`scanSolanaTokenWithNullClear`)**
+   - Active `MintAuthority` and `FreezeAuthority` checks
+   - Malicious Token-2022 extension detection: `TransferHook`, `PermanentDelegate`, hidden transfer fees, and non-transferable traps
+   - On-chain liquidity depth, holder concentration, and multi-oracle consensus
+
+2. **1-Call Pre-Sign Transaction Firewall (`guardSolanaTxWithNullClear`)**
+   - Decodes base64 Solana wire transactions (`rawTransactionBase64`) and unwraps instructions
+   - Runs `simulateTransaction` preflight to catch reverts and unexpected balance drains before signing
+   - Automatically audits all touched SPL and Token-2022 mints in a single call
+
+3. **Drop-In Guarded JSON-RPC (`https://api.nullclear.dev/rpc/solana/:apiKey`)**
+   - Optional RPC proxy mode where read calls pass through at `0` credits and every `sendTransaction` broadcast is pre-screened automatically
+
+## Usage
+
+```typescript
+import { SolanaAgentKit } from "solana-agent-kit";
+import TokenPlugin from "@solana-agent-kit/plugin-token";
+
+const agent = new SolanaAgentKit(wallet, RPC_URL, {
+  // Optional: NULLCLEAR_API_KEY: process.env.NULLCLEAR_API_KEY, // nc_live_...
+}).use(TokenPlugin);
+
+// 1. Audit a Solana SPL / Token-2022 mint before a Jupiter swap
+const scan = await agent.methods.scanSolanaTokenWithNullClear(
+  agent,
+  "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+);
+
+if (scan.recommendedAgentAction !== "EXECUTE_SAFE") {
+  throw new Error(`Aborted swap: ${scan.safetyVerdict} (${scan.riskFlags.join(", ")})`);
+}
+
+// 2. Or run a 1-call pre-sign check on a mint + serialized wire transaction
+const guard = await agent.methods.guardSolanaTxWithNullClear(agent, {
+  tokenAddress: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+  rawTransactionBase64: unsignedWireTxBase64,
+});
+```
+
+### Example Prompts
+
+- `"Run a NullClear preflight check on DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263 before swapping"`
+- `"Check if this Token-2022 mint has a malicious transfer hook or freeze authority: <mint>"`
+
+## Pricing & Configuration
+
+Works out of the box with **zero API key** (`10` free live forensic checks/day/IP; cached scans served free). For high-frequency autonomous agents, configure an optional `NULLCLEAR_API_KEY` (`nc_live_...` Prepaid Pass minted via x402 at `POST https://api.nullclear.dev/v1/pass/buy`) in `agent.config`.
