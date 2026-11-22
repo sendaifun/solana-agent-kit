@@ -18,6 +18,10 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `stakeWithJup` - Stake tokens using Jupiter
 - `trade` - Trade tokens using Jupiter
 
+### HelmSwap
+- `getHelmswapQuote` - Get a swap quote (expected output, minimum output, disclosed fee)
+- `tradeWithHelmswap` - Swap tokens using HelmSwap (unsigned tx signed by the agent wallet)
+
 ### Light Protocol
 - `sendCompressedAirdrop` - Send compressed token airdrops to multiple addresses efficiently
 
@@ -78,6 +82,8 @@ const usdcBalance = await agent.methods.get_balance(
 
 ### Trading Tokens
 ```typescript
+import { PublicKey } from "@solana/web3.js";
+
 // Swap 1 SOL for USDC
 const trade = await agent.methods.trade(
   agent,
@@ -85,6 +91,18 @@ const trade = await agent.methods.trade(
   1, // amount
   undefined, // input mint (undefined means SOL)
   100 // 1% slippage
+);
+
+// Quote or swap with HelmSwap (builds need HELMSWAP_API_KEY)
+const quote = await agent.methods.getHelmswapQuote(
+  agent,
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+  0.01
+);
+const helmSwap = await agent.methods.tradeWithHelmswap(
+  agent,
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+  0.01
 );
 ```
 

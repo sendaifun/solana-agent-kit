@@ -20,6 +20,10 @@ This plugin provides a set of tools and actions to interact with, create and tra
 - `trade` - Swap tokens using Jupiter's aggregator
 - `getTokenByTicker` - Get token data using a token's ticker symbol
 
+### HelmSwap
+- `getHelmswapQuote` - Get a swap quote (expected output, minimum output, disclosed fee)
+- `tradeWithHelmswap` - Swap tokens using HelmSwap (unsigned tx signed by the agent wallet)
+
 ### Light Protocol
 - `sendCompressedAirdrop` - Send compressed token airdrops to multiple addresses efficiently
 
