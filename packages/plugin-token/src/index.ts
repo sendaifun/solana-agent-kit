@@ -29,6 +29,10 @@ import walletAddressAction from "./solana/actions/walletAddress";
 // mayan
 import mayanSwapAction from "./mayan/actions/swap";
 
+// helmswap
+import getHelmswapQuoteAction from "./helmswap/actions/getQuote";
+import tradeWithHelmswapAction from "./helmswap/actions/trade";
+
 import claimCreatorFeeAction from "./pumpfun/actions/claimCreatorFeeAction";
 // pumpfun
 import launchPumpfunTokenAction from "./pumpfun/actions/launchPumpfunToken";
@@ -49,6 +53,7 @@ import {
   getTokenAddressFromTicker,
   getTokenDataByAddress,
 } from "./dexscreener/tools";
+import { getHelmswapQuote, tradeWithHelmswap } from "./helmswap/tools";
 import {
   cancelLimitOrders as cancelJupiterLimitOrders,
   createLimitOrder as createJupiterLimitOrder,
@@ -106,6 +111,8 @@ const TokenPlugin = {
     request_faucet_funds,
     transfer,
     swap,
+    getHelmswapQuote,
+    tradeWithHelmswap,
     launchPumpFunToken,
     claimCreatorFee,
     fetchPythPrice,
@@ -137,6 +144,8 @@ const TokenPlugin = {
     requestFundsAction,
     transferAction,
     mayanSwapAction,
+    getHelmswapQuoteAction,
+    tradeWithHelmswapAction,
     launchPumpfunTokenAction,
     claimCreatorFeeAction,
     pythFetchPriceAction,

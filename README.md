@@ -50,6 +50,7 @@ Anyone - whether an SF-based AI researcher or a crypto-native builder - can brin
 
 - **DeFi Integration**
   - Jupiter Exchange swaps
+  - HelmSwap swaps
   - Launch on Pump via PumpPortal
   - Raydium pool creation (CPMM, CLMM, AMMv4)
   - Orca Whirlpool integration

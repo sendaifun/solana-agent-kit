@@ -112,6 +112,7 @@
                 "group": "Defi Integrations",
                 "pages": [
                   "docs/v2/integrations/defi-integration/jupiter_exchange_swaps",
+                  "docs/v2/integrations/defi-integration/helmswap",
                   "docs/v2/integrations/defi-integration/launch_pumpfun",
                   "docs/v2/integrations/defi-integration/raydium_pools",
                   "docs/v2/integrations/defi-integration/orca_whirlpool",

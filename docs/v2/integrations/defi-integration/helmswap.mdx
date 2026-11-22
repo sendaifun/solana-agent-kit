@@ -1,0 +1,43 @@
+---
+title: 'HelmSwap Swaps'
+description: 'Quote and swap Solana tokens through HelmSwap'
+---
+
+Solana Agent Kit can quote and execute token swaps through [HelmSwap](https://helmswap.com/developers). HelmSwap returns a quote and an **unsigned** transaction. The agent's wallet signs and sends it. The HelmSwap API never holds keys, signs, or broadcasts.
+
+Quotes are keyless. Building a Solana swap requires a free API key from [helmswap.com/developers](https://helmswap.com/developers). Set it as `HELMSWAP_API_KEY` in the agent config or environment. Every quote discloses the fee before you sign; the fee is a SOL or SPL transfer in the same transaction.
+
+## Quote
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+const quote = await agent.methods.getHelmswapQuote(
+  agent,
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+  0.01, // 0.01 SOL
+);
+
+console.log(quote.expectedOut, quote.minOut, quote.fee);
+```
+
+## Swap
+
+```typescript
+import { PublicKey } from "@solana/web3.js";
+
+const result = await agent.methods.tradeWithHelmswap(
+  agent,
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"), // USDC
+  0.01, // amount in whole tokens
+  new PublicKey("So11111111111111111111111111111111111111112"), // SOL (optional, this is the default)
+  50 // 0.5% slippage (optional)
+);
+```
+
+Input amounts are in whole tokens (the same convention as `trade` / Jupiter), not base units.
+
+## Actions
+
+- `GET_HELMSWAP_QUOTE` — expected output, minimum output after slippage, and the disclosed fee. Nothing is executed.
+- `TRADE_WITH_HELMSWAP` — quote, build an unsigned transaction, then sign and send it with the agent wallet.
